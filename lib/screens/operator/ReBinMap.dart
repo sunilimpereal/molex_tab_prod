@@ -7,7 +7,7 @@ import '../../model_api/Transfer/bundleToBin_model.dart';
 import '../../model_api/Transfer/getBinDetail.dart';
 import '../../model_api/crimping/bundleDetail.dart';
 import '../../model_api/machinedetails_model.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../widgets/showBundles.dart';
 import '../../service/apiService.dart';
 
@@ -225,27 +225,23 @@ class _ReMapBinState extends State<ReMapBin> {
         CustomCell(
           width: 40,
           child: Text('No.',
-              style: GoogleFonts.openSans(
-                  textStyle: TextStyle(fontWeight: FontWeight.w600))),
-        ),
+              style: TextStyle(fontWeight: FontWeight.w600))),
+        
 
         CustomCell(
           width: 120,
           child: Text('Location ID',
-              style: GoogleFonts.openSans(
-                  textStyle: TextStyle(fontWeight: FontWeight.w600))),
+              style: TextStyle(fontWeight: FontWeight.w600)),
         ),
         CustomCell(
           width: 100,
           child: Text('Bin ID',
-              style: GoogleFonts.openSans(
-                  textStyle: TextStyle(fontWeight: FontWeight.w600))),
+              style: TextStyle(fontWeight: FontWeight.w600)),
         ),
         CustomCell(
           width: 100,
           child: Text('Bundle ID',
-              style: GoogleFonts.openSans(
-                  textStyle: TextStyle(fontWeight: FontWeight.w600))),
+              style:  TextStyle(fontWeight: FontWeight.w600)),
         ),
         // DataColumn(
         //   label: Text('Remove',
@@ -261,20 +257,20 @@ class _ReMapBinState extends State<ReMapBin> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text("${a++}",
-                        style: GoogleFonts.openSans(textStyle: TextStyle())),
+                        style:  TextStyle()),
                   )),
               CustomCell(
                   width: 120,
                   child: Text("${e.locationId}",
-                      style: GoogleFonts.openSans(textStyle: TextStyle()))),
+                      style:  TextStyle())),
               CustomCell(
                   width: 100,
                   child: Text("${e.binId}",
-                      style: GoogleFonts.openSans(textStyle: TextStyle()))),
+                      style: TextStyle())),
               CustomCell(
                   width: 100,
                   child: Text("${e.bundleIdentification}",
-                      style: GoogleFonts.openSans(textStyle: TextStyle()))),
+                      style:  TextStyle())),
               // DataCell(
               //   IconButton(
               //     icon: Icon(

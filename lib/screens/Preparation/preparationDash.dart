@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../Machine_Id.dart';
 import '../../model_api/Preparation/getpreparationSchedule.dart';
 import '../../model_api/login_model.dart';
@@ -361,13 +361,12 @@ class _SchudleTableState extends State<SchudleTable> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(name,
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
+                  style:  TextStyle(
                         // color: Color(0xffBF3947),
                         color: Colors.red,
                         fontSize: 12,
                         fontWeight: FontWeight.w600),
-                  )),
+                  ),
             ],
           ),
         ),
@@ -483,8 +482,7 @@ class _SchudleTableState extends State<SchudleTable> {
                 child: Center(
                   child: Text(
                     schedule.scheduledStatus,
-                    style: GoogleFonts.openSans(
-                      textStyle: TextStyle(
+                    style:  TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: schedule.scheduledStatus == 'Complete'
@@ -492,7 +490,7 @@ class _SchudleTableState extends State<SchudleTable> {
                             : schedule.scheduledStatus == "Partial"
                                 ? Colors.yellow[900]
                                 : Colors.blue[900],
-                      ),
+                      
                     ),
                   ),
                 ),

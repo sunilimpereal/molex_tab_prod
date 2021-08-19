@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../model_api/crimping/bundleDetail.dart';
 import '../../service/apiService.dart';
 
@@ -249,12 +249,11 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                   padding: const EdgeInsets.all(0.0),
                   child: Text(
                     "$title",
-                    style: GoogleFonts.openSans(
-                      textStyle: TextStyle(
+                    style:  TextStyle(
                           fontSize: 14,
                           color: Colors.grey,
                           fontWeight: FontWeight.w400),
-                    ),
+                    
                   ),
                 ),
               ],
@@ -266,14 +265,13 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                   padding: const EdgeInsets.all(0.0),
                   child: Text(
                     "$data",
-                    style: GoogleFonts.openSans(
-                      textStyle: TextStyle(
+                    style: TextStyle(
                           fontSize: 15,
                           color: Colors.black,
                           fontWeight: FontWeight.w400),
                     ),
                   ),
-                )
+                
               ],
             )
           ],

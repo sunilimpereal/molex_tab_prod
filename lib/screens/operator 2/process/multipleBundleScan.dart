@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:molex/screens/widgets/keypad.dart';
+import '../../widgets/keypad.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import '../../../model_api/Transfer/bundleToBin_model.dart';
 import '../../../model_api/cableTerminalA_model.dart';
@@ -11,7 +11,7 @@ import '../../../model_api/cableTerminalB_model.dart';
 import '../../../model_api/crimping/bundleDetail.dart';
 import '../../../model_api/crimping/getCrimpingSchedule.dart';
 import '../../../model_api/crimping/postCrimprejectedDetail.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../service/apiService.dart';
 
 enum Status {

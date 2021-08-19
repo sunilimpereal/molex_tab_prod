@@ -8,7 +8,6 @@ import '../../../model_api/cableDetails_model.dart';
 import '../../../model_api/cableTerminalA_model.dart';
 import '../../../model_api/cableTerminalB_model.dart';
 import '../../../model_api/fgDetail_model.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../model_api/login_model.dart';
 import '../../../model_api/machinedetails_model.dart';
 import '../../../model_api/materialTrackingCableDetails_model.dart';
@@ -677,14 +676,13 @@ class _ProcessPageState extends State<ProcessPage> {
                       width: MediaQuery.of(context).size.width * width,
                       child: Text(p4,
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
+                          style:TextStyle(
                               fontSize: 11,
                               color: Colors.red,
                               fontFamily: fonts.openSans,
                               fontWeight: FontWeight.w600,
                             ),
-                          )),
+                          )
                     ),
                     SizedBox(height: 4),
                     Text(
@@ -752,14 +750,13 @@ class _ProcessPageState extends State<ProcessPage> {
                       child: Text(
                           "${cableDetails.cablePartNumber}(${cableDetails.description})",
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
+                          style:  TextStyle(
                               fontSize: 11,
                               color: Colors.red,
                               fontFamily: fonts.openSans,
                               fontWeight: FontWeight.w600,
                             ),
-                          )),
+                          )
                     ),
                     SizedBox(height: 1),
                     Container(
@@ -1132,15 +1129,13 @@ class _ProcessPageState extends State<ProcessPage> {
                         children: [
                           Text(
                             'Machine Id : ',
-                            style: GoogleFonts.openSans(
-                                textStyle: TextStyle(fontSize: 16)),
-                          ),
+                            style: TextStyle(fontSize: 16)),
+                          
                           Text(
                             '${machineDetails.machineNumber}',
-                            style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
+                            style: TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.w600)),
-                          ),
+                          
                         ],
                       ),
                       SizedBox(height: 10),
@@ -1148,15 +1143,13 @@ class _ProcessPageState extends State<ProcessPage> {
                         children: [
                           Text(
                             'Printer Id : ',
-                            style: GoogleFonts.openSans(
-                                textStyle: TextStyle(fontSize: 15)),
-                          ),
+                            style: TextStyle(fontSize: 15)),
+                   
                           Text(
                             '${machineDetails.printerIp}',
-                            style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
+                            style:  TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.w600)),
-                          ),
+                        
                         ],
                       ),
                       SizedBox(height: 10),
@@ -1164,15 +1157,14 @@ class _ProcessPageState extends State<ProcessPage> {
                         children: [
                           Text(
                             'Machine Location :',
-                            style: GoogleFonts.openSans(
-                                textStyle: TextStyle(fontSize: 15)),
-                          ),
+                            style:
+                                 TextStyle(fontSize: 15)),
+                          
                           Text(
                             " ${machineDetails.machineLocation}",
-                            style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
+                            style:TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.w600)),
-                          ),
+                          
                         ],
                       ),
                     ],
@@ -1194,15 +1186,13 @@ class _ProcessPageState extends State<ProcessPage> {
                         children: [
                           Text(
                             'Model Name : ',
-                            style: GoogleFonts.openSans(
-                                textStyle: TextStyle(fontSize: 16)),
-                          ),
+                            style: TextStyle(fontSize: 16)),
+                          
                           Text(
                             '${machineDetails.modelName}',
-                            style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
+                            style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w600)),
-                          ),
+                          
                         ],
                       ),
                       SizedBox(height: 10),
@@ -1211,9 +1201,8 @@ class _ProcessPageState extends State<ProcessPage> {
                         children: [
                           Text(
                             '',
-                            style: GoogleFonts.openSans(
-                                textStyle: TextStyle(fontSize: 15)),
-                          ),
+                            style:  TextStyle(fontSize: 15)),
+                          
                         ],
                       ),
                       SizedBox(height: 10),
@@ -1222,9 +1211,8 @@ class _ProcessPageState extends State<ProcessPage> {
                         children: [
                           Text(
                             '',
-                            style: GoogleFonts.openSans(
-                                textStyle: TextStyle(fontSize: 15)),
-                          ),
+                            style: TextStyle(fontSize: 15)),
+                          
                         ],
                       ),
                     ],

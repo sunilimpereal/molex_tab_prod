@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:molex/model_api/Transfer/postgetBundleMaster.dart';
-import 'package:molex/model_api/process1/getBundleListGl.dart';
-import 'package:molex/screens/widgets/alertDialog/alertDialogVI.dart';
+
+import '../../model_api/Transfer/postgetBundleMaster.dart';
+import '../../model_api/process1/getBundleListGl.dart';
+import '../widgets/alertDialog/alertDialogVI.dart';
 import '../../main.dart';
 import '../../model_api/Transfer/bundleToBin_model.dart';
 import '../../model_api/cableTerminalA_model.dart';
@@ -645,34 +645,30 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                 DataColumn(
                   label: Text(
                     'Employee ID',
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
+                    style:  TextStyle(fontSize: 12),
                     ),
-                  ),
+                  
                 ),
                 DataColumn(
                     label: Text(
                   'Bundle ID',
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(fontSize: 12),
-                  ),
+                  style:  TextStyle(fontSize: 12),
+                  
                 )),
                 DataColumn(
                   label: Text(
                     'BIN ID',
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
-                    ),
+                    style:   TextStyle(fontSize: 12),
+                    
                   ),
                 ),
                 DataColumn(
                   label: Text(
                     'Status',
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
+                    style:   TextStyle(fontSize: 12),
                     ),
                   ),
-                ),
+           
                 DataColumn(
                     label: ElevatedButton(
                   onPressed: () {
@@ -1331,13 +1327,12 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
               children: [
                 Text(
                   heading,
-                  style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
+                  style:  TextStyle(
                     fontSize: 12,
                     color: Colors.grey[500],
                     fontWeight: FontWeight.normal,
                   )),
-                )
+                
               ],
             ),
             Padding(
@@ -1346,10 +1341,9 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                 children: [
                   Text(
                     value ?? '',
-                    style: GoogleFonts.poppins(
-                      textStyle:
+                    style:  
                           TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
-                    ),
+                    
                   ),
                 ],
               ),

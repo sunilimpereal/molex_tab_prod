@@ -16,7 +16,7 @@ public class MainActivity extends FlutterActivity {
     TscWifiActivity TscEthernetDll = new TscWifiActivity();
     private String PrintLabel(String ip,String bundleQty,String routeno,String date, String orderId,String qr, String fgpart,String cutLength,
                         String cablePart,String wireGauge,String terminalFrom,String terminalto,String userid,String shift,String machine ){
-        String status="";
+        String status="success";
         String op = TscEthernetDll.openport(ip, 9100);
         System.out.println("ip: "+ip);
         System.out.println("bundle Qty:"+bundleQty);
@@ -75,7 +75,7 @@ public class MainActivity extends FlutterActivity {
             TscEthernetDll.sendcommand("TEXT 706,315,\"0\",180,8,8,\""+machine+"\"\n");
             TscEthernetDll.sendcommand("PRINT 1,1\"\n");
             TscEthernetDll.sendcommand("PUTBMP 100,520,\"Triangle.bmp\"\n");
-            status = TscEthernetDll.printerstatus();
+            // status = TscEthernetDll.printerstatus();
             TscEthernetDll.printlabel(1, 1);
             //TscEthernetDll.sendfile("zpl.txt");
             TscEthernetDll.closeport(5000);
@@ -115,7 +115,7 @@ public class MainActivity extends FlutterActivity {
                                 if(status != "-1") {
                                     result.success(status);
                                 }else{
-                                    result.error("-1 not printed","Printer not available",null);
+                                    result.error("-1 not printed","Printer not available",false);
                                 }
                             }else{
                                 result.notImplemented();

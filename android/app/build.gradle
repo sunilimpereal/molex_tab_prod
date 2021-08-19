@@ -40,7 +40,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
-    signingConfigs {
+ signingConfigs {
        release {
            keyAlias keystoreProperties['keyAlias']
            keyPassword keystoreProperties['keyPassword']
@@ -53,8 +53,6 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
-            shrinkResources false
-         minifyEnabled false
         }
     }
 }
@@ -65,5 +63,6 @@ flutter {
 
 dependencies {
     implementation files('libs\\tscsdk.jar')
+    // implementation 'com.google.android.material:material:1.5.0-alpha02'
   
 }

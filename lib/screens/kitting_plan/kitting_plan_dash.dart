@@ -2,13 +2,18 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../model_api/kitting_plan/getKittingData_model.dart';
-import '../../model_api/kitting_plan/save_kitting_model.dart';
-import '../../model_api/login_model.dart';
-import '../widgets/time.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../../service/apiService.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+import 'package:input_with_keyboard_control/input_with_keyboard_control.dart';
+import 'package:molex/model_api/kitting_plan/getKittingData_model.dart';
+import 'package:molex/model_api/kitting_plan/save_kitting_model.dart';
+import 'package:molex/model_api/login_model.dart';
+import 'package:molex/model_api/machinedetails_model.dart';
+import 'package:molex/screens/widgets/drawer.dart';
+import 'package:molex/screens/widgets/time.dart';
+import 'package:molex/service/apiService.dart';
+
+import '../../main.dart';
+
 
 class KittingDash extends StatefulWidget {
   Employee employee;
@@ -21,18 +26,18 @@ class _KittingDashState extends State<KittingDash> {
   String fgNumber;
   String orderId;
   String qty;
-  ApiService apiService;
+   ApiService apiService;
   List<KittingPost> kittingList = [];
   bool loading = false;
   bool loadingSave = false;
+
+  TextEditingController textEditingController = new TextEditingController();
 
   @override
   void initState() {
     apiService = new ApiService();
     super.initState();
   }
-  //369100018
-  //846883996
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +48,11 @@ class _KittingDashState extends State<KittingDash> {
         iconTheme: IconThemeData(
           color: Colors.red,
         ),
-       
-        
         title: const Text(
           'Kitting',
           style: TextStyle(color: Colors.red),
         ),
         elevation: 0,
-       
         actions: [
           Container(
             padding: EdgeInsets.all(1),
@@ -64,7 +66,7 @@ class _KittingDashState extends State<KittingDash> {
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       height: 24,
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: Colors.grey.shade100,
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
                       child: Center(
@@ -81,7 +83,7 @@ class _KittingDashState extends State<KittingDash> {
                             ),
                           ),
                           Text(
-                            widget.employee.empId,
+                            widget.employee.empId ?? '',
                             style: TextStyle(fontSize: 13, color: Colors.black),
                           ),
                         ],
@@ -94,6 +96,12 @@ class _KittingDashState extends State<KittingDash> {
           ),
           TimeDisplay(),
         ],
+      ),
+      drawer: Drawer(
+        child: DrawerWidget(
+            employee: widget.employee,
+            machineDetails: MachineDetails(),
+            type: "process"),
       ),
       body: Column(
         children: [
@@ -117,25 +125,27 @@ class _KittingDashState extends State<KittingDash> {
           children: [
             Container(
               width: 180,
-              height: 45,
+              height: 50,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.grey[100],
+                color: Colors.grey.shade100,
               ),
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: TextField(
+                  child: TextFormField(
+                    keyboardType: TextInputType.numberWithOptions(),
                     onChanged: (value) {
                       //TODO
                       setState(() {
                         fgNumber = value;
                       });
                     },
+                    style: TextStyle(fontSize: 18),
                     decoration: InputDecoration(
                         labelText: "Fg Number",
-                        contentPadding: EdgeInsets.all(0),
-                        isDense: true,
+                        contentPadding: EdgeInsets.all(5),
+                        isDense: false,
                         border: InputBorder.none,
                         focusedBorder: InputBorder.none,
                         disabledBorder: InputBorder.none),
@@ -151,7 +161,7 @@ class _KittingDashState extends State<KittingDash> {
               height: 45,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.grey[100],
+                color: Colors.grey.shade100,
               ),
               child: Center(
                 child: Padding(
@@ -163,10 +173,11 @@ class _KittingDashState extends State<KittingDash> {
                         orderId = value;
                       });
                     },
+                    style: TextStyle(fontSize: 15),
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(0),
                         labelText: "Order ID",
-                        isDense: true,
+                        isDense: false,
                         border: InputBorder.none,
                         focusedBorder: InputBorder.none,
                         disabledBorder: InputBorder.none),
@@ -182,7 +193,7 @@ class _KittingDashState extends State<KittingDash> {
               height: 45,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.grey[100],
+                color: Colors.grey.shade100,
               ),
               child: Center(
                 child: Padding(
@@ -192,10 +203,11 @@ class _KittingDashState extends State<KittingDash> {
                       qty = value;
                       //TODO
                     },
+                    style: TextStyle(fontSize: 15),
                     decoration: InputDecoration(
                         labelText: "Qty",
                         contentPadding: EdgeInsets.all(0),
-                        isDense: true,
+                        isDense: false,
                         border: InputBorder.none,
                         focusedBorder: InputBorder.none,
                         disabledBorder: InputBorder.none),
@@ -204,7 +216,7 @@ class _KittingDashState extends State<KittingDash> {
               ),
             ),
             SizedBox(
-              width: 10,
+              width: 20,
             ),
             ElevatedButton(
               style: ButtonStyle(
@@ -215,8 +227,8 @@ class _KittingDashState extends State<KittingDash> {
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
                   (Set<MaterialState> states) {
                     if (states.contains(MaterialState.pressed))
-                      return Colors.blue[200];
-                    return Colors.blue[500]; // Use the component's default.
+                      return Colors.blue.shade200;
+                    return Colors.blue.shade500; // Use the component's default.
                   },
                 ),
               ),
@@ -229,8 +241,8 @@ class _KittingDashState extends State<KittingDash> {
                 focusNode.unfocus();
                 PostKittingData postKittingData = new PostKittingData(
                     orderNo: orderId,
-                    fgNumber: int.parse(fgNumber),
-                    quantity: int.parse(qty));
+                    fgNumber: int?.parse(fgNumber),
+                    quantity: int?.parse(qty));
                 apiService.getkittingDetail(postKittingData).then((value) {
                   //84671404
                   //369100004
@@ -260,8 +272,6 @@ class _KittingDashState extends State<KittingDash> {
                         height: 22,
                         width: 22,
                         child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
                           strokeWidth: 3,
                         ),
                       )
@@ -271,7 +281,7 @@ class _KittingDashState extends State<KittingDash> {
                           SizedBox(width: 6),
                           Text(
                             "Search",
-                            style: TextStyle(fontSize: 15),
+                            style: TextStyle(fontSize: 13),
                           ),
                         ],
                       ),
@@ -285,152 +295,182 @@ class _KittingDashState extends State<KittingDash> {
 
   getList(List<BundleMaster> bundleList) {
     List<BundleMaster> temp = [];
+    int totalQty = 0;
     for (BundleMaster b in bundleList) {
-      temp.add(b);
+      if (totalQty < int.parse(qty ?? '0')) {
+        temp.add(b);
+        totalQty = totalQty +b.bundleQuantity;
+      } else {
+        break;
+      }
     }
     return temp;
   }
 
   Widget dataTable() {
+    TextStyle headingStyle = TextStyle(
+        fontSize: 13, fontWeight: FontWeight.w500, fontFamily: fonts.openSans);
+    TextStyle dataStyle = TextStyle(
+      fontSize: 12,
+    );
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-          height: 450,
+          height: MediaQuery.of(context).size.height * 0.77,
           width: MediaQuery.of(context).size.width,
           color: Colors.transparent,
           child: SingleChildScrollView(
             child: DataTable(
-              columnSpacing: 15,
+              columnSpacing: 35,
               columns: [
                 DataColumn(
                   label: Text(
                     'FG',
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
+                    style:  
+                      headingStyle,
                     ),
                   ),
-                ),
+                
                 DataColumn(
                     label: Text(
                   'Cablepart No.',
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(fontSize: 12),
+                  style:  
+                    headingStyle,
                   ),
-                )),
+                ),
                 DataColumn(
                   label: Text(
                     ' AWG',
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
+                    style:  
+                      headingStyle,
                     ),
                   ),
-                ),
+                
                 DataColumn(
                   label: Text(
                     'Cut Length',
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
+                    style:  
+                      headingStyle,
                     ),
                   ),
-                ),
+                
                 DataColumn(
                     label: Text(
                   'Bundles',
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(fontSize: 12),
-                  ),
-                )),
-                DataColumn(
-                  label: Text(
-                    'Color',
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 12),
-                    ),
+                  style:  
+                    headingStyle,
                   ),
                 ),
                 DataColumn(
                     label: Text(
-                  'Order Qty',
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(fontSize: 12),
+                  'Total Qty',
+                  style:  
+                    headingStyle,
                   ),
-                )),
+                ),
+                DataColumn(
+                  label: Text(
+                    'Color',
+                    style:  
+                      headingStyle,
+                    ),
+                  ),
+                
                 DataColumn(
                     label: Text(
-                  'Dispatched Qty',
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(fontSize: 12),
+                  'Order Qty',
+                  style:  
+                    headingStyle,
                   ),
-                )),
+                ),
                 DataColumn(
                     label: Text(
                   'Pending Qty',
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(fontSize: 12),
-                  ),
+                  style:   headingStyle,
+                  
                 ))
               ],
-              rows: kittingList
-                  .map(
-                    (e) => DataRow(cells: <DataCell>[
-                      DataCell(Text(
-                        "${e.kittingEJobDtoList.fgNumber}",
-                        style: TextStyle(fontSize: 12),
-                      )),
-                      DataCell(Text(
-                        "${e.kittingEJobDtoList.cableNumber}",
-                        style: TextStyle(fontSize: 12),
-                      )),
-                      DataCell(Text(
-                        "${e.kittingEJobDtoList.wireGuage}" ?? "",
-                        style: TextStyle(fontSize: 12),
-                      )),
-                      DataCell(Text(
-                        "${e.kittingEJobDtoList.cutLength}" ?? "",
-                        style: TextStyle(fontSize: 12),
-                      )),
-                      DataCell(Container(
-                        width: 80,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(
-                              "${e.kittingEJobDtoList.bundleMaster.length}" ??
-                                  '-',
-                              style: TextStyle(fontSize: 12),
-                            ),
-                            IconButton(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                onPressed: () {
-                                  showBundleDetail(
-                                      context: context,
-                                      bundles:
-                                          e.kittingEJobDtoList.bundleMaster,
-                                      selectedBundles: e.selectedBundles);
-                                },
-                                icon: Icon(
-                                  Icons.launch,
-                                  size: 16,
-                                  color: Colors.red[500],
-                                ))
-                          ],
-                        ),
-                      )),
-                      DataCell(Text(
-                        e.kittingEJobDtoList.cableColor ?? "",
-                        style: TextStyle(fontSize: 12),
-                      )),
-                      DataCell(Text("$qty")),
-                      // DataCell(Text("${e.selectedBundles.length}")),
-                      // DataCell(Text(
-                      //     "${e.kittingEJobDtoList.bundleMaster.length - e.selectedBundles.length}")),
-                      DataCell(Text("${getBundleQty(e.selectedBundles)}")),
-                      DataCell(Text(
-                          "${getPendingQty(e.kittingEJobDtoList.bundleMaster, e.selectedBundles)}")),
-                    ]),
-                  )
-                  .toList(),
+              rows: kittingList.map(
+                (e) {
+                  var length2 = e.kittingEJobDtoList.bundleMaster.length;
+
+                  return DataRow(cells: <DataCell>[
+                    DataCell(Text(
+                      "${e.kittingEJobDtoList.fgNumber}",
+                      style: dataStyle,
+                    )),
+                    DataCell(Text(
+                      "${e.kittingEJobDtoList.cableNumber}",
+                      style: dataStyle,
+                    )),
+                    DataCell(Text(
+                      "${e.kittingEJobDtoList.wireGuage}",
+                      style: dataStyle,
+                    )),
+                    DataCell(Text(
+                      "${e.kittingEJobDtoList.cutLength}",
+                      style: dataStyle,
+                    )),
+
+                    DataCell(Container(
+                      width: 80,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            "$length2",
+                            style: dataStyle,
+                          ),
+                          IconButton(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              onPressed: () {
+                                showBundleDetail(
+                                    context: context,
+                                    fgNo: "${e.kittingEJobDtoList.fgNumber}",
+                                    cablePartNo:
+                                        "${e.kittingEJobDtoList.cableNumber}",
+                                    awg: "${e.kittingEJobDtoList.wireGuage}",
+                                    bundles: e.kittingEJobDtoList.bundleMaster,
+                                    selectedBundles: e.selectedBundles);
+                              },
+                              icon: Icon(
+                                Icons.launch,
+                                size: 16,
+                                color: Colors.red.shade500,
+                              ))
+                        ],
+                      ),
+                    )),
+                    DataCell(Text(
+                      "${getBundleQty(e.selectedBundles)}",
+                      style: dataStyle,
+                    )),
+                    DataCell(Text(
+                      e.kittingEJobDtoList.cableColor ?? "",
+                      style: dataStyle,
+                    )),
+                    DataCell(Text(
+                      "$qty",
+                      style: dataStyle,
+                    )),
+                    // DataCell(Text("${e.selectedBundles.length}")),
+                    // DataCell(Text(
+                    //     "${e.kittingEJobDtoList.bundleMaster!.length - e.selectedBundles.length}")),
+
+                    DataCell(Text(
+                        "${getPendingQty(e.kittingEJobDtoList.bundleMaster, e.selectedBundles).abs()}",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: getPendingQty(
+                                        e.kittingEJobDtoList.bundleMaster,
+                                        e.selectedBundles) <=
+                                    0
+                                ? Colors.green
+                                : Colors.red))),
+                  ]);
+                },
+              ).toList(),
             ),
           )),
     );
@@ -446,21 +486,27 @@ class _KittingDashState extends State<KittingDash> {
     List<BundleMaster> bundlesmaster,
     List<BundleMaster> selectedBundle1,
   ) {
-    int sum1 = bundlesmaster
+    int sum1 = selectedBundle1
         .map((e) => e.bundleQuantity)
         .toList()
         .fold(0, (p, c) => p + c);
-    int sum2 = selectedBundle1
-        .map((e) => e.bundleQuantity)
-        .toList()
-        .fold(0, (p, c) => p + c);
-    return sum1 - sum2;
+
+    int sum2 = int.parse(qty ?? '0');
+
+    //  = selectedBundle1
+    //     .map((e) => e.bundleQuantity)
+    //     .toList()
+    //     .fold(0, (p, c) => p + c);
+    return sum2 - sum1;
   }
 
   Future<void> showBundleDetail(
-      {BuildContext context,
-      List<BundleMaster> bundles,
-      List<BundleMaster> selectedBundles}) async {
+      { BuildContext context,
+       List<BundleMaster> bundles,
+       String fgNo,
+       String cablePartNo,
+       String awg,
+       List<BundleMaster> selectedBundles}) async {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {
@@ -473,6 +519,9 @@ class _KittingDashState extends State<KittingDash> {
       builder: (BuildContext context) {
         return Center(
             child: ShowBundleList(
+          fgNo: fgNo,
+          awg: awg,
+          cablePartNo: cablePartNo,
           bundleList: bundles,
           selectedBundleList: selectedBundles,
           reload: () {
@@ -493,8 +542,8 @@ class _KittingDashState extends State<KittingDash> {
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.pressed))
-                return Colors.green[200];
-              return Colors.green[500]; // Use the component's default.
+                return Colors.green.shade200;
+              return Colors.green.shade500; // Use the component's default.
             },
           ),
         ),
@@ -529,7 +578,7 @@ class _KittingDashState extends State<KittingDash> {
                 loadingSave = false;
               });
             } else {
-              log("saved ${saveKitting}");
+              log("saved $saveKitting");
               setState(() {
                 loadingSave = false;
               });
@@ -540,30 +589,47 @@ class _KittingDashState extends State<KittingDash> {
           // }
         },
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(8.0),
           child: loadingSave
               ? Container(
                   height: 22,
                   width: 22,
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     strokeWidth: 3,
                   ),
                 )
-              : Text(
-                  'save',
-                  style: TextStyle(fontSize: 16),
+              : Row(
+                  children: [
+                    Icon(Icons.save),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      'save',
+                      style: TextStyle(fontSize: 13),
+                    ),
+                  ],
                 ),
         ));
   }
 }
 
+// ignore: must_be_immutable
 class ShowBundleList extends StatefulWidget {
   List<BundleMaster> bundleList;
   List<BundleMaster> selectedBundleList;
+  String fgNo;
+  String cablePartNo;
+  String awg;
   Function reload;
 
-  ShowBundleList({this.reload, this.bundleList, this.selectedBundleList});
+  ShowBundleList(
+      { this.reload,
+       this.bundleList,
+       this.selectedBundleList,
+       this.awg,
+       this.cablePartNo,
+       this.fgNo});
   @override
   _ShowBundleListState createState() => _ShowBundleListState();
 }
@@ -586,7 +652,7 @@ class _ShowBundleListState extends State<ShowBundleList> {
 
     return AlertDialog(
       title: Container(
-        width: 700,
+        width: 900,
         height: 500,
         child: Column(
           children: [
@@ -594,18 +660,15 @@ class _ShowBundleListState extends State<ShowBundleList> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  field(
-                      title: "Fg No.",
-                      data: "${widget.bundleList[0].finishedGoodsPart}",
-                      width: 120),
+                  SizedBox(
+                    width: 50,
+                  ),
+                  field(title: "Fg No.", data: "${widget.fgNo}", width: 140),
                   field(
                       title: "Cable Part No.",
-                      data: "${widget.bundleList[0].cablePartNumber}",
-                      width: 120),
-                  field(
-                      title: "AWG",
-                      data: "${widget.bundleList[0].awg}",
-                      width: 80),
+                      data: "${widget.cablePartNo}",
+                      width: 140),
+                  field(title: "AWG", data: "${widget.awg}", width: 100),
                   field(
                       title: "Total Qty",
                       data: "${widget.bundleList.length}",
@@ -613,17 +676,21 @@ class _ShowBundleListState extends State<ShowBundleList> {
                   field(
                       title: "Dispatch Bundles",
                       data: "${widget.selectedBundleList.length}",
-                      width: 140),
-                  field(
-                      title: "Pending Bundles",
-                      data:
-                          "${widget.bundleList.length - widget.selectedBundleList.length}",
-                      width: 140)
+                      width: 120),
+                  // field(
+                  //     title: "Pending Bundles",
+                  //     data:
+                  //         "${widget.bundleList.length - widget.selectedBundleList.length}",
+                  //     width: 120)
+
+                  SizedBox(
+                    width: 50,
+                  ),
                 ],
               ),
             ),
             Container(
-              width: 700,
+              width: 800,
               height: 400,
               child: SingleChildScrollView(
                 child: DataTable(
@@ -633,51 +700,56 @@ class _ShowBundleListState extends State<ShowBundleList> {
                     DataColumn(
                       label: Text(
                         'Bundle Id',
-                        style: GoogleFonts.poppins(
-                          textStyle: TextStyle(fontSize: 12),
+                        style:  
+                          TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ),
+                    
                     DataColumn(
                         label: Text(
                       'Bin Id',
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(fontSize: 12),
-                      ),
-                    )),
+                      style:  TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
+                      
+                    ),
+                    ),
                     DataColumn(
                       label: Text(
                         'location ',
-                        style: GoogleFonts.poppins(
-                          textStyle: TextStyle(fontSize: 12),
+                        style:  
+                          TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ),
+                    
                     DataColumn(
                       label: Text(
                         'Color',
-                        style: GoogleFonts.poppins(
-                          textStyle: TextStyle(fontSize: 12),
+                        style:  
+                          TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ),
+                    
                     DataColumn(
                       label: Text(
                         'Qty',
-                        style: GoogleFonts.poppins(
-                          textStyle: TextStyle(fontSize: 12),
+                        style:  
+                          TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ),
+                    
                   ],
                   rows: widget.bundleList
                       .map((e) => DataRow(
                               selected: widget.selectedBundleList.contains(e),
                               onSelectChanged: (value) {
                                 setState(() {
-                                  if (value)
+                                  if (value ?? false) {
                                     widget.selectedBundleList.add(e);
-                                  else {
+                                  } else {
                                     widget.selectedBundleList.remove(e);
                                   }
                                 });
@@ -692,7 +764,7 @@ class _ShowBundleListState extends State<ShowBundleList> {
                                   style: TextStyle(fontSize: 12),
                                 )),
                                 DataCell(Text(
-                                  "${e.locationId}" ?? '-',
+                                  "${e.locationId}",
                                   style: TextStyle(fontSize: 12),
                                 )),
                                 DataCell(Text(
@@ -700,7 +772,7 @@ class _ShowBundleListState extends State<ShowBundleList> {
                                   style: TextStyle(fontSize: 12),
                                 )),
                                 DataCell(Text(
-                                  "${e.bundleQuantity}" ?? "",
+                                  "${e.bundleQuantity}",
                                   style: TextStyle(fontSize: 12),
                                 )),
                               ]))
@@ -720,9 +792,9 @@ class _ShowBundleListState extends State<ShowBundleList> {
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
                       (Set<MaterialState> states) {
                         if (states.contains(MaterialState.pressed))
-                          return Colors.green[200];
+                          return Colors.green.shade200;
                         return Colors
-                            .green[500]; // Use the component's default.
+                            .green.shade500; // Use the component's default.
                       },
                     ),
                   ),
@@ -734,7 +806,10 @@ class _ShowBundleListState extends State<ShowBundleList> {
                     padding: const EdgeInsets.all(2.0),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("Save"),
+                      child: Text(
+                        "Save",
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
                   ),
                 )
@@ -758,7 +833,7 @@ class _ShowBundleListState extends State<ShowBundleList> {
               Text(
                 title,
                 style:
-                    GoogleFonts.montserrat(textStyle: TextStyle(fontSize: 12)),
+                    TextStyle(fontSize: 13)
               )
             ],
           ),
@@ -766,9 +841,9 @@ class _ShowBundleListState extends State<ShowBundleList> {
           Row(
             children: [
               Text(data,
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(fontSize: 13),
-                  )),
+                  style:  
+                    TextStyle(fontSize: 13),
+                  )
             ],
           )
         ],
@@ -780,5 +855,6 @@ class _ShowBundleListState extends State<ShowBundleList> {
 class KittingPost {
   KittingEJobDtoList kittingEJobDtoList;
   List<BundleMaster> selectedBundles;
-  KittingPost({this.kittingEJobDtoList, this.selectedBundles});
+  KittingPost(
+      { this.kittingEJobDtoList,  this.selectedBundles});
 }

@@ -3,8 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:molex/model_api/login_model.dart';
+import '../../../model_api/login_model.dart';
 import '../../../main.dart';
 import '../../../model_api/Transfer/bundleToBin_model.dart';
 import '../../../model_api/Transfer/postgetBundleMaster.dart';
@@ -3487,12 +3486,11 @@ class _GenerateLabelState extends State<GenerateLabel> {
                 padding: const EdgeInsets.all(0.0),
                 child: Text(
                   "$title",
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
+                  style:  TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                         fontWeight: FontWeight.w400),
-                  ),
+                  
                 ),
               ),
             ],
@@ -3504,12 +3502,11 @@ class _GenerateLabelState extends State<GenerateLabel> {
                 padding: const EdgeInsets.all(0.0),
                 child: Text(
                   "$data",
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
+                  style:  TextStyle(
                         fontSize: 15,
                         color: Colors.black,
                         fontWeight: FontWeight.w400),
-                  ),
+                  
                 ),
               )
             ],

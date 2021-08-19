@@ -3,16 +3,15 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:molex/model_api/Transfer/binToLocation_model.dart';
-import 'package:molex/model_api/Transfer/postgetBundleMaster.dart';
-import 'package:molex/model_api/materialTrackingCableDetails_model.dart';
-import 'package:molex/model_api/process1/getBundleListGl.dart';
-import 'package:molex/screens/widgets/alertDialog/alertDialogCrimping.dart';
-import 'package:molex/screens/widgets/alertDialog/alertDialogVI.dart';
-import 'package:molex/screens/widgets/showBundleDetail.dart';
-import 'package:molex/screens/widgets/showBundles.dart';
-import 'package:molex/screens/widgets/timer.dart';
+import '../../../model_api/Transfer/binToLocation_model.dart';
+import '../../../model_api/Transfer/postgetBundleMaster.dart';
+import '../../../model_api/materialTrackingCableDetails_model.dart';
+import '../../../model_api/process1/getBundleListGl.dart';
+import '../../widgets/alertDialog/alertDialogCrimping.dart';
+import '../../widgets/alertDialog/alertDialogVI.dart';
+import '../../widgets/showBundleDetail.dart';
+import '../../widgets/showBundles.dart';
+import '../../widgets/timer.dart';
 import '../../../main.dart';
 import '../../../model_api/Transfer/bundleToBin_model.dart';
 import '../../../model_api/cableTerminalA_model.dart';
@@ -773,12 +772,11 @@ class _ScanBundleState extends State<ScanBundle> {
                 padding: const EdgeInsets.all(0.0),
                 child: Text(
                   "$title",
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
+                  style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                         fontWeight: FontWeight.w400),
-                  ),
+                  
                 ),
               ),
             ],
@@ -790,12 +788,11 @@ class _ScanBundleState extends State<ScanBundle> {
                 padding: const EdgeInsets.all(0.0),
                 child: Text(
                   "$data",
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
+                  style:  TextStyle(
                         fontSize: 15,
                         color: Colors.black,
                         fontWeight: FontWeight.w400),
-                  ),
+                  
                 ),
               )
             ],

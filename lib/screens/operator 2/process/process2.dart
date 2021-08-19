@@ -17,7 +17,6 @@ import '../../operator%202/process/multipleBundleScan.dart';
 import '../../operator%202/process/partialCompletion.dart';
 import 'crimping.dart';
 import '../../operator/location.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../operator/materialPick.dart';
 import '../../operator/process/drawerWIp.dart';
 import '../../operator/process/materialTableWIP.dart';
@@ -508,13 +507,12 @@ class _ProcessPage2State extends State<ProcessPage2> {
                       width: MediaQuery.of(context).size.width * width,
                       child: Text(p4,
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
+                          style: TextStyle(
                               fontSize: 12,
                               color: Colors.red,
                               fontFamily: fonts.openSans,
                               fontWeight: FontWeight.bold,
-                            ),
+                            
                           )),
                     ),
                     SizedBox(height: 4),
@@ -583,13 +581,12 @@ class _ProcessPage2State extends State<ProcessPage2> {
                       child: Text(
                           "${cableDetails.cablePartNumber}(${cableDetails.description})",
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
+                          style: TextStyle(
                               fontSize: 12,
                               color: Colors.red,
                               fontFamily: fonts.openSans,
                               fontWeight: FontWeight.bold,
-                            ),
+                            
                           )),
                     ),
                     SizedBox(height: 1),

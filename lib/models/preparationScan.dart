@@ -1,4 +1,4 @@
-import 'package:molex/model_api/process1/getBundleListGl.dart';
+import '../model_api/process1/getBundleListGl.dart';
 
 import '../model_api/crimping/bundleDetail.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../model_api/machinedetails_model.dart';
 import '../navigation.dart';
 import '../widgets/CrimpPatrolHeader.dart';
@@ -76,10 +76,9 @@ class _CrimpingPatrolDashState extends State<CrimpingPatrolDash> {
                           ),
                           Text(
                             widget.userId,
-                            style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
+                            style:TextStyle(
                                     fontSize: 13, color: Colors.black)),
-                          ),
+                          
                         ],
                       )),
                     ),
@@ -105,10 +104,9 @@ class _CrimpingPatrolDashState extends State<CrimpingPatrolDash> {
                           ),
                           Text(
                             widget.machineId ?? "",
-                            style: GoogleFonts.openSans(
-                              textStyle:
+                            style:
                                   TextStyle(fontSize: 13, color: Colors.black),
-                            ),
+                            
                           ),
                         ],
                       )),

@@ -1,6 +1,6 @@
 //Fot terminal the three boxes below the order detail in work in progress page
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:molex/model_api/cableDetails_model.dart';
 import 'package:molex/model_api/cableTerminalA_model.dart';
 import 'package:molex/model_api/cableTerminalB_model.dart';
@@ -45,13 +45,12 @@ class _P1ProcessDetailState extends State<P1ProcessDetail> {
               children: [
                 Text(
                   heading,
-                  style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
+                  style: TextStyle(
                     fontSize: 9,
                     color: Colors.grey[500],
                     fontWeight: FontWeight.normal,
                   )),
-                )
+                
               ],
             ),
             Padding(
@@ -60,11 +59,10 @@ class _P1ProcessDetailState extends State<P1ProcessDetail> {
                 children: [
                   Text(
                     value ?? '',
-                    style: GoogleFonts.poppins(
-                      textStyle:
+                    style: 
                           TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
                     ),
-                  ),
+
                 ],
               ),
             )
@@ -96,11 +94,10 @@ class _P1ProcessDetailState extends State<P1ProcessDetail> {
                           children: [
                             Text(
                               'From Process',
-                              style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
+                              style: TextStyle(
                                     fontWeight: FontWeight.w400, fontSize: 11),
                               ),
-                            ),
+
                           ],
                         ),
                         Row(
@@ -170,10 +167,9 @@ class _P1ProcessDetailState extends State<P1ProcessDetail> {
                         children: [
                           Text(
                             'Cable',
-                            style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
+                            style:  TextStyle(
                                   fontWeight: FontWeight.w400, fontSize: 11),
-                            ),
+                            
                           ),
                         ],
                       ),
@@ -239,10 +235,9 @@ class _P1ProcessDetailState extends State<P1ProcessDetail> {
                           children: [
                             Text(
                               'To Process',
-                              style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
+                              style:  TextStyle(
                                     fontWeight: FontWeight.w400, fontSize: 11),
-                              ),
+                              
                             ),
                           ],
                         ),

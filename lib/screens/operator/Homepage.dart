@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_progress_button/flutter_progress_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../main.dart';
 import '../../model_api/login_model.dart';
@@ -176,9 +175,8 @@ class _HomepageState extends State<Homepage> {
                           ),
                           Text(
                             widget.employee.empId,
-                            style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
-                                    fontSize: 13, color: Colors.black)),
+                            style: TextStyle(
+                                    fontSize: 13, color: Colors.black)
                           ),
                         ],
                       )),
@@ -206,10 +204,9 @@ class _HomepageState extends State<Homepage> {
                           ),
                           Text(
                             widget.machine.machineNumber ?? "",
-                            style: GoogleFonts.openSans(
-                              textStyle:
+                            style:
                                   TextStyle(fontSize: 13, color: Colors.black),
-                            ),
+                            
                           ),
                         ],
                       )),
@@ -287,8 +284,7 @@ class _HomepageState extends State<Homepage> {
                         onChanged: (value) {
                           setState(() {});
                         },
-                        style: GoogleFonts.openSans(
-                            textStyle: TextStyle(fontSize: 16)),
+                        style:  TextStyle(fontSize: 16),
                         onTap: () {},
                         decoration: new InputDecoration(
                           // suffix: _searchController.text.length > 1
@@ -304,10 +300,9 @@ class _HomepageState extends State<Homepage> {
                           //             size: 16, color: Colors.red))
                           //     : Container(),
                           hintText: _chosenValue,
-                          hintStyle: GoogleFonts.openSans(
-                            textStyle: TextStyle(
+                          hintStyle:TextStyle(
                                 fontSize: 12, fontWeight: FontWeight.w500),
-                          ),
+
                           focusedBorder: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           errorBorder: InputBorder.none,
@@ -345,9 +340,8 @@ class _HomepageState extends State<Homepage> {
       ),
       isDense: false,
       isExpanded: false,
-      style: GoogleFonts.openSans(
-        textStyle: TextStyle(color: Colors.white),
-      ),
+      style: TextStyle(color: Colors.white),
+      
       iconSize: 28,
       iconEnabledColor: Colors.redAccent,
       items: options.map<DropdownMenuItem<String>>((String value) {
@@ -360,10 +354,9 @@ class _HomepageState extends State<Homepage> {
         );
       }).toList(),
       hint: Text(name,
-          style: GoogleFonts.openSans(
-            textStyle: TextStyle(
+          style: TextStyle(
                 color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
-          )),
+          ),
       onChanged: (String value) {
         setState(() {
           _chosenValue = value;
@@ -524,10 +517,9 @@ class _SchudleTableState extends State<SchudleTable> {
                                 Container(
                                     child: Text(
                                   'No Schedule Found',
-                                  style: GoogleFonts.openSans(
-                                      textStyle:
+                                  style:
                                           TextStyle(color: Colors.black)),
-                                )),
+                                ),
                                 SizedBox(
                                   height: 10,
                                 ),
@@ -589,10 +581,9 @@ class _SchudleTableState extends State<SchudleTable> {
                                 Container(
                                     child: Text(
                                   'No Schedule Found',
-                                  style: GoogleFonts.openSans(
-                                      textStyle:
+                                  style:
                                           TextStyle(color: Colors.black)),
-                                )),
+                                ),
                                 SizedBox(
                                   height: 10,
                                 ),
@@ -674,13 +665,12 @@ class _SchudleTableState extends State<SchudleTable> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(name,
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
+                  style:  TextStyle(
                         // color: Color(0xffBF3947),
                         color: Colors.red,
                         fontSize: 11.5,
                         fontWeight: FontWeight.w600),
-                  )),
+                  )
             ],
           ),
         ),
@@ -736,10 +726,9 @@ class _SchudleTableState extends State<SchudleTable> {
         child: Center(
           child: Text(
             name,
-            style: GoogleFonts.poppins(
-              textStyle: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
             ),
-          ),
+          
         ),
       );
     }
@@ -803,31 +792,28 @@ class _SchudleTableState extends State<SchudleTable> {
                           children: [
                             Text(
                               "No:",
-                              style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
+                              style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 11,
                                     fontWeight: FontWeight.w500),
-                              ),
+                              
                             ),
                             SizedBox(
                               width: 5,
                             ),
                             Text(
                               "${schedule.shiftNumber}",
-                              style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
+                              style: TextStyle(
                                     fontSize: 12, fontWeight: FontWeight.w500),
-                              ),
+
                             ),
                           ],
                         ),
                         Text(
                           "${schedule.shiftType}",
-                          style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
+                          style:TextStyle(
                                 fontSize: 11, fontWeight: FontWeight.w500),
-                          ),
+                          
                         ),
                       ],
                     ),
@@ -908,8 +894,7 @@ class _SchudleTableState extends State<SchudleTable> {
                               ),
                               child: Text(
                                 schedule.scheduledStatus,
-                                style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
+                                style: TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w500,
                                     color: schedule.scheduledStatus
@@ -922,7 +907,7 @@ class _SchudleTableState extends State<SchudleTable> {
                                                     .toLowerCase()
                                             ? Colors.red[400]
                                             : Colors.blue[900],
-                                  ),
+                                  
                                 ),
                               ),
                             ),
@@ -993,13 +978,12 @@ class _SchudleTableState extends State<SchudleTable> {
                                               schedule.scheduledStatus == null
                                           ? Text(
                                               "Accept",
-                                              style: GoogleFonts.montserrat(
-                                                textStyle: TextStyle(
+                                              style:  TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 12,
                                                     fontWeight:
                                                         FontWeight.w500),
-                                              ),
+                                              
                                             )
                                           : schedule.scheduledStatus
                                                           .toLowerCase() ==
@@ -1013,13 +997,12 @@ class _SchudleTableState extends State<SchudleTable> {
                                                       "started".toLowerCase()
                                               ? Text(
                                                   'Continue',
-                                                  style: GoogleFonts.montserrat(
-                                                    textStyle: TextStyle(
+                                                  style:  TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 12,
                                                         fontWeight:
                                                             FontWeight.w500),
-                                                  ),
+                                                  
                                                 )
                                               : Text('')),
                                   animate: true,
@@ -1132,13 +1115,12 @@ class _SchudleTableState extends State<SchudleTable> {
                 children: [
                   Text(
                     heading,
-                    style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[500],
                       fontWeight: FontWeight.normal,
                     )),
-                  )
+                  
                 ],
               ),
               Padding(
@@ -1147,10 +1129,9 @@ class _SchudleTableState extends State<SchudleTable> {
                   children: [
                     Text(
                       value ?? '',
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
+                      style: TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 14),
-                      ),
+                      
                     ),
                   ],
                 ),

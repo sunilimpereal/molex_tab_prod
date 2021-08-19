@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../main.dart';
 import '../../../model_api/crimping/getCrimpingSchedule.dart';
 import '../../../model_api/login_model.dart';
@@ -211,10 +210,9 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                         children: [
                           Text(
                             'reason',
-                            style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
+                            style: TextStyle(
                                     color: Colors.blue, fontSize: 14)),
-                          ),
+                          
                           Icon(
                             Icons.edit,
                             color: Colors.blueAccent,

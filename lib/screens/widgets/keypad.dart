@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class KeyPad extends StatefulWidget {
   TextEditingController controller;
@@ -124,12 +123,11 @@ class _KeyPadState extends State<KeyPad> {
                     ))
                 : new Text(
                     buttonText,
-                    style: GoogleFonts.openSans(
-                      textStyle: TextStyle(
+                    style:  TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
                         fontSize: 16.0,
-                      ),
+                      
                     ),
                   ),
             onPressed: () => {widget.buttonPressed(buttonText)},

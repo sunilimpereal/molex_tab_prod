@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'model_api/login_model.dart';
 import 'model_api/machinedetails_model.dart';
@@ -89,14 +88,13 @@ class _MachineIdState extends State<MachineId> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 "Scan Machine",
-                                style: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
+                                style:  TextStyle(
                                     fontSize: 30,
                                     color: Colors.red[600],
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ),
+                              
                             ),
                             loading
                                 ? Container(
@@ -124,12 +122,11 @@ class _MachineIdState extends State<MachineId> {
                             machineId != ''
                                 ? Text(
                                     machineId ?? '',
-                                    style: GoogleFonts.poppins(
-                                      textStyle: TextStyle(
+                                    style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 18,
                                       ),
-                                    ),
+                                   
                                   )
                                 : Container(
                                     width: 10,
@@ -171,11 +168,10 @@ class _MachineIdState extends State<MachineId> {
                                 },
                                 child: Text(
                                   'Machine Login' ,
-                                  style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
+                                  style:  TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500),
-                                  ),
+                                 
                                 ),
                               ),
                             ),
@@ -217,13 +213,12 @@ class _MachineIdState extends State<MachineId> {
                                   },
                                   child: Text(
                                     'Visual Inspection',
-                                    style: GoogleFonts.poppins(
-                                      textStyle: TextStyle(
+                                    style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500),
                                     ),
                                   )),
-                            ),
+                           
                             //Kitting
                             SizedBox(height: 10),
                             Container(
@@ -261,11 +256,10 @@ class _MachineIdState extends State<MachineId> {
                                   },
                                   child: Text(
                                     'Kitting',
-                                    style: GoogleFonts.poppins(
-                                      textStyle: TextStyle(
+                                    style:  TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500),
-                                    ),
+                                    
                                   )),
                             ),
                             //pREPARATION

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:intl/intl.dart';
 
 class TimeDisplay extends StatefulWidget {
@@ -24,18 +24,16 @@ class _TimeDisplayState extends State<TimeDisplay> {
                     children: [
                       Text(
                         DateFormat('MM-dd-yyyy').format(DateTime.now()),
-                        style: GoogleFonts.openSans(
-                            textStyle:
+                        style: 
                                 TextStyle(fontSize: 12, color: Colors.grey)),
-                      ),
+                      
                       Text(DateFormat('hh:mm').format(DateTime.now()),
-                          style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
+                          style:  TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
-                          )),
+                          )
                     ],
                   ),
                   SizedBox(width: 10)

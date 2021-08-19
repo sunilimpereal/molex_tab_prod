@@ -1,7 +1,7 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 class CrimpPatrolTable extends StatefulWidget {
   @override
@@ -416,11 +416,10 @@ class _TableContentState extends State<TableContent> {
                             child: TextField(
                               decoration: new InputDecoration(
                                 hintText: '$fiels1',
-                                hintStyle: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
+                                hintStyle:  TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500),
-                                ),
+                                
                                 focusedBorder: InputBorder.none,
                                 enabledBorder: InputBorder.none,
                                 errorBorder: InputBorder.none,
@@ -464,11 +463,10 @@ class _TableContentState extends State<TableContent> {
                             child: TextField(
                               decoration: new InputDecoration(
                                 hintText: '$fiels2',
-                                hintStyle: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
+                                hintStyle: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500),
-                                ),
+                                
                                 focusedBorder: InputBorder.none,
                                 enabledBorder: InputBorder.none,
                                 errorBorder: InputBorder.none,
@@ -512,11 +510,10 @@ class _TableContentState extends State<TableContent> {
                             child: TextField(
                               decoration: new InputDecoration(
                                 hintText: '$fiels3',
-                                hintStyle: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
+                                hintStyle:TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500),
-                                ),
+                                
                                 focusedBorder: InputBorder.none,
                                 enabledBorder: InputBorder.none,
                                 errorBorder: InputBorder.none,

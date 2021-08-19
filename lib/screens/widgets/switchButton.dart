@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 typedef OnToggle = void Function(int index);
 
@@ -87,8 +86,7 @@ class _SwitchButtonState extends State<SwitchButton> {
                           borderRadius: BorderRadius.all(Radius.circular(50))),
                       child: Center(
                         child: Text('${widget.options[0]}',
-                            style: GoogleFonts.montserrat(
-                              textStyle: TextStyle(
+                            style: TextStyle(
                                   fontWeight: index == 0
                                       ? FontWeight.w500
                                       : FontWeight.w400,
@@ -96,7 +94,7 @@ class _SwitchButtonState extends State<SwitchButton> {
                                       ? Colors.red[500]
                                       : Colors.red[400],
                                   fontSize: 11),
-                            )),
+                            )
                       ),
                     ),
                   ),
@@ -124,8 +122,7 @@ class _SwitchButtonState extends State<SwitchButton> {
                       child: Center(
                         child: Text(
                           '${widget.options[1]}',
-                          style: GoogleFonts.montserrat(
-                            textStyle: TextStyle(
+                          style:  TextStyle(
                                 fontWeight: index == 1
                                     ? FontWeight.w500
                                     : FontWeight.w400,
@@ -133,7 +130,7 @@ class _SwitchButtonState extends State<SwitchButton> {
                                     ? Colors.red[500]
                                     : Colors.red[400],
                                 fontSize: 11),
-                          ),
+                          
                         ),
                       ),
                     ),

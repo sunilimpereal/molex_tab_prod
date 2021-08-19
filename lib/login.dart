@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:lottie/lottie.dart';
 import 'model_api/login_model.dart';
 // import 'package:lottie/lottie.dart';
@@ -95,12 +95,11 @@ class _LoginScanState extends State<LoginScan> {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               "Login",
-                              style: GoogleFonts.openSans(
-                                textStyle: TextStyle(
+                              style: TextStyle(
                                   fontSize: 30,
                                   color: Colors.red[600],
                                   fontWeight: FontWeight.bold,
-                                ),
+
                               ),
                             ),
                           ),
@@ -121,22 +120,20 @@ class _LoginScanState extends State<LoginScan> {
                               width: 280, fit: BoxFit.cover),
                           Text(
                             'Scan Id Card to Login',
-                            style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
+                            style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
                               ),
-                            ),
+
                           ),
                           userId != ''
                               ? Text(
                                   userId ?? '',
-                                  style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
+                                  style:  TextStyle(
                                       color: Colors.black,
                                       fontSize: 18,
                                     ),
-                                  ),
+
                                 )
                               : Container(
                                   width: 10,
@@ -222,11 +219,10 @@ class _LoginScanState extends State<LoginScan> {
                                 },
                                 child: Text(
                                   'Login',
-                                  style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
+                                  style:  TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w600),
-                                  ),
+                                  
                                 )),
                           ),
                           SizedBox(height: 10),
@@ -413,7 +409,7 @@ class _LoginScanState extends State<LoginScan> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text("v 1.0.0+12"),
+                          child: Text("v 1.0.0+13"),
                         )
                       ],
                     ),

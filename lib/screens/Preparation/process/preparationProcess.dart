@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:molex/model_api/Transfer/postgetBundleMaster.dart';
-import 'package:molex/model_api/process1/getBundleListGl.dart';
-import 'package:molex/screens/widgets/alertDialog/alertDialogVI.dart';
+
+import '../../../model_api/Transfer/postgetBundleMaster.dart';
+import '../../../model_api/process1/getBundleListGl.dart';
+import '../../widgets/alertDialog/alertDialogVI.dart';
 import '../../../model_api/Preparation/getpreparationSchedule.dart';
 import '../../../model_api/Preparation/postPreparationDetail.dart';
 import '../../../model_api/Transfer/bundleToBin_model.dart';
@@ -1262,44 +1262,39 @@ class _PreparationprocessState extends State<Preparationprocess> {
                   DataColumn(
                     label: Text(
                       'Employee Id',
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
+                      style:  TextStyle(
                             fontSize: 13, fontWeight: FontWeight.w400),
-                      ),
+                      
                     ),
                   ),
                   DataColumn(
                       label: Text(
                     'Bundle ID',
-                    style: GoogleFonts.poppins(
-                      textStyle:
+                    style: 
                           TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
-                    ),
+                    
                   )),
                   DataColumn(
                     label: Text(
                       'Bin ID',
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
+                      style:  TextStyle(
                             fontSize: 13, fontWeight: FontWeight.w400),
                       ),
                     ),
-                  ),
+                  
                   DataColumn(
                     label: Text(
                       'Status',
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
+                      style:  TextStyle(
                             fontSize: 13, fontWeight: FontWeight.w400),
-                      ),
+                      
                     ),
                   ),
                   DataColumn(
                       label: Text(
                     '',
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 13),
-                    ),
+                    style:  TextStyle(fontSize: 13),
+                    
                   ))
                 ],
                 rows: preparationList
@@ -1497,13 +1492,12 @@ class _PreparationprocessState extends State<Preparationprocess> {
               children: [
                 Text(
                   heading,
-                  style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
+                  style:  TextStyle(
                     fontSize: 11,
                     color: Colors.grey[500],
                     fontWeight: FontWeight.normal,
                   )),
-                )
+                
               ],
             ),
             Padding(
@@ -1512,10 +1506,9 @@ class _PreparationprocessState extends State<Preparationprocess> {
                 children: [
                   Text(
                     value ?? '',
-                    style: GoogleFonts.poppins(
-                      textStyle:
+                    style:
                           TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
-                    ),
+                    
                   ),
                 ],
               ),
@@ -1543,13 +1536,12 @@ class _PreparationprocessState extends State<Preparationprocess> {
               children: [
                 Text(
                   heading,
-                  style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[500],
                     fontWeight: FontWeight.normal,
                   )),
-                )
+                
               ],
             ),
             Padding(
@@ -1579,10 +1571,9 @@ class _PreparationprocessState extends State<Preparationprocess> {
                           },
                           decoration: new InputDecoration(
                             hintText: value,
-                            hintStyle: GoogleFonts.openSans(
-                              textStyle: TextStyle(
+                            hintStyle: TextStyle(
                                   fontSize: 8, fontWeight: FontWeight.w500),
-                            ),
+                            
                             border: new OutlineInputBorder(
                               borderRadius: new BorderRadius.circular(5.0),
                               borderSide: new BorderSide(),

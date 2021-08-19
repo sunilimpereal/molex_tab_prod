@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 class CrimpPatrolHeader extends StatefulWidget {
   @override
@@ -130,13 +130,12 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
               children: [
                 Text(
                   heading,
-                  style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
+                  style:  TextStyle(
                     fontSize: 12,
                     color: Colors.grey[500],
                     fontWeight: FontWeight.normal,
                   )),
-                )
+                
               ],
             ),
             Padding(
@@ -155,10 +154,9 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
                         child: TextField(
                           decoration: new InputDecoration(
                             hintText: heading,
-                            hintStyle: GoogleFonts.openSans(
-                              textStyle: TextStyle(
+                            hintStyle:  TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.w500),
-                            ),
+                         
                             focusedBorder: InputBorder.none,
                             enabledBorder: InputBorder.none,
                             errorBorder: InputBorder.none,

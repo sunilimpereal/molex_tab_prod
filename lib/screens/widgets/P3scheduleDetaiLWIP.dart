@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../model_api/Preparation/getpreparationSchedule.dart';
 import '../../model_api/fgDetail_model.dart';
 import '../../service/apiService.dart';
@@ -68,13 +68,12 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
               children: [
                 Text(
                   heading,
-                  style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
+                  style:  TextStyle(
                     fontSize: 11,
                     color: Colors.grey[500],
                     fontWeight: FontWeight.normal,
                   )),
-                )
+                
               ],
             ),
             Padding(
@@ -83,11 +82,10 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
                 children: [
                   Text(
                     "${value ?? ''}",
-                    style: GoogleFonts.poppins(
-                      textStyle:
+                    style:
                           TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
                     ),
-                  ),
+
                 ],
               ),
             )

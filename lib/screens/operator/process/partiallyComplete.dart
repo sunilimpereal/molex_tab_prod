@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../main.dart';
 import '../../../model_api/login_model.dart';
 import '../../../model_api/machinedetails_model.dart';
@@ -250,13 +250,12 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                   ))
               : new Text(
                   buttonText,
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
+                  style:  TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
                       fontSize: 16.0,
                     ),
-                  ),
+                  
                 ),
           onPressed: () => {buttonPressed(buttonText)},
         ),
@@ -382,11 +381,10 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                     children: [
                       Text(
                         'Reason',
-                        style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
+                        style: TextStyle(
                                 color: Colors.red,
                                 fontFamily: fonts.openSans,
-                                fontSize: 14)),
+                                fontSize: 14)
                       ),
                       Icon(
                         Icons.edit,
@@ -1023,11 +1021,10 @@ class _ReasonSelectionState extends State<ReasonSelection> {
                                   children: [
                                     Text(
                                       e,
-                                      style: GoogleFonts.openSans(
-                                        textStyle: TextStyle(
+                                      style: TextStyle(
                                           fontSize: 13,
                                         ),
-                                      ),
+
                                     ),
                                     SizedBox(width: 4),
                                     GestureDetector(
@@ -1069,10 +1066,9 @@ class _ReasonSelectionState extends State<ReasonSelection> {
                   contentPadding: EdgeInsets.all(0),
                   title: Text(
                     reasonList[index],
-                    style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                    )),
+                    )
                   ),
                   trailing: selectedreasons.contains(reasonList[index])
                       ? Icon(

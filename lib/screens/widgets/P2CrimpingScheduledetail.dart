@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:intl/intl.dart';
 import '../../model_api/crimping/getCrimpingSchedule.dart';
 import '../../model_api/fgDetail_model.dart';
@@ -70,13 +70,12 @@ class _P2ScheduleDetailWIPState extends State<P2ScheduleDetailWIP> {
               children: [
                 Text(
                   heading,
-                  style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
+                  style:TextStyle(
                     fontSize: 10,
                     color: Colors.grey[500],
                     fontWeight: FontWeight.normal,
                   )),
-                )
+                
               ],
             ),
             Padding(
@@ -85,11 +84,10 @@ class _P2ScheduleDetailWIPState extends State<P2ScheduleDetailWIP> {
                 children: [
                   Text(
                     value ?? '',
-                    style: GoogleFonts.poppins(
-                      textStyle:
+                    style:
                           TextStyle(fontWeight: FontWeight.w400, fontSize: 11),
                     ),
-                  ),
+
                 ],
               ),
             )

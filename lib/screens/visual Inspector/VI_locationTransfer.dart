@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../model_api/Transfer/binToLocation_model.dart';
 import '../../model_api/Transfer/getBinDetail.dart';
 import '../../model_api/login_model.dart';
@@ -71,7 +71,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
               title: Text(
                 'Location Transfer',
                 style:
-                    GoogleFonts.openSans(textStyle: TextStyle(color: Colors.red)),
+                    TextStyle(color: Colors.red),
               ),
               elevation: 2,
               actions: [
@@ -134,9 +134,8 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
                                 ),
                                 Text(
                                   widget.machine.machineNumber ?? "",
-                                  style: GoogleFonts.openSans(
-                                      textStyle: TextStyle(
-                                          fontSize: 13, color: Colors.black)),
+                                  style:  TextStyle(
+                                          fontSize: 13, color: Colors.black),
                                 ),
                               ],
                             )),
@@ -464,41 +463,36 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
               columns: <DataColumn>[
                 DataColumn(
                   label: Text('No.',
-                      style: GoogleFonts.openSans(
-                          textStyle: TextStyle(fontWeight: FontWeight.w600))),
+                      style:  TextStyle(fontWeight: FontWeight.w600)),
                 ),
                 DataColumn(
                   label: Text('Location Id',
-                      style: GoogleFonts.openSans(
-                          textStyle: TextStyle(fontWeight: FontWeight.w600))),
+                      style:TextStyle(fontWeight: FontWeight.w600)),
                 ),
                 DataColumn(
                   label: Text('Bin Id',
-                      style: GoogleFonts.openSans(
-                          textStyle: TextStyle(fontWeight: FontWeight.w600))),
+                      style:  TextStyle(fontWeight: FontWeight.w600)),
                 ),
                 DataColumn(
                   label: Text('Bundles',
-                      style: GoogleFonts.openSans(
-                          textStyle: TextStyle(fontWeight: FontWeight.w600))),
+                      style: TextStyle(fontWeight: FontWeight.w600)),
                 ),
                 DataColumn(
                   label: Text('Remove',
-                      style: GoogleFonts.openSans(
-                          textStyle: TextStyle(fontWeight: FontWeight.w600))),
-                ),
+                      style: TextStyle(fontWeight: FontWeight.w600))),
+
               ],
               rows: transferList
                   .map(
                     (e) => DataRow(cells: <DataCell>[
                       DataCell(Text("${a++}",
-                          style: GoogleFonts.openSans(textStyle: TextStyle()))),
+                          style:  TextStyle())),
                       DataCell(Text(e.locationId ?? '',
-                          style: GoogleFonts.openSans(textStyle: TextStyle()))),
+                          style: TextStyle())),
                       DataCell(Text(e.binIdentification ?? '',
-                          style: GoogleFonts.openSans(textStyle: TextStyle()))),
+                          style:TextStyle())),
                       DataCell(Text(e.bundleId ?? '',
-                          style: GoogleFonts.openSans(textStyle: TextStyle()))),
+                          style: TextStyle())),
                       DataCell(
                         IconButton(
                           icon: Icon(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../main.dart';
 import '../../model_api/login_model.dart';
 import '../../model_api/schedular_model.dart';
@@ -157,12 +157,11 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
                                                 decoration: new InputDecoration(
                                                   hintText: _chosenValue,
                                                   hintStyle:
-                                                      GoogleFonts.openSans(
-                                                    textStyle: TextStyle(
+                                                      TextStyle(
                                                         fontSize: 12,
                                                         fontWeight:
                                                             FontWeight.w500),
-                                                  ),
+                                                  
                                                   focusedBorder:
                                                       InputBorder.none,
                                                   enabledBorder:
@@ -393,13 +392,12 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(name,
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
+                  style:  TextStyle(
                         // color: Color(0xffBF3947),
                         color: Colors.red,
                         fontSize: 12,
                         fontWeight: FontWeight.w600),
-                  )),
+                  ),
             ],
           ),
         ),
@@ -448,9 +446,8 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
         child: Center(
           child: Text(
             name,
-            style: GoogleFonts.openSans(
-              textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-            ),
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            
           ),
         ),
       );

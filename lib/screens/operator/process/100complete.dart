@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../main.dart';
 import '../../../model_api/login_model.dart';
 import '../../../model_api/machinedetails_model.dart';
@@ -172,13 +171,12 @@ class _FullyCompleteState extends State<FullyComplete> {
                   ))
               : new Text(
                   buttonText,
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
+                  style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
                       fontSize: 16.0,
                     ),
-                  ),
+                  
                 ),
           onPressed: () => {buttonPressed(buttonText)},
         ),

@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../model_api/crimping/getCrimpingSchedule.dart';
 import '../../model_api/login_model.dart';
@@ -132,7 +131,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
         ),
         title: Text(
           'Raw Material Loading',
-          style: GoogleFonts.openSans(textStyle: TextStyle(color: Colors.red)),
+          style: TextStyle(color: Colors.red),
         ),
         elevation: 0,
         automaticallyImplyLeading: false,

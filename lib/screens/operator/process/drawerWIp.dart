@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../model_api/login_model.dart';
 import '../../../model_api/machinedetails_model.dart';
 import '../../../model_api/schedular_model.dart';
@@ -53,15 +52,14 @@ class _DrawerWidgetWIPState extends State<DrawerWidgetWIP> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "v 1.0.0+12",
-                    style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
+                    "v 1.0.0+13",
+                    style: TextStyle(
                       color: Colors.red,
                       letterSpacing: 2,
                       fontWeight: FontWeight.w500,
                     )),
                   ),
-                ))
+                )
           ],
         ),
       ),
@@ -86,11 +84,10 @@ class _DrawerWidgetWIPState extends State<DrawerWidgetWIP> {
                   child: Center(
                     child: Text(
                       "${widget.employee.employeeName.substring(0, 2).toUpperCase()}", // TODO
-                      style: GoogleFonts.poppins(
-                          textStyle: TextStyle(
+                      style: TextStyle(
                               color: Colors.black,
                               fontSize: 15,
-                              fontWeight: FontWeight.w500)),
+                              fontWeight: FontWeight.w500)
                     ),
                   ),
                 ),
@@ -105,11 +102,10 @@ class _DrawerWidgetWIPState extends State<DrawerWidgetWIP> {
                           width: 170,
                           child: Text(
                             "${widget.employee.employeeName}",
-                            style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
+                            style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 15,
-                                    fontWeight: FontWeight.w500)),
+                                    fontWeight: FontWeight.w500)
                           ),
                         )
                       ],
@@ -123,13 +119,12 @@ class _DrawerWidgetWIPState extends State<DrawerWidgetWIP> {
                           width: 170,
                           child: Text(
                             "${widget.employee.empId}",
-                            style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
+                            style:  TextStyle(
                                     color: Colors.black,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500)),
                           ),
-                        )
+                        
                       ],
                     ),
                   )

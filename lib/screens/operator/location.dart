@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../model_api/Transfer/binToLocation_model.dart';
 import '../../model_api/Transfer/getBinDetail.dart';
 import '../../model_api/login_model.dart';
@@ -81,7 +80,7 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
             title: Text(
               'Transfer',
               style:
-                  GoogleFonts.openSans(textStyle: TextStyle(color: Colors.red)),
+                  TextStyle(color: Colors.red)
             ),
             elevation: 2,
             actions: [
@@ -146,9 +145,8 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
                               ),
                               Text(
                                 widget.machine.machineNumber ?? "",
-                                style: GoogleFonts.openSans(
-                                    textStyle: TextStyle(
-                                        fontSize: 13, color: Colors.black)),
+                                style: TextStyle(
+                                        fontSize: 13, color: Colors.black)
                               ),
                             ],
                           )),
@@ -561,32 +559,27 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
           CustomCell(
             width: 100,
             child: Text('No.',
-                style: GoogleFonts.openSans(
-                    textStyle: TextStyle(fontWeight: FontWeight.w600))),
+                style: TextStyle(fontWeight: FontWeight.w600))
           ),
           CustomCell(
             width: 120,
             child: Text('Location Id',
-                style: GoogleFonts.openSans(
-                    textStyle: TextStyle(fontWeight: FontWeight.w600))),
+                style:TextStyle(fontWeight: FontWeight.w600))
           ),
           CustomCell(
             width: 100,
             child: Text('Bin Id',
-                style: GoogleFonts.openSans(
-                    textStyle: TextStyle(fontWeight: FontWeight.w600))),
+                style: TextStyle(fontWeight: FontWeight.w600))
           ),
           CustomCell(
             width: 100,
             child: Text('Bundles',
-                style: GoogleFonts.openSans(
-                    textStyle: TextStyle(fontWeight: FontWeight.w600))),
+                style:  TextStyle(fontWeight: FontWeight.w600))
           ),
           CustomCell(
             width: 100,
             child: Text('Remove',
-                style: GoogleFonts.openSans(
-                    textStyle: TextStyle(fontWeight: FontWeight.w600))),
+                style:TextStyle(fontWeight: FontWeight.w600))
           ),
         ],
         rows: transferList
@@ -595,19 +588,19 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
                 CustomCell(
                     width: 100,
                     child: Text("${a++}",
-                        style: GoogleFonts.openSans(textStyle: TextStyle()))),
+                        style:TextStyle())),
                 CustomCell(
                     width: 120,
                     child: Text(e.locationId ?? '',
-                        style: GoogleFonts.openSans(textStyle: TextStyle()))),
+                        style:  TextStyle())),
                 CustomCell(
                     width: 100,
                     child: Text(e.binIdentification ?? '',
-                        style: GoogleFonts.openSans(textStyle: TextStyle()))),
+                        style:  TextStyle())),
                 CustomCell(
                     width: 100,
                     child: Text(e.bundleId ?? '',
-                        style: GoogleFonts.openSans(textStyle: TextStyle()))),
+                        style:  TextStyle())),
                 CustomCell(
                   width: 100,
                   child: IconButton(
