@@ -58,7 +58,7 @@ class _ChangeIpState extends State<ChangeIp> {
 
   @override
   Widget build(BuildContext context) {
-    baseip = preferences.getString('baseIp');
+   
     print(baseip);
     return Scaffold(
       appBar: AppBar(

@@ -7,6 +7,7 @@ import 'package:flutter_progress_button/flutter_progress_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:intl/intl.dart';
+import 'package:molex/screens/operator%202/widgets/crimpig_schedule_data_row.dart';
 import '../../model_api/crimping/getCrimpingSchedule.dart';
 import '../../model_api/login_model.dart';
 import '../../model_api/machinedetails_model.dart';
@@ -54,9 +55,10 @@ class _HomePageOp2State extends State<HomePageOp2> {
           color: Colors.red,
         ),
         backwardsCompatibility: false,
-        title: Text('Crimping',
-            style: TextStyle(color: Colors.red, fontSize: 18),
-            ),
+        title: Text(
+          'Crimping',
+          style: TextStyle(color: Colors.red, fontSize: 18),
+        ),
         elevation: 0,
         actions: [
           //typeselect
@@ -76,33 +78,6 @@ class _HomePageOp2State extends State<HomePageOp2> {
                     });
                   },
                 ),
-                // Container(
-                //   height: 25,
-                //   decoration: BoxDecoration(
-                //     color: Colors.red[500],
-                //     borderRadius: BorderRadius.all(Radius.circular(5)),
-                //     border: Border.all(color: Colors.red[500], width: 1.5),
-                //   ),
-                //   child: ToggleSwitch(
-                //     minWidth: 68.0,
-                //     cornerRadius: 5.0,
-                //     activeBgColor: Colors.red[500],
-                //     activeFgColor: Colors.white,
-                //     initialLabelIndex: type,
-                //     inactiveBgColor: Colors.white,
-                //     inactiveFgColor: Colors.red,
-                //     fontSize: 12,
-                //     labels: ['Auto', 'Manual'],
-                //     onToggle: (index) {
-                //       print('switched to: $index');
-                //       type = index;
-
-                //       setState(() {
-                //         type = index;
-                //       });
-                //     },
-                //   ),
-                // ),
               ],
             ),
           ),
@@ -184,10 +159,10 @@ class _HomePageOp2State extends State<HomePageOp2> {
                               color: Colors.redAccent,
                             ),
                           ),
-                          Text(widget.employee.empId,
-                              style:  TextStyle(
-                                    fontSize: 13, color: Colors.black),
-                              )
+                          Text(
+                            widget.employee.empId,
+                            style: TextStyle(fontSize: 13, color: Colors.black),
+                          )
                         ],
                       )),
                     ),
@@ -212,10 +187,10 @@ class _HomePageOp2State extends State<HomePageOp2> {
                               color: Colors.redAccent,
                             ),
                           ),
-                          Text(widget.machine.machineNumber ?? "",
-                              style:  TextStyle(
-                                    fontSize: 13, color: Colors.black),
-                              )
+                          Text(
+                            widget.machine.machineNumber ?? "",
+                            style: TextStyle(fontSize: 13, color: Colors.black),
+                          )
                         ],
                       )),
                     ),
@@ -300,8 +275,7 @@ class _HomePageOp2State extends State<HomePageOp2> {
                         decoration: new InputDecoration(
                           hintText: _chosenValue,
                           hintStyle: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500),
-                          
+                              fontSize: 12, fontWeight: FontWeight.w500),
                           focusedBorder: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           errorBorder: InputBorder.none,
@@ -334,7 +308,6 @@ class _HomePageOp2State extends State<HomePageOp2> {
       isDense: false,
       isExpanded: false,
       style: TextStyle(color: Colors.white),
-      
       iconEnabledColor: Colors.redAccent,
       items: options.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
@@ -468,8 +441,7 @@ class _SchudleTableState extends State<SchudleTable> {
                               shrinkWrap: true,
                               itemCount: schedulelist.length,
                               itemBuilder: (context, index) {
-                                return buildDataRow(
-                                    schedule: schedulelist[index], c: index);
+                                return  CrimpingScheduleDataRow(schedule: schedulelist[index], machine: widget.machine, employee: widget.employee);
                               }),
                         );
                       } else {
@@ -481,8 +453,7 @@ class _SchudleTableState extends State<SchudleTable> {
                                 Container(
                                     child: Text(
                                   'No Schedule Found',
-                                  style:
-                                          TextStyle(color: Colors.black),
+                                  style: TextStyle(color: Colors.black),
                                 )),
                                 SizedBox(
                                   height: 10,
@@ -547,7 +518,7 @@ class _SchudleTableState extends State<SchudleTable> {
                           child: Container(
                               child: Text(
                             'No Schedule Found',
-                            style:  TextStyle(color: Colors.black),
+                            style: TextStyle(color: Colors.black),
                           )),
                         ),
                       );
@@ -569,13 +540,14 @@ class _SchudleTableState extends State<SchudleTable> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(name,
-                  style:TextStyle(
-                        // color: Color(0xffBF3947),
-                        color: Colors.red,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600),
-                  ),
+              Text(
+                name,
+                style: TextStyle(
+                    // color: Color(0xffBF3947),
+                    color: Colors.red,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600),
+              ),
             ],
           ),
         ),
@@ -630,8 +602,7 @@ class _SchudleTableState extends State<SchudleTable> {
         child: Center(
           child: Text(
             name,
-            style:  TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
-
+            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
           ),
         ),
       );
@@ -684,14 +655,12 @@ class _SchudleTableState extends State<SchudleTable> {
                       Text(
                         "${schedule.shiftType}",
                         style: TextStyle(
-                              fontSize: 11, fontWeight: FontWeight.w500),
-                        
+                            fontSize: 11, fontWeight: FontWeight.w500),
                       ),
                       Text(
                         "No : ${schedule.shiftNumber}",
                         style: TextStyle(
-                              fontSize: 11, fontWeight: FontWeight.w500),
-                      
+                            fontSize: 11, fontWeight: FontWeight.w500),
                       )
                     ],
                   ),
@@ -755,12 +724,15 @@ class _SchudleTableState extends State<SchudleTable> {
                             width: MediaQuery.of(context).size.width * 0.08,
                             child: Padding(
                               padding: const EdgeInsets.all(4.0),
-                              child: ProgressButton(
-                                color: schedule.schedulestatus.toLowerCase() ==
-                                        "Partially Completed".toLowerCase()
-                                    ? Colors.green[500]
-                                    : Colors.green[500],
-                                defaultWidget: Container(
+                              child: CrimpingStartButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: schedule.schedulestatus
+                                              .toLowerCase() ==
+                                          "Partially Completed".toLowerCase()
+                                      ? Colors.green[500]
+                                      : Colors.green[500],
+                                ),
+                                child: Container(
                                     child: schedule.schedulestatus
                                                     .toLowerCase() ==
                                                 "Allocated".toLowerCase() ||
@@ -771,10 +743,9 @@ class _SchudleTableState extends State<SchudleTable> {
                                         ? Text(
                                             "Accept",
                                             style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500),
-
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500),
                                           )
                                         : schedule.schedulestatus
                                                         .toLowerCase() ==
@@ -789,29 +760,12 @@ class _SchudleTableState extends State<SchudleTable> {
                                             ? Text(
                                                 'Continue',
                                                 style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                
+                                                    color: Colors.white,
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w500),
                                               )
                                             : Text('')),
-                                animate: true,
-                                progressWidget: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(17.0),
-                                    child: Container(
-                                      height: 10,
-                                      child: ColorLoader4(
-                                        dotOneColor: Colors.white,
-                                        dotThreeColor: Colors.white,
-                                        dotTwoColor: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                width: 30,
-                                height: 40,
                                 onPressed: () async {
                                   // After [onPressed], it will trigger animation running backwards, from end to beginning
                                   postStartprocess = new PostStartProcessP1(
@@ -856,6 +810,7 @@ class _SchudleTableState extends State<SchudleTable> {
                                                       MaterialPickType.newload,
                                                 )),
                                       );
+                                      return true;
                                     } else {
                                       Fluttertoast.showToast(
                                           msg: "Unable to Start Process",
@@ -865,8 +820,8 @@ class _SchudleTableState extends State<SchudleTable> {
                                           backgroundColor: Colors.red,
                                           textColor: Colors.white,
                                           fontSize: 16.0);
+                                      return true;
                                     }
-                                    return () {};
                                   });
                                 },
                               ),
@@ -874,57 +829,65 @@ class _SchudleTableState extends State<SchudleTable> {
                           ),
                         ),
                 )
-                // Container(
-                //   width: MediaQuery.of(context).size.width * 0.10,
-                //   child: Center(
-                //     child: false
-                //         // schedule.scheduledStatus == "Complete"
-                //         ? Text("-")
-                //         : ElevatedButton(
-                //             style: ButtonStyle(
-                //               backgroundColor:
-                //                   MaterialStateProperty.resolveWith<Color>(
-                //                 (Set<MaterialState> states) {
-                //                   if (states.contains(MaterialState.pressed))
-                //                     return Colors.green;
-                //                   return Colors.green;
-                //                   //  schedule.scheduledStatus == "Pending"
-                //                   //     ? Colors.red
-                //                   //     : Colors
-                //                   //         .green; // Use the component's default.
-                //                 },
-                //               ),
-                //             ),
-                //             onPressed: () {
-                //               Navigator.push(
-                //                 context,
-                //                 MaterialPageRoute(
-                //                     builder: (context) => MaterialPickOp2(
-                //                           schedule: schedule,
-                //                           userId: widget.userId,
-                //                           machine: widget.machine,
-                //                           materialPickType:
-                //                               MaterialPickType.newload,
-                //                         )),
-                //               );
-                //             },
-                //             child: Container(
-                //               child: Text('Accept'),
-                //               //  child:
-                //               //   schedule.scheduledStatus == "Allocated"|| schedule.scheduledStatus == "Open"||schedule.scheduledStatus == ""||schedule.scheduledStatus == null
-                //               //       ? Text("Accept")
-                //               //       : schedule.scheduledStatus == "Pending"
-                //               //           ? Text('Continue')
-                //               //           : Text(''),
-                //             ),
-                //           ),
-                //   ),
-                // )
               ],
             ),
           ),
         ),
       ),
     );
+ 
+ 
+  }
+}
+
+class CrimpingStartButton extends StatefulWidget {
+  Function onPressed;
+  Widget child;
+  ButtonStyle style;
+  CrimpingStartButton({this.onPressed, this.child, this.style}) : super();
+
+  @override
+  _CrimpingStartButtonState createState() => _CrimpingStartButtonState();
+}
+
+class _CrimpingStartButtonState extends State<CrimpingStartButton> {
+  bool loading = false;
+  @override
+  void initState() {
+    loading = false;
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        style: widget.style,
+        onPressed: loading
+            ? () {}
+            : () async {
+                setState(() {
+                  loading = true;
+                });
+                bool a = true;
+                try{
+                 a = await widget.onPressed();
+                }catch(e){
+                  setState(() {
+                    loading = false;
+                  });
+                }
+                if (a) {
+                  setState(() {
+                    loading = false;
+                  });
+                }
+                Future.delayed(Duration(seconds: 4)).then((value) {
+                  setState(() {
+                    loading = false;
+                  });
+                });
+              },
+        child: loading ? CircularProgressIndicator() : widget.child);
   }
 }

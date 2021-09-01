@@ -1,10 +1,12 @@
-import 'dart:async';
+ import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_progress_button/flutter_progress_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:molex/screens/operator/widgets/schedule_data_row.dart';
+import 'package:molex/screens/utils/loadingButton.dart';
 import '../../main.dart';
 import '../../model_api/login_model.dart';
 import '../../model_api/machinedetails_model.dart';
@@ -19,8 +21,7 @@ import '../widgets/time.dart';
 import '../../service/apiService.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-
-// Process 1 Auto Cut and Crimp
+// Process 1 Auto Cut and Crimp                        
 class Homepage extends StatefulWidget {
   Employee employee;
   MachineDetails machine;
@@ -90,7 +91,6 @@ class _HomepageState extends State<Homepage> {
                     });
                   },
                 ),
-               
               ],
             ),
           ),
@@ -173,11 +173,9 @@ class _HomepageState extends State<Homepage> {
                               color: Colors.redAccent,
                             ),
                           ),
-                          Text(
-                            widget.employee.empId,
-                            style: TextStyle(
-                                    fontSize: 13, color: Colors.black)
-                          ),
+                          Text(widget.employee.empId,
+                              style:
+                                  TextStyle(fontSize: 13, color: Colors.black)),
                         ],
                       )),
                     ),
@@ -204,9 +202,7 @@ class _HomepageState extends State<Homepage> {
                           ),
                           Text(
                             widget.machine.machineNumber ?? "",
-                            style:
-                                  TextStyle(fontSize: 13, color: Colors.black),
-                            
+                            style: TextStyle(fontSize: 13, color: Colors.black),
                           ),
                         ],
                       )),
@@ -218,7 +214,6 @@ class _HomepageState extends State<Homepage> {
           ),
 
           TimeDisplay(),
-         
         ],
       ),
       drawer: Drawer(
@@ -228,20 +223,18 @@ class _HomepageState extends State<Homepage> {
             type: "process"),
       ),
       body: Column(
-            children: [
-              search(),
-              SchudleTable(
-                employee: widget.employee,
-                machine: widget.machine,
-                type: type == 0 ? "A" : "M",
-                scheduleType: scheduleType == 0 ? "true" : "false",
-                searchType: _chosenValue,
-                query: _searchController.text ?? "",
-              ),
-            ],
+        children: [
+          search(),
+          SchudleTable(
+            employee: widget.employee,
+            machine: widget.machine,
+            type: type == 0 ? "A" : "M",
+            scheduleType: scheduleType == 0 ? "true" : "false",
+            searchType: _chosenValue,
+            query: _searchController.text ?? "",
           ),
-        
-      
+        ],
+      ),
     );
   }
 
@@ -284,7 +277,7 @@ class _HomepageState extends State<Homepage> {
                         onChanged: (value) {
                           setState(() {});
                         },
-                        style:  TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 16),
                         onTap: () {},
                         decoration: new InputDecoration(
                           // suffix: _searchController.text.length > 1
@@ -300,8 +293,8 @@ class _HomepageState extends State<Homepage> {
                           //             size: 16, color: Colors.red))
                           //     : Container(),
                           hintText: _chosenValue,
-                          hintStyle:TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500),
+                          hintStyle: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w500),
 
                           focusedBorder: InputBorder.none,
                           enabledBorder: InputBorder.none,
@@ -341,7 +334,6 @@ class _HomepageState extends State<Homepage> {
       isDense: false,
       isExpanded: false,
       style: TextStyle(color: Colors.white),
-      
       iconSize: 28,
       iconEnabledColor: Colors.redAccent,
       items: options.map<DropdownMenuItem<String>>((String value) {
@@ -353,10 +345,11 @@ class _HomepageState extends State<Homepage> {
           ),
         );
       }).toList(),
-      hint: Text(name,
-          style: TextStyle(
-                color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
-          ),
+      hint: Text(
+        name,
+        style: TextStyle(
+            color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
+      ),
       onChanged: (String value) {
         setState(() {
           _chosenValue = value;
@@ -434,221 +427,224 @@ class _SchudleTableState extends State<SchudleTable> {
   }
 
   ScrollController _scrollController = new ScrollController();
-    Future<Null> _onRefresh() {
+  Future<Null> _onRefresh() {
     Completer<Null> completer = new Completer<Null>();
     Timer timer = new Timer(new Duration(seconds: 3), () {
       log("message reload");
       completer.complete();
-      setState(() {
-              
-            });
+      setState(() {});
     });
     return completer.future;
   }
 
-
-
-  void homeReload(){
-    setState(() {
-          
-        });
+  void homeReload() {
+    setState(() {});
   }
+
   @override
   Widget build(BuildContext context) {
-    return  SingleChildScrollView(
-        child: Container(
-          color: Colors.white,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              tableHeading(),
-              SingleChildScrollView(
-                child: Container(
-                    height: widget.type == "M" ? 425 : 495,
-                    // height: double.parse("${rowList.length*60}"),
-                    child: FutureBuilder(
-                      future: apiService.getScheduelarData(
-                          machId: widget.machine.machineNumber,
-                          type: widget.type,
-                          sameMachine: widget.scheduleType),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          // return  buildDataRow(schedule:widget.schedule,c:2);
-                          List<Schedule> schedulelist =
-                              searchfilter(snapshot.data);
-                          schedulelist = schedulelist
-                              .where((element) =>
-                                  element.scheduledStatus.toLowerCase() !=
-                                  "complete".toLowerCase())
-                              .toList();
-                       schedulelist=   schedulelist
-                              .where((element) =>
-                                  element.currentDate.compareTo(DateTime(
-                                    DateTime.now().year,
-                                    DateTime.now().month,
-                                    DateTime.now().day,
-                                  )) <=
-                                  0)
-                              .toList();
-                          schedulelist.sort(
-                              (a, b) => a.currentDate.compareTo(b.currentDate));
-                              //  schedulelist =  schedulelist+ schedulelist+ schedulelist+ schedulelist+ schedulelist;
+    return SingleChildScrollView(
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            tableHeading(),
+            SingleChildScrollView(
+              child: Container(
+                  height: widget.type == "M" ? 425 : 495,
+                  // height: double.parse("${rowList.length*60}"),
+                  child: FutureBuilder(
+                    future: apiService.getScheduelarData(
+                        machId: widget.machine.machineNumber,
+                        type: widget.type,
+                        sameMachine: widget.scheduleType),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        // return  buildDataRow(schedule:widget.schedule,c:2);
+                        List<Schedule> schedulelist =
+                            searchfilter(snapshot.data);
+                        schedulelist = schedulelist
+                            .where((element) =>
+                                element.scheduledStatus.toLowerCase() !=
+                                "complete".toLowerCase())
+                            .toList();
+                        schedulelist = schedulelist
+                            .where((element) =>
+                                element.currentDate.compareTo(DateTime(
+                                  DateTime.now().year,
+                                  DateTime.now().month,
+                                  DateTime.now().day,
+                                )) <=
+                                0)
+                            .toList();
+                        schedulelist.sort(
+                            (a, b) => a.currentDate.compareTo(b.currentDate));
+                        //  schedulelist =  schedulelist+ schedulelist+ schedulelist+ schedulelist+ schedulelist;
 
-                          if (schedulelist.length > 0) {
-                            return RefreshIndicator(
-                             onRefresh: _onRefresh,
-                              child: ListView.builder(physics: const AlwaysScrollableScrollPhysics(),
-                                  controller: _scrollController,
-
-                                  shrinkWrap: true,
-                                  itemCount: schedulelist.length,
-                                  itemBuilder: (context, index) {
-                                    return buildDataRow(
-                                        schedule: schedulelist[index],
-                                        c: index + 1);
-                                  }),
-                            );
-                          } else {
-                            return Padding(
-                          padding: const EdgeInsets.all(108.0),
-                          child: Center(
-                            child: Column(
-                              children: [
-                                Container(
-                                    child: Text(
-                                  'No Schedule Found',
-                                  style:
-                                          TextStyle(color: Colors.black)),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  width: 150,
-                                  child: ElevatedButton(
-                                    style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(100.0),
-                                              side: BorderSide(
-                                                  color: Colors.transparent))),
-                                      backgroundColor: MaterialStateProperty
-                                          .resolveWith<Color>(
-                                        (Set<MaterialState> states) {
-                                          if (states
-                                              .contains(MaterialState.pressed))
-                                            return Colors.green[200];
-                                          return Colors.red[
-                                              400]; // Use the component's default.
-                                        },
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Refresh  ",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        Icon(
-                                          Icons.replay_outlined,
-                                          color: Colors.white,
-                                          size: 18,
-                                        )
-                                      ],
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        setState(() {});
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                          }
+                        if (schedulelist.length > 0) {
+                          return RefreshIndicator(
+                            onRefresh: _onRefresh,
+                            child: ListView.builder(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                controller: _scrollController,
+                                shrinkWrap: true,
+                                itemCount: schedulelist.length,
+                                itemBuilder: (context, index) {
+                                  return ScheduleDataRow(
+                                      schedule: schedulelist[index],
+                                      machine: widget.machine,
+                                      employee: widget.employee,
+                                      onrefresh: _onRefresh,
+                                      
+                                      
+                                      );
+                                }),
+                          );
                         } else {
-                          if (snapshot.connectionState == ConnectionState.done) {
                           return Padding(
-                          padding: const EdgeInsets.all(108.0),
-                          child: Center(
-                            child: Column(
-                              children: [
-                                Container(
-                                    child: Text(
-                                  'No Schedule Found',
-                                  style:
-                                          TextStyle(color: Colors.black)),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  width: 150,
-                                  child: ElevatedButton(
-                                    style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(100.0),
-                                              side: BorderSide(
-                                                  color: Colors.transparent))),
-                                      backgroundColor: MaterialStateProperty
-                                          .resolveWith<Color>(
-                                        (Set<MaterialState> states) {
-                                          if (states
-                                              .contains(MaterialState.pressed))
-                                            return Colors.green[200];
-                                          return Colors.red[
-                                              400]; // Use the component's default.
-                                        },
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Refresh  ",
-                                          style: TextStyle(color: Colors.white),
+                            padding: const EdgeInsets.all(108.0),
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  Container(
+                                    child: Text('No Schedule Found',
+                                        style: TextStyle(color: Colors.black)),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    width: 150,
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        100.0),
+                                                side: BorderSide(
+                                                    color:
+                                                        Colors.transparent))),
+                                        backgroundColor: MaterialStateProperty
+                                            .resolveWith<Color>(
+                                          (Set<MaterialState> states) {
+                                            if (states.contains(
+                                                MaterialState.pressed))
+                                              return Colors.green[200];
+                                            return Colors.red[
+                                                400]; // Use the component's default.
+                                          },
                                         ),
-                                        Icon(
-                                          Icons.replay_outlined,
-                                          color: Colors.white,
-                                          size: 18,
-                                        )
-                                      ],
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Refresh  ",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          Icon(
+                                            Icons.replay_outlined,
+                                            color: Colors.white,
+                                            size: 18,
+                                          )
+                                        ],
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          setState(() {});
+                                        });
+                                      },
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        setState(() {});
-                                      });
-                                    },
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                  // color: Colors.red,
-                                  ),
-                            );
-                          }
+                          );
                         }
-                      },
-                    )),
-              ),
-            ],
-          ),
+                      } else {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return Padding(
+                            padding: const EdgeInsets.all(108.0),
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  Container(
+                                    child: Text('No Schedule Found',
+                                        style: TextStyle(color: Colors.black)),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    width: 150,
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        100.0),
+                                                side: BorderSide(
+                                                    color:
+                                                        Colors.transparent))),
+                                        backgroundColor: MaterialStateProperty
+                                            .resolveWith<Color>(
+                                          (Set<MaterialState> states) {
+                                            if (states.contains(
+                                                MaterialState.pressed))
+                                              return Colors.green[200];
+                                            return Colors.red[
+                                                400]; // Use the component's default.
+                                          },
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Refresh  ",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          Icon(
+                                            Icons.replay_outlined,
+                                            color: Colors.white,
+                                            size: 18,
+                                          )
+                                        ],
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          setState(() {});
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                                // color: Colors.red,
+                                ),
+                          );
+                        }
+                      }
+                    },
+                  )),
+            ),
+          ],
         ),
-      
+      ),
     );
   }
 
@@ -664,13 +660,14 @@ class _SchudleTableState extends State<SchudleTable> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(name,
-                  style:  TextStyle(
-                        // color: Color(0xffBF3947),
-                        color: Colors.red,
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w600),
-                  )
+              Text(
+                name,
+                style: TextStyle(
+                    // color: Color(0xffBF3947),
+                    color: Colors.red,
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w600),
+              )
             ],
           ),
         ),
@@ -687,7 +684,7 @@ class _SchudleTableState extends State<SchudleTable> {
           width: MediaQuery.of(context).size.width,
           height: 40,
           decoration: BoxDecoration(
-              color: Colors.white, 
+              color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(5))),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -717,720 +714,5 @@ class _SchudleTableState extends State<SchudleTable> {
       ),
     );
   }
-
-  Widget buildDataRow({Schedule schedule, int c}) {
-    Widget cell(String name, double width) {
-      return Container(
-        width: MediaQuery.of(context).size.width * width,
-        height: 34,
-        child: Center(
-          child: Text(
-            name,
-            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
-            ),
-          
-        ),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(3.0),
-      child: Material(
-        elevation: 1,
-        shadowColor: Colors.white,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: 55,
-          color: c % 2 == 0 ? Colors.white : Colors.grey[50],
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border(
-                  left: BorderSide(
-                color: schedule.scheduledStatus.toLowerCase() ==
-                        "Complete".toLowerCase()
-                    ? Colors.green
-                    : schedule.scheduledStatus.toLowerCase() ==
-                            "Partially".toLowerCase()
-                        ? Colors.orange[100]
-                        : Colors.blue[100],
-                width: 5,
-              )),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // orderId
-                cell(schedule.orderId, 0.07),
-                //Fg Part
-                cell(schedule.finishedGoodsNumber, 0.07),
-
-                //Schudule ID
-                cell(schedule.scheduledId, 0.07),
-                //Cable Part
-                cell(schedule.cablePartNumber, 0.08),
-
-                //Process
-                cell(schedule.process, 0.12),
-                // Cut length
-                cell(schedule.length, 0.060),
-                //Color
-                cell(schedule.color, 0.05),
-                //Scheduled Qty
-                cell(schedule.scheduledQuantity, 0.065),
-                cell(schedule.actualQuantity.toString(), 0.05),
-                cell(schedule.awg.toString(), 0.035),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.073,
-                  height: 34,
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "No:",
-                              style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "${schedule.shiftNumber}",
-                              style: TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w500),
-
-                            ),
-                          ],
-                        ),
-                        Text(
-                          "${schedule.shiftType}",
-                          style:TextStyle(
-                                fontSize: 11, fontWeight: FontWeight.w500),
-                          
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                // cell("${schedule.shiftType}", 0.074),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.085,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            schedule.currentDate == null
-                                ? ""
-                                : DateFormat("dd-MM-yyyy")
-                                    .format(schedule.currentDate),
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black,
-                            ),
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "${schedule.shiftStart.length > 2 ? schedule.shiftStart.substring(0, 5) : schedule.shiftStart}",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.green,
-                            ),
-                          ),
-                          Text(
-                            " - ${schedule.shiftEnd.length > 2 ? schedule.shiftEnd.substring(0, 5) : schedule.shiftEnd}",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.red,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                //Status
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.08,
-                  height: schedule.scheduledStatus.toLowerCase() ==
-                          "Partially Completed".toLowerCase()
-                      ? 45
-                      : 30,
-                  padding: EdgeInsets.all(0),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: schedule.scheduledStatus.toLowerCase() ==
-                                    'Complete'.toLowerCase()
-                                ? Colors.green[100]
-                                : schedule.scheduledStatus.toLowerCase() ==
-                                        "Partially Completed".toLowerCase()
-                                    ? Colors.red[50]
-                                    : Colors.blue[50],
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 2.0,
-                                horizontal: 4
-                              ),
-                              child: Text(
-                                schedule.scheduledStatus,
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500,
-                                    color: schedule.scheduledStatus
-                                                .toLowerCase() ==
-                                            'Complete'.toLowerCase()
-                                        ? Colors.green
-                                        : schedule.scheduledStatus
-                                                    .toLowerCase() ==
-                                                "Partially Completed"
-                                                    .toLowerCase()
-                                            ? Colors.red[400]
-                                            : Colors.blue[900],
-                                  
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          child: Stack(
-                            children: [
-                              Container(
-                                width:
-                                    MediaQuery.of(context).size.width * 0.07,
-                                height: 5,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(100)),
-                                ),
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width *
-                                    0.07 *
-                                    ((schedule.actualQuantity /
-                                        int.parse(schedule.scheduledQuantity ??
-                                            '1'))),
-                                height: 5,
-                                decoration: BoxDecoration(
-                                  color: Colors.green[300],
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(100)),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.08,
-                  height: 45,
-                  child: schedule.scheduledStatus.toLowerCase() ==
-                          "Complete".toLowerCase()
-                      ? Center(child: Text("-"))
-                      : Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.08,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: ProgressButton(
-                                  color: schedule.scheduledStatus
-                                              .toLowerCase() ==
-                                          "Partially Completed".toLowerCase()
-                                      ? Colors.green[500]
-                                      : Colors.green[500],
-                                  defaultWidget: Container(
-                                      child: schedule.scheduledStatus
-                                                      .toLowerCase() ==
-                                                  "Allocated".toLowerCase() ||
-                                              schedule.scheduledStatus
-                                                      .toLowerCase() ==
-                                                  "Open".toLowerCase() ||
-                                              schedule.scheduledStatus
-                                                      .toLowerCase() ==
-                                                  "".toLowerCase() ||
-                                              schedule.scheduledStatus == null
-                                          ? Text(
-                                              "Accept",
-                                              style:  TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              
-                                            )
-                                          : schedule.scheduledStatus
-                                                          .toLowerCase() ==
-                                                      "Pending".toLowerCase() ||
-                                                  schedule.scheduledStatus
-                                                          .toLowerCase() ==
-                                                      "Partially Completed"
-                                                          .toLowerCase() ||
-                                                  schedule.scheduledStatus
-                                                          .toLowerCase() ==
-                                                      "started".toLowerCase()
-                                              ? Text(
-                                                  'Continue',
-                                                  style:  TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  
-                                                )
-                                              : Text('')),
-                                  animate: true,
-                                  progressWidget: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(17.0),
-                                      child: Container(
-                                        height: 10,
-                                        child: ColorLoader4(
-                                          dotOneColor: Colors.white,
-                                          dotThreeColor: Colors.white,
-                                          dotTwoColor: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  width: 30,
-                                  height: 40,
-                                  onPressed: () async {
-                                    if (schedule.shiftType == "Allocated") {
-                                      // After [onPressed], it will trigger animation running backwards, from end to beginning
-                                      postStartprocess = new PostStartProcessP1(
-                                        cablePartNumber:
-                                            schedule.cablePartNumber ?? "0",
-                                        color: schedule.color,
-                                        finishedGoodsNumber:
-                                            schedule.finishedGoodsNumber ?? "0",
-                                        lengthSpecificationInmm:
-                                            schedule.length ?? "0",
-                                        machineIdentification:
-                                            widget.machine.machineNumber,
-                                        orderIdentification:
-                                            schedule.orderId ?? "0",
-                                        scheduledIdentification:
-                                            schedule.scheduledId ?? "0",
-                                        scheduledQuantity:
-                                            schedule.scheduledQuantity ?? "0",
-                                        scheduleStatus: "started",
-                                      );
-                                      Fluttertoast.showToast(
-                                          msg: "Loading",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.red,
-                                          textColor: Colors.white,
-                                          fontSize: 16.0);
-                                      apiService
-                                          .startProcess1(postStartprocess)
-                                          .then((value) {
-                                        if (value) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MaterialPick(
-                                                      schedule: schedule,
-                                                      employee: widget.employee,
-                                                      machine: widget.machine,
-                                                      materialPickType:
-                                                          MaterialPickType
-                                                              .newload,
-                                                    )),
-                                          ).then((value) {
-                                            _onRefresh();
-                                            log("nabk");
-                                          });
-                                        } else {
-                                          Fluttertoast.showToast(
-                                              msg: "Unable to Start Process",
-                                              toastLength: Toast.LENGTH_SHORT,
-                                              gravity: ToastGravity.BOTTOM,
-                                              timeInSecForIosWeb: 1,
-                                              backgroundColor: Colors.red,
-                                              textColor: Colors.white,
-                                              fontSize: 16.0);
-                                        }
-                                        return () {};
-                                      });
-                                    } else {
-                                      showScheduleDetail(schedule: schedule)
-                                          .then((value) {
-                                        setState(() {});
-                                      });
-                                    }
-                                  }),
-                            ),
-                          ),
-                        ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> showScheduleDetail({Schedule schedule}) {
-    Widget feild({String heading, String value, double width}) {
-      width = MediaQuery.of(context).size.width * width;
-      return Padding(
-        padding: const EdgeInsets.all(0.0),
-        child: Container(
-          // color: Colors.red[100],
-          width: width,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Text(
-                    heading,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[500],
-                      fontWeight: FontWeight.normal,
-                    )),
-                  
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 1.0),
-                child: Row(
-                  children: [
-                    Text(
-                      value ?? '',
-                      style: TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 14),
-                      
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      );
-    }
-
-    return showDialog<void>(
-        context: context,
-        barrierDismissible: true, // user must tap button!
-        builder: (BuildContext context1) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.all(0),
-            titlePadding: EdgeInsets.all(0),
-            title: Container(
-                height: 380,
-                width: 550,
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    Container(
-                      height: 300,
-                      width: 550,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              feild(
-                                  heading: "Order Id",
-                                  value: schedule.orderId,
-                                  width: 0.14),
-                              feild(
-                                  heading: "FG Part",
-                                  value: "${schedule.finishedGoodsNumber}",
-                                  width: 0.14),
-                              feild(
-                                  heading: "Schedule ID",
-                                  value: "${schedule.scheduledId}",
-                                  width: 0.14),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              feild(
-                                  heading: "Cable Part No.",
-                                  value: "${schedule.cablePartNumber}",
-                                  width: 0.14),
-                              feild(
-                                  heading: "Process",
-                                  value: "${schedule.process}",
-                                  width: 0.14),
-                              feild(
-                                  heading: "cable#",
-                                  value: "${schedule.cableNumber}",
-                                  width: 0.14),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              feild(
-                                  heading: "Cut Length",
-                                  value: "${schedule.length}",
-                                  width: 0.14),
-                              feild(
-                                  heading: "Color",
-                                  value: "${schedule.color}",
-                                  width: 0.14),
-                              feild(
-                                  heading: "Scheduled Qty",
-                                  value: "${schedule.scheduledQuantity}",
-                                  width: 0.14),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              feild(
-                                  heading: "Date",
-                                  value: schedule.currentDate == null
-                                      ? ""
-                                      : DateFormat("dd-MM-yyyy")
-                                          .format(schedule.currentDate),
-                                  width: 0.14),
-                              feild(
-                                  heading: "Shift Type",
-                                  value: "${schedule.shiftType}",
-                                  width: 0.14),
-                              feild(heading: "", width: 0.14)
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton(
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        side: BorderSide(color: Colors.green))),
-                                backgroundColor:
-                                    MaterialStateProperty.resolveWith<Color>(
-                                  (Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.pressed))
-                                      return Colors.green[200];
-                                    return Colors.green[
-                                        500]; // Use the component's default.
-                                  },
-                                ),
-                                overlayColor:
-                                    MaterialStateProperty.resolveWith<Color>(
-                                  (Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.pressed))
-                                      return Colors.green[200];
-                                    return Colors.green[
-                                        500]; // Use the component's default.
-                                  },
-                                ),
-                              ),
-                              onPressed: () {
-                                postStartprocess = new PostStartProcessP1(
-                                  cablePartNumber:
-                                      schedule.cablePartNumber ?? "0",
-                                  color: schedule.color,
-                                  finishedGoodsNumber:
-                                      schedule.finishedGoodsNumber ?? "0",
-                                  lengthSpecificationInmm:
-                                      schedule.length ?? "0",
-                                  machineIdentification:
-                                      widget.machine.machineNumber,
-                                  orderIdentification: schedule.orderId ?? "0",
-                                  scheduledIdentification:
-                                      schedule.scheduledId ?? "0",
-                                  scheduledQuantity:
-                                      schedule.scheduledQuantity ?? "0",
-                                  scheduleStatus: "complete",
-                                );
-                                FullyCompleteModel fullyComplete =
-                                    FullyCompleteModel(
-                                        finishedGoodsNumber: int.parse(
-                                            schedule.finishedGoodsNumber),
-                                        purchaseOrder:
-                                            int.parse(schedule.orderId),
-                                        orderId: int.parse(schedule.orderId),
-                                        cablePartNumber:
-                                            int.parse(schedule.cablePartNumber),
-                                        length: int.parse(schedule.length),
-                                        color: schedule.color,
-                                        scheduledStatus: "Complete",
-                                        scheduledId:
-                                            int.parse(schedule.scheduledId),
-                                        scheduledQuantity: int.parse(
-                                            schedule.scheduledQuantity),
-                                        machineIdentification:
-                                            widget.machine.machineNumber,
-                                        //TODO bundle ID
-                                        firstPieceAndPatrol: 0,
-                                        applicatorChangeover: 0);
-                                apiService
-                                    .post100Complete(fullyComplete)
-                                    .then((value) {
-                                  if (value) {
-                                    Navigator.pop(context1);
-
-                                    Fluttertoast.showToast(
-                                      msg: "Schedule Completed",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0,
-                                    );
-                                  } else {
-                                    Fluttertoast.showToast(
-                                      msg: "Schedule not Completed",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0,
-                                    );
-                                  }
-                                });
-                              },
-                              child: Text('Complete')),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton(
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        side: BorderSide(color: Colors.green))),
-                                backgroundColor:
-                                    MaterialStateProperty.resolveWith<Color>(
-                                  (Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.pressed))
-                                      return Colors.green[200];
-                                    return Colors.green[
-                                        500]; // Use the component's default.
-                                  },
-                                ),
-                                overlayColor:
-                                    MaterialStateProperty.resolveWith<Color>(
-                                  (Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.pressed))
-                                      return Colors.green[200];
-                                    return Colors.green[
-                                        500]; // Use the component's default.
-                                  },
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context1);
-                                postStartprocess = new PostStartProcessP1(
-                                  cablePartNumber:
-                                      schedule.cablePartNumber ?? "0",
-                                  color: schedule.color,
-                                  finishedGoodsNumber:
-                                      schedule.finishedGoodsNumber ?? "0",
-                                  lengthSpecificationInmm:
-                                      schedule.length ?? "0",
-                                  machineIdentification:
-                                      widget.machine.machineNumber,
-                                  orderIdentification: schedule.orderId ?? "0",
-                                  scheduledIdentification:
-                                      schedule.scheduledId ?? "0",
-                                  scheduledQuantity:
-                                      schedule.scheduledQuantity ?? "0",
-                                  scheduleStatus: "started",
-                                );
-                                Fluttertoast.showToast(
-                                    msg: "Loading",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                                apiService.startProcess1(postStartprocess).then(
-                                  (value) {
-                                    if (value) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => MaterialPick(
-                                                  schedule: schedule,
-                                                  employee: widget.employee,
-                                                  machine: widget.machine,
-                                                  homeReload: homeReload,
-                                                  materialPickType:
-                                                      MaterialPickType.newload,
-                                                )),
-                                      );
-                                    } else {
-                                      Fluttertoast.showToast(
-                                          msg: "Unable to Start Process",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.red,
-                                          textColor: Colors.white,
-                                          fontSize: 16.0);
-                                    }
-                                  },
-                                );
-                              },
-                              child: Text(
-                                "Start Process",
-                                style: TextStyle(
-                                  fontFamily: fonts.openSans,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )),
-                        ),
-                      ],
-                    )
-                  ],
-                )),
-          );
-        });
-  }
+  
 }

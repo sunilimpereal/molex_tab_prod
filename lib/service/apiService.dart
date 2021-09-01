@@ -376,8 +376,8 @@ class ApiService {
     var response = await http.post(url,
         body: postStartProcessP1ToJson(process), headers: headerList);
     print("start proces response = ${response.statusCode}");
-    print("start proces body = ${ postStartProcessP1ToJson(process)}");
-       print("start proces response = ${response.body}");
+    print("start proces body = ${postStartProcessP1ToJson(process)}");
+    print("start proces response = ${response.body}");
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -655,7 +655,7 @@ class ApiService {
         'molex/visual-inspection/save-visual-inspected-bundle-quantity');
     var response = await http.post(url,
         body: viInspectedbundleToJson(viInspectedbudle), headers: headerList);
-    log("postVIinspectedBundle :${viInspectedbundleToJson (viInspectedbudle)}");
+    log("postVIinspectedBundle :${viInspectedbundleToJson(viInspectedbudle)}");
     log('postVIinspectedBundle status Code: ${response.statusCode}');
     log('postVIinspectedBundle response status body: ${response.body}');
     print(response.body);
@@ -885,28 +885,43 @@ class ApiService {
 
   // get bundle in schedule
   Future<List<BundlesRetrieved>> getBundlesInSchedule(
-      {@required PostgetBundleMaster postgetBundleMaster, @required String scheduleID}) async {
+      {@required PostgetBundleMaster postgetBundleMaster,
+      @required String scheduleID}) async {
     var url = Uri.parse(baseUrl + 'molex/bundlemaster/');
     var response = await http.post(url,
         body: postgetBundleMasterToJson(postgetBundleMaster),
         headers: headerList);
-         log('Get Bundles  post: ${postgetBundleMasterToJson(postgetBundleMaster)}');
+    log('Get Bundles  post: ${postgetBundleMasterToJson(postgetBundleMaster)}');
     log('Get Bundles From Bin status Code: ${response.statusCode}');
     log('Get Bundleslist From Bin  response body :${response.body}');
     log('Get Bundleslistp From Bin  response body :${postgetBundleMasterToJson(postgetBundleMaster)}');
     if (response.statusCode == 200) {
-      GetBundleListGl getBundleListGl = getBundleListGlFromJson(response.body);
-      List<BundlesRetrieved> bundleList = getBundleListGl.data.bundlesRetrieved;
-      if(scheduleID !=''){
-      bundleList = bundleList
-          .where((element) => element.scheduledId.toString() == scheduleID)
-          .toList();
-      }else{
-        
+      try {
+        GetBundleListGl getBundleListGl =
+            getBundleListGlFromJson(response.body);
+        List<BundlesRetrieved> bundleList =
+            getBundleListGl.data.bundlesRetrieved;
+        if (scheduleID != '') {
+          bundleList = bundleList
+              .where((element) => element.scheduledId.toString() == scheduleID)
+              .toList();
+        } else {}
+        if (bundleList.length < 1) {
+          log(" mesd true");
+          Fluttertoast.showToast(
+            msg: "Unable to find bundle",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        }
+        return bundleList;
+      } catch (e) {
+        return null;
       }
-   
-
-      return bundleList;
     } else {
       Fluttertoast.showToast(
         msg: "Get Bundles From Schedule status Code: ${response.statusCode}",

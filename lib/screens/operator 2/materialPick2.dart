@@ -52,7 +52,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
   DateTime selectedDate = DateTime.now();
   ApiService apiService;
   List<RawMaterial> rawMaterial = [];
-  bool keyBoard = false;
+  bool keyBoard = true;
   List<RawMaterial> rawmaterial1;
   List<PostRawMaterial> selectdItems = [];
 

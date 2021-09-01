@@ -9,11 +9,11 @@ import 'package:molex/model_api/kitting_plan/save_kitting_model.dart';
 import 'package:molex/model_api/login_model.dart';
 import 'package:molex/model_api/machinedetails_model.dart';
 import 'package:molex/screens/widgets/drawer.dart';
+import 'package:molex/screens/widgets/showBundles.dart';
 import 'package:molex/screens/widgets/time.dart';
 import 'package:molex/service/apiService.dart';
 
 import '../../main.dart';
-
 
 class KittingDash extends StatefulWidget {
   Employee employee;
@@ -26,7 +26,7 @@ class _KittingDashState extends State<KittingDash> {
   String fgNumber;
   String orderId;
   String qty;
-   ApiService apiService;
+  ApiService apiService;
   List<KittingPost> kittingList = [];
   bool loading = false;
   bool loadingSave = false;
@@ -141,7 +141,7 @@ class _KittingDashState extends State<KittingDash> {
                         fgNumber = value;
                       });
                     },
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 15),
                     decoration: InputDecoration(
                         labelText: "Fg Number",
                         contentPadding: EdgeInsets.all(5),
@@ -273,6 +273,8 @@ class _KittingDashState extends State<KittingDash> {
                         width: 22,
                         child: CircularProgressIndicator(
                           strokeWidth: 3,
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
                     : Row(
@@ -299,7 +301,7 @@ class _KittingDashState extends State<KittingDash> {
     for (BundleMaster b in bundleList) {
       if (totalQty < int.parse(qty ?? '0')) {
         temp.add(b);
-        totalQty = totalQty +b.bundleQuantity;
+        totalQty = totalQty + b.bundleQuantity;
       } else {
         break;
       }
@@ -320,154 +322,172 @@ class _KittingDashState extends State<KittingDash> {
           width: MediaQuery.of(context).size.width,
           color: Colors.transparent,
           child: SingleChildScrollView(
-            child: DataTable(
-              columnSpacing: 35,
-              columns: [
-                DataColumn(
-                  label: Text(
+            child: CustomTable(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.8,
+              colums: [
+                CustomCell(
+                  width: 100,
+                  child: Text(
                     'FG',
-                    style:  
-                      headingStyle,
-                    ),
-                  ),
-                
-                DataColumn(
-                    label: Text(
-                  'Cablepart No.',
-                  style:  
-                    headingStyle,
+                    style: headingStyle,
                   ),
                 ),
-                DataColumn(
-                  label: Text(
+                CustomCell(
+                  width: 100,
+                  child: Text(
+                    'Cablepart No.',
+                    style: headingStyle,
+                  ),
+                ),
+                CustomCell(
+                  width: 100,
+                  child: Text(
                     ' AWG',
-                    style:  
-                      headingStyle,
-                    ),
+                    style: headingStyle,
                   ),
-                
-                DataColumn(
-                  label: Text(
+                ),
+                CustomCell(
+                  width: 100,
+                  child: Text(
                     'Cut Length',
-                    style:  
-                      headingStyle,
-                    ),
-                  ),
-                
-                DataColumn(
-                    label: Text(
-                  'Bundles',
-                  style:  
-                    headingStyle,
+                    style: headingStyle,
                   ),
                 ),
-                DataColumn(
-                    label: Text(
-                  'Total Qty',
-                  style:  
-                    headingStyle,
+                CustomCell(
+                  width: 100,
+                  child: Text(
+                    'Bundles',
+                    style: headingStyle,
                   ),
                 ),
-                DataColumn(
-                  label: Text(
+                CustomCell(
+                  width: 100,
+                  child: Text(
+                    'Total Bundles',
+                    style: headingStyle,
+                  ),
+                ),
+                CustomCell(
+                  width: 100,
+                  child: Text(
                     'Color',
-                    style:  
-                      headingStyle,
-                    ),
-                  ),
-                
-                DataColumn(
-                    label: Text(
-                  'Order Qty',
-                  style:  
-                    headingStyle,
+                    style: headingStyle,
                   ),
                 ),
-                DataColumn(
-                    label: Text(
-                  'Pending Qty',
-                  style:   headingStyle,
-                  
-                ))
+                CustomCell(
+                  width: 100,
+                  child: Text(
+                    'Order Qty',
+                    style: headingStyle,
+                  ),
+                ),
+                CustomCell(
+                    width: 100,
+                    child: Text(
+                      'Pending Qty',
+                      style: headingStyle,
+                    ))
               ],
               rows: kittingList.map(
                 (e) {
                   var length2 = e.kittingEJobDtoList.bundleMaster.length;
 
-                  return DataRow(cells: <DataCell>[
-                    DataCell(Text(
-                      "${e.kittingEJobDtoList.fgNumber}",
-                      style: dataStyle,
-                    )),
-                    DataCell(Text(
-                      "${e.kittingEJobDtoList.cableNumber}",
-                      style: dataStyle,
-                    )),
-                    DataCell(Text(
-                      "${e.kittingEJobDtoList.wireGuage}",
-                      style: dataStyle,
-                    )),
-                    DataCell(Text(
-                      "${e.kittingEJobDtoList.cutLength}",
-                      style: dataStyle,
-                    )),
+                  return CustomRow(cells: [
+                    CustomCell(
+                        width: 100,
+                        child: Text(
+                          "${e.kittingEJobDtoList.fgNumber}",
+                          style: dataStyle,
+                        )),
+                    CustomCell(
+                        width: 100,
+                        child: Text(
+                          "${e.kittingEJobDtoList.cableNumber}",
+                          style: dataStyle,
+                        )),
+                    CustomCell(
+                        width: 100,
+                        child: Text(
+                          "${e.kittingEJobDtoList.wireGuage}",
+                          style: dataStyle,
+                        )),
+                    CustomCell(
+                        width: 100,
+                        child: Text(
+                          "${e.kittingEJobDtoList.cutLength}",
+                          style: dataStyle,
+                        )),
 
-                    DataCell(Container(
-                      width: 80,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            "$length2",
-                            style: dataStyle,
+                    CustomCell(
+                        width: 100,
+                        child: Container(
+                          width: 80,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                "$length2",
+                                style: dataStyle,
+                              ),
+                              IconButton(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  onPressed: () {
+                                    showBundleDetail(
+                                        context: context,
+                                        fgNo:
+                                            "${e.kittingEJobDtoList.fgNumber}",
+                                        cablePartNo:
+                                            "${e.kittingEJobDtoList.cableNumber}",
+                                        awg:
+                                            "${e.kittingEJobDtoList.wireGuage}",
+                                        bundles:
+                                            e.kittingEJobDtoList.bundleMaster,
+                                        selectedBundles: e.selectedBundles);
+                                  },
+                                  icon: Icon(
+                                    Icons.launch,
+                                    size: 16,
+                                    color: Colors.red.shade500,
+                                  ))
+                            ],
                           ),
-                          IconButton(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              onPressed: () {
-                                showBundleDetail(
-                                    context: context,
-                                    fgNo: "${e.kittingEJobDtoList.fgNumber}",
-                                    cablePartNo:
-                                        "${e.kittingEJobDtoList.cableNumber}",
-                                    awg: "${e.kittingEJobDtoList.wireGuage}",
-                                    bundles: e.kittingEJobDtoList.bundleMaster,
-                                    selectedBundles: e.selectedBundles);
-                              },
-                              icon: Icon(
-                                Icons.launch,
-                                size: 16,
-                                color: Colors.red.shade500,
-                              ))
-                        ],
-                      ),
-                    )),
-                    DataCell(Text(
-                      "${getBundleQty(e.selectedBundles)}",
-                      style: dataStyle,
-                    )),
-                    DataCell(Text(
-                      e.kittingEJobDtoList.cableColor ?? "",
-                      style: dataStyle,
-                    )),
-                    DataCell(Text(
-                      "$qty",
-                      style: dataStyle,
-                    )),
+                        )),
+                    CustomCell(
+                        width: 100,
+                        child: Text(
+                          "${getBundleQty(e.selectedBundles)}",
+                          style: dataStyle,
+                        )),
+                    CustomCell(
+                        width: 100,
+                        child: Text(
+                          e.kittingEJobDtoList.cableColor ?? "",
+                          style: dataStyle,
+                        )),
+                    CustomCell(
+                        width: 100,
+                        child: Text(
+                          "$qty",
+                          style: dataStyle,
+                        )),
                     // DataCell(Text("${e.selectedBundles.length}")),
                     // DataCell(Text(
                     //     "${e.kittingEJobDtoList.bundleMaster!.length - e.selectedBundles.length}")),
 
-                    DataCell(Text(
-                        "${getPendingQty(e.kittingEJobDtoList.bundleMaster, e.selectedBundles).abs()}",
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: getPendingQty(
-                                        e.kittingEJobDtoList.bundleMaster,
-                                        e.selectedBundles) <=
-                                    0
-                                ? Colors.green
-                                : Colors.red))),
+                    CustomCell(
+                      width: 100,
+                        child: Text(
+                            "${getPendingQty(e.kittingEJobDtoList.bundleMaster, e.selectedBundles).abs()}",
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: getPendingQty(
+                                            e.kittingEJobDtoList.bundleMaster,
+                                            e.selectedBundles) <=
+                                        0
+                                    ? Colors.green
+                                    : Colors.red))),
                   ]);
                 },
               ).toList(),
@@ -501,12 +521,12 @@ class _KittingDashState extends State<KittingDash> {
   }
 
   Future<void> showBundleDetail(
-      { BuildContext context,
-       List<BundleMaster> bundles,
-       String fgNo,
-       String cablePartNo,
-       String awg,
-       List<BundleMaster> selectedBundles}) async {
+      {BuildContext context,
+      List<BundleMaster> bundles,
+      String fgNo,
+      String cablePartNo,
+      String awg,
+      List<BundleMaster> selectedBundles}) async {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {
@@ -624,12 +644,12 @@ class ShowBundleList extends StatefulWidget {
   Function reload;
 
   ShowBundleList(
-      { this.reload,
-       this.bundleList,
-       this.selectedBundleList,
-       this.awg,
-       this.cablePartNo,
-       this.fgNo});
+      {this.reload,
+      this.bundleList,
+      this.selectedBundleList,
+      this.awg,
+      this.cablePartNo,
+      this.fgNo});
   @override
   _ShowBundleListState createState() => _ShowBundleListState();
 }
@@ -654,167 +674,178 @@ class _ShowBundleListState extends State<ShowBundleList> {
       title: Container(
         width: 900,
         height: 500,
-        child: Column(
+        child: Stack(
           children: [
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 50,
-                  ),
-                  field(title: "Fg No.", data: "${widget.fgNo}", width: 140),
-                  field(
-                      title: "Cable Part No.",
-                      data: "${widget.cablePartNo}",
-                      width: 140),
-                  field(title: "AWG", data: "${widget.awg}", width: 100),
-                  field(
-                      title: "Total Qty",
-                      data: "${widget.bundleList.length}",
-                      width: 100),
-                  field(
-                      title: "Dispatch Bundles",
-                      data: "${widget.selectedBundleList.length}",
-                      width: 120),
-                  // field(
-                  //     title: "Pending Bundles",
-                  //     data:
-                  //         "${widget.bundleList.length - widget.selectedBundleList.length}",
-                  //     width: 120)
-
-                  SizedBox(
-                    width: 50,
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: 800,
-              height: 400,
-              child: SingleChildScrollView(
-                child: DataTable(
-                  showCheckboxColumn: true,
-                  columnSpacing: 40,
-                  columns: [
-                    DataColumn(
-                      label: Text(
-                        'Bundle Id',
-                        style:  
-                          TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    
-                    DataColumn(
-                        label: Text(
-                      'Bin Id',
-                      style:  TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      
-                    ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'location ',
-                        style:  
-                          TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    
-                    DataColumn(
-                      label: Text(
-                        'Color',
-                        style:  
-                          TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    
-                    DataColumn(
-                      label: Text(
-                        'Qty',
-                        style:  
-                          TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    
-                  ],
-                  rows: widget.bundleList
-                      .map((e) => DataRow(
-                              selected: widget.selectedBundleList.contains(e),
-                              onSelectChanged: (value) {
-                                setState(() {
-                                  if (value ?? false) {
-                                    widget.selectedBundleList.add(e);
-                                  } else {
-                                    widget.selectedBundleList.remove(e);
-                                  }
-                                });
-                              },
-                              cells: <DataCell>[
-                                DataCell(Text(
-                                  "${e.bundleIdentification}",
-                                  style: TextStyle(fontSize: 12),
-                                )),
-                                DataCell(Text(
-                                  "${e.binId}",
-                                  style: TextStyle(fontSize: 12),
-                                )),
-                                DataCell(Text(
-                                  "${e.locationId}",
-                                  style: TextStyle(fontSize: 12),
-                                )),
-                                DataCell(Text(
-                                  e.color ?? "",
-                                  style: TextStyle(fontSize: 12),
-                                )),
-                                DataCell(Text(
-                                  "${e.bundleQuantity}",
-                                  style: TextStyle(fontSize: 12),
-                                )),
-                              ]))
-                      .toList(),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+            Column(
               children: [
-                ElevatedButton(
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(40.0),
-                            side: BorderSide(color: Colors.transparent))),
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.pressed))
-                          return Colors.green.shade200;
-                        return Colors
-                            .green.shade500; // Use the component's default.
-                      },
-                    ),
-                  ),
-                  onPressed: () {
-                    widget.reload();
-                    Navigator.pop(context);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Save",
-                        style: TextStyle(fontSize: 16),
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 50,
                       ),
+                      field(
+                          title: "Fg No.", data: "${widget.fgNo}", width: 140),
+                      field(
+                          title: "Cable Part No.",
+                          data: "${widget.cablePartNo}",
+                          width: 140),
+                      field(title: "AWG", data: "${widget.awg}", width: 100),
+                      field(
+                          title: "Total Qty",
+                          data: "${widget.bundleList.length}",
+                          width: 100),
+                      field(
+                          title: "Dispatch Bundles",
+                          data: "${widget.selectedBundleList.length}",
+                          width: 120),
+                      // field(
+                      //     title: "Pending Bundles",
+                      //     data:
+                      //         "${widget.bundleList.length - widget.selectedBundleList.length}",
+                      //     width: 120)
+
+                      SizedBox(
+                        width: 50,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: 800,
+                  height: 400,
+                  child: SingleChildScrollView(
+                    child: DataTable(
+                      showCheckboxColumn: true,
+                      columnSpacing: 40,
+                      columns: [
+                        DataColumn(
+                          label: Text(
+                            'Bundle Id',
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Bin Id',
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'location ',
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Color',
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Qty',
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                      rows: widget.bundleList
+                          .map((e) => DataRow(
+                                  selected:
+                                      widget.selectedBundleList.contains(e),
+                                  onSelectChanged: (value) {
+                                    setState(() {
+                                      if (value ?? false) {
+                                        widget.selectedBundleList.add(e);
+                                      } else {
+                                        widget.selectedBundleList.remove(e);
+                                      }
+                                    });
+                                  },
+                                  cells: <DataCell>[
+                                    DataCell(Text(
+                                      "${e.bundleIdentification}",
+                                      style: TextStyle(fontSize: 12),
+                                    )),
+                                    DataCell(Text(
+                                      "${e.binId}",
+                                      style: TextStyle(fontSize: 12),
+                                    )),
+                                    DataCell(Text(
+                                      "${e.locationId}",
+                                      style: TextStyle(fontSize: 12),
+                                    )),
+                                    DataCell(Text(
+                                      e.color ?? "",
+                                      style: TextStyle(fontSize: 12),
+                                    )),
+                                    DataCell(Text(
+                                      "${e.bundleQuantity}",
+                                      style: TextStyle(fontSize: 12),
+                                    )),
+                                  ]))
+                          .toList(),
                     ),
                   ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(40.0),
+                                    side:
+                                        BorderSide(color: Colors.transparent))),
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.pressed))
+                              return Colors.green.shade200;
+                            return Colors
+                                .green.shade500; // Use the component's default.
+                          },
+                        ),
+                      ),
+                      onPressed: () {
+                        widget.reload();
+                        Navigator.pop(context);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Save",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 )
               ],
-            )
+            ),
+            Positioned(
+                right: 0,
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.red,
+                  ),
+                ))
           ],
         ),
       ),
@@ -829,21 +860,15 @@ class _ShowBundleListState extends State<ShowBundleList> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style:
-                    TextStyle(fontSize: 13)
-              )
-            ],
+            children: [Text(title, style: TextStyle(fontSize: 13))],
           ),
           SizedBox(height: 5),
           Row(
             children: [
-              Text(data,
-                  style:  
-                    TextStyle(fontSize: 13),
-                  )
+              Text(
+                data,
+                style: TextStyle(fontSize: 13),
+              )
             ],
           )
         ],
@@ -855,6 +880,5 @@ class _ShowBundleListState extends State<ShowBundleList> {
 class KittingPost {
   KittingEJobDtoList kittingEJobDtoList;
   List<BundleMaster> selectedBundles;
-  KittingPost(
-      { this.kittingEJobDtoList,  this.selectedBundles});
+  KittingPost({this.kittingEJobDtoList, this.selectedBundles});
 }

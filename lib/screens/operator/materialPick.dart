@@ -63,7 +63,7 @@ class _MaterialPickState extends State<MaterialPick> {
   bool isCollapsedScannedMaterial = false;
   DateTime selectedDate = DateTime.now();
   ApiService apiService;
-  bool keyBoard = false;
+  bool keyBoard = true;
   List<RawMaterial> rawmaterial1;
   bool nextPageLoading = false;
 

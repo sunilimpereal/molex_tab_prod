@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:molex/screens/kitting_plan/kitting_plan_dash.dart';
+import 'package:molex/screens/operator/widgets/show_bundle_list.dart';
 import '../../../model_api/login_model.dart';
 import '../../../main.dart';
 import '../../../model_api/Transfer/bundleToBin_model.dart';
@@ -2148,241 +2150,15 @@ class _GenerateLabelState extends State<GenerateLabel> {
         context: context,
         barrierDismissible: true, // user must tap button!
         builder: (BuildContext context2) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.all(0),
-            titlePadding: EdgeInsets.all(0),
-            title: Container(
-              height: MediaQuery.of(context).size.height * 0.8,
-              width: MediaQuery.of(context).size.width * 0.7,
-              color: Colors.white,
-              child: Stack(
-                children: [
-                  FutureBuilder(
-                      future: apiService.getBundlesInSchedule(
-                          postgetBundleMaster: postgetBundleMaste,
-                          scheduleID: widget.schedule.scheduledId),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          List<BundlesRetrieved> bundles = snapshot.data;
-                          List<GeneratedBundle> genbundles =
-                              bundles.map((bundle) {
-                            return GeneratedBundle(
-                                bundleDetail: bundle,
-                                bundleQty: bundle.bundleQuantity.toString(),
-                                transferBundleToBin: TransferBundleToBin(
-                                    binIdentification: bundle.binId.toString(),
-                                    locationId: bundle.locationId.toString()),
-                                label: GeneratedLabel(
-                                  finishedGoods: bundle.finishedGoodsPart,
-                                  cablePartNumber: bundle.cablePartNumber,
-                                  cutLength: bundle.cutLengthSpecificationInmm,
-                                  wireGauge: bundle.awg,
-                                  bundleId: bundle.bundleIdentification,
-                                  routeNo: "${widget.schedule.route}",
-                                  status: 0,
-                                  bundleQuantity: bundle.bundleQuantity,
-                                  terminalFrom: terminalA.terminalPart,
-                                  terminalTo: terminalB.terminalPart,
-                                  //  terminalFrom: bundle.t
-                                  //todo terminal from,terminal to
-                                  //todo route no
-                                  //
-                                ));
-                          }).toList();
-
-                          return Padding(
-                            padding: const EdgeInsets.all(18.0),
-                            child: Container(
-                              child: CustomTable(
-                                height: 500,
-                                width: 650,
-                                colums: [
-                                  CustomCell(
-                                    width: 100,
-                                    child: Text(
-                                      'Bundle ID',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: fonts.openSans,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  CustomCell(
-                                    width: 100,
-                                    child: Text(
-                                      'Bin ID',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: fonts.openSans,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  CustomCell(
-                                    width: 100,
-                                    child: Text(
-                                      'Location ID',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: fonts.openSans,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  CustomCell(
-                                    width: 100,
-                                    child: Text(
-                                      'Qty',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: fonts.openSans,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  CustomCell(
-                                    width: 100,
-                                    child: Text(
-                                      'Reprint',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: fonts.openSans,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  CustomCell(
-                                    width: 100,
-                                    child: Text(
-                                      'info',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: fonts.openSans,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                                rows: genbundles
-                                    .map((e) => CustomRow(cells: [
-                                          CustomCell(
-                                            width: 100,
-                                            child: Text(
-                                              e.label.bundleId.toString(),
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                          CustomCell(
-                                            width: 100,
-                                            color: e.bundleDetail.binId == null
-                                                ? Colors.red[100]
-                                                : Colors.transparent,
-                                            child: Text(
-                                              "${e.bundleDetail.binId ?? "-"}",
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                          CustomCell(
-                                            width: 100,
-                                            color: e.bundleDetail.locationId ==
-                                                    null
-                                                ? Colors.red[100]
-                                                : Colors.transparent,
-                                            child: Text(
-                                              e.bundleDetail.locationId ?? "-",
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                          CustomCell(
-                                            width: 100,
-                                            child: Text(
-                                              "${e.bundleQty}",
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                          CustomCell(
-                                            width: 100,
-                                            child: ElevatedButton(
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty
-                                                        .resolveWith((states) =>
-                                                            Colors.green),
-                                              ),
-                                              onPressed: () {
-                                                DateTime now = DateTime.now();
-                                                //TODO
-                                                _print(
-                                                  ipaddress:
-                                                      "${widget.machine.printerIp}",
-                                                  // ipaddress: "172.26.59.14",
-                                                  bq: e.bundleQty,
-                                                  qr: "${e.label.bundleId}",
-                                                  routenumber1:
-                                                      "${e.label.routeNo}",
-                                                  date: now.day.toString() +
-                                                      "-" +
-                                                      now.month.toString() +
-                                                      "-" +
-                                                      now.year.toString(),
-                                                  orderId:
-                                                      "${widget.schedule.orderId}",
-                                                  fgPartNumber:
-                                                      "${widget.schedule.finishedGoodsNumber}",
-                                                  cutlength:
-                                                      "${widget.schedule.length}",
-                                                  cablepart:
-                                                      "${widget.schedule.cablePartNumber}",
-                                                  wireGauge:
-                                                      "${e.label.wireGauge}",
-                                                  terminalfrom:
-                                                      "${e.label.terminalFrom}",
-                                                  terminalto:
-                                                      "${e.label.terminalTo}",
-
-                                                  userid:
-                                                      "${widget.employee.empId}",
-                                                  shift:
-                                                      "${widget.schedule.shiftNumber}",
-                                                  machine:
-                                                      "${widget.machine.machineNumber}",
-                                                );
-                                              },
-                                              child: Text(
-                                                ' Reprint',
-                                                style: TextStyle(fontSize: 12),
-                                              ),
-                                            ),
-                                          ),
-                                          CustomCell(
-                                            width: 100,
-                                            child: GestureDetector(
-                                                onTap: () {
-                                                  showBundleDetail(e);
-                                                },
-                                                child: Icon(
-                                                  Icons.info_outline,
-                                                  color: Colors.blue,
-                                                )),
-                                          )
-                                        ]))
-                                    .toList(),
-                              ),
-                            ),
-                          );
-                        } else {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      }),
-                  Positioned(
-                      top: 0,
-                      right: 0,
-                      child: IconButton(
-                          focusColor: Colors.transparent,
-                          onPressed: () {
-                            Navigator.pop(context2);
-                          },
-                          icon:
-                              Icon(Icons.close, size: 20, color: Colors.red))),
-                ],
-              ),
-            ),
+          return ShowBundleListWIP(
+            terminalA: terminalA,
+            terminalB: terminalB,
+            postgetBundleMaste: postgetBundleMaste,
+            machine: widget.machine,
+            employee: widget.employee,
+            schedule: widget.schedule,
           );
+        
         });
   }
 
@@ -2902,12 +2678,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
   }
 
   Widget bundleScan() {
-    // Future.delayed(
-    //   const Duration(milliseconds: 50),
-    //   () {
-    //     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    //   },
-    // );
+    
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     return Stack(
       children: [
