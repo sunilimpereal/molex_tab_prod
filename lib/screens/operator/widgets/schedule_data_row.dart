@@ -70,7 +70,11 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                 cell(widget.schedule.finishedGoodsNumber, 0.07),
 
                 //Schudule ID
-                cell(widget.schedule.scheduledId, 0.07),
+                Tooltip(
+                    showDuration: const Duration(seconds: 2),
+                    waitDuration: const Duration(seconds: 1),
+                    message: "${widget.schedule.machineNumber}",
+                    child: cell(widget.schedule.scheduledId, 0.07)),
                 //Cable Part
                 cell(widget.schedule.cablePartNumber, 0.08),
 

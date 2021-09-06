@@ -1,4 +1,4 @@
- import 'dart:async';
+import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,7 +21,7 @@ import '../widgets/time.dart';
 import '../../service/apiService.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-// Process 1 Auto Cut and Crimp                        
+// Process 1 Auto Cut and Crimp
 class Homepage extends StatefulWidget {
   Employee employee;
   MachineDetails machine;
@@ -475,7 +475,7 @@ class _SchudleTableState extends State<SchudleTable> {
                                   DateTime.now().year,
                                   DateTime.now().month,
                                   DateTime.now().day,
-                                )) <=
+                                ).add(Duration(days: 7))) <=
                                 0)
                             .toList();
                         schedulelist.sort(
@@ -492,13 +492,11 @@ class _SchudleTableState extends State<SchudleTable> {
                                 itemCount: schedulelist.length,
                                 itemBuilder: (context, index) {
                                   return ScheduleDataRow(
-                                      schedule: schedulelist[index],
-                                      machine: widget.machine,
-                                      employee: widget.employee,
-                                      onrefresh: _onRefresh,
-                                      
-                                      
-                                      );
+                                    schedule: schedulelist[index],
+                                    machine: widget.machine,
+                                    employee: widget.employee,
+                                    onrefresh: _onRefresh,
+                                  );
                                 }),
                           );
                         } else {
@@ -714,5 +712,4 @@ class _SchudleTableState extends State<SchudleTable> {
       ),
     );
   }
-  
 }

@@ -431,6 +431,7 @@ class _SchudleTableState extends State<SchudleTable> {
                               element.schedulestatus.toLowerCase() !=
                               "Complete".toLowerCase())
                           .toList();
+                           
                       log("aaa ${schedulelist}");
 
                       if (schedulelist.length > 0) {

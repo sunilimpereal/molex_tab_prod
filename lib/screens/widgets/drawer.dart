@@ -30,7 +30,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "v 1.0.0+13",
+                  "v 1.0.0+15",
                   style: TextStyle(
                     color: Colors.red,
                     letterSpacing: 2,
