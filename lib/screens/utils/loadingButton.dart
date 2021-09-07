@@ -10,12 +10,12 @@ class LoadingButton extends StatefulWidget {
   Function onPressed;
 
   LoadingButton(
-      {Key key,
-      this.style,
-      this.child,
-      this.loading,
-      this.loadingChild,
-      this.onPressed})
+      {Key? key,
+      required this.style,
+      required this.child,
+      required this.loading,
+      required this.loadingChild,
+      required this.onPressed})
       : super(key: key);
 
   @override

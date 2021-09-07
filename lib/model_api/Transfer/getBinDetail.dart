@@ -10,10 +10,10 @@ String getBinDetailToJson(GetBinDetail data) => json.encode(data.toJson());
 
 class GetBinDetail {
     GetBinDetail({
-        this.status,
-        this.statusMsg,
-        this.errorCode,
-        this.data,
+       required this.status,
+       required this.statusMsg,
+       required this.errorCode,
+       required this.data,
     });
 
     String status;
@@ -38,7 +38,7 @@ class GetBinDetail {
 
 class Data {
     Data({
-        this.materialCodinatorSchedulerData,
+      required  this.materialCodinatorSchedulerData,
     });
 
     List<BundleDetail> materialCodinatorSchedulerData;
@@ -54,23 +54,23 @@ class Data {
 
 class BundleDetail {
     BundleDetail({
-        this.id,
-        this.bundleIdentification,
-        this.scheduledId,
-        this.bundleCreationTime,
-        this.bundleQuantity,
-        this.machineIdentification,
-        this.operatorIdentification,
-        this.finishedGoodsPart,
-        this.cablePartNumber,
-        this.cablePartDescription,
-        this.cutLengthSpecificationInmm,
-        this.color,
-        this.bundleStatus,
-        this.binId,
-        this.locationId,
-        this.orderId,
-        this.updateFromProcess,
+      required  this.id,
+      required  this.bundleIdentification,
+      required  this.scheduledId,
+      required  this.bundleCreationTime,
+      required  this.bundleQuantity,
+      required  this.machineIdentification,
+      required  this.operatorIdentification,
+      required  this.finishedGoodsPart,
+      required  this.cablePartNumber,
+      required  this.cablePartDescription,
+      required  this.cutLengthSpecificationInmm,
+      required  this.color,
+      required  this.bundleStatus,
+      required  this.binId,
+      required  this.locationId,
+      required  this.orderId,
+      required  this.updateFromProcess,
     });
 
     int id;

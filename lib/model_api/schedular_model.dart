@@ -10,10 +10,10 @@ String schedularToJson(Schedular data) => json.encode(data.toJson());
 
 class Schedular {
     Schedular({
-        this.status,
-        this.statusMsg,
-        this.errorCode,
-        this.data,
+       required this.status,
+       required this.statusMsg,
+       required this.errorCode,
+       required this.data,
     });
 
     String status;
@@ -38,7 +38,7 @@ class Schedular {
 
 class Data {
     Data({
-        this.employeeList,
+        required this.employeeList,
     });
 
     List<Schedule> employeeList;
@@ -54,29 +54,29 @@ class Data {
 
 class Schedule {
     Schedule({
-        this.machineNumber,
-        this.currentTime,
-        this.shiftType,
-        this.currentDate,
-        this.machineName,
-        this.orderId,
-        this.finishedGoodsNumber,
-        this.scheduledId,
-        this.cablePartNumber,
-        this.length,
-        this.color,
-        this.scheduledQuantity,
-        this.scheduledStatus,
-        this.process,
-        this.awg,
-        this.shiftStart,
-        this.shiftEnd,
-        this.cableNumber,
-        this.actualQuantity,
-        this.shiftNumber,
-        this.startDate,
-        this.lengthTolerance,
-        this.route,
+      required  this.machineNumber,
+      required  this.currentTime,
+      required  this.shiftType,
+      required  this.currentDate,
+      required  this.machineName,
+      required  this.orderId,
+      required  this.finishedGoodsNumber,
+      required  this.scheduledId,
+      required  this.cablePartNumber,
+      required  this.length,
+      required  this.color,
+      required  this.scheduledQuantity,
+      required  this.scheduledStatus,
+      required  this.process,
+      required  this.awg,
+      required  this.shiftStart,
+      required  this.shiftEnd,
+      required  this.cableNumber,
+      required  this.actualQuantity,
+      required  this.shiftNumber,
+      required  this.startDate,
+      required  this.lengthTolerance,
+      required  this.route,
     });
 
     dynamic machineNumber;
@@ -133,7 +133,7 @@ class Schedule {
         "machineNumber": machineNumber,
         "currentTime": currentTime,
         "shiftType": shiftType,
-        "currentDate": "${currentDate.year.toString().padLeft(4, '0')}-${currentDate.month.toString().padLeft(2, '0')}-${currentDate.day.toString().padLeft(2, '0')}",
+        "currentDate": "${currentDate!.year.toString().padLeft(4, '0')}-${currentDate!.month.toString().padLeft(2, '0')}-${currentDate!.day.toString().padLeft(2, '0')}",
         "machineName": machineName,
         "orderId": orderId,
         "finishedGoodsNumber": finishedGoodsNumber,

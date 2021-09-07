@@ -6,11 +6,11 @@ class ItemPart {
   String schQty;
   String date;
   ItemPart({
-    this.description,
-    this.oty,
-    this.partNo,
-    this.schQty,
-    this.uom,
-    this.date,
+    required this.description,
+    required this.oty,
+    required this.partNo,
+    required this.schQty,
+    required this.uom,
+    required this.date,
   });
 }

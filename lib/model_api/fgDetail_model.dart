@@ -11,10 +11,10 @@ String getFgDetailsToJson(GetFgDetails data) => json.encode(data.toJson());
 
 class GetFgDetails {
   GetFgDetails({
-    this.status,
-    this.statusMsg,
-    this.errorCode,
-    this.data,
+   required this.status,
+   required this.statusMsg,
+   required this.errorCode,
+   required this.data,
   });
 
   String status;
@@ -39,7 +39,7 @@ class GetFgDetails {
 
 class Data {
   Data({
-    this.getFgDetaials,
+   required this.getFgDetaials,
   });
 
   FgDetails getFgDetaials;
@@ -63,12 +63,12 @@ class FgDetails {
     this.tolrance,
   });
 
-  String fgDescription;
+  String? fgDescription;
   dynamic fgScheduleDate;
-  String customer;
-  String drgRev;
-  int cableSerialNo;
-  String tolrance;
+  String ?customer;
+  String? drgRev;
+  int? cableSerialNo;
+  String? tolrance;
 
   factory FgDetails.fromJson(Map<String, dynamic> json) => FgDetails(
         fgDescription: json["fgDescription"],

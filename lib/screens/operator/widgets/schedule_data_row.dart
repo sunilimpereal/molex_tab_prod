@@ -648,10 +648,10 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                         scheduledQuantity: int.parse(
                                             widget.schedule.scheduledQuantity),
                                         machineIdentification:
-                                            widget.machine.machineNumber,
+                                            widget.machine.machineNumber??"",
                                         //TODO bundle ID
                                         firstPieceAndPatrol: 0,
-                                        applicatorChangeover: 0);
+                                        applicatorChangeover: 0, bundleIdentification: '');
                                 apiService
                                     .post100Complete(fullyComplete)
                                     .then((value) {

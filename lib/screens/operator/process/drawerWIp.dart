@@ -11,21 +11,21 @@ import '../Homepage.dart';
 class DrawerWidgetWIP extends StatefulWidget {
   Employee employee;
   MachineDetails machineDetails;
-  Schedule schedule;
+
   Function reloadmaterial;
   Function homeReload;
   Function transfer;
   Function returnmaterial;
-  String type;
+
   DrawerWidgetWIP(
-      {this.employee,
-      this.schedule,
-      this.machineDetails,
-      this.homeReload,
-      this.type,
-      this.reloadmaterial,
-      this.transfer,
-      this.returnmaterial});
+      {required this.employee,
+     
+      required this.machineDetails,
+      required this.homeReload,
+   
+      required this.reloadmaterial,
+      required this.transfer,
+      required this.returnmaterial});
   @override
   _DrawerWidgetWIPState createState() => _DrawerWidgetWIPState();
 }

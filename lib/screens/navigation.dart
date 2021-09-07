@@ -33,7 +33,7 @@ class _NavPageState extends State<NavPage> {
             title: Text('Change IP'),
             onTap: () {
               ApiService apiService = new ApiService();
-              apiService.getmachinedetails(widget.machine.machineNumber).then((value) {
+              apiService.getmachinedetails(widget.machine.machineNumber??'').then((value) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(

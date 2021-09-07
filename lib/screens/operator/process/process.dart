@@ -28,14 +28,12 @@ import '../../../main.dart';
 
 class ProcessPage extends StatefulWidget {
   Schedule schedule;
-  String rightside;
   Employee employee;
   Function homeReload;
   MachineDetails machine;
   MatTrkPostDetail matTrkPostDetail;
   ProcessPage(
       {required this.schedule,
-      required this.rightside,
       required this.machine,
       required this.employee,
       required this.homeReload,
@@ -64,7 +62,7 @@ class _ProcessPageState extends State<ProcessPage> {
   void initState() {
     apiService = new ApiService();
     SystemChrome.setEnabledSystemUIOverlays([]);
-    items = widget.machine.category.contains("Cutting")
+    items = widget.machine.category!.contains("Cutting")
         ? <String>['Cutlength & both Side Stripping']
         : <String>[
             'Crimp From, Cutlength, Crimp To',
@@ -79,7 +77,7 @@ class _ProcessPageState extends State<ProcessPage> {
     // _chosenValue = widget.machine.category.contains("Cutting")
     //     ? 'Cutlength & both side stripping'
     //     : 'Crimp-From,Cutlength,Crimp-To';
-    totalquantity = widget.schedule.actualQuantity;
+    totalquantity = widget.schedule.actualQuantity??0;
     super.initState();
   }
 
@@ -155,6 +153,7 @@ class _ProcessPageState extends State<ProcessPage> {
                 ],
               ),
             );
+            return false;
         },
         child: Scaffold(
           backgroundColor: Colors.blueGrey.shade50,
@@ -385,7 +384,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                                     widget.schedule
                                                         .scheduledQuantity),
                                                 machineIdentification: widget
-                                                    .machine.machineNumber,
+                                                    .machine.machineNumber??"", applicatorChangeover: 0, bundleIdentification: '', firstPieceAndPatrol: 0,
                                                 //TODO bundle ID
                                               );
                                               apiService!
@@ -525,7 +524,7 @@ class _ProcessPageState extends State<ProcessPage> {
               child: Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: FutureBuilder(
-                    future: apiService.getCableTerminalA(
+                    future: apiService!.getCableTerminalA(
                         fgpartNo: widget.schedule.finishedGoodsNumber,
                         cablepartno: widget.schedule.cablePartNumber ??
                             widget.schedule.finishedGoodsNumber,
@@ -533,14 +532,14 @@ class _ProcessPageState extends State<ProcessPage> {
                         color: widget.schedule.color,
                         awg: widget.schedule.awg),
                     builder: (context, snapshot) {
-                      CableTerminalA terminalA = snapshot.data;
+                      CableTerminalA? terminalA = snapshot.data as CableTerminalA?;
                       if (snapshot.hasData) {
                         return process(
                             'From Process',
                             '',
                             // 'From Strip Length Spec(mm) - ${terminalA.fronStripLengthSpec}',
                             'Process (Strip Length)(Terminal Part#)Spec-(Crimp Height)(Pull Force)(Cmt)',
-                            '(${terminalA.processType})(${terminalA.stripLength})(${terminalA.terminalPart})(${terminalA.specCrimpLength})(${terminalA.pullforce})(${terminalA.comment})',
+                            '(${terminalA!.processType})(${terminalA.stripLength})(${terminalA.terminalPart})(${terminalA.specCrimpLength})(${terminalA.pullforce})(${terminalA.comment})',
                             '',
                             0.35,
                             method.contains('a') ? true : false);
@@ -561,14 +560,14 @@ class _ProcessPageState extends State<ProcessPage> {
             Padding(
               padding: const EdgeInsets.all(0.0),
               child: FutureBuilder(
-                  future: apiService.getCableDetails(
+                  future: apiService!.getCableDetails(
                       fgpartNo: widget.schedule.finishedGoodsNumber,
                       cablepartno: widget.schedule.cablePartNumber ?? "0",
                       length: widget.schedule.length,
                       color: widget.schedule.color,
                       awg: widget.schedule.awg),
                   builder: (context, snapshot) {
-                    CableDetails cableDetail = snapshot.data;
+                    CableDetails? cableDetail = snapshot.data as CableDetails?;
                     if (snapshot.hasData) {
                       return cable(
                           cableDetails: cableDetail,
@@ -591,7 +590,7 @@ class _ProcessPageState extends State<ProcessPage> {
             Padding(
               padding: const EdgeInsets.all(0.0),
               child: FutureBuilder(
-                  future: apiService.getCableTerminalB(
+                  future: apiService!.getCableTerminalB(
                       fgpartNo: widget.schedule.finishedGoodsNumber,
                       cablepartno: widget.schedule.cablePartNumber ??
                           widget.schedule.finishedGoodsNumber,
@@ -600,12 +599,12 @@ class _ProcessPageState extends State<ProcessPage> {
                       awg: widget.schedule.awg),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      CableTerminalB cableTerminalB = snapshot.data;
+                      CableTerminalB? cableTerminalB = snapshot.data as CableTerminalB?;
                       return process(
                           'To Process',
                           '',
                           'Process(Strip Length)(Terminal Part#)Spec-(Crimp Height)(Pull Force)(Cmt)',
-                          '(${cableTerminalB.processType})(${cableTerminalB.stripLength})(${cableTerminalB.terminalPart})(${cableTerminalB.specCrimpLength})(${cableTerminalB.pullforce})(${cableTerminalB.comment})',
+                          '(${cableTerminalB!.processType})(${cableTerminalB.stripLength})(${cableTerminalB.terminalPart})(${cableTerminalB.specCrimpLength})(${cableTerminalB.pullforce})(${cableTerminalB.comment})',
                           '',
                           0.35,
                           method.contains('b') ? true : false);
@@ -701,7 +700,7 @@ class _ProcessPageState extends State<ProcessPage> {
     );
   }
 
-  Widget cable({CableDetails cableDetails, double width, bool color}) {
+  Widget cable({CableDetails? cableDetails, double? width, bool? color}) {
     return Material(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -714,9 +713,9 @@ class _ProcessPageState extends State<ProcessPage> {
         // width: MediaQuery.of(context).size.width * width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: color ? Colors.red.shade50 : Colors.white,
+          color: color??false ? Colors.red.shade50 : Colors.white,
           border: Border.all(
-              width: 1.5, color: color ? Colors.red.shade300 : Colors.white),
+              width: 1.5, color: color??false ? Colors.red.shade300 : Colors.white),
         ),
         child: Row(
           children: [
@@ -737,7 +736,7 @@ class _ProcessPageState extends State<ProcessPage> {
                         ),
                         SizedBox(width: 20),
                         Text(
-                          "Cut Length Spec(mm) -${cableDetails.cutLengthSpec}",
+                          "Cut Length Spec(mm) -${cableDetails!.cutLengthSpec}",
                           style: TextStyle(fontSize: 11, fontFamily: ''),
                         ),
                       ],
@@ -748,7 +747,7 @@ class _ProcessPageState extends State<ProcessPage> {
                       style: TextStyle(fontSize: 10),
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width * width,
+                      width: MediaQuery.of(context).size.width * width!,
                       child: Text(
                           "${cableDetails.cablePartNumber}(${cableDetails.description})",
                           textAlign: TextAlign.center,
@@ -854,7 +853,7 @@ class _ProcessPageState extends State<ProcessPage> {
     );
   }
 
-  Widget buildDataRow({Schedule schedule, int c}) {
+  Widget buildDataRow({required Schedule schedule}) {
     double width = MediaQuery.of(context).size.width;
 
     Widget cell(String name, double d) {
@@ -932,11 +931,11 @@ class _ProcessPageState extends State<ProcessPage> {
     return Padding(
         padding: const EdgeInsets.all(5.0),
         child: FutureBuilder(
-          future: apiService.getFgDetails(widget.schedule.finishedGoodsNumber),
+          future: apiService!.getFgDetails(widget.schedule.finishedGoodsNumber),
           builder: (context, snapshot) {
             print('fg number ${widget.schedule.finishedGoodsNumber}');
             if (snapshot.hasData) {
-              FgDetails fgDetail = snapshot.data;
+              FgDetails? fgDetail = snapshot.data as FgDetails?;
               return Container(
                 decoration: BoxDecoration(),
                 child: Container(
@@ -946,7 +945,7 @@ class _ProcessPageState extends State<ProcessPage> {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          boxes("FG Description", fgDetail.fgDescription ?? ''),
+                          boxes("FG Description", fgDetail!.fgDescription ?? ''),
                           boxes("FG Scheduled", fgDetail.fgScheduleDate ?? ''),
                           boxes("Customer", fgDetail.customer ?? ''),
                           boxes("Drg Rev", fgDetail.drgRev ?? ''),
@@ -990,7 +989,7 @@ class _ProcessPageState extends State<ProcessPage> {
 
   //tearmial A b and cable
   Widget startProcess() {
-    return _chosenValue == null || !items.contains(widget.schedule.process)
+    return _chosenValue == null || !items!.contains(widget.schedule.process)
         ? Container(
             child: DropdownButton<String>(
               elevation: 0,
@@ -1002,7 +1001,7 @@ class _ProcessPageState extends State<ProcessPage> {
               //elevation: 5,
               style: TextStyle(color: Colors.white),
               iconEnabledColor: Colors.red,
-              items: items.map<DropdownMenuItem<String>>((String value) {
+              items: items!.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Container(
@@ -1042,7 +1041,7 @@ class _ProcessPageState extends State<ProcessPage> {
                     fontSize: 14,
                     fontWeight: FontWeight.w500),
               ),
-              onChanged: (String value) {
+              onChanged: (String? value) {
                 setState(() {
                   _chosenValue = value;
                   if (value == "Crimp From, Cutlength, Crimp To") {
@@ -1074,7 +1073,7 @@ class _ProcessPageState extends State<ProcessPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  _chosenValue,
+                  _chosenValue??'',
                   style: TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.w600,
@@ -1100,7 +1099,7 @@ class _ProcessPageState extends State<ProcessPage> {
   }
 
   Future<void> machineDetail(
-      {BuildContext context, MachineDetails machineDetails}) async {
+      {required BuildContext context, required MachineDetails machineDetails}) async {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {},

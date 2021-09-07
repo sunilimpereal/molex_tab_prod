@@ -26,7 +26,7 @@ import 'package:rounded_loading_button/rounded_loading_button.dart';
 class Homepage extends StatefulWidget {
   Employee employee;
   MachineDetails machine;
-  Homepage({this.employee, this.machine});
+  Homepage({required this.employee, required this.machine});
   @override
   _HomepageState createState() => _HomepageState();
 }
@@ -35,7 +35,7 @@ class _HomepageState extends State<Homepage> {
   int type = 0;
   String sameMachine = 'true';
   int scheduleType = 0;
-  ApiService apiService;
+  ApiService ?apiService;
 
   String dropdownName = "FG part";
 
@@ -46,8 +46,7 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     apiService = new ApiService();
-    apiService.getScheduelarData(
-        machId: widget.machine.machineNumber, type: type == 0 ? "A" : "B");
+   
     SystemChrome.setEnabledSystemUIOverlays([]);
     super.initState();
   }
@@ -323,7 +322,7 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
-  Widget dropdown({List<String> options, String name}) {
+  Widget dropdown({required List<String> options, required String name}) {
     return Container(
         child: DropdownButton<String>(
       focusColor: Colors.red,
@@ -351,9 +350,9 @@ class _HomepageState extends State<Homepage> {
         style: TextStyle(
             color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
       ),
-      onChanged: (String value) {
+      onChanged: (String ?value) {
         setState(() {
-          _chosenValue = value;
+          _chosenValue = value!;
         });
       },
     ));
@@ -361,7 +360,7 @@ class _HomepageState extends State<Homepage> {
 }
 
 class SchudleTable extends StatefulWidget {
-  Schedule schedule;
+
   Employee employee;
   MachineDetails machine;
   String scheduleType;
@@ -369,14 +368,13 @@ class SchudleTable extends StatefulWidget {
   String searchType;
   String query;
   SchudleTable(
-      {Key key,
-      this.schedule,
-      this.employee,
-      this.type,
-      this.searchType,
-      this.query,
-      this.machine,
-      this.scheduleType})
+      {Key? key,
+      required this.employee,
+      required this.type,
+      required this.searchType,
+      required this.query,
+      required this.machine,
+      required this.scheduleType})
       : super(key: key);
 
   @override
@@ -387,9 +385,9 @@ class _SchudleTableState extends State<SchudleTable> {
   List<Schedule> schedualrList = [];
 
   List<DataRow> datarows = [];
-  ApiService apiService;
+  ApiService ?apiService;
 
-  PostStartProcessP1 postStartprocess;
+  PostStartProcessP1? postStartprocess;
   @override
   void initState() {
     apiService = new ApiService();
@@ -403,21 +401,21 @@ class _SchudleTableState extends State<SchudleTable> {
     Timer(Duration(seconds: 3), () {});
   }
 
-  List<Schedule> searchfilter(List<Schedule> scheduleList) {
+  List<Schedule>? searchfilter(List<Schedule>? scheduleList) {
     switch (widget.searchType) {
       case "Order Id":
-        return scheduleList
+        return scheduleList!
             .where((element) => element.orderId.startsWith(widget.query))
             .toList();
         break;
       case "FG Part No.":
-        return scheduleList
+        return scheduleList!
             .where((element) =>
                 element.finishedGoodsNumber.startsWith(widget.query))
             .toList();
         break;
       case "Cable Part No":
-        return scheduleList
+        return scheduleList!
             .where(
                 (element) => element.cablePartNumber.startsWith(widget.query))
             .toList();
@@ -465,16 +463,16 @@ class _SchudleTableState extends State<SchudleTable> {
                   height: widget.type == "M" ? 425 : 495,
                   // height: double.parse("${rowList.length*60}"),
                   child: FutureBuilder(
-                    future: apiService.getScheduelarData(
-                        machId: widget.machine.machineNumber,
+                    future: apiService!.getScheduelarData(
+                        machId: widget.machine.machineNumber??'',
                         type: widget.type,
                         sameMachine: widget.scheduleType),
-                    builder: (context, snapshot) {
+                    builder: (context,AsyncSnapshot<List<Schedule>> snapshot) {
                       if (snapshot.hasData) {
                         // return  buildDataRow(schedule:widget.schedule,c:2);
-                        List<Schedule> schedulelist =
+                        List<Schedule>? schedulelist =
                             searchfilter(snapshot.data);
-                        schedulelist = schedulelist
+                        schedulelist = schedulelist!
                             .where((element) =>
                                 element.scheduledStatus.toLowerCase() !=
                                 "complete".toLowerCase())
@@ -502,7 +500,7 @@ class _SchudleTableState extends State<SchudleTable> {
                                 itemCount: schedulelist.length,
                                 itemBuilder: (context, index) {
                                   return ScheduleDataRow(
-                                    schedule: schedulelist[index],
+                                    schedule: schedulelist![index],
                                     machine: widget.machine,
                                     employee: widget.employee,
                                     onrefresh: _onRefresh,
@@ -541,8 +539,7 @@ class _SchudleTableState extends State<SchudleTable> {
                                             if (states.contains(
                                                 MaterialState.pressed))
                                               return Colors.green.shade200;
-                                            return Colors.red[
-                                                400]; // Use the component's default.
+                                            return Colors.red.shade400; // Use the component's default.
                                           },
                                         ),
                                       ),
@@ -607,8 +604,7 @@ class _SchudleTableState extends State<SchudleTable> {
                                             if (states.contains(
                                                 MaterialState.pressed))
                                               return Colors.green.shade200;
-                                            return Colors.red[
-                                                400]; // Use the component's default.
+                                            return Colors.red.shade400; // Use the component's default.
                                           },
                                         ),
                                       ),

@@ -14,7 +14,9 @@ String viInspectedbundleToJson(ViInspectedbundle data) =>
 
 class ViInspectedbundle {
   ViInspectedbundle(
-      {this.bundleIdentification,
+      {
+        
+        this.bundleIdentification,
       this.bundleQuantity,
       this.passedQuantity,
       this.rejectedQuantity,
@@ -67,58 +69,58 @@ class ViInspectedbundle {
       @required this.viCompleted,
       @required this.processType});
 
-  String bundleIdentification;
-  int bundleQuantity;
-  int passedQuantity;
-  int rejectedQuantity;
-  int crimpInslation;
-  int insulationSlug;
-  int windowGap;
-  int exposedStrands;
-  int burrOrCutOff;
-  int terminalBendOrClosedOrDamage;
-  int seamOpen;
-  int missCrimp;
-  int frontBellMouth;
-  int backBellMouth;
-  int extrusionOnBurr;
-  int brushLength;
-  int cableDamage;
-  int terminalTwist;
-  String orderId;
-  String fgPart;
-  String scheduleId;
-  String binId;
-  String awg;
-  String method;
-  int terminalFrom;
-  int terminalTo;
-  int cvmRejectionsCable;
-  int cvmRejectionsCableTerminalTo;
-  int cvmRejectionsCableTerminalFrom;
-  int cfmRejectionsCable;
-  int cfmRejectionsCableTerminalTo;
-  int cfmRejectionsCableTerminalFrom;
-  int endWire;
-  int rejectionsTerminalTo;
-  int rejectionsTerminalFrom;
-  int lengthVariation;
-  int stringLengthVariation;
-  int nickMark;
-  int bellMouthError;
-  int brushLengthLessMore;
-  int wrongTerminal;
-  int wrongCable;
-  int wrongCutLength;
-  int extrusionBurr;
-  String employeeid;
-  String status;
-  String locationId;
-  String crimpFromSchId;
-  String crimpToSchId;
-  String preparationCompleteFlag;
-  String viCompleted;
-  String processType;
+  String? bundleIdentification;
+  int? bundleQuantity;
+  int? passedQuantity;
+  int? rejectedQuantity;
+  int? crimpInslation;
+  int? insulationSlug;
+  int? windowGap;
+  int? exposedStrands;
+  int? burrOrCutOff;
+  int? terminalBendOrClosedOrDamage;
+  int? seamOpen;
+  int? missCrimp;
+  int? frontBellMouth;
+  int? backBellMouth;
+  int? extrusionOnBurr;
+  int? brushLength;
+  int? cableDamage;
+  int? terminalTwist;
+  String ?orderId;
+  String ?fgPart;
+  String ?scheduleId;
+  String ?binId;
+  String ?awg;
+  String ?method;
+  int ?terminalFrom;
+  int ?terminalTo;
+  int ?cvmRejectionsCable;
+  int ?cvmRejectionsCableTerminalTo;
+  int ?cvmRejectionsCableTerminalFrom;
+  int ?cfmRejectionsCable;
+  int ?cfmRejectionsCableTerminalTo;
+  int ?cfmRejectionsCableTerminalFrom;
+  int ?endWire;
+  int ?rejectionsTerminalTo;
+  int ?rejectionsTerminalFrom;
+  int ?lengthVariation;
+  int ?stringLengthVariation;
+  int? nickMark;
+  int? bellMouthError;
+  int? brushLengthLessMore;
+  int? wrongTerminal;
+  int? wrongCable;
+  int? wrongCutLength;
+  int? extrusionBurr;
+  String? employeeid;
+  String? status;
+  String? locationId;
+  String? crimpFromSchId;
+  String? crimpToSchId;
+  String? preparationCompleteFlag;
+  String? viCompleted;
+  String? processType;
 
   factory ViInspectedbundle.fromJson(Map<String, dynamic> json) =>
       ViInspectedbundle(

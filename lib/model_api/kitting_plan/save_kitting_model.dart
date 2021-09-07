@@ -33,21 +33,21 @@ class SaveKitting {
         this.status,
     });
 
-    int fgPartNumber;
-    String orderId;
-    String cablePartNumber;
-    String cableType;
-    int length;
-    String wireCuttingColor;
-    int average;
-    String customerName;
-    String routeMaster;
-    int scheduledQty;
+    int ?fgPartNumber;
+    String? orderId;
+    String ?cablePartNumber;
+    String ?cableType;
+    int ?length;
+    String? wireCuttingColor;
+    int ?average;
+    String? customerName;
+    String? routeMaster;
+    int ?scheduledQty;
     dynamic actualQty;
-    String binId;
-    String binLocation;
-    List<String> bundleId;
-    int bundleQty;
+    String? binId;
+    String? binLocation;
+    List<String>? bundleId;
+    int? bundleQty;
     dynamic suggetedScheduledQty;
     dynamic suggestedActualQty;
     dynamic suggestedBinLocation;
@@ -93,7 +93,7 @@ class SaveKitting {
         "actualQty": actualQty,
         "binId": binId,
         "binLocation": binLocation,
-        "bundleId": List<dynamic>.from(bundleId.map((x) => x)),
+        "bundleId": List<dynamic>.from(bundleId!.map((x) => x)),
         "bundleQty": bundleQty,
         "SuggetedScheduledQty": suggetedScheduledQty,
         "suggestedActualQty": suggestedActualQty,

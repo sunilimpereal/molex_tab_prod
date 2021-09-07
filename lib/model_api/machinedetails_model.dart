@@ -10,10 +10,10 @@ String getMachineDetailsToJson(GetMachineDetails data) => json.encode(data.toJso
 
 class GetMachineDetails {
     GetMachineDetails({
-        this.status,
-        this.statusMsg,
-        this.errorCode,
-        this.data,
+      required  this.status,
+      required  this.statusMsg,
+      required  this.errorCode,
+      required  this.data,
     });
 
     String status;
@@ -38,7 +38,7 @@ class GetMachineDetails {
 
 class Data {
     Data({
-        this.machineDetailsList,
+      required  this.machineDetailsList,
     });
 
     List<MachineDetails> machineDetailsList;
@@ -54,28 +54,29 @@ class Data {
 
 class MachineDetails {
     MachineDetails({
-        this.modelName,
-        this.machineNumber,
-        this.make,
-        this.machineType,
-        this.machineName,
-        this.category,
-        this.machineLocation,
-        this.process,
-        this.segment,
-        this.printerIp,
+      this.modelName,
+      this.machineNumber,
+      this.make,
+      this.machineType,
+      this.machineName,
+      this.category,
+      this.machineLocation,
+      this.process,
+      this.segment,
+      this.printerIp,
     });
+     
 
-    String modelName;
-    String machineNumber;
-    String make;
-    String machineType;
-    String machineName;
-    String category;
-    String machineLocation;
-    String process;
-    String segment;
-    String printerIp;
+    String ?modelName;
+    String ?machineNumber;
+    String ?make;
+    String ?machineType;
+    String ?machineName;
+    String ?category;
+    String ?machineLocation;
+    String ?process;
+    String ?segment;
+    String ?printerIp;
 
     factory MachineDetails.fromJson(Map<String, dynamic> json) => MachineDetails(
         modelName: json["modelName"],

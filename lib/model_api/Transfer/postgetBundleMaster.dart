@@ -10,14 +10,14 @@ String postgetBundleMasterToJson(PostgetBundleMaster data) => json.encode(data.t
 
 class PostgetBundleMaster {
     PostgetBundleMaster({
-        this.binId,
-        this.status,
-        this.bundleId,
-        this.location,
-        this.finishedGoods,
-        this.cablePartNumber,
-        this.orderId,
-        this.scheduleId,
+       required this.binId,
+       required this.status,
+       required this.bundleId,
+       required this.location,
+       required this.finishedGoods,
+       required this.cablePartNumber,
+       required this.orderId,
+       required this.scheduleId,
     });
 
     int binId;

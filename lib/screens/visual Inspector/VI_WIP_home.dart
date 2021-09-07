@@ -1205,10 +1205,10 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
     viIspectionBundleList[selectedindex].rejectedQuantity = int.parse(
         rejectedQtyController.text == '' ? "0" : rejectedQtyController.text);
     viIspectionBundleList[selectedindex].passedQuantity =
-        viIspectionBundleList[selectedindex].bundleQuantity -
+        (viIspectionBundleList[selectedindex].bundleQuantity! -
             int.parse(rejectedQtyController.text == ''
                 ? "0"
-                : rejectedQtyController.text);
+                : rejectedQtyController.text))!;
     viIspectionBundleList[selectedindex].status = "completed";
     viIspectionBundleList[selectedindex].viCompleted = "1";
     return viIspectionBundleList[selectedindex];
@@ -1474,7 +1474,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                                       userId: widget.employee.empId,
                                       bundleId:
                                           viIspectionBundleList[selectedindex]
-                                              .bundleIdentification,
+                                              .bundleIdentification??'',
                                       locationId: _locationController.text == ''
                                           ? ""
                                           : _locationController.text,

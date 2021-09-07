@@ -11,10 +11,10 @@ String getRawMaterialToJson(GetRawMaterial data) => json.encode(data.toJson());
 
 class GetRawMaterial {
     GetRawMaterial({
-        this.status,
-        this.statusMsg,
-        this.errorCode,
-        this.data,
+       required this.status,
+       required this.statusMsg,
+       required this.errorCode,
+       required this.data,
     });
 
     String status;
@@ -39,7 +39,7 @@ class GetRawMaterial {
 
 class Data {
     Data({
-        this.rawMaterialDetails,
+        required this.rawMaterialDetails,
     });
 
     List<RawMaterial> rawMaterialDetails;
@@ -62,11 +62,11 @@ class RawMaterial {
         this.description,
     });
 
-    String partNunber;
-    String uom;
-    String requireQuantity;
-    String toatalScheduleQuantity;
-    String description;
+    String? partNunber;
+    String? uom;
+    String? requireQuantity;
+    String? toatalScheduleQuantity;
+    String? description;
 
     factory RawMaterial.fromJson(Map<String, dynamic> json) => RawMaterial(
         partNunber: json["partNunber"],

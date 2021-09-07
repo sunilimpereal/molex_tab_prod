@@ -231,7 +231,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
               ),
             ),
           );
-        },
+        }, homeReload: (){}, returnmaterial: (){}, 
       ),
       body: Container(
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -257,7 +257,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
     if (main == "scanBundle") {
       return bundltype == "single"
           ? ScanBundle(
-              machineId: widget.machine.machineNumber,
+              machineId: widget.machine.machineNumber??'',
               userId: widget.employee.empId,
               schedule: widget.schedule,
               method: method,
@@ -302,7 +302,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
               }, 
             )
           : MultipleBundleScan(
-              machineId: widget.machine.machineNumber,
+              machineId: widget.machine.machineNumber??'',
               userId: widget.employee.empId,
               schedule: widget.schedule,
               method: method,

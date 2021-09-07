@@ -10,10 +10,10 @@ String responsePostCrimpingDetailToJson(ResponsePostCrimpingDetail data) => json
 
 class ResponsePostCrimpingDetail {
     ResponsePostCrimpingDetail({
-        this.status,
-        this.statusMsg,
+        required this.status,
+        required this.statusMsg,
         this.errorCode,
-        this.data,
+        required this.data,
     });
 
     String status;
@@ -38,7 +38,7 @@ class ResponsePostCrimpingDetail {
 
 class Data {
     Data({
-        this.crimpingProcess,
+        required this.crimpingProcess,
     });
 
     CrimpingResponse crimpingProcess;
@@ -54,39 +54,39 @@ class Data {
 
 class CrimpingResponse {
     CrimpingResponse({
-        this.bundleIdentification,
-        this.bundleQuantity,
-        this.passedQuantity,
-        this.rejectedQuantity,
-        this.crimpInslation,
-        this.insulationSlug,
-        this.windowGap,
-        this.exposedStrands,
-        this.burrOrCutOff,
-        this.terminalBendOrClosedOrDamage,
-        this.nickMarkOrStrandsCut,
-        this.seamOpen,
-        this.missCrimp,
-        this.frontBellMouth,
-        this.backBellMouth,
-        this.extrusionOnBurr,
-        this.brushLength,
-        this.cableDamage,
-        this.terminalTwist,
-        this.orderId,
-        this.fgPart,
-        this.scheduleId,
-        this.binId,
-        this.processType,
-        this.method,
-        this.machineIdentification,
-        this.cablePartNumber,
-        this.cutLength,
-        this.color,
-        this.finishedGoods,
-        this.terminalFrom,
-        this.terminalTo,
-        this.status,
+       required this.bundleIdentification,
+       required this.bundleQuantity,
+       required this.passedQuantity,
+       required this.rejectedQuantity,
+       required this.crimpInslation,
+       required this.insulationSlug,
+       required this.windowGap,
+       required this.exposedStrands,
+       required this.burrOrCutOff,
+       required this.terminalBendOrClosedOrDamage,
+       required this.nickMarkOrStrandsCut,
+       required this.seamOpen,
+       required this.missCrimp,
+       required this.frontBellMouth,
+       required this.backBellMouth,
+       required this.extrusionOnBurr,
+       required this.brushLength,
+       required this.cableDamage,
+       required this.terminalTwist,
+       required this.orderId,
+       required this.fgPart,
+       required this.scheduleId,
+       required this.binId,
+       required this.processType,
+       required this.method,
+       required this.machineIdentification,
+       required this.cablePartNumber,
+       required this.cutLength,
+       required this.color,
+       required this.finishedGoods,
+       required this.terminalFrom,
+       required this.terminalTo,
+       required this.status,
     });
 
     String bundleIdentification;

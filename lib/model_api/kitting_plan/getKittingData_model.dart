@@ -11,10 +11,10 @@ String getKittingDataToJson(GetKittingData data) => json.encode(data.toJson());
 
 class GetKittingData {
   GetKittingData({
-    this.status,
-    this.statusMsg,
+    required this.status,
+    required this.statusMsg,
     this.errorCode,
-    this.data,
+    required this.data,
   });
 
   String status;
@@ -39,7 +39,7 @@ class GetKittingData {
 
 class Data {
   Data({
-    this.kittingDetail,
+   required this.kittingDetail,
   });
 
   KittingDetail kittingDetail;
@@ -55,8 +55,8 @@ class Data {
 
 class KittingDetail {
   KittingDetail({
-    this.kittingEJobDtoList,
-    this.kittingIssuanceList,
+   required this.kittingEJobDtoList,
+   required this.kittingIssuanceList,
   });
 
   List<KittingEJobDtoList> kittingEJobDtoList;
@@ -80,12 +80,12 @@ class KittingDetail {
 
 class KittingEJobDtoList {
   KittingEJobDtoList({
-    this.fgNumber,
-    this.cableColor,
-    this.cableNumber,
-    this.wireGuage,
-    this.cutLength,
-    this.bundleMaster,
+   required this.fgNumber,
+   required this.cableColor,
+   required this.cableNumber,
+   required this.wireGuage,
+   required this.cutLength,
+   required this.bundleMaster,
   });
 
   int fgNumber;
@@ -118,25 +118,25 @@ class KittingEJobDtoList {
 
 class BundleMaster {
   BundleMaster({
-    this.id,
-    this.bundleIdentification,
-    this.scheduledId,
-    this.bundleCreationTime,
-    this.bundleUpdateTime,
-    this.bundleQuantity,
-    this.machineIdentification,
-    this.operatorIdentification,
-    this.finishedGoodsPart,
-    this.cablePartNumber,
-    this.cablePartDescription,
-    this.cutLengthSpecificationInmm,
-    this.color,
-    this.bundleStatus,
-    this.binId,
-    this.locationId,
-    this.orderId,
-    this.updateFromProcess,
-    this.awg,
+    required this.id,
+    required this.bundleIdentification,
+    required this.scheduledId,
+    required this.bundleCreationTime,
+    required this.bundleUpdateTime,
+    required this.bundleQuantity,
+    required this.machineIdentification,
+    required this.operatorIdentification,
+    required this.finishedGoodsPart,
+    required this.cablePartNumber,
+    required this.cablePartDescription,
+    required this.cutLengthSpecificationInmm,
+    required this.color,
+    required this.bundleStatus,
+    required this.binId,
+    required this.locationId,
+    required this.orderId,
+    required this.updateFromProcess,
+    required this.awg,
   });
 
   int id;
@@ -220,9 +220,9 @@ String postKittingDataToJson(PostKittingData data) =>
 
 class PostKittingData {
   PostKittingData({
-    this.orderNo,
-    this.fgNumber,
-    this.quantity,
+   required this.orderNo,
+   required this.fgNumber,
+   required this.quantity,
   });
 
   String orderNo;

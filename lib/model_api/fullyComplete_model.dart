@@ -20,14 +20,14 @@ class PostFullyComplete {
         this.cFaCrimpingFault,
     });
 
-    String orderId;
-    String finishedGoodsNumber;
-    String scheduledId;
-    String cablePartNumber;
-    String color;
-    String firstPieceAndPatrol;
-    String applicatorChangeover;
-    String cFaCrimpingFault;
+    String ? orderId;
+    String ? finishedGoodsNumber;
+    String ? scheduledId;
+    String ? cablePartNumber;
+    String ? color;
+    String ? firstPieceAndPatrol;
+    String ? applicatorChangeover;
+    String ? cFaCrimpingFault;
 
     factory PostFullyComplete.fromJson(Map<String, dynamic> json) => PostFullyComplete(
         orderId: json["orderId"],

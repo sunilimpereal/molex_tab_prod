@@ -2,7 +2,7 @@ class BundlePrint{
   String bundelId;
   String bundleQty;
   BundlePrint({
-    this.bundleQty,
-    this.bundelId,
+    required this.bundleQty,
+    required this.bundelId,
   });
 }

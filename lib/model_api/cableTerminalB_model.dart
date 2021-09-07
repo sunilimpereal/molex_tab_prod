@@ -16,10 +16,10 @@ class GetCableTerminalB {
         this.data,
     });
 
-    String status;
-    String statusMsg;
+    String? status;
+    String? statusMsg;
     dynamic errorCode;
-    Data data;
+    Data? data;
 
     factory GetCableTerminalB.fromJson(Map<String, dynamic> json) => GetCableTerminalB(
         status: json["status"],
@@ -32,13 +32,13 @@ class GetCableTerminalB {
         "status": status,
         "statusMsg": statusMsg,
         "errorCode": errorCode,
-        "data": data.toJson(),
+        "data": data!.toJson(),
     };
 }
 
 class Data {
     Data({
-        this.findCableTerminalBDto,
+      required this.findCableTerminalBDto,
     });
 
     CableTerminalB findCableTerminalBDto;
@@ -64,14 +64,14 @@ class CableTerminalB{
         this.stripLength,
     });
 
-    String fronStripLengthSpec;
-    String processType;
-    int terminalPart;
-    String specCrimpLength;
-    double pullforce;
-    String comment;
-    String unsheathingLength;
-    String stripLength;
+    String ?fronStripLengthSpec;
+    String ?processType;
+    int ?terminalPart;
+    String ?specCrimpLength;
+    double? pullforce;
+    String? comment;
+    String? unsheathingLength;
+    String? stripLength;
 
     factory CableTerminalB.fromJson(Map<String, dynamic> json) => CableTerminalB(
         fronStripLengthSpec: json["fronStripLengthSpec"]?.toString()?.replaceAll("Â±", "±"),

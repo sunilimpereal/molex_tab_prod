@@ -6,11 +6,11 @@ class ViSchedule {
   String totalBundles;
   String totalbundleQty;
   ViSchedule({
-    this.binId,
-    this.fgPart,
-    this.orderId,
-    this.scheduleId,
-    this.totalBundles,
-    this.totalbundleQty,
+    required this.binId,
+    required this.fgPart,
+    required this.orderId,
+    required this.scheduleId,
+    required this.totalBundles,
+    required this.totalbundleQty,
   });
 }

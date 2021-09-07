@@ -11,16 +11,16 @@ String matTrkPostDetailToJson(MatTrkPostDetail data) => json.encode(data.toJson(
 
 class MatTrkPostDetail {
     MatTrkPostDetail({
-        this.machineId,
-        this.schedulerId,
-        this.cablePartNumbers,
+       required this.machineId,
+       required this.schedulerId,
+       required this.cablePartNumbers,
         this.selectedRawMaterial,
     });
 
     String machineId;
     String schedulerId;
     List<String> cablePartNumbers;
-    List<PostRawMaterial> selectedRawMaterial;
+    List<PostRawMaterial>? selectedRawMaterial;
 
     factory MatTrkPostDetail.fromJson(Map<String, dynamic> json) => MatTrkPostDetail(
         machineId: json["machineId"],
@@ -42,10 +42,10 @@ String matTrkDetailToJson(MatTrkDetail data) => json.encode(data.toJson());
 
 class MatTrkDetail {
     MatTrkDetail({
-        this.status,
-        this.statusMsg,
-        this.errorCode,
-        this.data,
+       required this.status,
+       required this.statusMsg,
+       required this.errorCode,
+       required this.data,
     });
 
     String status;
@@ -70,7 +70,7 @@ class MatTrkDetail {
 
 class Data1 {
     Data1({
-        this.material,
+       required this.material,
     });
 
     List<MaterialDetail> material;
@@ -94,12 +94,12 @@ class MaterialDetail {
         this.cablePartNo,
     });
 
-    String uom;
-    String requiredQty;
-    String loadedQty;
-    String availableQty;
-    String machineNo;
-    String cablePartNo;
+    String? uom;
+    String? requiredQty;
+    String? loadedQty;
+    String? availableQty;
+    String? machineNo;
+    String? cablePartNo;
 
     factory MaterialDetail.fromJson(Map<String, dynamic> json) => MaterialDetail(
         uom: json["uom"],

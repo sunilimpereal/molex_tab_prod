@@ -17,7 +17,7 @@ class PartiallyComplete extends StatefulWidget {
   Employee employee;
   Function continueProcess;
   PartiallyComplete(
-      {this.machine, this.employee, this.continueProcess, this.schedule});
+      {required this.machine, required this.employee, required this.continueProcess, required this.schedule});
   @override
   _PartiallyCompleteState createState() => _PartiallyCompleteState();
 }
@@ -145,7 +145,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
     "System Fault",
   ];
   List<String> selectedreasons = [];
-  ApiService apiService;
+  ApiService ?apiService;
   @override
   void initState() {
     apiService = new ApiService();
@@ -743,7 +743,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                                   color: widget.schedule.color,
                                   scheduleIdentification:
                                       int.parse(widget.schedule.scheduledId));
-                          apiService
+                          apiService!
                               .postpartialComplete(
                                   postpartiallyComplete, widget.schedule.awg)
                               .then((value) {
@@ -810,7 +810,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                                   color: widget.schedule.color,
                                   scheduleIdentification:
                                       int.parse(widget.schedule.scheduledId));
-                          apiService
+                          apiService!
                               .postpartialComplete(
                                   postpartiallyComplete, widget.schedule.awg)
                               .then((value) {
@@ -851,10 +851,9 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
   }
 
   Widget quantitycell(
-      {String name,
-      int quantity,
-      TextEditingController textEditingController,
-      FocusNode focusNode}) {
+      {required String name,
+      required int quantity,
+      required TextEditingController textEditingController,}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 3.0),
       child: Container(
@@ -868,7 +867,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                 child: TextField(
                   readOnly: true,
                   controller: textEditingController,
-                  focusNode: focusNode,
+ 
                   onTap: () {
                     setState(() {
                       if (textEditingController.text.length > 0) {
@@ -927,7 +926,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
 class ReasonSelection extends StatefulWidget {
   Function onChanged;
   List<String> selectedList;
-  ReasonSelection({this.onChanged, this.selectedList});
+  ReasonSelection({required this.onChanged, required this.selectedList});
   @override
   _ReasonSelectionState createState() => _ReasonSelectionState();
 }

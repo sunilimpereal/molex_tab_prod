@@ -16,10 +16,10 @@ class GetBundleDetail {
         this.data,
     });
 
-    String status;
-    String statusMsg;
+    String? status;
+    String? statusMsg;
     dynamic errorCode;
-    Data data;
+    Data ?data;
 
     factory GetBundleDetail.fromJson(Map<String, dynamic> json) => GetBundleDetail(
         status: json["status"],
@@ -32,7 +32,7 @@ class GetBundleDetail {
         "status": status,
         "statusMsg": statusMsg,
         "errorCode": errorCode,
-        "data": data.toJson(),
+        "data": data!.toJson(),
     };
 }
 
@@ -41,14 +41,14 @@ class Data {
         this.bundleData,
     });
 
-    BundleData bundleData;
+    BundleData? bundleData;
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
         bundleData: BundleData.fromJson(json["Bundle Data"]),
     );
 
     Map<String, dynamic> toJson() => {
-        "Bundle Data": bundleData.toJson(),
+        "Bundle Data": bundleData!.toJson(),
     };
 }
 
@@ -75,25 +75,25 @@ class BundleData {
         this.awg,
     });
 
-    int id;
-    String bundleIdentification;
-    int scheduledId;
-    DateTime bundleCreationTime;
-    String bundleUpdateTime;
-    int bundleQuantity;
-    String machineIdentification;
-    String operatorIdentification;
-    int finishedGoodsPart;
-    int cablePartNumber;
-    String cablePartDescription;
-    int cutLengthSpecificationInmm;
-    String color;
-    String bundleStatus;
-    int binId;
-    String locationId;
-    String orderId;
-    String updateFromProcess;
-    String awg;
+    int? id;
+    String? bundleIdentification;
+    int? scheduledId;
+    DateTime? bundleCreationTime;
+    String? bundleUpdateTime;
+    int? bundleQuantity;
+    String? machineIdentification;
+    String? operatorIdentification;
+    int? finishedGoodsPart;
+    int? cablePartNumber;
+    String? cablePartDescription;
+    int? cutLengthSpecificationInmm;
+    String? color;
+    String? bundleStatus;
+    int? binId;
+    String? locationId;
+    String? orderId;
+    String? updateFromProcess;
+    String? awg;
 
     factory BundleData.fromJson(Map<String, dynamic> json) => BundleData(
         id: json["id"],
@@ -121,7 +121,7 @@ class BundleData {
         "id": id,
         "bundleIdentification": bundleIdentification,
         "scheduledId": scheduledId,
-        "bundleCreationTime": "${bundleCreationTime.year.toString().padLeft(4, '0')}-${bundleCreationTime.month.toString().padLeft(2, '0')}-${bundleCreationTime.day.toString().padLeft(2, '0')}",
+        "bundleCreationTime": "${bundleCreationTime!.year.toString().padLeft(4, '0')}-${bundleCreationTime!.month.toString().padLeft(2, '0')}-${bundleCreationTime!.day.toString().padLeft(2, '0')}",
         "bundleUpdateTime": bundleUpdateTime,
         "bundleQuantity": bundleQuantity,
         "machineIdentification": machineIdentification,

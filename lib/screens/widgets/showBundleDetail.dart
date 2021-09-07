@@ -306,18 +306,18 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                         children: [
                           field(
                               title: "Bundle ID",
-                              data: bundleData!.bundleIdentification),
+                              data: bundleData!.bundleIdentification??''),
                           field(
                               title: "Bundle Qty",
                               data: bundleData.bundleQuantity.toString()),
                           field(
                               title: "Bundle Status",
-                              data: bundleData.bundleStatus),
+                              data: bundleData.bundleStatus??''),
                           field(
                               title: "Cut Length",
                               data: bundleData.cutLengthSpecificationInmm
                                   .toString()),
-                          field(title: "Color", data: bundleData.color),
+                          field(title: "Color", data: bundleData.color??""),
                         ],
                       ),
                       Column(
@@ -327,7 +327,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                               data: bundleData.cablePartNumber.toString()),
                           field(
                             title: "Cable part Description",
-                            data: bundleData.cablePartDescription,
+                            data: bundleData.cablePartDescription??'',
                           ),
                           field(
                             title: "Finished Goods",
@@ -335,11 +335,11 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                           ),
                           field(
                             title: "Order Id",
-                            data: bundleData.orderId,
+                            data: bundleData.orderId??"",
                           ),
                           field(
                             title: "Update From",
-                            data: bundleData.updateFromProcess,
+                            data: bundleData.updateFromProcess??"",
                           ),
                         ],
                       ),
@@ -347,7 +347,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                         children: [
                           field(
                             title: "Machine Id",
-                            data: bundleData.machineIdentification,
+                            data: bundleData.machineIdentification??'',
                           ),
                           field(
                             title: "Schedule ID",
@@ -363,7 +363,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                           ),
                           field(
                             title: "Location Id",
-                            data: bundleData.locationId,
+                            data: bundleData.locationId??'',
                           ),
                         ],
                       ),

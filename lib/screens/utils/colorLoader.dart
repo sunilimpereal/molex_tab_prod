@@ -26,10 +26,10 @@ class ColorLoader4 extends StatefulWidget {
 
 class _ColorLoader4State extends State<ColorLoader4>
     with SingleTickerProviderStateMixin {
-  Animation<double> animation_1;
-  Animation<double> animation_2;
-  Animation<double> animation_3;
-  AnimationController controller;
+  late Animation<double> animation_1;
+  late Animation<double> animation_2;
+  late Animation<double> animation_3;
+  late AnimationController controller;
 
   @override
   void initState() {
@@ -147,7 +147,7 @@ class Dot extends StatelessWidget {
   final DotType type;
   final Icon icon;
 
-  Dot({this.radius, this.color, this.type, this.icon});
+  Dot({required this.radius, required this.color, required this.type, required this.icon});
 
   @override
   Widget build(BuildContext context) {

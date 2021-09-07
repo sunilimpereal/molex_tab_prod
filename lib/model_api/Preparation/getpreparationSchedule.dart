@@ -10,10 +10,10 @@ String getpreparationSheduleToJson(GetpreparationShedule data) => json.encode(da
 
 class GetpreparationShedule {
     GetpreparationShedule({
-        this.status,
-        this.statusMsg,
-        this.errorCode,
-        this.data,
+       required this.status,
+       required this.statusMsg,
+       required this.errorCode,
+       required this.data,
     });
 
     String status;
@@ -38,7 +38,7 @@ class GetpreparationShedule {
 
 class Data {
     Data({
-        this.preparationProcessData,
+      required  this.preparationProcessData,
     });
 
     List<PreparationSchedule> preparationProcessData;
@@ -54,35 +54,35 @@ class Data {
 
 class PreparationSchedule {
     PreparationSchedule({
-        this.orderId,
-        this.finishedGoodsNumber,
-        this.scheduledId,
-        this.cablePartNumber,
-        this.length,
-        this.color,
-        this.scheduledQuantity,
-        this.scheduledStatus,
-        this.process,
-        this.numberOfBundles,
-        this.binIdentification,
-        this.rejectedQuantity,
-        this.bundleQuantity,
-        this.passedQuantity,
+   this.orderId,
+   this.finishedGoodsNumber,
+   this.scheduledId,
+   this.cablePartNumber,
+   this.length,
+   this.color,
+   this.scheduledQuantity,
+   this.scheduledStatus,
+   this.process,
+   this.numberOfBundles,
+   this.binIdentification,
+   this.rejectedQuantity,
+   this.bundleQuantity,
+   this.passedQuantity,
     });
 
-    String orderId;
-    String finishedGoodsNumber;
-    String scheduledId;
-    String cablePartNumber;
-    String length;
-    String color;
-    String scheduledQuantity;
-    String scheduledStatus;
-    String process;
-    String numberOfBundles;
-    String binIdentification;
+    String ? orderId;
+    String ? finishedGoodsNumber;
+    String ? scheduledId;
+    String ? cablePartNumber;
+    String ? length;
+    String ? color;
+    String ? scheduledQuantity;
+    String ? scheduledStatus;
+    String ? process;
+    String ? numberOfBundles;
+    String ? binIdentification;
     dynamic rejectedQuantity;
-    String bundleQuantity;
+    String? bundleQuantity;
     dynamic passedQuantity;
 
     factory PreparationSchedule.fromJson(Map<String, dynamic> json) => PreparationSchedule(

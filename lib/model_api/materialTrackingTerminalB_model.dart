@@ -10,10 +10,10 @@ String getMaterialTrackingTerminalBToJson(GetMaterialTrackingTerminalB data) => 
 
 class GetMaterialTrackingTerminalB {
     GetMaterialTrackingTerminalB({
-        this.status,
-        this.statusMsg,
-        this.errorCode,
-        this.data,
+       required this.status,
+       required this.statusMsg,
+       required this.errorCode,
+       required this.data,
     });
 
     String status;
@@ -38,7 +38,7 @@ class GetMaterialTrackingTerminalB {
 
 class Data {
     Data({
-        this.materialTrackingTerminalB,
+       required this.materialTrackingTerminalB,
     });
 
     List<MaterialTrackingTerminalB> materialTrackingTerminalB;
@@ -54,12 +54,12 @@ class Data {
 
 class MaterialTrackingTerminalB {
     MaterialTrackingTerminalB({
-        this.partNumber,
-        this.uom,
-        this.required,
-        this.loaded,
-        this.available,
-        this.pending,
+       required this.partNumber,
+       required this.uom,
+       required this.required,
+       required this.loaded,
+       required this.available,
+       required this.pending,
     });
 
     int partNumber;

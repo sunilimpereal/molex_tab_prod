@@ -10,10 +10,10 @@ String getCableDetailToJson(GetCableDetail data) => json.encode(data.toJson());
 
 class GetCableDetail {
     GetCableDetail({
-        this.status,
-        this.statusMsg,
-        this.errorCode,
-        this.data,
+       required this.status,
+        required this.statusMsg,
+        required this.errorCode,
+        required this.data,
     });
 
     String status;
@@ -38,7 +38,7 @@ class GetCableDetail {
 
 class Data {
     Data({
-        this.findCableDetails,
+       required this.findCableDetails,
     });
 
     CableDetails findCableDetails;
@@ -54,21 +54,21 @@ class Data {
 
 class CableDetails {
     CableDetails({
-        this.cutLengthSpec,
-        this.cablePartNumber,
-        this.description,
-        this.stripLengthFrom,
-        this.stripLengthTo,
+      required  this.cutLengthSpec,
+      required  this.cablePartNumber,
+      required  this.description,
+      required  this.stripLengthFrom,
+      required  this.stripLengthTo,
     });
 
-    String cutLengthSpec;
-    String cablePartNumber;
-    String description;
-    String stripLengthFrom;
-    String stripLengthTo;
+    String ?cutLengthSpec;
+    String? cablePartNumber;
+    String? description;
+    String ?stripLengthFrom;
+    String ?stripLengthTo;
 
     factory CableDetails.fromJson(Map<String, dynamic> json) => CableDetails(
-        cutLengthSpec: json["cutLengthSpec"]?.toString()?.replaceAll("Â±", "±"),
+        cutLengthSpec: json["cutLengthSpec"]?.toString().replaceAll("Â±", "±"),
         cablePartNumber: json["cablePartNumber"]?.toString()?.replaceAll("Â±", "±"),
         description: json["description"]?.toString()?.replaceAll("Â±", "±"),
         stripLengthFrom: json["stripLengthFrom"]?.toString()?.replaceAll("Â±", "±"),

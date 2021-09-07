@@ -4,7 +4,7 @@ import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 class DateRangePickerDash extends StatefulWidget {
   @required Function onChanged;
 
-  DateRangePickerDash();
+  DateRangePickerDash({required this.onChanged});
 
   @override
   _DateRangePickerDashState createState() => _DateRangePickerDashState();

@@ -4,7 +4,7 @@ import '../../../service/apiService.dart';
 
 class MaterialtableWIP extends StatefulWidget {
   MatTrkPostDetail matTrkPostDetail;
-  MaterialtableWIP({Key key, this.matTrkPostDetail}) : super(key: key);
+  MaterialtableWIP({Key? key, required this.matTrkPostDetail}) : super(key: key);
 
   @override
   _MaterialtableWIPState createState() => _MaterialtableWIPState();
@@ -30,8 +30,8 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
             apiService.getMaterialTrackingCableDetail(widget.matTrkPostDetail),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<MaterialDetail> matList = snapshot.data;
-            if (matList.length > 0) {
+            List<MaterialDetail>? matList = snapshot.data as List<MaterialDetail>?;
+            if (matList!.length > 0) {
               return Row(
                 children: [
                   Container(
@@ -229,11 +229,11 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
 
   Widget tableData() {
     Widget row(
-        {String partNo,
-        String uom,
-        String require,
-        String loaded,
-        String available}) {
+        {required String partNo,
+        required String uom,
+        required String require,
+        required String loaded,
+        required String available}) {
       Widget cell(String title, double width) {
         return Padding(
           padding: const EdgeInsets.all(1.0),
@@ -273,9 +273,9 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
             apiService.getMaterialTrackingCableDetail(widget.matTrkPostDetail),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<MaterialDetail> matList = snapshot.data;
+            List<MaterialDetail>? matList = snapshot.data as List<MaterialDetail>?;
 
-            if (matList.length > 0) {
+            if (matList!.length > 0) {
               return Container(
                 width: 320,
                 height: 68,

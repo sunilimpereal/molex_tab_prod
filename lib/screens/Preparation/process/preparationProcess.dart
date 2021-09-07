@@ -914,7 +914,9 @@ class _PreparationprocessState extends State<Preparationprocess> {
                       builder: (context) => ViLocationTransfer(
                             employee: widget.employee,
                             type: "preparation",
-                            locationType: LocationType.partialTransfer, machine: MachineDetails(),
+                            locationType: LocationType.partialTransfer, machine: MachineDetails(
+                              machineNumber: ""
+                            ),
                            
                           )),
                 );

@@ -13,12 +13,12 @@ class CrimpRejectionError {
         this.status,
         this.statusMsg,
         this.errorCode,
-        this.data,
+        required this.data,
     });
 
-    String status;
-    String statusMsg;
-    String errorCode;
+    String ?status;
+    String ?statusMsg;
+    String ?errorCode;
     Data data;
 
     factory CrimpRejectionError.fromJson(Map<String, dynamic> json) => CrimpRejectionError(

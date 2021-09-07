@@ -10,10 +10,10 @@ String loginToJson(Login data) => json.encode(data.toJson());
 
 class Login {
     Login({
-        this.status,
-        this.statusMsg,
-        this.errorCode,
-        this.data,
+       required this.status,
+       required this.statusMsg,
+       required this.errorCode,
+       required this.data,
     });
 
     String status;
@@ -38,7 +38,7 @@ class Login {
 
 class Data {
     Data({
-        this.employeeList,
+       required this.employeeList,
     });
 
     Employee employeeList;
@@ -54,11 +54,11 @@ class Data {
 
 class Employee {
     Employee({
-        this.employeeName,
-        this.empId,
-        this.emolyeeType,
-        this.status,
-        this.contractEndDate,
+       required this.employeeName,
+       required this.empId,
+       required this.emolyeeType,
+       required this.status,
+       required this.contractEndDate,
     });
 
     String employeeName;

@@ -12,8 +12,8 @@ import '../../service/apiService.dart';
 
 class HomeVisualInspector extends StatefulWidget {
   Employee employee;
-  String machineId;
-  HomeVisualInspector({required this.employee, required this.machineId});
+
+  HomeVisualInspector({required this.employee, });
   @override
   _HomeVisualInspectorState createState() => _HomeVisualInspectorState();
 }

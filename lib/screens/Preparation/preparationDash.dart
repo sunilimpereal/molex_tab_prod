@@ -443,21 +443,21 @@ class _SchudleTableState extends State<SchudleTable> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             // orderId
-            cell(schedule.orderId, 0.1),
+            cell(schedule.orderId??'', 0.1),
             //Fg Part
-            cell(schedule.finishedGoodsNumber, 0.1),
+            cell(schedule.finishedGoodsNumber??'', 0.1),
 
             //Schudule ID
-            cell(schedule.scheduledId, 0.1),
+            cell(schedule.scheduledId??'NULL', 0.1),
             //Cable Part
-            cell(schedule.cablePartNumber, 0.1),
+            cell(schedule.cablePartNumber??'null', 0.1),
 
             //Process
-            cell(schedule.process, 0.07),
+            cell(schedule.process??'null', 0.07),
             // Cut length
-            cell(schedule.length, 0.07),
+            cell(schedule.length??"null", 0.07),
             //Color
-            cell(schedule.color, 0.04),
+            cell(schedule.color??"null", 0.04),
             //Bin Id
             cell("${schedule.binIdentification}", 0.09),
             // Total bundles
@@ -481,7 +481,7 @@ class _SchudleTableState extends State<SchudleTable> {
                 ),
                 child: Center(
                   child: Text(
-                    schedule.scheduledStatus,
+                    schedule.scheduledStatus??"status",
                     style:  TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,

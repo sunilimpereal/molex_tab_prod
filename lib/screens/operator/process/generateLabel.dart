@@ -279,7 +279,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
             bundleQty: bundle.bundleQuantity.toString(),
             transferBundleToBin: TransferBundleToBin(
                 binIdentification: bundle.binId.toString(),
-                locationId: bundle.locationId.toString()),
+                locationId: bundle.locationId.toString(), bundleId: '', userId: ''),
             label: GeneratedLabel(
               finishedGoods: bundle.finishedGoodsPart,
               cablePartNumber: bundle.cablePartNumber,
@@ -330,7 +330,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
             bundleQty: bundle.bundleQuantity.toString(),
             transferBundleToBin: TransferBundleToBin(
                 binIdentification: bundle.binId.toString(),
-                locationId: bundle.locationId.toString()),
+                locationId: bundle.locationId.toString(), bundleId: '', userId: ''),
             label: GeneratedLabel(
               finishedGoods: bundle.finishedGoodsPart,
               cablePartNumber: bundle.cablePartNumber,
@@ -2046,27 +2046,27 @@ class _GenerateLabelState extends State<GenerateLabel> {
   // 8765607  500 900 RD 369100004 84671404
 
   PostGenerateLabel calculateTotal(PostGenerateLabel label) {
-    int total = label.terminalDamage +
-        label.exposureStrands +
-        label.terminalBend +
-        label.cableDamage +
-        label.exposureStrands +
-        label.rollerMark +
-        label.terminalTwist +
-        label.halfCurlingA +
-        label.strandsCut +
-        label.windowGap +
-        label.endWire +
-        label.cutOffBurr +
-        label.cfmRejectionsCable +
-        label.cvmRejectionsCable +
-        label.cvmRejectionsCableTerminalFrom +
-        label.cvmRejectionsCableTerminalTo +
-        label.cfmRejectionsCableTerminalFrom +
-        label.cfmRejectionsCableTerminalTo +
-        label.setUpRejectionTerminalFrom +
-        label.setUpRejectionTerminalTo +
-        label.setUpRejections;
+    int total = label.terminalDamage! +
+        label.exposureStrands! +
+        label.terminalBend! +
+        label.cableDamage! +
+        label.exposureStrands! +
+        label.rollerMark! +
+        label.terminalTwist! +
+        label.halfCurlingA! +
+        label.strandsCut! +
+        label.windowGap! +
+        label.endWire! +
+        label.cutOffBurr! +
+        label.cfmRejectionsCable! +
+        label.cvmRejectionsCable! +
+        label.cvmRejectionsCableTerminalFrom! +
+        label.cvmRejectionsCableTerminalTo! +
+        label.cfmRejectionsCableTerminalFrom! +
+        label.cfmRejectionsCableTerminalTo! +
+        label.setUpRejectionTerminalFrom! +
+        label.setUpRejectionTerminalTo! +
+        label.setUpRejections!;
     label.rejectedQuantity = total;
     return label;
   }
@@ -2886,14 +2886,9 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                         fontSize: 16.0);
 
                                     setState(() {
-                                      generatedBundleList.add(GeneratedBundle(
-                                          bundleQty: bundleQty.text,
-                                          label: label!,
-                                          transferBundleToBin:
-                                              getpostBundletoBin(),
-                                          rejectedQty: total()));
+                                    
                                       widget
-                                          .sendData(generatedBundleList.length);
+                                          .sendData(generatedBundleList.length+1);
                                       clear();
                                       _bundleScanController.clear();
                                       _binController.clear();
@@ -3016,7 +3011,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
     TransferBundleToBin bundleToBin = TransferBundleToBin(
         userId: widget.employee.empId,
         binIdentification: _binController.text,
-        bundleId: label!.bundleId);
+        bundleId: label!.bundleId!, locationId: '');
     return bundleToBin;
   }
 
@@ -3139,7 +3134,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                 children: [
                                   field(
                                       title: "Bundle ID",
-                                      data: generatedBundle.label.bundleId),
+                                      data: generatedBundle.label.bundleId??''),
                                   field(
                                       title: "Bundle Qty",
                                       data:

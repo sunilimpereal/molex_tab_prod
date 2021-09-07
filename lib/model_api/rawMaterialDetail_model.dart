@@ -10,10 +10,10 @@ String getRawMaterialDetailToJson(GetRawMaterialDetail data) => json.encode(data
 
 class GetRawMaterialDetail {
     GetRawMaterialDetail({
-        this.status,
-        this.statusMsg,
-        this.errorCode,
-        this.data,
+      required  this.status,
+      required  this.statusMsg,
+      required  this.errorCode,
+      required  this.data,
     });
 
     String status;
@@ -38,7 +38,7 @@ class GetRawMaterialDetail {
 
 class Data {
     Data({
-        this.addRawMaterialRequiredDetails,
+      required  this.addRawMaterialRequiredDetails,
     });
 
     RawMaterialDetail addRawMaterialRequiredDetails;
@@ -64,14 +64,14 @@ class RawMaterialDetail {
         this.description,
     });
 
-    int partMunber;
-    String uom;
-    int scannedQuantity;
+    int ?partMunber;
+    String ?uom;
+    int ?scannedQuantity;
     dynamic scheduledQuantity;
-    String tracebility;
-    DateTime date;
-    int existQuantity;
-    String description;
+    String? tracebility;
+    DateTime? date;
+    int? existQuantity;
+    String? description;
 
     factory RawMaterialDetail.fromJson(Map<String, dynamic> json) => RawMaterialDetail(
         partMunber: json["partMunber"],
@@ -90,7 +90,7 @@ class RawMaterialDetail {
         "scannedQuantity": scannedQuantity,
         "scheduledQuantity": scheduledQuantity,
         "tracebility": tracebility,
-        "date": "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
+        "date": "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
         "existQuantity": existQuantity,
         "description": description,
     };

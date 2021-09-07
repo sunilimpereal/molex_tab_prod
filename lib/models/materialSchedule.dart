@@ -6,11 +6,11 @@ class MaterialSchedule {
   String totalBin;
   String routeId;
   MaterialSchedule({
-    this.fgPart,
-    this.locationId,
-    this.orderId,
-    this.routeId,
-    this.scheduleId,
-    this.totalBin,
+    required this.fgPart,
+    required this.locationId,
+    required this.orderId,
+    required this.routeId,
+    required this.scheduleId,
+    required this.totalBin,
   });
 }

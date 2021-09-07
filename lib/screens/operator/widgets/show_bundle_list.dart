@@ -22,18 +22,18 @@ import '../process/generateLabel.dart';
 class ShowBundleListWIP extends StatefulWidget {
   Schedule schedule;
   PostgetBundleMaster postgetBundleMaste;
-  CableTerminalA terminalA;
-  CableTerminalB terminalB;
+  CableTerminalA?terminalA;
+  CableTerminalB? terminalB;
   MachineDetails machine;
   Employee employee;
 
   ShowBundleListWIP(
-      {@required this.schedule,
-      @required this.employee,
-      @required this.terminalA,
-      @required this.terminalB,
-      @required this.machine,
-      @required this.postgetBundleMaste})
+      {required this.schedule,
+      required this.employee,
+      this.terminalA,
+       this.terminalB,
+      required this.machine,
+      required this.postgetBundleMaste})
       : super();
 
   @override
@@ -41,7 +41,7 @@ class ShowBundleListWIP extends StatefulWidget {
 }
 
 class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
-  ApiService apiService;
+  ApiService? apiService;
 
   String _printerStatus = "";
   bool printing = false;
@@ -55,21 +55,21 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
 
   static const platform = const MethodChannel('com.impereal.dev/tsc');
   Future<bool> _print({
-    String ipaddress,
-    String bq,
-    String qr,
-    String routenumber1,
-    String date,
-    String orderId,
-    String fgPartNumber,
-    String cutlength,
-    String cablepart,
-    String wireGauge,
-    String terminalfrom,
-    String terminalto,
-    String userid,
-    String shift,
-    String machine,
+    required String ipaddress,
+    required String bq,
+    required String qr,
+    required String routenumber1,
+    required String date,
+    required String orderId,
+    required String fgPartNumber,
+    required String cutlength,
+    required String cablepart,
+    required String wireGauge,
+    required String terminalfrom,
+    required String terminalto,
+    required String userid,
+    required String shift,
+    required String machine,
   }) async {
     String printerStatus;
 
@@ -155,19 +155,19 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
             //   ),
             // ),
             FutureBuilder(
-                future: apiService.getBundlesInSchedule(
+                future: apiService!.getBundlesInSchedule(
                     postgetBundleMaster: widget.postgetBundleMaste,
                     scheduleID: widget.schedule.scheduledId),
-                builder: (context, snapshot) {
+                builder: (context,AsyncSnapshot<List<BundlesRetrieved>?> snapshot) {
                   if (snapshot.hasData) {
-                    List<BundlesRetrieved> bundles = snapshot.data;
-                    List<GeneratedBundle> genbundles = bundles.map((bundle) {
+                    List<BundlesRetrieved>? bundles = snapshot.data;
+                    List<GeneratedBundle> genbundles = bundles!.map((bundle) {
                       return GeneratedBundle(
                           bundleDetail: bundle,
                           bundleQty: bundle.bundleQuantity.toString(),
                           transferBundleToBin: TransferBundleToBin(
                               binIdentification: bundle.binId.toString(),
-                              locationId: bundle.locationId.toString()),
+                              locationId: bundle.locationId.toString(), bundleId: '', userId: widget.employee.empId),
                           label: GeneratedLabel(
                             finishedGoods: bundle.finishedGoodsPart,
                             cablePartNumber: bundle.cablePartNumber,
@@ -177,13 +177,13 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
                             routeNo: "${widget.schedule.route}",
                             status: 0,
                             bundleQuantity: bundle.bundleQuantity,
-                            terminalFrom: widget.terminalA.terminalPart,
-                            terminalTo: widget.terminalB.terminalPart,
+                            terminalFrom: widget.terminalA!.terminalPart,
+                            terminalTo: widget.terminalB!.terminalPart,
                             //  terminalFrom: bundle.t
                             //todo terminal from,terminal to
                             //todo route no
                             //
-                          ));
+                          ), rejectedQty: '');
                     }).toList();
 
                     return Padding(
@@ -411,7 +411,7 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
                                 children: [
                                   field(
                                       title: "Bundle ID",
-                                      data: generatedBundle.label.bundleId),
+                                      data: generatedBundle.label.bundleId!),
                                   field(
                                       title: "Bundle Qty",
                                       data:
@@ -502,7 +502,7 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
     );
   }
 
-  Widget field({String title, String data}) {
+  Widget field({required String title, required String data}) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.22,
       padding: EdgeInsets.all(10),
@@ -545,14 +545,14 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
 
 class ReprintButton extends StatefulWidget {
   Function onPressed;
-  ReprintButton({this.onPressed}) : super();
+  ReprintButton({required this.onPressed}) : super();
 
   @override
   _ReprintButtonState createState() => _ReprintButtonState();
 }
 
 class _ReprintButtonState extends State<ReprintButton> {
-  bool loading;
+  late bool loading;
   @override
   void initState() {
     loading = false;

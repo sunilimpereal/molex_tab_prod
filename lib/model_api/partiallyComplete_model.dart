@@ -19,13 +19,13 @@ class PostpartiallyComplete {
         this.color,
     });
 
-    int finishedGoods;
-    String purchaseOrder;
-    String orderIdentification;
-    String cablePartNumber;
-    String cutLength;
-    int scheduleIdentification;
-    String color;
+    int? finishedGoods;
+    String? purchaseOrder;
+    String? orderIdentification;
+    String? cablePartNumber;
+    String? cutLength;
+    int ?scheduleIdentification;
+    String? color;
 
     factory PostpartiallyComplete.fromJson(Map<String, dynamic> json) => PostpartiallyComplete(
         finishedGoods: json["finishedGoods"],

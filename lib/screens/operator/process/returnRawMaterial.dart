@@ -35,7 +35,7 @@ Future<void> showReturnMaterial(BuildContext context,
 class ReturnRawmaterial extends StatefulWidget {
   MatTrkPostDetail matTrkPostDetail;
   MachineDetails machineDetails;
-  ReturnRawmaterial({Key key, this.matTrkPostDetail, this.machineDetails})
+  ReturnRawmaterial({Key? key, required this.matTrkPostDetail, required this.machineDetails})
       : super(key: key);
 
   @override
@@ -43,7 +43,7 @@ class ReturnRawmaterial extends StatefulWidget {
 }
 
 class _ReturnRawmaterialState extends State<ReturnRawmaterial> {
-  ApiService apiService;
+  ApiService? apiService;
   bool loading = false;
   @override
   void initState() {
@@ -90,23 +90,23 @@ class _ReturnRawmaterialState extends State<ReturnRawmaterial> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: FutureBuilder(
-          future: apiService
+          future: apiService!
               .getMaterialTrackingCableDetail(widget.matTrkPostDetail),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              List<MaterialDetail> matList = snapshot.data;
+              List<MaterialDetail>? matList = snapshot.data as List<MaterialDetail>?;
               PostReturnMaterial postReturnMaterial = PostReturnMaterial(
                   machineIdentification: widget.machineDetails.machineNumber,
-                  partNumberList: matList?.map((e) {
+                  partNumberList: matList!.map((e) {
                     return Part(
-                      partNumbers: int.parse(e.cablePartNo),
-                      usedQuantity: int.parse(e.availableQty),
-                      traceabilityNumber: getTraceabilityNumber(e.cablePartNo),
+                      partNumbers: int.parse(e.cablePartNo!),
+                      usedQuantity: int.parse(e.availableQty!),
+                      traceabilityNumber: getTraceabilityNumber(e.cablePartNo!),
                     );
                   })?.toList());
               log("message ${postReturnMaterialToJson(postReturnMaterial)} ");
 
-              if (matList.length > 0) {
+              if (matList!.length > 0) {
                 return Container(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -129,7 +129,7 @@ class _ReturnRawmaterialState extends State<ReturnRawmaterial> {
                           ),
                           child: Text("Return Material"),
                           onPressed: () {
-                            apiService
+                            apiService!
                                 .postreturnRawMaterial(postReturnMaterial);
                             Navigator.pop(context);
                           },
@@ -150,9 +150,9 @@ class _ReturnRawmaterialState extends State<ReturnRawmaterial> {
 
   String getTraceabilityNumber(String partNumber) {
     for (PostRawMaterial material
-        in widget.matTrkPostDetail.selectedRawMaterial) {
+        in widget.matTrkPostDetail.selectedRawMaterial!) {
       if (material.cablePartNumber.toString() == partNumber) {
-        return material.traceabilityNumber;
+        return material.traceabilityNumber!;
       }
     }
     return "";

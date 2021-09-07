@@ -10,10 +10,10 @@ String getCrimpingScheduleToJson(GetCrimpingSchedule data) => json.encode(data.t
 
 class GetCrimpingSchedule {
     GetCrimpingSchedule({
-        this.status,
-        this.statusMsg,
+        required this.status,
+        required this.statusMsg,
         this.errorCode,
-        this.data,
+        required this.data,
     });
 
     String status;
@@ -38,7 +38,7 @@ class GetCrimpingSchedule {
 
 class Data {
     Data({
-        this.crimpingBundleList,
+        required this.crimpingBundleList,
     });
 
     List<CrimpingSchedule> crimpingBundleList;
@@ -54,30 +54,30 @@ class Data {
 
 class CrimpingSchedule {
     CrimpingSchedule({
-        this.cablePartNo,
-        this.length,
-        this.wireColour,
-        this.purchaseOrder,
-        this.finishedGoods,
-        this.scheduleId, 
-        this.process,
-        this.binIdentification,
-        this.schedulestatus,
-        this.bundleIdentificationCount,
-        this.bundleQuantityTotal,
-        this.awg,
-        this.shiftStart,
-        this.shiftEnd,
-        this.scheduleDate,
-        this.plannedQuantity,
-        this.cableNumber,
-        this.schdeuleQuantity,
-        this.actualQuantity,
-        this.shiftNumber,
+        required this.cablePartNo,
+        required this.length,
+        required this.wireColour,
+        required this.purchaseOrder,
+        required this.finishedGoods,
+        required this.scheduleId, 
+        required this.process,
+        required this.binIdentification,
+        required this.schedulestatus,
+        required this.bundleIdentificationCount,
+        required this.bundleQuantityTotal,
+        required this.awg,
+        required this.shiftStart,
+        required this.shiftEnd,
+        required this.scheduleDate,
+        required this.plannedQuantity,
+        required this.cableNumber,
+        required this.schdeuleQuantity,
+        required this.actualQuantity,
+        required this.shiftNumber,
         this.startDate,
-        this.lengthTolerance,
-        this.route,
-        this.shiftType,
+        required this.lengthTolerance,
+        required this.route,
+        required this.shiftType,
     });
 
     int cablePartNo;

@@ -2,7 +2,7 @@ class Bundle{
   String binId;
   String bundleId;
   Bundle({
-    this.binId,
-    this.bundleId,
+    required this.binId,
+    required this.bundleId,
   });
 }

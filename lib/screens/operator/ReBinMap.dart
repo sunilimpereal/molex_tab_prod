@@ -13,8 +13,8 @@ import '../../service/apiService.dart';
 
 class ReMapBin extends StatefulWidget {
   String userId;
-  MachineDetails machine;
-  ReMapBin({this.userId, this.machine});
+  MachineDetails? machine;
+  ReMapBin({required this.userId,  this.machine});
 
   @override
   _ReMapBinState createState() => _ReMapBinState();
@@ -25,11 +25,11 @@ class _ReMapBinState extends State<ReMapBin> {
   TextEditingController bundleIdController = new TextEditingController();
   FocusNode _binFocus = new FocusNode();
   TextEditingController _binController = new TextEditingController();
-  String binId;
+  String? binId;
   TextEditingController _bundleController = new TextEditingController();
   FocusNode _bundleFocus = new FocusNode();
 
-  String bundleId;
+  String ?bundleId;
   List<BundleTransferToBin> transferList = [];
   bool loading = false;
 
@@ -170,7 +170,7 @@ class _ReMapBinState extends State<ReMapBin> {
                                 .invokeMethod('TextInput.hide');
                             setState(() {
                               _binController.clear();
-                              binId = null;
+                              binId = "";
                             });
                           },
                           onSubmitted: (value) {},
@@ -482,7 +482,7 @@ class _ReMapBinState extends State<ReMapBin> {
     TransferBundleToBin bundleToBin = TransferBundleToBin(
       binIdentification: _binController.text,
       bundleId: _bundleController.text,
-      userId: widget.userId,
+      userId: widget.userId, locationId: '',
     );
     return bundleToBin;
   }

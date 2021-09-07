@@ -10,10 +10,10 @@ String getBundleQtyCrimpToJson(GetBundleQtyCrimp data) => json.encode(data.toJso
 
 class GetBundleQtyCrimp {
     GetBundleQtyCrimp({
-        this.status,
-        this.statusMsg,
+        required this.status,
+        required this.statusMsg,
         this.errorCode,
-        this.data,
+        required this.data,
     });
 
     String status;
@@ -38,7 +38,7 @@ class GetBundleQtyCrimp {
 
 class Data {
     Data({
-        this.crimpingProcess,
+        required this.crimpingProcess,
     });
 
     List<CrimpingProcess> crimpingProcess;
@@ -54,7 +54,7 @@ class Data {
 
 class CrimpingProcess {
     CrimpingProcess({
-        this.bundleQuantity,
+        required this.bundleQuantity,
     });
 
     int bundleQuantity;

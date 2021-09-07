@@ -10,10 +10,10 @@ String getCableTerminalAToJson(GetCableTerminalA data) => json.encode(data.toJso
 
 class GetCableTerminalA {
     GetCableTerminalA({
-        this.status,
-        this.statusMsg,
-        this.errorCode,
-        this.data,
+       required this.status,
+       required this.statusMsg,
+       required this.errorCode,
+       required this.data,
     });
 
     String status;
@@ -38,7 +38,7 @@ class GetCableTerminalA {
 
 class Data {
     Data({
-        this.findCableTerminalADto,
+      required  this.findCableTerminalADto,
     });
 
     CableTerminalA findCableTerminalADto;
@@ -64,14 +64,14 @@ class CableTerminalA {
         this.stripLength,
     });
 
-    String fronStripLengthSpec;
-    String processType;
-    int terminalPart;
-    String specCrimpLength;
-    double pullforce;
-    String comment;
-    String unsheathingLength;
-    String stripLength;
+    String? fronStripLengthSpec;
+    String? processType;
+    int ?terminalPart;
+    String? specCrimpLength;
+    double? pullforce;
+    String? comment;
+    String? unsheathingLength;
+    String? stripLength;
 
     factory CableTerminalA.fromJson(Map<String, dynamic> json) => CableTerminalA(
         fronStripLengthSpec: json["fronStripLengthSpec"]?.toString()?.replaceAll("Â±", "±"),

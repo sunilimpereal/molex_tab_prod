@@ -34,12 +34,12 @@ class MaterialPick extends StatefulWidget {
   Function homeReload;
   Function reload;
   MaterialPick(
-      {this.employee,
-      this.machine,
-      this.schedule,
-      this.materialPickType,
-      this.homeReload,
-      this.reload});
+      {required this.employee,
+      required this.machine,
+      required this.schedule,
+      required this.materialPickType,
+      required this.homeReload,
+      required this.reload});
   @override
   _MaterialPickState createState() => _MaterialPickState();
 }
@@ -52,19 +52,19 @@ class _MaterialPickState extends State<MaterialPick> {
   FocusNode _trackingNumber = new FocusNode();
   FocusNode _qtyFocus = new FocusNode();
   FocusNode keyboardfocus = new FocusNode();
-  String partNumber;
-  String trackingNumber;
-  String qty;
+  String ?partNumber;
+  String ?trackingNumber;
+  String ?qty;
   List<ItemPart> items = [];
   List<ItemPart> selectditems = [];
   List<PostRawMaterial> selectdItems = [];
-  List<RawMaterial> rawMaterial = [];
+  List<RawMaterial> ?rawMaterial = [];
   bool isCollapsedRawMaterial = false;
   bool isCollapsedScannedMaterial = false;
   DateTime selectedDate = DateTime.now();
-  ApiService apiService;
+  ApiService? apiService;
   bool keyBoard = true;
-  List<RawMaterial> rawmaterial1;
+  List<RawMaterial> ?rawmaterial1;
   bool nextPageLoading = false;
 
   Future<List<RawMaterial>> getRawmaterialFut(List<RawMaterial> rawMat) async {
@@ -217,7 +217,7 @@ class _MaterialPickState extends State<MaterialPick> {
                 color: Colors.redAccent,
                 thickness: 2,
               ),
-              scheduleDetail(schedule: widget.schedule),
+              scheduleDetail(schedule: widget.schedule, c: 2),
 
               //Raw material
               buildDataRawMaterial(),
@@ -268,9 +268,9 @@ class _MaterialPickState extends State<MaterialPick> {
                             style: TextStyle(fontSize: 16),
                             autofocus: true,
                             onSubmitted: (value) {
-                              for (RawMaterial ip in rawMaterial) {
+                              for (RawMaterial ip in rawMaterial!) {
                                 if (ip.partNunber.toString() == value) {
-                                  if (!rawMaterial.contains(ip)) {
+                                  if (!rawMaterial!.contains(ip)) {
                                     _trackingNumber.requestFocus();
                                     Future.delayed(
                                       const Duration(milliseconds: 100),
@@ -330,7 +330,7 @@ class _MaterialPickState extends State<MaterialPick> {
                             controller: _trackingNumberController,
                             onSubmitted: (value) async {
                               trackingNumber = value;
-                              final DateTime picked = await showDatePicker(
+                              final DateTime? picked = await showDatePicker(
                                   context: context,
                                   initialDate: selectedDate, // Refer step 1
                                   firstDate: DateTime(2000),
@@ -396,7 +396,7 @@ class _MaterialPickState extends State<MaterialPick> {
                             color: keyBoard ? Colors.green : Colors.grey)),
                     GestureDetector(
                       onTap: () async {
-                        final DateTime picked = await showDatePicker(
+                        final DateTime? picked = await showDatePicker(
                             context: context,
                             initialDate: selectedDate, // Refer step 1
                             firstDate: DateTime(2000),
@@ -477,11 +477,11 @@ class _MaterialPickState extends State<MaterialPick> {
                           onPressed: () {
                             print('rawmaterial = $rawMaterial');
                             setState(() {
-                              if (rawMaterial
+                              if (rawMaterial!
                                   .map((e) => e.partNunber)
                                   .toList()
                                   .contains(partNumber)) {
-                                for (RawMaterial ip in rawMaterial) {
+                                for (RawMaterial ip in rawMaterial!) {
                                   if (ip.partNunber == partNumber) {
                                     if (!selectdItems.contains(ip)) {
                                       print('loop ${ip.partNunber.toString()}');
@@ -501,15 +501,15 @@ class _MaterialPickState extends State<MaterialPick> {
                                               orderidentification: int.parse(
                                                   widget.schedule.orderId),
                                               partNumber:
-                                                  int.parse(ip.partNunber),
+                                                  int.parse(ip.partNunber??'0'),
                                               requiredQuantityOrPiece:
                                                   double.parse(
-                                                      ip.requireQuantity),
+                                                      ip.requireQuantity??'0'),
                                               totalScheduledQuantity: double.parse(
-                                                  ip.toatalScheduleQuantity),
+                                                  ip.toatalScheduleQuantity??'0'),
                                               unitOfMeasurement: ip.uom,
-                                              traceabilityNumber:trackingNumber,
-                                              scannedQuantity: double.parse(qty),
+                                              traceabilityNumber:trackingNumber??'',
+                                              scannedQuantity: double.parse(qty??"0"),
                                               cablePartNumber:
                                                   int.parse(widget.schedule.cablePartNumber),
                                               length: int.parse(widget.schedule.length),
@@ -566,13 +566,13 @@ class _MaterialPickState extends State<MaterialPick> {
                     log(postRawMaterialListToJson(selectdItems));
                     // if (setEquals(rawPartNo.toSet(), scannedPartNo.toSet())) {
                     MatTrkPostDetail matTrkPostDetail = new MatTrkPostDetail(
-                      machineId: widget.machine.machineNumber,
+                      machineId: widget.machine.machineNumber??'',
                       schedulerId: widget.schedule.scheduledId,
-                      cablePartNumbers: rawMaterial
+                      cablePartNumbers: rawMaterial!
                           .map((e) => e.partNunber.toString())
                           .toList(),
                     );
-                    apiService.postRawmaterial(selectdItems).then((value) {
+                    apiService!.postRawmaterial(selectdItems).then((value) {
                       if (value) {
                         widget.reload(matTrkPostDetail);
                         widget.materialPickType == MaterialPickType.newload?
@@ -649,9 +649,9 @@ class _MaterialPickState extends State<MaterialPick> {
                             autofocus: true,
                             focusNode: _textNode,
                             onSubmitted: (value) {
-                              for (RawMaterial ip in rawMaterial) {
+                              for (RawMaterial ip in rawMaterial!) {
                                 if (ip.partNunber.toString() == value) {
-                                  if (!rawMaterial.contains(ip)) {
+                                  if (!rawMaterial!.contains(ip)) {
                                     _trackingNumber.requestFocus();
                                     Future.delayed(
                                       const Duration(milliseconds: 100),
@@ -711,7 +711,7 @@ class _MaterialPickState extends State<MaterialPick> {
                             controller: _trackingNumberController,
                             onSubmitted: (value) async {
                               trackingNumber = value;
-                              final DateTime picked = await showDatePicker(
+                              final DateTime? picked = await showDatePicker(
                                   context: context,
                                   initialDate: selectedDate, // Refer step 1
                                   firstDate: DateTime(2000),
@@ -777,7 +777,7 @@ class _MaterialPickState extends State<MaterialPick> {
                             color: keyBoard ? Colors.green : Colors.grey)),
                     GestureDetector(
                       onTap: () async {
-                        final DateTime picked = await showDatePicker(
+                        final DateTime? picked = await showDatePicker(
                             context: context,
                             initialDate: selectedDate, // Refer step 1
                             firstDate: DateTime(2000),
@@ -857,11 +857,11 @@ class _MaterialPickState extends State<MaterialPick> {
                           onPressed: () {
                             print('rawmaterial = $rawMaterial');
                             setState(() {
-                              if (rawmaterial1
+                              if (rawmaterial1!
                                   .map((e) => e.partNunber)
                                   .toList()
                                   .contains(partNumber)) {
-                                for (RawMaterial ip in rawMaterial) {
+                                for (RawMaterial ip in rawMaterial!) {
                                   if (ip.partNunber == partNumber) {
                                     if (!selectdItems.contains(ip)) {
                                       print('loop ${ip.partNunber.toString()}');
@@ -881,15 +881,15 @@ class _MaterialPickState extends State<MaterialPick> {
                                               orderidentification: int.parse(
                                                   widget.schedule.orderId),
                                               partNumber:
-                                                  int.parse(ip.partNunber),
+                                                  int.parse(ip.partNunber!),
                                               requiredQuantityOrPiece:
                                                   double.parse(
-                                                      ip.requireQuantity),
+                                                      ip.requireQuantity!),
                                               totalScheduledQuantity: double.parse(
-                                                  ip.toatalScheduleQuantity),
+                                                  ip.toatalScheduleQuantity!),
                                               unitOfMeasurement: ip.uom,
-                                              traceabilityNumber:trackingNumber,
-                                              scannedQuantity: double.parse(qty),
+                                              traceabilityNumber:trackingNumber??'',
+                                              scannedQuantity: double.parse(qty??'0'),
                                               cablePartNumber:
                                                   int.parse(widget.schedule.cablePartNumber),
                                               length: int.parse(widget.schedule.length),
@@ -1020,34 +1020,34 @@ class _MaterialPickState extends State<MaterialPick> {
         child: Container(
           padding: EdgeInsets.all(3),
           child: FutureBuilder(
-              future: rawMaterial.length == 0
-                  ? apiService.rawMaterial(
-                      machineId: widget.machine.machineNumber,
+              future: rawMaterial!.length == 0
+                  ? apiService!.rawMaterial(
+                      machineId: widget.machine.machineNumber??'',
                       fgNo: widget.schedule.finishedGoodsNumber,
-                      type: widget.machine.category,
-                      scheduleId: widget.schedule.scheduledId)
-                  : getRawmaterialFut(rawMaterial),
+                      type: widget.machine.category??'',
+                      scheduleId: widget.schedule.scheduledId, partNo: '')
+                  : getRawmaterialFut(rawMaterial!),
               // 'EMU-M/C-038B', '367760913', '367870011', '1223445'),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  List<RawMaterial> rawmaterial = snapshot.data;
-                  rawmaterial1 = snapshot.data;
+                  List<RawMaterial>? rawmaterial = snapshot.data as List<RawMaterial>?;
+                  rawmaterial1 = snapshot.data as List<RawMaterial>?;
 
-                  rawMaterial = snapshot.data;
+                  rawMaterial = snapshot.data as List<RawMaterial>?;
                   MatTrkPostDetail matTrkPostDetail = new MatTrkPostDetail(
-                    machineId: widget.machine.machineNumber,
+                    machineId: widget.machine.machineNumber??'',
                     schedulerId: widget.schedule.scheduledId,
-                    cablePartNumbers: rawMaterial
+                    cablePartNumbers: rawMaterial!
                         .map((e) => e.partNunber.toString())
                         .toList(),
                   );
 
                   return FutureBuilder(
-                      future: apiService
+                      future: apiService!
                           .getMaterialTrackingCableDetail(matTrkPostDetail),
                       builder: (context, snapshot1) {
-                        List<MaterialDetail> matDetail = [];
-                        matDetail = snapshot1.data;
+                        List<MaterialDetail>? matDetail = [];
+                        matDetail = snapshot1.data as List<MaterialDetail>?;
                         if (snapshot.hasData) {
                           return Container(
                             child: Column(
@@ -1139,7 +1139,7 @@ class _MaterialPickState extends State<MaterialPick> {
                                               ),
                                             ),
                                           ],
-                                          rows: rawmaterial
+                                          rows: rawmaterial!
                                               .map(
                                                   (e) =>
                                                       DataRow(cells: <DataCell>[
@@ -1149,7 +1149,7 @@ class _MaterialPickState extends State<MaterialPick> {
                                                             setState(() {
                                                               _partNumberController
                                                                       .text =
-                                                                  e.partNunber;
+                                                                  e.partNunber??'';
                                                               partNumber =
                                                                   e.partNunber;
                                                               _qtyFocusController
@@ -1174,12 +1174,12 @@ class _MaterialPickState extends State<MaterialPick> {
                                                           ),
                                                         )),
                                                         DataCell(Text(
-                                                          e.description,
+                                                          e.description??'',
                                                           style: TextStyle(
                                                               fontSize: 11),
                                                         )),
                                                         DataCell(Text(
-                                                          e.uom,
+                                                          e.uom??'',
                                                           style: TextStyle(
                                                               fontSize: 11),
                                                         )),
@@ -1368,7 +1368,7 @@ class _MaterialPickState extends State<MaterialPick> {
                                     style: TextStyle(fontSize: 11),
                                   )),
                                   DataCell(Text(
-                                    e.partDescription,
+                                    e.partDescription??'',
                                     style: TextStyle(fontSize: 11),
                                   )),
                                   DataCell(Text(
@@ -1462,14 +1462,14 @@ class _MaterialPickState extends State<MaterialPick> {
                   // if (setEquals(rawPartNo.toSet(), scannedPartNo.toSet())) {
                   // _showConfirmationDialog();
                   MatTrkPostDetail matTrkPostDetail = new MatTrkPostDetail(
-                    machineId: widget.machine.machineNumber,
+                    machineId: widget.machine.machineNumber??'',
                     schedulerId: widget.schedule.scheduledId,
                     selectedRawMaterial: selectdItems,
-                    cablePartNumbers: rawMaterial
+                    cablePartNumbers: rawMaterial!
                         .map((e) => e.partNunber.toString())
                         .toList(),
                   );
-                  apiService.postRawmaterial(selectdItems).then((value) {
+                  apiService!.postRawmaterial(selectdItems).then((value) {
                     if (value) {
                       Navigator.pop(context1);
                       widget.materialPickType == MaterialPickType.newload
@@ -1480,7 +1480,7 @@ class _MaterialPickState extends State<MaterialPick> {
                                         schedule: widget.schedule,
                                         employee: widget.employee,
                                         machine: widget.machine,
-                                        matTrkPostDetail: matTrkPostDetail,
+                                        matTrkPostDetail: matTrkPostDetail, homeReload: (){}, 
                                       )),
                             )
                           : Future.delayed(
@@ -1512,7 +1512,7 @@ class _MaterialPickState extends State<MaterialPick> {
     );
   }
 
-  Widget scheduleDetail({Schedule schedule, int c}) {
+  Widget scheduleDetail({Schedule? schedule, required int c}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Material(
@@ -1531,7 +1531,7 @@ class _MaterialPickState extends State<MaterialPick> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               tableHeading(),
-              buildDataRow(schedule: widget.schedule),
+              buildDataRow(schedule: widget.schedule, c: 2),
             ],
           ),
         ),
@@ -1580,7 +1580,7 @@ class _MaterialPickState extends State<MaterialPick> {
     );
   }
 
-  Widget buildDataRow({Schedule schedule, int c}) {
+  Widget buildDataRow({required Schedule schedule, required int c}) {
     double width = MediaQuery.of(context).size.width;
 
     Widget cell(String name, double d) {
@@ -1667,7 +1667,7 @@ class _MaterialPickState extends State<MaterialPick> {
 
 class ScanInputRawMat extends StatefulWidget {
   Function update;
-  ScanInputRawMat({this.update});
+  ScanInputRawMat({required this.update});
   @override
   _ScanInputRawMatState createState() => _ScanInputRawMatState();
 }

@@ -4,12 +4,12 @@ import 'package:flutter/services.dart';
 
 class TextFieldWithNoKeyboard extends EditableText {
   TextFieldWithNoKeyboard(
-      {@required TextEditingController controller,
-      @required TextStyle style,
-      @required Function onValueUpdated,
-      @required Color cursorColor,
+      {required TextEditingController controller,
+      required TextStyle style,
+      required Function onValueUpdated,
+      required Color cursorColor,
       bool autofocus = false,
-      Color selectionColor})
+      required Color selectionColor})
       : super(
             controller: controller,
             focusNode: TextfieldFocusNode(),

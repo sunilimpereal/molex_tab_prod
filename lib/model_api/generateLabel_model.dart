@@ -105,97 +105,97 @@ class PostGenerateLabel {
     this.processType,
   });
 
-  int finishedGoods;
-  int purchaseorder;
-  int orderIdentification;
-  int cablePartNumber;
-  int cutLength;
-  String color;
-  int scheduleIdentification;
-  int scheduledQuantity;
-  String machineIdentification;
-  String operatorIdentification;
-  String bundleIdentification;
-  int rejectedQuantity;
-  int terminalDamage;
-  int terminalBend;
-  int terminalTwist;
-  int conductorCurlingUpDown;
-  int insulationCurlingUpDown;
-  int conductorBurr;
-  int windowGap;
-  int crimpOnInsulation;
-  int improperCrimping;
-  int tabBendOrTabOpen;
-  int bellMouthLessOrMore;
-  int cutOffLessOrMore;
-  int cutOffBurr;
-  int cutOffBend;
-  int insulationDamage;
-  int exposureStrands;
-  int strandsCut;
-  int brushLengthLessorMore;
-  int terminalCoppermark;
-  int setupRejections;
-  int terminalBackOut;
-  int cableDamage;
-  int crimpingPositionOutOrMissCrimp;
-  int terminalSeamOpen;
-  int rollerMark;
-  int lengthLessOrLengthMore;
-  int gripperMark;
-  int endTerminal;
-  int entangledCable;
-  int troubleShootingRejections;
-  int wireOverLoadRejectionsJam;
-  int halfCurlingA;
-  int brushLengthLessOrMoreC;
-  int exposureStrandsD;
-  int cameraPositionOutE;
-  int crimpOnInsulationF;
-  int cablePositionMovementG;
-  int crimpOnInsulationC;
-  int crimpingPositionOutOrMissCrimpD;
-  int crimpPositionOut;
-  int stripPositionOut;
-  int offCurling;
-  int cFmPfmRejections;
-  int incomingIssue;
-  int bladeMark;
-  int crossCut;
-  int insulationBarrel;
-  String method;
-  int terminalFrom;
-  int terminalTo;
-  String awg;
-  int setUpRejections;
-  int setUpRejectionTerminalFrom;
-  int setUpRejectionTerminalTo;
-  int cvmRejectionsCable;
-  int cvmRejectionsCableTerminalTo;
-  int cvmRejectionsCableTerminalFrom;
-  int cfmRejectionsCable;
-  int cfmRejectionsCableTerminalTo;
-  int cfmRejectionsCableTerminalFrom;
-  int endWire;
-  int rejectionsTerminalTo;
-  int rejectionsTerminalFrom;
-  int lengthVariation;
-  int stringLengthVariation;
-  int nickMark;
-  int bellMouthError;
-  int brushLengthLessMore;
-  int wrongTerminal;
-  int wrongCable;
-  int seamOpen;
-  int wrongCutLength;
-  int missCrimp;
-  int extrusionBurr;
-  String crimpFromSchId;
-  String crimpToSchId;
-  String preparationCompleteFlag;
-  String viCompleted;
-  String processType;
+  int? finishedGoods;
+  int? purchaseorder;
+  int? orderIdentification;
+  int? cablePartNumber;
+  int? cutLength;
+  String ?color;
+  int? scheduleIdentification;
+  int? scheduledQuantity;
+  String? machineIdentification;
+  String? operatorIdentification;
+  String? bundleIdentification;
+  int ? rejectedQuantity;
+  int ? terminalDamage;
+  int ? terminalBend;
+  int ? terminalTwist;
+  int ? conductorCurlingUpDown;
+  int ? insulationCurlingUpDown;
+  int ? conductorBurr;
+  int ? windowGap;
+  int ? crimpOnInsulation;
+  int ? improperCrimping;
+  int ? tabBendOrTabOpen;
+  int ? bellMouthLessOrMore;
+  int ? cutOffLessOrMore;
+  int ? cutOffBurr;
+  int ? cutOffBend;
+  int ? insulationDamage;
+  int ? exposureStrands;
+  int ? strandsCut;
+  int ? brushLengthLessorMore;
+  int ? terminalCoppermark;
+  int ? setupRejections;
+  int ? terminalBackOut;
+  int ? cableDamage;
+  int ? crimpingPositionOutOrMissCrimp;
+  int ? terminalSeamOpen;
+  int ? rollerMark;
+  int ? lengthLessOrLengthMore;
+  int ? gripperMark;
+  int ? endTerminal;
+  int ? entangledCable;
+  int ? troubleShootingRejections;
+  int ? wireOverLoadRejectionsJam;
+  int ? halfCurlingA;
+  int ? brushLengthLessOrMoreC;
+  int ? exposureStrandsD;
+  int ? cameraPositionOutE;
+  int ? crimpOnInsulationF;
+  int ? cablePositionMovementG;
+  int ? crimpOnInsulationC;
+  int ? crimpingPositionOutOrMissCrimpD;
+  int ? crimpPositionOut;
+  int ? stripPositionOut;
+  int ? offCurling;
+  int ? cFmPfmRejections;
+  int ? incomingIssue;
+  int ? bladeMark;
+  int ? crossCut;
+  int ? insulationBarrel;
+  String? method;
+  int? terminalFrom;
+  int? terminalTo;
+  String? awg;
+  int ?setUpRejections;
+  int ?setUpRejectionTerminalFrom;
+  int ?setUpRejectionTerminalTo;
+  int ?cvmRejectionsCable;
+  int ?cvmRejectionsCableTerminalTo;
+  int ?cvmRejectionsCableTerminalFrom;
+  int ?cfmRejectionsCable;
+  int ?cfmRejectionsCableTerminalTo;
+  int ?cfmRejectionsCableTerminalFrom;
+  int ?endWire;
+  int ?rejectionsTerminalTo;
+  int ?rejectionsTerminalFrom;
+  int ?lengthVariation;
+  int ?stringLengthVariation;
+  int ?nickMark;
+  int ?bellMouthError;
+  int ?brushLengthLessMore;
+  int ?wrongTerminal;
+  int ?wrongCable;
+  int ?seamOpen;
+  int ?wrongCutLength;
+  int ?missCrimp;
+  int ?extrusionBurr;
+  String ?crimpFromSchId;
+  String ?crimpToSchId;
+  String ?preparationCompleteFlag;
+  String ?viCompleted;
+  String ?processType;
 
   factory PostGenerateLabel.fromJson(Map<String, dynamic> json) =>
       PostGenerateLabel(
@@ -405,10 +405,10 @@ String responseGenerateLabelToJson(ResponseGenerateLabel data) =>
 
 class ResponseGenerateLabel {
   ResponseGenerateLabel({
-    this.status,
-    this.statusMsg,
-    this.errorCode,
-    this.data,
+   required this.status,
+   required this.statusMsg,
+   required this.errorCode,
+   required this.data,
   });
 
   String status;
@@ -434,7 +434,7 @@ class ResponseGenerateLabel {
 
 class Data {
   Data({
-    this.generateLabel,
+   required this.generateLabel,
   });
 
   GeneratedLabel generateLabel;
@@ -462,16 +462,16 @@ class GeneratedLabel {
     this.status,
   });
 
-  int finishedGoods;
-  int cablePartNumber;
-  int cutLength;
-  String wireGauge;
-  int terminalFrom;
-  int terminalTo;
-  int bundleQuantity;
-  String routeNo;
-  String bundleId;
-  int status;
+  int? finishedGoods;
+  int ?cablePartNumber;
+  int ?cutLength;
+  String? wireGauge;
+  int? terminalFrom;
+  int? terminalTo;
+  int ?bundleQuantity;
+  String? routeNo;
+  String? bundleId;
+  int ?status;
 
   factory GeneratedLabel.fromJson(Map<String, dynamic> json) => GeneratedLabel(
         finishedGoods: json["finishedGoods"],
@@ -512,10 +512,10 @@ String errorGenerateLabelToJson(ErrorGenerateLabel data) =>
 
 class ErrorGenerateLabel {
   ErrorGenerateLabel({
-    this.status,
-    this.statusMsg,
-    this.errorCode,
-    this.data,
+   required this.status,
+   required this.statusMsg,
+   required this.errorCode,
+   required this.data,
   });
 
   String status;

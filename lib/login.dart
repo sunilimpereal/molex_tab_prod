@@ -23,14 +23,14 @@ class _LoginScanState extends State<LoginScan> {
   FocusNode _textNode = new FocusNode();
   late String userId;
   late ApiService apiService;
-  late Employee employee;
+
   late bool loading;
 
   @override
   void initState() {
     loading = false;
     apiService = new ApiService();
-    employee = new Employee();
+  
     _textNode.requestFocus();
     SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChannels.textInput.invokeMethod('TextInput.hide');

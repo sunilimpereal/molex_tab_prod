@@ -14,8 +14,8 @@ class PostReturnMaterial {
         this.partNumberList,
     });
 
-    String machineIdentification;
-    List<Part> partNumberList;
+    String? machineIdentification;
+    List<Part>? partNumberList;
 
     factory PostReturnMaterial.fromJson(Map<String, dynamic> json) => PostReturnMaterial(
         machineIdentification: json["machineIdentification"],
@@ -24,7 +24,7 @@ class PostReturnMaterial {
 
     Map<String, dynamic> toJson() => {
         "machineIdentification": machineIdentification,
-        "partNumberList": List<dynamic>.from(partNumberList.map((x) => x.toJson())),
+        "partNumberList": List<dynamic>.from(partNumberList!.map((x) => x.toJson())),
     };
 }
 
@@ -35,9 +35,9 @@ class Part {
         this.traceabilityNumber,
     });
 
-    int partNumbers;
-    int usedQuantity;
-    String traceabilityNumber;
+    int? partNumbers;
+    int ?usedQuantity;
+    String? traceabilityNumber;
     factory Part.fromJson(Map<String, dynamic> json) => Part(
         partNumbers: json["partNumbers"],
         usedQuantity: json["usedQuantity"],

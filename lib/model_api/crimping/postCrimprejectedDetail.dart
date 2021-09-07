@@ -12,126 +12,126 @@ String postCrimpingRejectedDetailToJson(PostCrimpingRejectedDetail data) =>
 
 class PostCrimpingRejectedDetail {
   PostCrimpingRejectedDetail({
-    this.bundleIdentification,
-    this.bundleQuantity,
-    this.passedQuantity,
-    this.rejectedQuantity,
-    this.crimpInslation,
-    this.insulationSlug,
-    this.windowGap, 
-    this.exposedStrands,
-    this.burrOrCutOff,
-    this.terminalBendOrClosedOrDamage,
-    this.nickMarkOrStrandsCut,
-    this.frontBellMouth,
-    this.backBellMouth,
-    this.extrusionOnBurr,
-    this.brushLength,
-    this.cableDamage,
-    this.terminalTwist,
-    this.orderId,
-    this.fgPart,
-    this.scheduleId,
-    this.binId,
-    this.processType,
-    this.method,
-    this.status,
-    this.machineIdentification,
-    this.cablePartNumber,
-    this.cutLength,
-    this.color,
-    this.finishedGoods,
-    this.terminalFrom,
-    this.terminalTo,
-    this.awg,
-    this.setUpRejections,
-    this.setUpRejectionTerminalFrom,
-    this.setUpRejectionTerminalTo,
-    this.cvmRejectionsCable,
-    this.cvmRejectionsCableTerminalTo,
-    this.cvmRejectionsCableTerminalFrom,
-    this.cfmRejectionsCable,
-    this.cfmRejectionsCableTerminalTo,
-    this.cfmRejectionsCableTerminalFrom,
-    this.endWire,
-    this.rejectionsTerminalTo,
-    this.rejectionsTerminalFrom,
-    this.lengthVariation,
-    this.stringLengthVariation,
-    this.nickMark,
-    this.bellMouthError,
-    this.brushLengthLessMore,
-    this.wrongTerminal,
-    this.wrongCable,
-    this.seamOpen,
-    this.wrongCutLength,
-    this.missCrimp,
-    this.extrusionBurr,
-    this.crimpFromSchId,
-    this.crimpToSchId,
-    this.preparationCompleteFlag,
-    this.viCompleted,
+     this.bundleIdentification,
+     this.bundleQuantity,
+     this.passedQuantity,
+     this.rejectedQuantity,
+     this.crimpInslation,
+     this.insulationSlug,
+     this.windowGap, 
+     this.exposedStrands,
+     this.burrOrCutOff,
+     this.terminalBendOrClosedOrDamage,
+     this.nickMarkOrStrandsCut,
+     this.frontBellMouth,
+     this.backBellMouth,
+     this.extrusionOnBurr,
+     this.brushLength,
+     this.cableDamage,
+     this.terminalTwist,
+     this.orderId,
+     this.fgPart,
+     this.scheduleId,
+     this.binId,
+     this.processType,
+     this.method,
+     this.status,
+     this.machineIdentification,
+     this.cablePartNumber,
+     this.cutLength,
+     this.color,
+     this.finishedGoods,
+     this.terminalFrom,
+     this.terminalTo,
+     this.awg,
+     this.setUpRejections,
+     this.setUpRejectionTerminalFrom,
+     this.setUpRejectionTerminalTo,
+     this.cvmRejectionsCable,
+     this.cvmRejectionsCableTerminalTo,
+     this.cvmRejectionsCableTerminalFrom,
+     this.cfmRejectionsCable,
+     this.cfmRejectionsCableTerminalTo,
+     this.cfmRejectionsCableTerminalFrom,
+     this.endWire,
+     this.rejectionsTerminalTo,
+     this.rejectionsTerminalFrom,
+     this.lengthVariation,
+     this.stringLengthVariation,
+     this.nickMark,
+     this.bellMouthError,
+     this.brushLengthLessMore,
+     this.wrongTerminal,
+     this.wrongCable,
+     this.seamOpen,
+     this.wrongCutLength,
+     this.missCrimp,
+     this.extrusionBurr,
+     this.crimpFromSchId,
+     this.crimpToSchId,
+     this.preparationCompleteFlag,
+     this.viCompleted,
   });
 
-  String bundleIdentification;
-  int bundleQuantity;
-  int passedQuantity;
-  int rejectedQuantity;
-  int crimpInslation;
-  int insulationSlug;
-  int windowGap;
-  int exposedStrands;
-  int burrOrCutOff;
-  int terminalBendOrClosedOrDamage;
-  int nickMarkOrStrandsCut;
-  int frontBellMouth;
-  int backBellMouth;
-  int extrusionOnBurr;
-  int brushLength;
-  int cableDamage;
-  int terminalTwist;
-  int orderId;
-  int fgPart;
-  int scheduleId;
-  String binId;
-  String method;
-  String status;
-  String machineIdentification;
-  int cablePartNumber;
-  int cutLength;
-  String color;
-  int finishedGoods;
-  int terminalFrom;
-  int terminalTo;
-  String awg;
-  int setUpRejections;
-  int setUpRejectionTerminalFrom;
-  int setUpRejectionTerminalTo;
-  int cvmRejectionsCable;
-  int cvmRejectionsCableTerminalTo;
-  int cvmRejectionsCableTerminalFrom;
-  int cfmRejectionsCable;
-  int cfmRejectionsCableTerminalTo;
-  int cfmRejectionsCableTerminalFrom;
-  int endWire;
-  int rejectionsTerminalTo;
-  int rejectionsTerminalFrom;
-  int lengthVariation;
-  int stringLengthVariation;
-  int nickMark;
-  int bellMouthError;
-  int brushLengthLessMore;
-  int wrongTerminal;
-  int wrongCable;
-  int seamOpen;
-  int wrongCutLength;
-  int missCrimp;
-  int extrusionBurr;
-  String crimpFromSchId;
-  String crimpToSchId;
-  String preparationCompleteFlag;
-  String viCompleted;
-  String processType;
+  String? bundleIdentification;
+  int? bundleQuantity;
+  int? passedQuantity;
+  int? rejectedQuantity;
+  int? crimpInslation;
+  int? insulationSlug;
+  int? windowGap;
+  int? exposedStrands;
+  int? burrOrCutOff;
+  int? terminalBendOrClosedOrDamage;
+  int? nickMarkOrStrandsCut;
+  int? frontBellMouth;
+  int? backBellMouth;
+  int? extrusionOnBurr;
+  int? brushLength;
+  int? cableDamage;
+  int? terminalTwist;
+  int? orderId;
+  int? fgPart;
+  int? scheduleId;
+  String? binId;
+  String? method;
+  String? status;
+  String? machineIdentification;
+  int? cablePartNumber;
+  int? cutLength;
+  String? color;
+  int ?finishedGoods;
+  int? terminalFrom;
+  int? terminalTo;
+  String ?awg;
+  int? setUpRejections;
+  int? setUpRejectionTerminalFrom;
+  int? setUpRejectionTerminalTo;
+  int? cvmRejectionsCable;
+  int? cvmRejectionsCableTerminalTo;
+  int? cvmRejectionsCableTerminalFrom;
+  int? cfmRejectionsCable;
+  int? cfmRejectionsCableTerminalTo;
+  int? cfmRejectionsCableTerminalFrom;
+  int? endWire;
+  int? rejectionsTerminalTo;
+  int? rejectionsTerminalFrom;
+  int? lengthVariation;
+  int? stringLengthVariation;
+  int? nickMark;
+  int? bellMouthError;
+  int? brushLengthLessMore;
+  int? wrongTerminal;
+  int? wrongCable;
+  int? seamOpen;
+  int? wrongCutLength;
+  int? missCrimp;
+  int? extrusionBurr;
+  String? crimpFromSchId;
+  String? crimpToSchId;
+  String? preparationCompleteFlag;
+  String? viCompleted;
+  String? processType;
 
   factory PostCrimpingRejectedDetail.fromJson(Map<String, dynamic> json) =>
       PostCrimpingRejectedDetail(

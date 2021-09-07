@@ -10,10 +10,10 @@ String getBundleListGlToJson(GetBundleListGl data) => json.encode(data.toJson())
 
 class GetBundleListGl {
     GetBundleListGl({
-        this.status,
-        this.statusMsg,
+        required this.status,
+        required this.statusMsg,
         this.errorCode,
-        this.data,
+        required this.data,
     });
 
     String status;
@@ -38,7 +38,7 @@ class GetBundleListGl {
 
 class Data {
     Data({
-        this.bundlesRetrieved,
+        required this.bundlesRetrieved,
     });
 
     List<BundlesRetrieved> bundlesRetrieved;
@@ -54,29 +54,29 @@ class Data {
 
 class BundlesRetrieved {
     BundlesRetrieved({
-        this.id,
-        this.bundleIdentification,
-        this.scheduledId,
-        this.bundleCreationTime,
-        this.bundleUpdateTime,
-        this.bundleQuantity,
-        this.machineIdentification,
-        this.operatorIdentification,
-        this.finishedGoodsPart,
-        this.cablePartNumber,
-        this.cablePartDescription,
-        this.cutLengthSpecificationInmm,
-        this.color,
-        this.bundleStatus,
-        this.binId,
-        this.locationId,
-        this.orderId,
-        this.updateFromProcess,
-        this.awg,
-          this.crimpFromSchId,
-        this.crimpToSchId,
-        this.preparationCompleteFlag,
-        this.viCompleted,
+       required this.id,
+       required this.bundleIdentification,
+       required this.scheduledId,
+       required this.bundleCreationTime,
+       required this.bundleUpdateTime,
+       required this.bundleQuantity,
+       required this.machineIdentification,
+       required this.operatorIdentification,
+       required this.finishedGoodsPart,
+       required this.cablePartNumber,
+       required this.cablePartDescription,
+       required this.cutLengthSpecificationInmm,
+       required this.color,
+       required this.bundleStatus,
+       required this.binId,
+       required this.locationId,
+       required this.orderId,
+       required this.updateFromProcess,
+       required this.awg,
+       required   this.crimpFromSchId,
+       required this.crimpToSchId,
+       required this.preparationCompleteFlag,
+       required this.viCompleted,
     });
 
     int id;
@@ -134,7 +134,7 @@ class BundlesRetrieved {
         "id": id,
         "bundleIdentification": bundleIdentification,
         "scheduledId": scheduledId,
-        "bundleCreationTime": "${bundleCreationTime.year.toString().padLeft(4, '0')}-${bundleCreationTime.month.toString().padLeft(2, '0')}-${bundleCreationTime.day.toString().padLeft(2, '0')}",
+        "bundleCreationTime": "${bundleCreationTime!.year.toString().padLeft(4, '0')}-${bundleCreationTime!.month.toString().padLeft(2, '0')}-${bundleCreationTime!.day.toString().padLeft(2, '0')}",
         "bundleUpdateTime": bundleUpdateTime,
         "bundleQuantity": bundleQuantity,
         "machineIdentification": machineIdentification,

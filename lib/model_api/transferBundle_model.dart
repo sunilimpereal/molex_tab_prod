@@ -37,31 +37,31 @@ class TransferBundle {
         this.bundleRejectedQuantity,
     });
 
-    String binIdentification;
-    String binLocation;
-    int bundleQuantity;
-    int numberOfBundles;
-    int finishedGoods;
-    DateTime lastUseDate;
-    int binRoute;
-    String binStatus;
-    String materialCoordinatorIdentification;
-    DateTime binHistory;
-    String binTime;
-    int scheduledId;
-    DateTime bundleCreationTime;
-    String machineIdentification;
-    String operatorIdentification;
-    int cablePartNumber;
-    String cablePartDescription;
-    String color;
-    String bundleLocation;
-    String bundleRoute;
-    String purchaseOrder;
-    int orderIdentification;
-    int cutLength;
-    int scheduledQuantity;
-    int bundleRejectedQuantity;
+    String ?binIdentification;
+    String ?binLocation;
+    int? bundleQuantity;
+    int? numberOfBundles;
+    int? finishedGoods;
+    DateTime? lastUseDate;
+    int? binRoute;
+    String? binStatus;
+    String? materialCoordinatorIdentification;
+    DateTime? binHistory;
+    String ?binTime;
+    int ?scheduledId;
+    DateTime? bundleCreationTime;
+    String ?machineIdentification;
+    String ?operatorIdentification;
+    int ?cablePartNumber;
+    String? cablePartDescription;
+    String ?color;
+    String ?bundleLocation;
+    String ?bundleRoute;
+    String ?purchaseOrder;
+    int ?orderIdentification;
+    int ?cutLength;
+    int ?scheduledQuantity;
+    int ?bundleRejectedQuantity;
 
     factory TransferBundle.fromJson(Map<String, dynamic> json) => TransferBundle(
         binIdentification: json["binIdentification"],
@@ -97,14 +97,14 @@ class TransferBundle {
         "bundleQuantity": bundleQuantity,
         "numberOfBundles": numberOfBundles,
         "finishedGoods": finishedGoods,
-        "lastUseDate": "${lastUseDate.year.toString().padLeft(4, '0')}-${lastUseDate.month.toString().padLeft(2, '0')}-${lastUseDate.day.toString().padLeft(2, '0')}",
+        "lastUseDate": "${lastUseDate!.year.toString().padLeft(4, '0')}-${lastUseDate!.month.toString().padLeft(2, '0')}-${lastUseDate!.day.toString().padLeft(2, '0')}",
         "binRoute": binRoute,
         "binStatus": binStatus,
         "materialCoordinatorIdentification": materialCoordinatorIdentification,
-        "binHistory": "${binHistory.year.toString().padLeft(4, '0')}-${binHistory.month.toString().padLeft(2, '0')}-${binHistory.day.toString().padLeft(2, '0')}",
+        "binHistory": "${binHistory!.year.toString().padLeft(4, '0')}-${binHistory!.month.toString().padLeft(2, '0')}-${binHistory!.day.toString().padLeft(2, '0')}",
         "binTime": binTime,
         "scheduledId": scheduledId,
-        "bundleCreationTime": "${bundleCreationTime.year.toString().padLeft(4, '0')}-${bundleCreationTime.month.toString().padLeft(2, '0')}-${bundleCreationTime.day.toString().padLeft(2, '0')}",
+        "bundleCreationTime": "${bundleCreationTime!.year.toString().padLeft(4, '0')}-${bundleCreationTime!.month.toString().padLeft(2, '0')}-${bundleCreationTime!.day.toString().padLeft(2, '0')}",
         "machineIdentification": machineIdentification,
         "operatorIdentification": operatorIdentification,
         "cablePartNumber": cablePartNumber,

@@ -10,10 +10,10 @@ String getViScheduleToJson(GetViSchedule data) => json.encode(data.toJson());
 
 class GetViSchedule {
     GetViSchedule({
-        this.status,
-        this.statusMsg,
-        this.errorCode,
-        this.data,
+       required this.status,
+       required this.statusMsg,
+       required this.errorCode,
+       required this.data,
     });
 
     String status;
@@ -38,7 +38,7 @@ class GetViSchedule {
 
 class Data {
     Data({
-        this.visualInspectionScheduler,
+        required this.visualInspectionScheduler,
     });
 
     List<ViScheduler> visualInspectionScheduler;
@@ -54,12 +54,12 @@ class Data {
 
 class ViScheduler {
     ViScheduler({
-        this.orderId,
-        this.fgNo,
-        this.scheduleId,
-        this.scheduleType,
-        this.binId,
-        this.totalBundles,
+       required this.orderId,
+       required this.fgNo,
+       required this.scheduleId,
+       required this.scheduleType,
+       required this.binId,
+       required this.totalBundles,
     });
 
     String orderId;

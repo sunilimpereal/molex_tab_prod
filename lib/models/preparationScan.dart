@@ -8,5 +8,5 @@ class PreparationScan{
   String status;
   String binId;
   BundlesRetrieved bundleDetail;
-  PreparationScan({this.bundleId,this.bundleDetail,this.employeeId,this.status,this.binId});
+  PreparationScan({required this.bundleId,required this.bundleDetail,required this.employeeId,required this.status,required this.binId});
 }

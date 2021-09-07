@@ -24,7 +24,7 @@ class Location extends StatefulWidget {
   MachineDetails machine;
   String type;
   LocationType locationType;
-  Location({this.employee, this.machine, this.type, this.locationType});
+  Location({required this.employee, required this.machine, required this.type, required this.locationType});
   @override
   _LocationState createState() => _LocationState();
 }
@@ -37,12 +37,12 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
   FocusNode _locationFocus = new FocusNode();
   List<TransferBinToLocation> transferList = [];
 
-  String locationId;
-  String binId;
+  String ?locationId;
+  String ?binId;
   bool hasLocation = false;
   ApiService apiService = new ApiService();
   
-  TabController _controller;
+  TabController ?_controller;
   @override
   void initState() {
     apiService = new ApiService();
@@ -309,7 +309,7 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
             ),
             onPressed: () {
               ApiService apiService = new ApiService();
-              apiService.getBundlesinBin(binId).then((value) {
+              apiService.getBundlesinBin(binId??"").then((value) {
                 if (value != null) {
                   List<BundleDetail> bundleist = value;
                   if (bundleist.length > 0) {
@@ -321,9 +321,9 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
                         setState(() {
                           transferList.add(TransferBinToLocation(
                               userId: widget.employee.empId,
-                              binIdentification: binId,
+                              binIdentification: binId??'',
                               bundleId: bundle.bundleIdentification,
-                              locationId: locationId));
+                              locationId: locationId??''));
                         });
                       } else {
                         Fluttertoast.showToast(
@@ -409,7 +409,7 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
                       ),
                       onPressed: () {
                    
-                        _controller.index==0? _controller.animateTo(1): postCompleteTransfer();
+                        _controller!.index==0? _controller!.animateTo(1): postCompleteTransfer();
                         // postCompleteTransfer();
                         // _showConfirmationDialog();
                       },
@@ -436,7 +436,7 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
                         ),
                       ),
                       onPressed: () {
-                        _controller.index==0? _controller.animateTo(1): postCompleteTransfer();
+                        _controller!.index==0? _controller!.animateTo(1): postCompleteTransfer();
                         // _showConfirmationDialog();
                       },
                       child: Text('Complete Transfer')),
@@ -464,7 +464,7 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
                     ),
                   ),
                   onPressed: () {
-                  _controller.index==0? _controller.animateTo(1): postCompleteTransfer();
+                  _controller!.index==0? _controller!.animateTo(1): postCompleteTransfer();
                     // _showConfirmationDialog();
                   },
                   child: Text(
@@ -692,7 +692,7 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
       },
     );
     return showDialog<void>(
-      context: _scaffoldKey1.currentContext,
+      context: _scaffoldKey1.currentContext??context,
       barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return Center(
@@ -745,12 +745,12 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
                         }
                         if (widget.type == 'process') {
                           apiService
-                              .getmachinedetails(widget.machine.machineNumber)
+                              .getmachinedetails(widget.machine.machineNumber??'')
                               .then((value) {
                             // Navigator.pop(context);
-                            MachineDetails machineDetails = value[0];
+                            MachineDetails machineDetails = value![0];
                             Fluttertoast.showToast(
-                                msg: widget.machine.machineNumber,
+                                msg: widget.machine.machineNumber??"",
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 timeInSecForIosWeb: 1,
@@ -887,12 +887,12 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
         }
         if (widget.type == 'process') {
           apiService
-              .getmachinedetails(widget.machine.machineNumber)
+              .getmachinedetails(widget.machine.machineNumber??'')
               .then((value) {
             // Navigator.pop(context);
-            MachineDetails machineDetails = value[0];
+            MachineDetails machineDetails = value![0];
             Fluttertoast.showToast(
-                msg: widget.machine.machineNumber,
+                msg: widget.machine.machineNumber??'',
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIosWeb: 1,
@@ -1005,11 +1005,11 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
       return 0;
     }
     if (widget.type == 'process') {
-      apiService.getmachinedetails(widget.machine.machineNumber).then((value) {
+      apiService.getmachinedetails(widget.machine.machineNumber??"").then((value) {
         // Navigator.pop(context);
-        MachineDetails machineDetails = value[0];
+        MachineDetails machineDetails = value![0];
         Fluttertoast.showToast(
-            msg: widget.machine.machineNumber,
+            msg: widget.machine.machineNumber??"",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,

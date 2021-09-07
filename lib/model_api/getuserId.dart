@@ -10,10 +10,10 @@ String getUserToJson(GetUser data) => json.encode(data.toJson());
 
 class GetUser {
     GetUser({
-        this.status,
-        this.statusMsg,
-        this.errorCode,
-        this.data,
+      required  this.status,
+      required  this.statusMsg,
+      required  this.errorCode,
+      required  this.data,
     });
 
     String status;
@@ -38,7 +38,7 @@ class GetUser {
 
 class Data {
     Data({
-        this.userId,
+       required this.userId,
     });
 
     List<Userid> userId;
@@ -54,7 +54,7 @@ class Data {
 
 class Userid {
     Userid({
-        this.empId,
+       required this.empId,
     });
 
     String empId;

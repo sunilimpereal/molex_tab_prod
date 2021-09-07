@@ -420,7 +420,7 @@ class _SchudleTableState extends State<SchudleTable> {
                 child: FutureBuilder(
                   future: apiService.getCrimpingSchedule(
                       scheduleType: "${widget.type}",
-                      machineNo: widget.machine.machineNumber,
+                      machineNo: widget.machine.machineNumber??'',
                       sameMachine: "${widget.scheduleType}"),
                   builder: (context,AsyncSnapshot<List<CrimpingSchedule>> snapshot) {
                     if (snapshot.hasData) {

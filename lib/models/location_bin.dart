@@ -1,6 +1,6 @@
 class LocationBin{
   String locationId;
   String binId;
-  LocationBin({this.locationId,this.binId});
+  LocationBin({required this.locationId,required this.binId});
 
 }

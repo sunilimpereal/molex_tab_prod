@@ -21,15 +21,15 @@ class PostStartProcessP1 {
         this.scheduleStatus,
     });
 
-    String scheduledIdentification;
-    String machineIdentification;
-    String scheduledQuantity;
-    String finishedGoodsNumber;
-    String orderIdentification;
-    String cablePartNumber;
-    String lengthSpecificationInmm;
-    String color;
-    String scheduleStatus;
+    String ?scheduledIdentification;
+    String ?machineIdentification;
+    String ?scheduledQuantity;
+    String ?finishedGoodsNumber;
+    String ?orderIdentification;
+    String ?cablePartNumber;
+    String ?lengthSpecificationInmm;
+    String ?color;
+    String ?scheduleStatus;
 
     factory PostStartProcessP1.fromJson(Map<String, dynamic> json) => PostStartProcessP1(
         scheduledIdentification: json["scheduledIdentification"],

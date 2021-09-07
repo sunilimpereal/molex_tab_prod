@@ -23,14 +23,14 @@ enum Status {
 }
 
 class MultipleBundleScan extends StatefulWidget {
-  int length;
+  
   String userId;
   String machineId;
   String method;
   @required
   CrimpingSchedule schedule;
   MultipleBundleScan(
-      {required this.length, required this.machineId, required this.method, required this.userId, required this.schedule});
+      { required this.machineId, required this.method, required this.userId, required this.schedule});
 
   @override
   _MultipleBundleScanState createState() => _MultipleBundleScanState();
@@ -818,7 +818,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                       binId: "",
                                       bundleQuantity: e.bundleQuantity,
                                       passedQuantity:
-                                          e.bundleQuantity - total(),
+                                          e.bundleQuantity! - total(),
                                       rejectedQuantity: total(),
                                       crimpInslation: int.parse(
                                           crimpOnInsulationController
@@ -896,11 +896,11 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                       scheduleId: widget.schedule.scheduleId,
                                       awg: widget.schedule.awg != null
                                           ? widget.schedule.awg.toString()
-                                          : null,
+                                          : "",
                                       terminalFrom: int.parse(
-                                          '${terminalA.terminalPart}'),
+                                          '${terminalA!.terminalPart}'),
                                       terminalTo: int.parse(
-                                          '${terminalB.terminalPart}'),
+                                          '${terminalB!.terminalPart}'),
                                     );
                                     apiService
                                         .postCrimpRejectedQty(
@@ -1025,9 +1025,8 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
   }
 
   Widget quantitycell(
-      {String name,
-      TextEditingController textEditingController,
-      FocusNode focusNode}) {
+      {required String name,
+      required TextEditingController textEditingController,}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 3.0),
       child: Container(
@@ -1040,7 +1039,6 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                 width: 140,
                 child: TextField(
                   controller: textEditingController,
-                  focusNode: focusNode,
                   onTap: () {
                     setState(() {
                       _output = '';
@@ -1274,7 +1272,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                           listTransfer.add(TransferBundleToBin(
                               userId: widget.userId,
                               binIdentification: binId,
-                              bundleId: bundle.bundleIdentification));
+                              bundleId: bundle.bundleIdentification??'', locationId: ''));
                         }
 
                         apiService

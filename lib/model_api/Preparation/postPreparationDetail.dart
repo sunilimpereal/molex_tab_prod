@@ -13,10 +13,10 @@ String postPreparationDetailToJson(PostPreparationDetail data) =>
 
 class PostPreparationDetail {
   PostPreparationDetail({
-    @required this.bundleIdentification,
-    @required this.bundleQuantity,
-    @required this.passedQuantity,
-    @required this.rejectedQuantity,
+    required this.bundleIdentification,
+    required this.bundleQuantity,
+    required this.passedQuantity,
+    required this.rejectedQuantity,
     this.crimpInslation,
     this.insulationSlug,
     this.windowGap,
@@ -36,17 +36,17 @@ class PostPreparationDetail {
     this.fgPart,
     this.scheduleId,
     this.binId,
-    @required this.processType,
-    @required this.method,
-    @required this.status,
-    @required this.machineIdentification,
-    @required this.cablePartNumber,
-    @required this.cutLength,
-    @required this.color,
-    @required this.finishedGoods,
-    @required this.awg,
-    @required this.terminalFrom,
-    @required this.terminalTo,
+    required this.processType,
+    required this.method,
+    required this.status,
+    required this.machineIdentification,
+    required this.cablePartNumber,
+    required this.cutLength,
+    required this.color,
+    required this.finishedGoods,
+    required this.awg,
+    required this.terminalFrom,
+    required this.terminalTo,
     this.cvmRejectionsCable,
     this.cvmRejectionsCableTerminalTo,
     this.cvmRejectionsCableTerminalFrom,
@@ -65,35 +65,35 @@ class PostPreparationDetail {
     this.wrongCable,
     this.wrongCutLength,
     this.extrusionBurr,
-    @required this.crimpFromSchId,
-    @required this.crimpToSchId,
-    @required this.preparationCompleteFlag,
-    @required this.viCompleted,
+    required this.crimpFromSchId,
+    required this.crimpToSchId,
+    required this.preparationCompleteFlag,
+    required this.viCompleted,
   });
 
   String bundleIdentification;
-  int bundleQuantity;
-  int passedQuantity;
-  int rejectedQuantity;
-  int crimpInslation;
-  int insulationSlug;
-  int windowGap;
-  int exposedStrands;
-  int burrOrCutOff;
-  int terminalBendOrClosedOrDamage;
-  int nickMarkOrStrandsCut;
-  int seamOpen;
-  int missCrimp;
-  int frontBellMouth;
-  int backBellMouth;
-  int extrusionOnBurr;
-  int brushLength;
-  int cableDamage;
-  int terminalTwist;
-  int orderId;
-  int fgPart;
-  int scheduleId;
-  String binId;
+  int? bundleQuantity;
+  int? passedQuantity;
+  int? rejectedQuantity;
+  int? crimpInslation;
+  int? insulationSlug;
+  int? windowGap;
+  int? exposedStrands;
+  int? burrOrCutOff;
+  int? terminalBendOrClosedOrDamage;
+  int? nickMarkOrStrandsCut;
+  int? seamOpen;
+  int? missCrimp;
+  int? frontBellMouth;
+  int? backBellMouth;
+  int? extrusionOnBurr;
+  int? brushLength;
+  int? cableDamage;
+  int? terminalTwist;
+  int? orderId;
+  int? fgPart;
+  int? scheduleId;
+  String? binId;
   String method;
   String status;
   String machineIdentification;
@@ -104,24 +104,24 @@ class PostPreparationDetail {
   String awg;
   int terminalFrom;
   int terminalTo;
-  int cvmRejectionsCable;
-  int cvmRejectionsCableTerminalTo;
-  int cvmRejectionsCableTerminalFrom;
-  int cfmRejectionsCable;
-  int cfmRejectionsCableTerminalTo;
-  int cfmRejectionsCableTerminalFrom;
-  int endWire;
-  int rejectionsTerminalTo;
-  int rejectionsTerminalFrom;
-  int lengthVariation;
-  int stringLengthVariation;
-  int nickMark;
-  int bellMouthError;
-  int brushLengthLessMore;
-  int wrongTerminal;
-  int wrongCable;
-  int wrongCutLength;
-  int extrusionBurr;
+  int? cvmRejectionsCable;
+  int? cvmRejectionsCableTerminalTo;
+  int? cvmRejectionsCableTerminalFrom;
+  int? cfmRejectionsCable;
+  int ?cfmRejectionsCableTerminalTo;
+  int ?cfmRejectionsCableTerminalFrom;
+  int ?endWire;
+  int ?rejectionsTerminalTo;
+  int ?rejectionsTerminalFrom;
+  int ?lengthVariation;
+  int ?stringLengthVariation;
+  int ?nickMark;
+  int ?bellMouthError;
+  int ?brushLengthLessMore;
+  int ?wrongTerminal;
+  int ?wrongCable;
+  int ?wrongCutLength;
+  int ?extrusionBurr;
   String crimpFromSchId;
   String crimpToSchId;
   String preparationCompleteFlag;

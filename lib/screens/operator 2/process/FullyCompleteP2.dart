@@ -18,13 +18,13 @@ class FullCompleteP2 extends StatefulWidget {
   CrimpingSchedule schedule;
   Function continueProcess;
   FullCompleteP2(
-      {this.employee, this.machine, this.schedule, this.continueProcess});
+      {required this.employee, required this.machine, required this.schedule, required this.continueProcess});
   @override
   _FullCompleteP2State createState() => _FullCompleteP2State();
 }
 
 class _FullCompleteP2State extends State<FullCompleteP2> {
-  PostStartProcessP1 postStartprocess;
+  PostStartProcessP1 ?postStartprocess;
   TextEditingController mainController = new TextEditingController();
   TextEditingController noRawmaterialController = new TextEditingController();
   TextEditingController machineBreakdownController =
@@ -58,7 +58,7 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
   //     new TextEditingController();
 
   String _output = '';
-  ApiService apiService;
+  late ApiService apiService;
   @override
   void initState() {
     apiService = new ApiService();
@@ -246,8 +246,7 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.pressed))
                                     return Colors.green.shade200;
-                                  return Colors.green[
-                                      500]; // Use the component's default.
+                                  return Colors.green.shade500; // Use the component's default.
                                 },
                               ),
                             ),
@@ -286,10 +285,10 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
                                         scheduledQuantity:
                                             widget.schedule.bundleQuantityTotal,
                                         machineIdentification:
-                                            widget.machine.machineNumber,
+                                            widget.machine.machineNumber??'',
                                         //TODO bundle ID
                                         firstPieceAndPatrol: 0,
-                                        applicatorChangeover: 0);
+                                        applicatorChangeover: 0, bundleIdentification: '');
                                 apiService
                                     .post100Complete(fullyComplete)
                                     .then((value) {
@@ -300,7 +299,7 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
                                           builder: (context) => Location(
                                                 type: "process",
                                                 employee: widget.employee,
-                                                machine: widget.machine,
+                                                machine: widget.machine, locationType: LocationType.finaTtransfer,
                                               )),
                                     );
                                   } else {}
@@ -328,10 +327,9 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
   }
 
   Widget quantitycell(
-      {String name,
-      int quantity,
-      TextEditingController textEditingController,
-      FocusNode focusNode}) {
+      {required String name,
+      required int quantity,
+      required TextEditingController textEditingController,}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 3.0),
       child: Container(
@@ -345,7 +343,7 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
                 child: TextField(
                   showCursor: false,
                   controller: textEditingController,
-                  focusNode: focusNode,
+                
                   onTap: () {
                     setState(() {
                       _output = '';

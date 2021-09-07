@@ -9,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../main.dart';
 
 class UpdateApp extends StatefulWidget {
-  const UpdateApp({Key key}) : super(key: key);
+   UpdateApp({Key? key}) : super(key: key);
 
   @override
   _UpdateAppState createState() => _UpdateAppState();

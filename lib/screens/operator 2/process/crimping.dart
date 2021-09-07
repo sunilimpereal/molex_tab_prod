@@ -36,7 +36,7 @@ enum Status {
 }
 
 class ScanBundle extends StatefulWidget {
-  int length;
+  
   String userId;
   String machineId;
   String method;
@@ -53,7 +53,7 @@ class ScanBundle extends StatefulWidget {
   String processName;
   Function startProcess;
   ScanBundle(
-      {required this.length,
+      {
       required this.machineId,
       required this.method,
       required this.userId,
@@ -753,7 +753,7 @@ class _ScanBundleState extends State<ScanBundle> {
         });
   }
 
-  Widget field({String title, String data}) {
+  Widget field({required String title, required String data}) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.22,
       padding: EdgeInsets.all(10),
@@ -1016,7 +1016,7 @@ class _ScanBundleState extends State<ScanBundle> {
                                     MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.pressed))
-                                      return Colors.red[900];
+                                      return Colors.red.shade900;
                                     return Colors
                                         .red; // Use the component's default.
                                   },
@@ -1056,7 +1056,7 @@ class _ScanBundleState extends State<ScanBundle> {
           .getBundlesInSchedule(
               postgetBundleMaster: postgetBundleMaste, scheduleID: "")
           .then((value) {
-        List<BundlesRetrieved> bundleList = value;
+        List<BundlesRetrieved> bundleList = value!;
         BundlesRetrieved bundleDetail = bundleList[0];
         if (value != null) {
           if (validateBundle(bundleDetail)) {
@@ -1117,17 +1117,17 @@ class _ScanBundleState extends State<ScanBundle> {
       String crimpto,
     ) {
       if (widget.processName == "Crimp From" &&
-          (crimpfrom == null || crimpfrom?.length < 1)) {
+          (crimpfrom == null || crimpfrom.length < 1)) {
         return true;
       }
       if (widget.processName == "Crimp To" &&
-          (crimpto == null || crimpto?.length < 1)) {
+          (crimpto == null || crimpto.length < 1)) {
         return true;
       }
       // ignore: null_aware_before_operator
       if (widget.processName == "Crimp From & To" &&
-          (crimpto == null || crimpto?.length < 1) &&
-          (crimpto == null || crimpto?.length < 1)) {
+          (crimpto == null || crimpto.length < 1) &&
+          (crimpto == null || crimpto.length < 1)) {
         return true;
       }
       return false;
@@ -1142,8 +1142,8 @@ class _ScanBundleState extends State<ScanBundle> {
         "${bundleDetail.orderId}" == "${widget.schedule.purchaseOrder}") {
       // ignore: null_aware_in_logical_operator
       if (!bundleDetail.updateFromProcess
-              ?.toLowerCase()
-              ?.contains(widget.processName.toLowerCase()) &&
+              .toLowerCase()
+              .contains(widget.processName.toLowerCase()) &&
           checkCrimping(
               bundleDetail.crimpFromSchId, bundleDetail.crimpFromSchId)) {
         return true;
@@ -1447,8 +1447,7 @@ class _ScanBundleState extends State<ScanBundle> {
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.pressed))
                                       return Colors.green.shade200;
-                                    return Colors.green[
-                                        500]; // Use the component's default.
+                                    return Colors.green.shade500; // Use the component's default.
                                   },
                                 ),
                               ),
@@ -1586,7 +1585,7 @@ class _ScanBundleState extends State<ScanBundle> {
       cutLength: widget.schedule.length,
       color: widget.schedule.wireColour,
       cablePartNumber: widget.schedule.cablePartNo,
-      processType: getProcessType(scannedBundle.updateFromProcess),
+      processType: getProcessType(scannedBundle!.updateFromProcess),
       method: "${widget.method}",
       crimpFromSchId:
           widget.method.contains("a") ? "${widget.schedule.scheduleId}" : "",
@@ -1684,9 +1683,10 @@ class _ScanBundleState extends State<ScanBundle> {
       orderId: widget.schedule.purchaseOrder,
       fgPart: widget.schedule.finishedGoods,
       scheduleId: widget.schedule.scheduleId,
-      awg: widget.schedule.awg != null ? widget.schedule.awg.toString() : null,
-      terminalFrom: int.parse('${terminalA.terminalPart ?? '0'}'),
-      terminalTo: int.parse('${terminalB.terminalPart ?? '0'}'),
+      // ignore: unnecessary_null_comparison
+      awg: widget.schedule.awg != null ? widget.schedule.awg.toString() : "",
+      terminalFrom: int.parse('${terminalA!.terminalPart}'),
+      terminalTo: int.parse('${terminalB!.terminalPart}'),
     );
   }
 
@@ -1736,11 +1736,11 @@ class _ScanBundleState extends State<ScanBundle> {
   }
 
   Widget tripleQuantityCell({
-    String name,
-    int quantity,
-    TextEditingController textEditingControllerFrom,
-    TextEditingController textEditingControllerCable,
-    TextEditingController textEditingControllerTo,
+    required String name,
+
+    required TextEditingController textEditingControllerFrom,
+    required TextEditingController textEditingControllerCable,
+    required TextEditingController textEditingControllerTo,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 3.0),
@@ -1853,10 +1853,10 @@ class _ScanBundleState extends State<ScanBundle> {
   }
 
   Widget doubleQuantityCell({
-    String name,
-    int quantity,
-    TextEditingController textEditingControllerFrom,
-    TextEditingController textEditingControllerTo,
+    required String name,
+    
+    required TextEditingController textEditingControllerFrom,
+    required TextEditingController textEditingControllerTo,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 3.0),
@@ -1930,9 +1930,9 @@ class _ScanBundleState extends State<ScanBundle> {
   }
 
   Widget quantitycell(
-      {String name,
-      TextEditingController textEditingController,
-      FocusNode focusNode}) {
+      {required String name,
+      required TextEditingController textEditingController,
+      }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 3.0),
       child: Container(
@@ -1945,7 +1945,7 @@ class _ScanBundleState extends State<ScanBundle> {
                 width: 140,
                 child: TextField(
                   controller: textEditingController,
-                  focusNode: focusNode,
+                
                   onTap: () {
                     setState(() {
                       _output = '';
@@ -2186,8 +2186,8 @@ class _ScanBundleState extends State<ScanBundle> {
     if (_binController.text.length > 0) {
       TransferBundleToBin bundleToBin = TransferBundleToBin(
           userId: widget.userId,
-          binIdentification: binId,
-          locationId: null,
+          binIdentification: binId??'',
+          locationId: "",
           bundleId: _scanIdController.text);
       apiService.postTransferBundletoBin(
           transferBundleToBin: [bundleToBin]).then((value) {
@@ -2203,9 +2203,9 @@ class _ScanBundleState extends State<ScanBundle> {
               textColor: Colors.white,
               fontSize: 16.0);
           setState(() {
-            scannedBundle.binId = int.parse(binId);
-            scannedBundle.locationId = null;
-            bundleList.add(scannedBundle);
+            scannedBundle!.binId = int.parse(binId!);
+            scannedBundle!.locationId = "";
+            bundleList.add(scannedBundle!);
             Future.delayed(
               const Duration(milliseconds: 4000),
               () {
@@ -2275,7 +2275,7 @@ class _ScanBundleState extends State<ScanBundle> {
           apiService.postTransferBinToLocation(bundleList1
               .map((e) => TransferBinToLocation(
                   bundleId: e.bundleIdentification,
-                  locationId: null,
+                  locationId: "",
                   binIdentification: binID,
                   userId: widget.userId))
               .toList());

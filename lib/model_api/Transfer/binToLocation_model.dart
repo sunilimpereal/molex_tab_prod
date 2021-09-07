@@ -10,10 +10,10 @@ String transferBinToLocationToJson(List<TransferBinToLocation> data) => json.enc
 
 class TransferBinToLocation {
     TransferBinToLocation({
-        this.binIdentification,
-        this.bundleId,
-        this.userId,
-        this.locationId,
+        required this.binIdentification,
+        required this.bundleId,
+        required this.userId,
+        required this.locationId,
     });
 
     String binIdentification;
@@ -51,10 +51,10 @@ String responseTransferBinToLocationToJson(ResponseTransferBinToLocation data) =
 
 class ResponseTransferBinToLocation {
     ResponseTransferBinToLocation({
-        this.status,
-        this.statusMsg,
-        this.errorCode,
-        this.data,
+       required this.status,
+        required this.statusMsg,
+        required this.errorCode,
+        required this.data,
     });
 
     String status;
@@ -79,7 +79,7 @@ class ResponseTransferBinToLocation {
 
 class Data {
     Data({
-        this.bundleTransferToBinTracking,
+       required this.bundleTransferToBinTracking,
     });
 
     List<BinTransferToLocationTracking> bundleTransferToBinTracking;
@@ -95,23 +95,23 @@ class Data {
 
 class BinTransferToLocationTracking {
     BinTransferToLocationTracking({
-        this.id,
-        this.bundleIdentification,
-        this.scheduledId,
-        this.bundleCreationTime,
-        this.bundleQuantity,
-        this.machineIdentification,
-        this.operatorIdentification,
-        this.finishedGoodsPart,
-        this.cablePartNumber,
-        this.cablePartDescription,
-        this.cutLengthSpecificationInmm,
-        this.color,
-        this.bundleStatus,
-        this.binId,
-        this.locationId,
-        this.orderId,
-        this.updateFromProcess,
+      required  this.id,
+      required  this.bundleIdentification,
+      required  this.scheduledId,
+      required  this.bundleCreationTime,
+      required  this.bundleQuantity,
+      required  this.machineIdentification,
+      required  this.operatorIdentification,
+      required  this.finishedGoodsPart,
+      required  this.cablePartNumber,
+      required  this.cablePartDescription,
+      required  this.cutLengthSpecificationInmm,
+      required  this.color,
+      required  this.bundleStatus,
+      required  this.binId,
+      required  this.locationId,
+      required  this.orderId,
+      required  this.updateFromProcess,
     });
 
     int id;
@@ -186,10 +186,10 @@ String errorTransferBinToLocationToJson(ErrorTransferBinToLocation data) => json
 
 class ErrorTransferBinToLocation {
     ErrorTransferBinToLocation({
-        this.status,
-        this.statusMsg,
-        this.errorCode,
-        this.data,
+      required  this.status,
+      required  this.statusMsg,
+      required  this.errorCode,
+      required  this.data,
     });
 
     String status;

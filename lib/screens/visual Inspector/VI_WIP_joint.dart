@@ -707,11 +707,11 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                         style: TextStyle(fontSize: 12),
                       )),
                       DataCell(Text(
-                        e.binId ,
+                        e.binId??"" ,
                         style: TextStyle(fontSize: 12),
                       )),
                       DataCell(Text(
-                        e.status ,
+                        e.status??'' ,
                         style: TextStyle(fontSize: 12),
                       )),
                       DataCell(Text(""))
@@ -1116,14 +1116,14 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                                                       ? "0"
                                                       : rejectedQtyController
                                                           .text);
-                                              bundle.passedQuantity = bundle
-                                                      .bundleQuantity -
+                                              bundle.passedQuantity = (bundle
+                                                      .bundleQuantity! -
                                                   int.parse(rejectedQtyController
                                                               .text ==
                                                           ''
                                                       ? "0"
                                                       : rejectedQtyController
-                                                          .text);
+                                                          .text))!;
                                               bundle.status = "completed";
 
                                               apiService
@@ -1466,7 +1466,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                                       TransferBundleToBin(
                                         binIdentification: _binController.text,
                                         userId: widget.employee.empId,
-                                        bundleId: bundle.bundleIdentification,
+                                        bundleId: bundle.bundleIdentification??'',
                                         locationId:
                                             _locationController.text == ''
                                                 ? ""

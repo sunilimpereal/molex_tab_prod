@@ -10,11 +10,11 @@ String partiallyCompleteModelToJson(PartiallyCompleteModel data) => json.encode(
 
 class PartiallyCompleteModel {
     PartiallyCompleteModel({
-        this.finishedGoods,
-        this.purchaseOrder,
-        this.orderIdentification,
-        this.cablePartNumber,
-        this.cutLength,
+        required this.finishedGoods,
+        required this.purchaseOrder,
+        required this.orderIdentification,
+        required this.cablePartNumber,
+        required this.cutLength,
     });
 
     int finishedGoods;

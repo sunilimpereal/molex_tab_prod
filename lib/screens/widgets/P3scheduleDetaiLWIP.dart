@@ -167,7 +167,7 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
         padding: const EdgeInsets.all(0.0),
         child: FutureBuilder(
             future:
-                apiService.getFgDetails(widget.schedule.finishedGoodsNumber),
+                apiService.getFgDetails(widget.schedule.finishedGoodsNumber??''),
             builder: (context, snapshot) {
               print('fg number ${widget.schedule.finishedGoodsNumber}');
               FgDetails? fgDetail = snapshot.data as FgDetails?;

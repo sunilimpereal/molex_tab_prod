@@ -135,12 +135,12 @@ class ApiService {
     List<RawMaterial> newList = [];
     for (RawMaterial rawmat in rawmaterial) {
       if (temp.partNunber == rawmat.partNunber) {
-        temp.requireQuantity = (double.parse(temp.requireQuantity) +
-                double.parse(rawmat.requireQuantity))
+        temp.requireQuantity = (double.parse(temp.requireQuantity??"") +
+                double.parse(rawmat.requireQuantity??''))
             .toString();
         temp.toatalScheduleQuantity =
-            (double.parse(temp.toatalScheduleQuantity) +
-                    double.parse(rawmat.toatalScheduleQuantity))
+            (double.parse(temp.toatalScheduleQuantity??'') +
+                    double.parse(rawmat.toatalScheduleQuantity??''))
                 .toString();
         newList.removeLast();
 
@@ -360,7 +360,7 @@ class ApiService {
       GetCableTerminalB getCableTerminalB =
           getCableTerminalBFromJson(response.body);
       CableTerminalB cableTerminalB =
-          getCableTerminalB.data.findCableTerminalBDto;
+          getCableTerminalB.data!.findCableTerminalBDto;
       return cableTerminalB;
     } else {
       CableTerminalB cableTerminalB = new CableTerminalB();
@@ -838,7 +838,7 @@ class ApiService {
       try {
         GetBundleDetail getBundleDetail =
             getBundleDetailFromJson(response.body);
-        BundleData bundleDetail = getBundleDetail.data.bundleData;
+        BundleData bundleDetail = getBundleDetail.data!.bundleData!;
         return bundleDetail;
       } catch (e) {
         return null;

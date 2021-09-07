@@ -603,12 +603,12 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
                         }
                         if (widget.type == 'process') {
                           apiService
-                              .getmachinedetails(widget.machine.machineNumber)
+                              .getmachinedetails(widget.machine.machineNumber??"")
                               .then((value) {
                             // Navigator.pop(context);
                             MachineDetails machineDetails = value![0];
                             Fluttertoast.showToast(
-                                msg: widget.machine.machineNumber,
+                                msg: widget.machine.machineNumber??"",
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 timeInSecForIosWeb: 1,
@@ -685,7 +685,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => HomeVisualInspector(
-                                      employee: widget.employee, machineId: '',
+                                      employee: widget.employee,
                                     )),
                           );
                         }
@@ -742,12 +742,12 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
         }
         if (widget.type == 'process') {
           apiService
-              .getmachinedetails(widget.machine.machineNumber)
+              .getmachinedetails(widget.machine.machineNumber??'')
               .then((value) {
             // Navigator.pop(context);
             MachineDetails machineDetails = value![0];
             Fluttertoast.showToast(
-                msg: widget.machine.machineNumber,
+                msg: widget.machine.machineNumber??'',
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIosWeb: 1,
@@ -824,7 +824,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
             context,
             MaterialPageRoute(
                 builder: (context) => HomeVisualInspector(
-                      employee: widget.employee, machineId: '',
+                      employee: widget.employee, 
                     )),
           );
         }

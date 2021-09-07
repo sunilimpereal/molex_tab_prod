@@ -3,8 +3,8 @@ class BundleScan {
   String bundleQty;
   String bundleProcessQty;
   BundleScan({
-    this.bundleId,
-    this.bundleProcessQty,
-    this.bundleQty,
+    required this.bundleId,
+    required this.bundleProcessQty,
+    required this.bundleQty,
   });
 }
