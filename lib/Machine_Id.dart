@@ -14,7 +14,7 @@ import 'service/apiService.dart';
 
 class MachineId extends StatefulWidget {
   Employee employee;
-  MachineId({this.employee});
+  MachineId({required this.employee});
   @override
   _MachineIdState createState() => _MachineIdState();
 }
@@ -22,9 +22,9 @@ class MachineId extends StatefulWidget {
 class _MachineIdState extends State<MachineId> {
   TextEditingController _textController = new TextEditingController();
   FocusNode _textNode = new FocusNode();
-  String machineId;
-  ApiService apiService;
-  bool loading;
+  late String machineId;
+  late ApiService apiService;
+  late bool loading;
   @override
   void initState() {
     loading = false;
@@ -39,9 +39,9 @@ class _MachineIdState extends State<MachineId> {
     super.initState();
   }
 
-  handleKey(RawKeyEventDataAndroid key) {
+  handleKey(RawKeyEventData? key) {
     String _keyCode;
-    _keyCode = key.keyCode.toString(); //keyCode of key event(66 is return )
+    _keyCode = key!.keyLabel.toString(); //keyCode of key event(66 is return )
     print("why does this run twice $_keyCode");
     setState(() {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
@@ -90,7 +90,7 @@ class _MachineIdState extends State<MachineId> {
                                 "Scan Machine",
                                 style:  TextStyle(
                                     fontSize: 30,
-                                    color: Colors.red[600],
+                                    color: Colors.red.shade600,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -101,7 +101,7 @@ class _MachineIdState extends State<MachineId> {
                                     height: 3,
                                     width: 280,
                                     child: LinearProgressIndicator(
-                                      backgroundColor: Colors.grey[50],
+                                      backgroundColor: Colors.grey.shade50,
                                       valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                                     ),
                                   )
@@ -110,6 +110,7 @@ class _MachineIdState extends State<MachineId> {
                                   ),
                             Lottie.asset('assets/lottie/scan-barcode.json',
                                 width: 280, fit: BoxFit.cover),
+                                
                             // Text(
                             //   'Scan Machine',
                             //   style: GoogleFonts.openSans(
@@ -121,7 +122,7 @@ class _MachineIdState extends State<MachineId> {
                             // ),
                             machineId != ''
                                 ? Text(
-                                    machineId ?? '',
+                                    machineId,
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 18,
@@ -334,7 +335,7 @@ class _MachineIdState extends State<MachineId> {
                         Column(
                           children: [
                             Text(
-                              widget.employee.employeeName ?? '',
+                              widget.employee.employeeName,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500,
@@ -342,7 +343,7 @@ class _MachineIdState extends State<MachineId> {
                               ),
                             ),
                             Text(
-                              widget.employee.empId ?? '',
+                              widget.employee.empId ,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500,
@@ -354,7 +355,7 @@ class _MachineIdState extends State<MachineId> {
                         SizedBox(width: 15),
                         Material(
                           elevation: 5,
-                          shadowColor: Colors.grey[200],
+                          shadowColor: Colors.grey.shade200,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(100.0)),
                           child: Container(
@@ -383,7 +384,7 @@ class _MachineIdState extends State<MachineId> {
     setState(() {
       loading = true;
     });
-    if (machineId?.trim() == "new") {
+    if (machineId.trim() == "new") {
       Fluttertoast.showToast(
           msg: "logged In",
           toastLength: Toast.LENGTH_SHORT,
@@ -392,14 +393,14 @@ class _MachineIdState extends State<MachineId> {
           backgroundColor: Colors.red,
           textColor: Colors.white,
           fontSize: 16.0);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => CrimpingPatrolDash(
-                  userId: widget.employee.empId,
-                  machineId: machineId,
-                )),
-      );
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //       builder: (context) => CrimpingPatrolDash(
+      //             userId: widget.employee.empId,
+      //             machineId: machineId,
+      //           )),
+      // );
     }
     if (machineId.trim() == "preparation") {
       Fluttertoast.showToast(
@@ -499,7 +500,7 @@ class _MachineIdState extends State<MachineId> {
                   textColor: Colors.white,
                   fontSize: 16.0);
               setState(() {
-                machineId = null;
+                machineId = '';
                 _textController.clear();
               });
           }
@@ -517,7 +518,7 @@ class _MachineIdState extends State<MachineId> {
               textColor: Colors.white,
               fontSize: 16.0);
           setState(() {
-            machineId = null;
+            machineId = '';
             _textController.clear();
           });
         }

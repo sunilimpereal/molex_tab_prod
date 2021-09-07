@@ -7,13 +7,13 @@ import '../../service/apiService.dart';
 class P3ScheduleDetailWIP extends StatefulWidget {
   PreparationSchedule schedule;
 
-  P3ScheduleDetailWIP({this.schedule});
+  P3ScheduleDetailWIP({required this.schedule});
   @override
   _P3ScheduleDetailWIPState createState() => _P3ScheduleDetailWIPState();
 }
 
 class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
-  ApiService apiService;
+  late ApiService apiService;
   @override
   void initState() {
     apiService = ApiService();
@@ -55,12 +55,12 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
     );
   }
 
-  Widget feild({String heading, String value, double width}) {
+  Widget feild({required String heading, required String value, required double width}) {
     width = MediaQuery.of(context).size.width * width;
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: Container(
-        // color: Colors.red[100],
+        // color: Colors.red.shade100,
         width: width,
         child: Column(
           children: [
@@ -70,7 +70,7 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
                   heading,
                   style:  TextStyle(
                     fontSize: 11,
-                    color: Colors.grey[500],
+                    color: Colors.grey.shade500,
                     fontWeight: FontWeight.normal,
                   )),
                 
@@ -81,7 +81,7 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
               child: Row(
                 children: [
                   Text(
-                    "${value ?? ''}",
+                    "${value }",
                     style:
                           TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
                     ),
@@ -111,21 +111,21 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
                 width: 0.1),
             feild(
                 heading: "Schedule ID",
-                value: widget.schedule.scheduledId.toString()??'',
+                value: widget.schedule.scheduledId.toString(),
                 width: 0.1),
             feild(
                 heading: "Cable Part No.",
-                value: widget.schedule.cablePartNumber.toString()??'',
+                value: widget.schedule.cablePartNumber.toString(),
                 width: 0.10),
             feild(
                 heading: "Process",
-                value: widget.schedule.process.toString()??'',
+                value: widget.schedule.process.toString(),
                 width: 0.18),
             feild(
                 heading: "Cut Length",
-                value: "${widget.schedule.length}".toString()??'',
+                value: "${widget.schedule.length}".toString(),
                 width: 0.07),
-            feild(heading: "Color", value: "${widget.schedule.color.toString()??''}", width: 0.06),
+            feild(heading: "Color", value: "${widget.schedule.color.toString()}", width: 0.06),
             // feild(
             //     heading: "Scheduled Qty",
             //     value: "${widget.schedule.scheduledQuantity.toString()??''}",
@@ -145,7 +145,7 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
         padding: EdgeInsets.symmetric(horizontal: 30),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(5)),
-          // color: Colors.grey[200],
+          // color: Colors.grey.shade200,
         ),
         child: Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -170,18 +170,18 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
                 apiService.getFgDetails(widget.schedule.finishedGoodsNumber),
             builder: (context, snapshot) {
               print('fg number ${widget.schedule.finishedGoodsNumber}');
-              FgDetails fgDetail = snapshot.data;
+              FgDetails? fgDetail = snapshot.data as FgDetails?;
               if (snapshot.hasData) {
                 return Container(
                     width: MediaQuery.of(context).size.width,
                     height: 50,
-                    // color: Colors.grey[200],
+                    // color: Colors.grey.shade200,
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           feild(
                               heading: "FG Description",
-                              value: "${fgDetail.fgDescription??''}",
+                              value: "${fgDetail!.fgDescription}",
                               width: 0.33),
                           feild(
                               heading: "FG Scheduled Date",
@@ -191,7 +191,7 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
                               heading: "Customer",
                               value: "${fgDetail.customer}",
                               width: 0.15),
-                          feild(heading: "Drg Rev", value:"${fgDetail.drgRev??''}", width: 0.05),
+                          feild(heading: "Drg Rev", value:"${fgDetail.drgRev}", width: 0.05),
                           feild(
                               heading: "Cable Serial No",
                               value: "${fgDetail.cableSerialNo.toString()}" ,

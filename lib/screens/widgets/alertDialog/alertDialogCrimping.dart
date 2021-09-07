@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 import '../../../main.dart';
 
 Future<void> showBundleAlertCrimping(
-    {@required BuildContext context,
-    @required Function onDoNotRemindAgain,
-    @required String bundleStaus,
-    @required Function onSubmitted}) async {
+    {required BuildContext context,
+    required Function onDoNotRemindAgain,
+    required String bundleStaus,
+    required Function onSubmitted}) async {
   Future.delayed(
     const Duration(milliseconds: 50),
     () {
@@ -36,7 +36,7 @@ class BundleAlertCrimping extends StatefulWidget {
   @required
   Function onSubmitted;
   BundleAlertCrimping(
-      {Key key, this.bundleStatus, this.onDoNotRemindAgain, this.onSubmitted})
+      {Key? key, required this.bundleStatus, required this.onDoNotRemindAgain, required this.onSubmitted})
       : super(key: key);
 
   @override
@@ -58,7 +58,7 @@ class _BundleAlertCrimpingState extends State<BundleAlertCrimping> {
                 child: IconButton(
                   icon: Icon(
                     Icons.close,
-                    color: Colors.red[400],
+                    color: Colors.red.shade400,
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -105,15 +105,15 @@ class _BundleAlertCrimpingState extends State<BundleAlertCrimping> {
                     fillColor: MaterialStateProperty.resolveWith<Color>(
                       (Set<MaterialState> states) {
                         if (states.contains(MaterialState.pressed))
-                          return Colors.green[200];
-                        return Colors.green[400]; // Use the component's default.
+                          return Colors.green.shade200;
+                        return Colors.green.shade400; // Use the component's default.
                       },
                     ),
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     value: checkbox,
                     onChanged: (value) {
                       setState(() {
-                        checkbox = value;
+                        checkbox = value!;
                         widget.onDoNotRemindAgain(value);
                       });
                     }),

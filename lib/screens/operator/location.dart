@@ -97,7 +97,7 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           height: 24,
                           decoration: BoxDecoration(
-                            color: Colors.grey[100],
+                            color: Colors.grey.shade100,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(100)),
                           ),
@@ -126,7 +126,7 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           height: 24,
                           decoration: BoxDecoration(
-                            color: Colors.grey[100],
+                            color: Colors.grey.shade100,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(100)),
                           ),
@@ -210,7 +210,7 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
     );
   }
 
-  handleKey(RawKeyEventDataAndroid key) {
+  handleKey(RawKeyEventData key) {
     setState(() {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
     });
@@ -268,7 +268,7 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Colors.grey[400], width: 2.0),
+                                      color: Colors.grey.shade400, width: 2.0),
                                 ),
                                 labelText: 'Scan Location',
                                 contentPadding: const EdgeInsets.symmetric(
@@ -302,7 +302,7 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
               backgroundColor: MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
                   if (states.contains(MaterialState.pressed))
-                    return Colors.green[200];
+                    return Colors.green.shade200;
                   return Colors.green; // Use the component's default.
                 },
               ),
@@ -401,9 +401,9 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
                             MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.pressed))
-                              return Colors.green[200];
+                              return Colors.green.shade200;
                             return Colors
-                                .green[500]; // Use the component's default.
+                                .green.shade500; // Use the component's default.
                           },
                         ),
                       ),
@@ -429,9 +429,9 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
                             MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.pressed))
-                              return Colors.green[200];
+                              return Colors.green.shade200;
                             return Colors
-                                .green[500]; // Use the component's default.
+                                .green.shade500; // Use the component's default.
                           },
                         ),
                       ),
@@ -458,7 +458,7 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
                       (Set<MaterialState> states) {
                         if (states.contains(MaterialState.pressed))
-                          return Colors.red[200];
+                          return Colors.red.shade200;
                         return Colors.white; // Use the component's default.
                       },
                     ),
@@ -533,7 +533,7 @@ class _LocationState extends State<Location>  with SingleTickerProviderStateMixi
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.grey[400], width: 2.0),
+                                    color: Colors.grey.shade400, width: 2.0),
                               ),
                               labelText: 'Scan bin',
                               contentPadding:

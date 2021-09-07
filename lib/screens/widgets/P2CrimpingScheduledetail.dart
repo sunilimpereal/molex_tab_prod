@@ -9,13 +9,13 @@ import '../../service/apiService.dart';
 class P2ScheduleDetailWIP extends StatefulWidget {
   CrimpingSchedule schedule;
 
-  P2ScheduleDetailWIP({this.schedule});
+  P2ScheduleDetailWIP({required this.schedule});
   @override
   _P2ScheduleDetailWIPState createState() => _P2ScheduleDetailWIPState();
 }
 
 class _P2ScheduleDetailWIPState extends State<P2ScheduleDetailWIP> {
-  ApiService apiService;
+  late ApiService apiService;
   @override
   void initState() {
     apiService = ApiService();
@@ -57,12 +57,12 @@ class _P2ScheduleDetailWIPState extends State<P2ScheduleDetailWIP> {
     );
   }
 
- Widget feild({String heading, String value, double width}) {
+ Widget feild({required String heading, required String value, required double width}) {
     width = MediaQuery.of(context).size.width * width;
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: Container(
-        // color: Colors.red[100],
+        // color: Colors.red.shade100,
         width: width,
         child: Column(
           children: [
@@ -72,7 +72,7 @@ class _P2ScheduleDetailWIPState extends State<P2ScheduleDetailWIP> {
                   heading,
                   style:TextStyle(
                     fontSize: 10,
-                    color: Colors.grey[500],
+                    color: Colors.grey.shade500,
                     fontWeight: FontWeight.normal,
                   )),
                 
@@ -83,7 +83,7 @@ class _P2ScheduleDetailWIPState extends State<P2ScheduleDetailWIP> {
               child: Row(
                 children: [
                   Text(
-                    value ?? '',
+                    value ,
                     style:
                           TextStyle(fontWeight: FontWeight.w400, fontSize: 11),
                     ),
@@ -150,7 +150,7 @@ class _P2ScheduleDetailWIPState extends State<P2ScheduleDetailWIP> {
         padding: EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(5)),
-          // color: Colors.grey[200],
+          // color: Colors.grey.shade200,
         ),
         child: Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -175,18 +175,18 @@ class _P2ScheduleDetailWIPState extends State<P2ScheduleDetailWIP> {
                 apiService.getFgDetails(widget.schedule.finishedGoods.toString()),
             builder: (context, snapshot) {
               print('fg number ${widget.schedule.finishedGoods}');
-              FgDetails fgDetail = snapshot.data;
+              FgDetails? fgDetail = snapshot.data as FgDetails?;
               if (snapshot.hasData) {
                 return Container(
                     width: MediaQuery.of(context).size.width,
                     height: 35,
-                    // color: Colors.grey[200],
+                    // color: Colors.grey.shade200,
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                       feild(
                               heading: "FG Description",
-                              value: "${fgDetail.fgDescription}",
+                              value: "${fgDetail!.fgDescription}",
                               width: 0.33),
                           // feild(
                           //     heading: "FG Scheduled Date",

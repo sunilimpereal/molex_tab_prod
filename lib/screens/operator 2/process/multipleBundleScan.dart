@@ -30,7 +30,7 @@ class MultipleBundleScan extends StatefulWidget {
   @required
   CrimpingSchedule schedule;
   MultipleBundleScan(
-      {this.length, this.machineId, this.method, this.userId, this.schedule});
+      {required this.length, required this.machineId, required this.method, required this.userId, required this.schedule});
 
   @override
   _MultipleBundleScanState createState() => _MultipleBundleScanState();
@@ -77,14 +77,14 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
 
   TextEditingController _binController = new TextEditingController();
 
-  bool hasBin;
+  late bool hasBin;
 
-  String binId;
+  late String binId;
   //to store the bundle Quantity fetched from api after scanning bundle Id
   String bundleQty = '';
   ApiService apiService = new ApiService();
-  CableTerminalA terminalA;
-  CableTerminalB terminalB;
+  CableTerminalA ?terminalA;
+  CableTerminalB ?terminalB;
 
   bool terminalfromcheck = false;
 
@@ -103,11 +103,10 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
       apiService
           .getCableTerminalB(
               fgpartNo: "${widget.schedule.finishedGoods}",
-              cablepartno: widget.schedule.cablePartNo.toString() ??
-                  widget.schedule.finishedGoods,
+              cablepartno: widget.schedule.cablePartNo.toString() ,
               length: "${widget.schedule.length}",
               color: widget.schedule.wireColour,
-              awg: int.parse(widget.schedule.awg ?? ''))
+              awg: int.parse(widget.schedule.awg))
           .then((termiB) {
         setState(() {
           terminalA = termiA;
@@ -351,7 +350,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                     apiService
                                         .getBundleDetail(_scanIdController.text)
                                         .then((value) {
-                                      BundleData bundleDetail = value;
+                                      BundleData bundleDetail = value!;
                                       if (value != null) {
                                         // if ("${bundleDetail.finishedGoodsPart}" ==
                                         //         "${widget.schedule.finishedGoods}") {
@@ -463,9 +462,9 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                             new Checkbox(
                                 value: terminalfromcheck,
                                 activeColor: Colors.green,
-                                onChanged: (bool newValue) {
+                                onChanged: (bool? newValue) {
                                   setState(() {
-                                    terminalfromcheck = newValue;
+                                    terminalfromcheck = newValue!;
                                   });
                                 }),
                             Text("Terminal From")
@@ -476,9 +475,9 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                             new Checkbox(
                                 value: terminaltocheck,
                                 activeColor: Colors.green,
-                                onChanged: (bool newValue) {
+                                onChanged: (bool? newValue) {
                                   setState(() {
-                                    terminaltocheck = newValue;
+                                    terminaltocheck = newValue!;
                                   });
                                 }),
                             Text("Terminal To")
@@ -495,7 +494,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
     );
   }
 
-  handleKey(RawKeyEventDataAndroid key) {
+  handleKey(RawKeyEventData key) {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
@@ -782,9 +781,8 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                     (Set<MaterialState> states) {
                                       if (states
                                           .contains(MaterialState.pressed))
-                                        return Colors.green[200];
-                                      return Colors.green[
-                                          500]; // Use the component's default.
+                                        return Colors.green.shade200;
+                                      return Colors.green.shade500; // Use the component's default.
                                     },
                                   ),
                                 ),
@@ -1191,7 +1189,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.grey[400], width: 2.0),
+                              BorderSide(color: Colors.grey.shade400, width: 2.0),
                         ),
                         labelText: '    Scan bin    ',
                         contentPadding:
@@ -1218,7 +1216,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                             MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.pressed))
-                              return Colors.red[200];
+                              return Colors.red.shade200;
                             return Colors.white; // Use the component's default.
                           },
                         ),
@@ -1252,7 +1250,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                             if (states.contains(MaterialState.pressed))
                               return Colors.red;
                             return Colors
-                                .red[400]; // Use the component's default.
+                                .red.shade400; // Use the component's default.
                           },
                         ),
                       ),

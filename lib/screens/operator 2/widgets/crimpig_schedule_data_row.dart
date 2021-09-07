@@ -15,7 +15,7 @@ class CrimpingScheduleDataRow extends StatefulWidget {
   Employee employee;
   MachineDetails machine;
 
-  CrimpingScheduleDataRow({ @required this.schedule,@required this.machine,@required this.employee}) : super();
+  CrimpingScheduleDataRow({ required this.schedule,required this.machine,required this.employee}) : super();
 
   @override
   _CrimpingScheduleDataRowState createState() =>
@@ -23,7 +23,7 @@ class CrimpingScheduleDataRow extends StatefulWidget {
 }
 
 class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
-  ApiService apiService;
+  late ApiService apiService;
   bool loading = false;
   @override
   void initState() {
@@ -44,7 +44,7 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 50,
-          color: 2 % 2 == 0 ? Colors.grey[50] : Colors.white,
+          color: 2 % 2 == 0 ? Colors.grey.shade50 : Colors.white,
           child: Container(
             decoration: BoxDecoration(),
             child: Row(
@@ -156,8 +156,8 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
                                   primary: widget.schedule.schedulestatus
                                               .toLowerCase() ==
                                           "Partially Completed".toLowerCase()
-                                      ? Colors.green[500]
-                                      : Colors.green[500],
+                                      ? Colors.green.shade500
+                                      : Colors.green.shade500,
                                 ),
                                 child:loading?Container(
                                     width: 30,
@@ -254,7 +254,7 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
                                                         machine: widget.machine,
                                                         materialPickType:
                                                             MaterialPickType
-                                                                .newload,
+                                                                .newload, reload: (){},
                                                       )),
                                             );
                                             setState(() {

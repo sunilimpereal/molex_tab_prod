@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import '../../../main.dart';
 
 Future<void> showBundleAlertVi(
-    {@required BuildContext context,
-    @required Function onDoNotRemindAgain,
-    @required String bundleStaus,
-    @required String crimpfrom,
-    @required String crimpto,
-    @required Function onSubmitted}) async {
+    {required BuildContext context,
+    required Function onDoNotRemindAgain,
+    required String bundleStaus,
+    required String crimpfrom,
+    required String crimpto,
+    required Function onSubmitted}) async {
   Future.delayed(
     const Duration(milliseconds: 50),
     () {
@@ -43,12 +43,12 @@ class BundleViAlert extends StatefulWidget {
   @required
   Function onSubmitted;
   BundleViAlert(
-      {Key key,
-      @required this.onSubmitted,
-      @required this.bundleStatus,
-      @required this.onDoNotRemindAgain,
-      @required this.crimpto,
-      this.crimpfrom})
+      {Key? key,
+      required this.onSubmitted,
+      required this.bundleStatus,
+      required this.onDoNotRemindAgain,
+      required this.crimpto,
+      required this.crimpfrom})
       : super(key: key);
 
   @override
@@ -70,7 +70,7 @@ class _BundleAlertViState extends State<BundleViAlert> {
                 child: IconButton(
                   icon: Icon(
                     Icons.close,
-                    color: Colors.red[400],
+                    color: Colors.red.shade400,
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -119,7 +119,7 @@ class _BundleAlertViState extends State<BundleViAlert> {
                     value: checkbox,
                     onChanged: (value) {
                       setState(() {
-                        checkbox = value;
+                        checkbox = value!;
                         widget.onDoNotRemindAgain(value);
                       });
                     }),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class KeyPad extends StatefulWidget {
   TextEditingController controller;
   Function buttonPressed;
-  KeyPad({ Key key,this.controller,this.buttonPressed}) : super(key: key);
+  KeyPad({ Key? key,required this.controller,required this.buttonPressed}) : super(key: key);
 
   @override
   _KeyPadState createState() => _KeyPadState();
@@ -16,7 +16,7 @@ class _KeyPadState extends State<KeyPad> {
       elevation: 3,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
-          side: BorderSide(color: Colors.red[100])),
+          side: BorderSide(color: Colors.red.shade100)),
       shadowColor: Colors.white,
       child: Container(
         width: MediaQuery.of(context).size.width * 0.24,
@@ -90,7 +90,7 @@ class _KeyPadState extends State<KeyPad> {
               shadowColor:  MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
                   if (states.contains(MaterialState.pressed))
-                    return Colors.red[100];
+                    return Colors.red.shade100;
 
                   return Colors.white; // Use the component's default.
                 },
@@ -104,7 +104,7 @@ class _KeyPadState extends State<KeyPad> {
               backgroundColor: MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
                   if (states.contains(MaterialState.pressed))
-                    return Colors.red[50];
+                    return Colors.red.shade50;
 
                   return Colors.white; // Use the component's default.
                 },
@@ -117,7 +117,7 @@ class _KeyPadState extends State<KeyPad> {
                     child: IconButton(
                       icon: Icon(
                         Icons.backspace,
-                        color: Colors.red[400],
+                        color: Colors.red.shade400,
                       ),
                       onPressed: () => {widget.buttonPressed(buttonText)},
                     ))

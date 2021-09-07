@@ -37,7 +37,7 @@ enum Status {
 class Preparationprocess extends StatefulWidget {
   Employee employee;
   String machineId;
-  Preparationprocess({this.employee, this.machineId});
+  Preparationprocess({required this.employee, required this.machineId});
   @override
   _PreparationprocessState createState() => _PreparationprocessState();
 }
@@ -47,11 +47,11 @@ class _PreparationprocessState extends State<Preparationprocess> {
   FocusNode _userScanFocus = new FocusNode();
   TextEditingController _bundleIdScanController = new TextEditingController();
   FocusNode _bundleIdScanFocus = new FocusNode();
-  String userId;
+  late String userId;
   List<PreparationScan> preparationList = [];
-  ApiService apiService;
+  late ApiService apiService;
   String _output = '';
-  String bundleId;
+  late String bundleId;
   List<String> usersList = [];
   bool donotrepeatalert = false;
   TextEditingController mainController = new TextEditingController();
@@ -88,19 +88,19 @@ class _PreparationprocessState extends State<Preparationprocess> {
     apiService = new ApiService();
     apiService.getUserList().then((value) {
       setState(() {
-        usersList = value.map((e) => e.empId).toList();
+        usersList = value!.map((e) => e.empId).toList();
       });
     });
   }
 
-  CableTerminalA terminalA;
-  CableTerminalB terminalB;
+  late CableTerminalA terminalA;
+  late CableTerminalB terminalB;
   getTerminal(
-      {String fgNumber,
-      String cablePtNo,
-      String length,
-      String color,
-      int awg}) {
+      {required String fgNumber,
+      required String cablePtNo,
+      required String length,
+      required String color,
+      required int awg}) {
     ApiService apiService = new ApiService();
     apiService
         .getCableTerminalA(
@@ -119,7 +119,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
               awg: awg)
           .then((termiB) {
         setState(() {
-          terminalA = termiA;
+          terminalA = termiA!;
           terminalB = termiB;
         });
       });
@@ -173,7 +173,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         height: 24,
                         decoration: BoxDecoration(
-                          color: Colors.grey[100],
+                          color: Colors.grey.shade100,
                           borderRadius: BorderRadius.all(Radius.circular(100)),
                         ),
                         child: Center(
@@ -201,7 +201,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         height: 24,
                         decoration: BoxDecoration(
-                          color: Colors.grey[100],
+                          color: Colors.grey.shade100,
                           borderRadius: BorderRadius.all(Radius.circular(100)),
                         ),
                         child: Center(
@@ -323,23 +323,19 @@ class _PreparationprocessState extends State<Preparationprocess> {
                       cablepartno: preparationList[selectedindex]
                               .bundleDetail
                               .cablePartNumber
-                              .toString() ??
-                          preparationList[selectedindex]
-                              .bundleDetail
-                              .finishedGoodsPart
                               .toString(),
                       length:
                           "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
                       color:
                           "${preparationList[selectedindex].bundleDetail.color}",
                       awg: int.parse(
-                        preparationList[selectedindex].bundleDetail.awg ?? '0',
+                        preparationList[selectedindex].bundleDetail.awg,
                       )),
                   builder: (context, snapshot) {
-                    CableTerminalA terminalA = snapshot.data;
+                    CableTerminalA? terminalA = snapshot.data as CableTerminalA?;
                     if (snapshot.hasData) {
                       return process1(
-                          'From Process Unsheathing Length : ${terminalA.unsheathingLength}',
+                          'From Process Unsheathing Length : ${terminalA!.unsheathingLength}',
                           0.30);
                     } else {
                       return process1(
@@ -356,10 +352,6 @@ class _PreparationprocessState extends State<Preparationprocess> {
                     cablepartno: preparationList[selectedindex]
                             .bundleDetail
                             .cablePartNumber
-                            .toString() ??
-                        preparationList[selectedindex]
-                            .bundleDetail
-                            .finishedGoodsPart
                             .toString(),
                     length:
                         "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
@@ -369,13 +361,13 @@ class _PreparationprocessState extends State<Preparationprocess> {
                       preparationList[selectedindex].bundleDetail.awg ?? '0',
                     )),
                 builder: (context, snapshot) {
-                  CableDetails cableDetail = snapshot.data;
+                  CableDetails? cableDetail = snapshot.data as CableDetails?;
                   if (snapshot.hasData) {
                     return process(
                         'Cable',
-                        'Cut Length Spec(mm) -${cableDetail.cutLengthSpec}',
+                        'Cut Length Spec(mm) -${cableDetail!.cutLengthSpec}',
                         'Cable Part Number(Description)',
-                        '${cableDetail.cablePartNumber}(${cableDetail.description})',
+                        '${cableDetail!.cablePartNumber}(${cableDetail.description})',
                         'From Strip Length Spec(mm) ${cableDetail.stripLengthFrom} \n To Strip Length Spec(mm) ${cableDetail.stripLengthTo}',
                         0.36);
                   } else {
@@ -393,10 +385,6 @@ class _PreparationprocessState extends State<Preparationprocess> {
                     cablepartno: preparationList[selectedindex]
                             .bundleDetail
                             .cablePartNumber
-                            .toString() ??
-                        preparationList[selectedindex]
-                            .bundleDetail
-                            .finishedGoodsPart
                             .toString(),
                     length:
                         "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
@@ -407,9 +395,9 @@ class _PreparationprocessState extends State<Preparationprocess> {
                     )),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    CableTerminalB cableTerminalB = snapshot.data;
+                    CableTerminalB? cableTerminalB = snapshot.data as CableTerminalB?;
                     return process1(
-                        'To Process Unsheathing Length : ${cableTerminalB.unsheathingLength} ',
+                        'To Process Unsheathing Length : ${cableTerminalB!.unsheathingLength} ',
                         0.30);
                   } else {
                     return process1('To Process Unsheathing Length : ', 0.325);
@@ -425,7 +413,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
       String p1, String p2, String p3, String p4, String p5, double width) {
     return Material(
       elevation: 10,
-      shadowColor: Colors.grey[100],
+      shadowColor: Colors.grey.shade100,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 2.0),
         width: MediaQuery.of(context).size.width * width,
@@ -515,7 +503,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
   Widget process1(String p1, double width) {
     return Material(
       elevation: 10,
-      shadowColor: Colors.grey[100],
+      shadowColor: Colors.grey.shade100,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 2.0),
         height: 50,
@@ -594,7 +582,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
             height: MediaQuery.of(context).size.height * 0.55,
             decoration: BoxDecoration(
               borderRadius: new BorderRadius.circular(20.0),
-              color: Colors.grey[100],
+              color: Colors.grey.shade100,
             ),
             child: Container(
               width: MediaQuery.of(context).size.width * 0.65,
@@ -819,7 +807,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
       color: preparationList[selectedindex].bundleDetail.color,
       finishedGoods:
           preparationList[selectedindex].bundleDetail.finishedGoodsPart,
-      terminalFrom: terminalA.terminalPart,
+      terminalFrom: terminalA.terminalPart??0,
       terminalTo: terminalB.terminalPart ?? 0,
       awg: preparationList[selectedindex].bundleDetail.awg,
       viCompleted: preparationList[selectedindex].bundleDetail.viCompleted,
@@ -871,7 +859,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
     return total;
   }
 
-  showtoast({String msg}) {
+  showtoast({required String msg}) {
     Fluttertoast.showToast(
         msg: "$msg",
         toastLength: Toast.LENGTH_SHORT,
@@ -926,8 +914,8 @@ class _PreparationprocessState extends State<Preparationprocess> {
                       builder: (context) => ViLocationTransfer(
                             employee: widget.employee,
                             type: "preparation",
-                            locationType: LocationType.partialTransfer,
-                            machine: MachineDetails(machineNumber: ""),
+                            locationType: LocationType.partialTransfer, machine: MachineDetails(),
+                           
                           )),
                 );
                 log("lilst : $list");
@@ -1098,7 +1086,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
     }
   }
 
-  handleKey(RawKeyEventDataAndroid key) {
+  handleKey(RawKeyEventData key) {
     setState(() {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
     });
@@ -1158,7 +1146,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.grey[400], width: 2.0),
+                                    color: Colors.grey.shade400, width: 2.0),
                               ),
                               labelText: '  Scan User  ',
                               contentPadding:
@@ -1229,7 +1217,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.grey[400], width: 2.0),
+                                    color: Colors.grey.shade400, width: 2.0),
                               ),
                               labelText: '  Scan Bundle ID  ',
                               contentPadding: const EdgeInsets.symmetric(
@@ -1479,12 +1467,12 @@ class _PreparationprocessState extends State<Preparationprocess> {
   }
 
   // To Show the bundle Id and  Bundle Qty and rejected Quantity
-  Widget feild({String heading, String value, double width}) {
+  Widget feild({required String heading, required String value, required double width}) {
     width = MediaQuery.of(context).size.width * width;
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: Container(
-        // color: Colors.red[100],
+        // color: Colors.red.shade100,
         width: width,
         child: Column(
           children: [
@@ -1494,7 +1482,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                   heading,
                   style:  TextStyle(
                     fontSize: 11,
-                    color: Colors.grey[500],
+                    color: Colors.grey.shade500,
                     fontWeight: FontWeight.normal,
                   )),
                 
@@ -1520,15 +1508,15 @@ class _PreparationprocessState extends State<Preparationprocess> {
   }
 
   Widget feild1(
-      {String heading,
-      String value,
-      double width,
-      TextEditingController textEditingController}) {
+      {required String heading,
+      required String value,
+      required double width,
+      required TextEditingController textEditingController}) {
     width = MediaQuery.of(context).size.width * width;
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: Container(
-        // color: Colors.red[100],
+        // color: Colors.red.shade100,
         width: width,
         child: Column(
           children: [
@@ -1538,7 +1526,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                   heading,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey[500],
+                    color: Colors.grey.shade500,
                     fontWeight: FontWeight.normal,
                   )),
                 
@@ -1554,7 +1542,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                       padding: const EdgeInsets.symmetric(horizontal: 0.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(5)),
-                        color: Colors.grey[200],
+                        color: Colors.grey.shade200,
                       ),
                       child: Center(
                         child: TextFormField(

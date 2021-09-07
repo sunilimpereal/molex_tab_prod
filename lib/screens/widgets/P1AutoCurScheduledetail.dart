@@ -8,13 +8,13 @@ import '../../service/apiService.dart';
 class P1ScheduleDetailWIP extends StatefulWidget {
   Schedule schedule;
 
-  P1ScheduleDetailWIP({this.schedule});
+  P1ScheduleDetailWIP({required this.schedule});
   @override
   _P1ScheduleDetailWIPState createState() => _P1ScheduleDetailWIPState();
 }
 
 class _P1ScheduleDetailWIPState extends State<P1ScheduleDetailWIP> {
-  ApiService apiService;
+  late ApiService apiService;
   @override
   void initState() {
     apiService = ApiService();
@@ -57,12 +57,12 @@ class _P1ScheduleDetailWIPState extends State<P1ScheduleDetailWIP> {
     );
   }
 
-  Widget feild({String heading, String value, double width}) {
+  Widget feild({required String heading, required String value, required double width}) {
     width = MediaQuery.of(context).size.width * width;
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: Container(
-        // color: Colors.red[100],
+        // color: Colors.red.shade100,
         width: width,
         child: Column(
           children: [
@@ -72,7 +72,7 @@ class _P1ScheduleDetailWIPState extends State<P1ScheduleDetailWIP> {
                   heading,
                   style:  TextStyle(
                     fontSize: 10,
-                    color: Colors.grey[500],
+                    color: Colors.grey.shade500,
                     fontWeight: FontWeight.normal,
                   )),
                 
@@ -161,18 +161,18 @@ class _P1ScheduleDetailWIPState extends State<P1ScheduleDetailWIP> {
                 apiService.getFgDetails(widget.schedule.finishedGoodsNumber),
             builder: (context, snapshot) {
               print('fg number ${widget.schedule.finishedGoodsNumber}');
-              FgDetails fgDetail = snapshot.data;
+              FgDetails? fgDetail = snapshot.data as FgDetails?;
               if (snapshot.hasData) {
                 return Container(
                     width: MediaQuery.of(context).size.width,
                     height: 35,
-                    // color: Colors.grey[200],
+                    // color: Colors.grey.shade200,
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           feild(
                               heading: "FG Description",
-                              value: "${fgDetail.fgDescription}",
+                              value: "${fgDetail!.fgDescription}",
                               width: 0.30),
                           feild(
                               heading: "Customer",

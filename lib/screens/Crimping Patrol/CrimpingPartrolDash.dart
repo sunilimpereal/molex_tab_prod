@@ -58,7 +58,7 @@ class _CrimpingPatrolDashState extends State<CrimpingPatrolDash> {
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       height: 24,
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: Colors.grey.shade100,
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
                       child: Center(
@@ -86,7 +86,7 @@ class _CrimpingPatrolDashState extends State<CrimpingPatrolDash> {
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       height: 24,
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: Colors.grey.shade100,
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
                       child: Center(

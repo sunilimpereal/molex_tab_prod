@@ -17,7 +17,7 @@ class PartialCompletionP2 extends StatefulWidget {
   Function continueProcess;
   CrimpingSchedule schedule;
   PartialCompletionP2(
-      {this.machine, this.employee, this.continueProcess, this.schedule});
+      {required this.machine, required this.employee, required this.continueProcess, required this.schedule});
   @override
   _PartialCompletionP2State createState() => _PartialCompletionP2State();
 }
@@ -560,7 +560,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                                   MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.pressed))
-                                    return Colors.green[200];
+                                    return Colors.green.shade200;
                                   return Colors
                                       .white; // Use the component's default.
                                 },
@@ -624,9 +624,9 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                                   MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.pressed))
-                                    return Colors.green[200];
-                                  return Colors.green[
-                                      500]; // Use the component's default.
+                                    return Colors.green.shade200;
+                                  return Colors.green.shade500
+                                      ; // Use the component's default.
                                 },
                               ),
                             ),
@@ -663,7 +663,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                                         builder: (context) => Location(
                                               type: "process",
                                               employee: widget.employee,
-                                              machine: widget.machine,
+                                              machine: widget.machine, locationType: LocationType.finaTtransfer,
                                             )),
                                   );
                                 }
@@ -682,10 +682,9 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
   }
 
   Widget quantitycell(
-      {String name,
-      int quantity,
-      TextEditingController textEditingController,
-      FocusNode focusNode}) {
+      {required String name,
+      required int quantity,
+      required TextEditingController textEditingController,}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 3.0),
       child: Container(
@@ -699,7 +698,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                 child: TextField(
                   showCursor: false,
                   controller: textEditingController,
-                  focusNode: focusNode,
+                  
                   onTap: () {
                     SystemChannels.textInput.invokeMethod('TextInput.hide');
                     setState(() {

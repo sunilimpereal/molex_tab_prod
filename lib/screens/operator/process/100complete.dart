@@ -14,20 +14,20 @@ class FullyComplete extends StatefulWidget {
   Employee employee;
   MachineDetails machine;
   Schedule schedule;
-  String bundleId;
+ 
   Function continueProcess;
   FullyComplete(
-      {this.employee,
-      this.machine,
-      this.schedule,
-      this.bundleId,
-      this.continueProcess});
+      {required this.employee,
+      required this.machine,
+      required this.schedule,
+ 
+      required this.continueProcess});
   @override
   _FullyCompleteState createState() => _FullyCompleteState();
 }
 
 class _FullyCompleteState extends State<FullyComplete> {
-  PostStartProcessP1 postStartprocess;
+  PostStartProcessP1? postStartprocess;
   //Text Eddititing Controller
 
   
@@ -62,7 +62,7 @@ class _FullyCompleteState extends State<FullyComplete> {
 
   // TextEditingController systemFaultController = new TextEditingController();
   String _output = '';
-  ApiService apiService;
+  late ApiService apiService;
   @override
   void initState() {
     apiService = new ApiService();
@@ -148,11 +148,11 @@ class _FullyCompleteState extends State<FullyComplete> {
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0.0),
-                    side: BorderSide(color: Colors.grey[50]))),
+                    side: BorderSide(color: Colors.grey.shade50))),
             backgroundColor: MaterialStateProperty.resolveWith<Color>(
               (Set<MaterialState> states) {
                 if (states.contains(MaterialState.pressed))
-                  return Colors.grey[100];
+                  return Colors.grey.shade100;
 
                 return Colors.white; // Use the component's default.
               },
@@ -165,7 +165,7 @@ class _FullyCompleteState extends State<FullyComplete> {
                   child: IconButton(
                     icon: Icon(
                       Icons.backspace,
-                      color: Colors.red[400],
+                      color: Colors.red.shade400,
                     ),
                     onPressed: () => {buttonPressed(buttonText)},
                   ))
@@ -185,7 +185,7 @@ class _FullyCompleteState extends State<FullyComplete> {
 
     return Material(
       elevation: 2,
-      shadowColor: Colors.grey[200],
+      shadowColor: Colors.grey.shade200,
       child: Container(
         width: MediaQuery.of(context).size.width * 0.24,
         decoration: new BoxDecoration(
@@ -387,16 +387,16 @@ class _FullyCompleteState extends State<FullyComplete> {
                                 if (states.contains(MaterialState.pressed))
                                   return Colors.green;
                                 return Colors
-                                    .green[500]; // Use the component's default.
+                                    .green.shade500; // Use the component's default.
                               },
                             ),
                             overlayColor:
                                 MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.pressed))
-                                  return Colors.green[600];
+                                  return Colors.green.shade600;
                                 return Colors
-                                    .green[300]; // Use the component's default.
+                                    .green.shade300; // Use the component's default.
                               },
                             ),
                           ),
@@ -437,10 +437,10 @@ class _FullyCompleteState extends State<FullyComplete> {
                                 scheduledQuantity:
                                     int.parse(widget.schedule.scheduledQuantity),
                                 machineIdentification:
-                                    widget.machine.machineNumber,
+                                    widget.machine.machineNumber??'',
                                 //TODO bundle ID
                                 firstPieceAndPatrol: 0,
-                                applicatorChangeover: 0
+                                applicatorChangeover: 0, bundleIdentification: ''
                               );
                               apiService
                                   .post100Complete(fullyComplete)
@@ -452,7 +452,7 @@ class _FullyCompleteState extends State<FullyComplete> {
                                         builder: (context) => Location(
                                               type: "process",
                                               employee: widget.employee,
-                                              machine: widget.machine,
+                                              machine: widget.machine, locationType: LocationType.finaTtransfer,
                                             )),
                                   );
                                 } else {}
@@ -473,10 +473,10 @@ class _FullyCompleteState extends State<FullyComplete> {
   }
 
   Widget quantitycell(
-      {String name,
-      int quantity,
-      TextEditingController textEditingController,
-      FocusNode focusNode}) {
+      {required String name,
+      required int quantity,
+      required TextEditingController textEditingController,
+      }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 3.0),
       child: Container(
@@ -489,7 +489,7 @@ class _FullyCompleteState extends State<FullyComplete> {
                 width: 200,
                 child: TextField(
                   controller: textEditingController,
-                  focusNode: focusNode,
+                 
                   onTap: () {
                     setState(() {
                           SystemChannels.textInput.invokeMethod('TextInput.hide');

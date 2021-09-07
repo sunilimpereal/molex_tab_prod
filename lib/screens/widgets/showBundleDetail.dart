@@ -27,7 +27,7 @@ enum STATE {
 }
 
 class ShowBundleDetail extends StatefulWidget {
-  const ShowBundleDetail({Key key}) : super(key: key);
+  const ShowBundleDetail({Key? key}) : super(key: key);
 
   @override
   _ShowBundleDetailState createState() => _ShowBundleDetailState();
@@ -37,8 +37,8 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
   STATE state = STATE.scanBundle;
   FocusNode keyboardFocus = new FocusNode();
   TextEditingController _bundleController = new TextEditingController();
-  String bundleId;
-  ApiService apiService;
+  late String bundleId;
+  late ApiService apiService;
   @override
   void initState() {
     apiService = new ApiService();
@@ -66,7 +66,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                 child: IconButton(
                   icon: Icon(
                     Icons.close,
-                    color: Colors.red[400],
+                    color: Colors.red.shade400,
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -153,7 +153,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Colors.grey[400], width: 2.0),
+                                  color: Colors.grey.shade400, width: 2.0),
                             ),
                             labelText: 'Scan Bundle',
                             contentPadding:
@@ -181,9 +181,9 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                                 MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.pressed))
-                                  return Colors.green[200];
+                                  return Colors.green.shade200;
                                 return Colors
-                                    .red[400]; // Use the component's default.
+                                    .red.shade400; // Use the component's default.
                               },
                             ),
                           ),
@@ -229,7 +229,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
   }
 
   handleKey(
-    RawKeyEventDataAndroid key,
+    RawKeyEventData key,
   ) {
     setState(() {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
@@ -237,7 +237,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
   }
 
   Widget showDetail() {
-    Widget field({String title, String data}) {
+    Widget field({required String title, required String data}) {
       return Container(
         width: MediaQuery.of(context).size.width * 0.22,
         padding: EdgeInsets.all(10),
@@ -286,7 +286,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
           future: apiService.getBundleDetail(bundleId),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              BundleData bundleData = snapshot.data;
+              BundleData? bundleData = snapshot.data as BundleData?;
               return Column(
                 children: [
                   Container(
@@ -306,7 +306,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                         children: [
                           field(
                               title: "Bundle ID",
-                              data: bundleData.bundleIdentification),
+                              data: bundleData!.bundleIdentification),
                           field(
                               title: "Bundle Qty",
                               data: bundleData.bundleQuantity.toString()),
@@ -408,9 +408,8 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                                       (Set<MaterialState> states) {
                                         if (states
                                             .contains(MaterialState.pressed))
-                                          return Colors.green[200];
-                                        return Colors.red[
-                                            400]; // Use the component's default.
+                                          return Colors.green.shade200;
+                                        return Colors.red.shade400; // Use the component's default.
                                       },
                                     ),
                                   ),
@@ -431,7 +430,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                                   onPressed: () {
                                     setState(() {
                                       state = STATE.scanBundle;
-                                      bundleId = null;
+                                      bundleId = "";
                                       _bundleController.clear();
                                     });
                                   },

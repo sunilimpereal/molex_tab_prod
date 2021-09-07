@@ -227,11 +227,11 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0.0),
-                    side: BorderSide(color: Colors.grey[50]))),
+                    side: BorderSide(color: Colors.grey.shade50))),
             backgroundColor: MaterialStateProperty.resolveWith<Color>(
               (Set<MaterialState> states) {
                 if (states.contains(MaterialState.pressed))
-                  return Colors.grey[100];
+                  return Colors.grey.shade100;
 
                 return Colors.white; // Use the component's default.
               },
@@ -244,7 +244,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                   child: IconButton(
                     icon: Icon(
                       Icons.backspace,
-                      color: Colors.red[400],
+                      color: Colors.red.shade400,
                     ),
                     onPressed: () => {buttonPressed(buttonText)},
                   ))
@@ -264,7 +264,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
 
     return Material(
       elevation: 2,
-      shadowColor: Colors.grey[200],
+      shadowColor: Colors.grey.shade200,
       child: Container(
         width: MediaQuery.of(context).size.width * 0.24,
         decoration: new BoxDecoration(
@@ -372,7 +372,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
                       (Set<MaterialState> states) {
                         if (states.contains(MaterialState.pressed))
-                          return Colors.red[50];
+                          return Colors.red.shade50;
                         return Colors.white; // Use the component's default.
                       },
                     ),
@@ -719,7 +719,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                               MaterialStateProperty.resolveWith<Color>(
                             (Set<MaterialState> states) {
                               if (states.contains(MaterialState.pressed))
-                                return Colors.green[200];
+                                return Colors.green.shade200;
                               return Colors
                                   .white; // Use the component's default.
                             },
@@ -785,9 +785,9 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                               MaterialStateProperty.resolveWith<Color>(
                             (Set<MaterialState> states) {
                               if (states.contains(MaterialState.pressed))
-                                return Colors.green[200];
+                                return Colors.green.shade200;
                               return Colors
-                                  .green[500]; // Use the component's default.
+                                  .green.shade500; // Use the component's default.
                             },
                           ),
                         ),
@@ -1014,7 +1014,7 @@ class _ReasonSelectionState extends State<ReasonSelection> {
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 2.0),
                             child: Container(
-                              color: Colors.grey[100],
+                              color: Colors.grey.shade100,
                               child: Padding(
                                 padding: const EdgeInsets.all(4.0),
                                 child: Row(
@@ -1097,17 +1097,17 @@ class _ReasonSelectionState extends State<ReasonSelection> {
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
                           if (states.contains(MaterialState.pressed))
-                            return Colors.green[200];
+                            return Colors.green.shade200;
                           return Colors
-                              .green[500]; // Use the component's default.
+                              .green.shade500; // Use the component's default.
                         },
                       ),
                       overlayColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
                           if (states.contains(MaterialState.pressed))
-                            return Colors.green[200];
+                            return Colors.green.shade200;
                           return Colors
-                              .green[500]; // Use the component's default.
+                              .green.shade500; // Use the component's default.
                         },
                       ),
                     ),

@@ -14,14 +14,14 @@ import '../../service/apiService.dart';
 class PreprationDash extends StatefulWidget {
   Employee employee;
   String machineId;
-  PreprationDash({this.employee, this.machineId});
+  PreprationDash({required this.employee, required this.machineId});
   @override
   _PreprationDashState createState() => _PreprationDashState();
 }
 
 class _PreprationDashState extends State<PreprationDash> {
   int type = 0;
-  ApiService apiService;
+  late ApiService apiService;
 
   @override
   void initState() {
@@ -63,7 +63,7 @@ class _PreprationDashState extends State<PreprationDash> {
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       height: 24,
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: Colors.grey.shade100,
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
                       child: Center(
@@ -90,7 +90,7 @@ class _PreprationDashState extends State<PreprationDash> {
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       height: 24,
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: Colors.grey.shade100,
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
                       child: Center(
@@ -145,9 +145,9 @@ class _PreprationDashState extends State<PreprationDash> {
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
                           if (states.contains(MaterialState.pressed))
-                            return Colors.green[200];
+                            return Colors.green.shade200;
                           return Colors
-                              .green[500]; // Use the component's default.
+                              .green.shade500; // Use the component's default.
                         },
                       ),
                     ),
@@ -283,10 +283,10 @@ class _PreprationDashState extends State<PreprationDash> {
 }
 
 class SchudleTable extends StatefulWidget {
-  Schedule schedule;
+
   String userId;
   String machineId;
-  SchudleTable({Key key, this.schedule, this.machineId, this.userId})
+  SchudleTable({Key? key, required this.machineId, required this.userId})
       : super(key: key);
 
   @override
@@ -294,7 +294,7 @@ class SchudleTable extends StatefulWidget {
 }
 
 class _SchudleTableState extends State<SchudleTable> {
-  ApiService apiService;
+  late ApiService apiService;
   List<Schedule> rowList = [];
 
   List<DataRow> datarows = [];
@@ -328,14 +328,14 @@ class _SchudleTableState extends State<SchudleTable> {
                   type: "A", machineNo: widget.machineId),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  List<PreparationSchedule> preparationSchedulelist =
-                      snapshot.data;
+                  List<PreparationSchedule>? preparationSchedulelist =
+                      snapshot.data as List<PreparationSchedule>?;
                   return RefreshIndicator(
                           onRefresh: _onRefresh,
                          child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: preparationSchedulelist.length,
+                      itemCount: preparationSchedulelist!.length,
                       itemBuilder: (context, index) {
                         return buildDataRow(
                             schedule: preparationSchedulelist[index], c: index);
@@ -409,7 +409,7 @@ class _SchudleTableState extends State<SchudleTable> {
     );
   }
 
-  Widget buildDataRow({PreparationSchedule schedule, int c}) {
+  Widget buildDataRow({required PreparationSchedule schedule, required int c}) {
     Widget cell(String name, double width) {
       return Container(
         width: MediaQuery.of(context).size.width * width,
@@ -426,7 +426,7 @@ class _SchudleTableState extends State<SchudleTable> {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 50,
-      color: c % 2 == 0 ? Colors.grey[50] : Colors.white,
+      color: c % 2 == 0 ? Colors.grey.shade50 : Colors.white,
       child: Container(
         decoration: BoxDecoration(
           border: Border(
@@ -434,8 +434,8 @@ class _SchudleTableState extends State<SchudleTable> {
             color: schedule.scheduledStatus == ""
                 ? Colors.green
                 : schedule.scheduledStatus == "Partial"
-                    ? Colors.orange[100]
-                    : Colors.blue[100],
+                    ? Colors.orange.shade100
+                    : Colors.blue.shade100,
             width: 5,
           )),
         ),
@@ -473,10 +473,10 @@ class _SchudleTableState extends State<SchudleTable> {
               child: Container(
                 decoration: BoxDecoration(
                   color: schedule.scheduledStatus == 'Complete'
-                      ? Colors.green[50]
+                      ? Colors.green.shade50
                       : schedule.scheduledStatus == "Partial"
-                          ? Colors.red[100]
-                          : Colors.blue[100],
+                          ? Colors.red.shade100
+                          : Colors.blue.shade100,
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
                 child: Center(

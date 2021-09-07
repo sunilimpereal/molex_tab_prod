@@ -29,7 +29,7 @@ enum Status {
 
 class VIWIP_Home extends StatefulWidget {
   Employee employee;
-  VIWIP_Home({this.employee});
+  VIWIP_Home({required this.employee});
   @override
   _VIWIP_HomeState createState() => _VIWIP_HomeState();
 }
@@ -39,8 +39,8 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
   FocusNode _userScanFocus = new FocusNode();
   TextEditingController _bundleIdScanController = new TextEditingController();
   FocusNode _bundleIdScanFocus = new FocusNode();
-  String userId;
-  String bundleId;
+  late String userId;
+  late String bundleId;
   List<ViInspectedbundle> viIspectionBundleList = [];
   TextEditingController scanBundleController = new TextEditingController();
   TextEditingController crimpInslController = new TextEditingController();
@@ -73,7 +73,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
   TextEditingController _binController = new TextEditingController();
   TextEditingController _locationController = new TextEditingController();
 
-  String binId;
+  late String binId;
 
   TextEditingController passedQtyController = new TextEditingController();
   TextEditingController bundleQtyController = new TextEditingController();
@@ -84,7 +84,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
   Status status = Status.dash;
 
   int selectedindex = 0;
-  ApiService apiService;
+  late ApiService apiService;
   List<String> usersList = [];
   bool loading = false;
 
@@ -95,19 +95,19 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
     apiService = new ApiService();
     apiService.getUserList().then((value) {
       setState(() {
-        usersList = value.map((e) => e.empId).toList();
+        usersList = value!.map((e) => e.empId).toList();
       });
     });
   }
 
-  CableTerminalA terminalA;
-  CableTerminalB terminalB;
+  late CableTerminalA terminalA;
+  late CableTerminalB terminalB;
   getTerminal(
-      {String fgNumber,
-      String cablePtNo,
-      String length,
-      String color,
-      int awg}) {
+      {required String fgNumber,
+      required String cablePtNo,
+      required String length,
+      required String color,
+      required int awg}) {
     ApiService apiService = new ApiService();
     apiService
         .getCableTerminalA(
@@ -126,7 +126,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
               awg: awg)
           .then((termiB) {
         setState(() {
-          terminalA = termiA;
+          terminalA = termiA!;
           terminalB = termiB;
         });
       });
@@ -175,7 +175,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           height: 24,
                           decoration: BoxDecoration(
-                            color: Colors.grey[100],
+                            color: Colors.grey.shade100,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(100)),
                           ),
@@ -520,7 +520,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
 
   onSubmittedNext() {}
 
-  handleKey(RawKeyEventDataAndroid key) {
+  handleKey(RawKeyEventData key) {
     setState(() {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
     });
@@ -626,7 +626,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Colors.grey[400], width: 2.0),
+                                      color: Colors.grey.shade400, width: 2.0),
                                 ),
                                 labelText: '  Scan User  ',
                                 contentPadding: const EdgeInsets.symmetric(
@@ -698,7 +698,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.grey[400], width: 2.0),
+                                    color: Colors.grey.shade400, width: 2.0),
                               ),
                               labelText: '  Scan Bundle ID  ',
                               contentPadding: const EdgeInsets.symmetric(
@@ -1021,9 +1021,8 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                                             (Set<MaterialState> states) {
                                               if (states.contains(
                                                   MaterialState.pressed))
-                                                return Colors.green[200];
-                                              return Colors.green[
-                                                  500]; // Use the component's default.
+                                                return Colors.green.shade200;
+                                              return Colors.green.shade500; // Use the component's default.
                                             },
                                           ),
                                           overlayColor: MaterialStateProperty
@@ -1032,8 +1031,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                                               if (states.contains(
                                                   MaterialState.pressed))
                                                 return Colors.green;
-                                              return Colors.green[
-                                                  500]; // Use the component's default.
+                                              return Colors.green.shade500; // Use the component's default.
                                             },
                                           ),
                                         ),
@@ -1062,9 +1060,8 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                                             (Set<MaterialState> states) {
                                               if (states.contains(
                                                   MaterialState.pressed))
-                                                return Colors.green[200];
-                                              return Colors.green[
-                                                  500]; // Use the component's default.
+                                                return Colors.green.shade200;
+                                              return Colors.green.shade500; // Use the component's default.
                                             },
                                           ),
                                           overlayColor: MaterialStateProperty
@@ -1073,8 +1070,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                                               if (states.contains(
                                                   MaterialState.pressed))
                                                 return Colors.green;
-                                              return Colors.green[
-                                                  500]; // Use the component's default.
+                                              return Colors.green.shade500; // Use the component's default.
                                             },
                                           ),
                                         ),
@@ -1270,10 +1266,10 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
   }
 
   Widget quantitycell(
-      {String name,
-      int quantity,
-      TextEditingController textEditingController,
-      FocusNode focusNode}) {
+      {required String name,
+      required int quantity,
+      required TextEditingController textEditingController,
+      }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
       child: Container(
@@ -1288,7 +1284,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                   showCursor: false,
                   controller: textEditingController,
                   readOnly: true,
-                  focusNode: focusNode,
+                
                   onTap: () {
                     SystemChannels.textInput.invokeMethod('TextInput.hide');
                     setState(() {
@@ -1316,12 +1312,12 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
     );
   }
 
-  Widget feild({String heading, String value, double width}) {
+  Widget feild({required String heading, required String value, required double width}) {
     width = MediaQuery.of(context).size.width * width;
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: Container(
-        // color: Colors.red[100],
+        // color: Colors.red.shade100,
         width: width,
         child: Column(
           children: [
@@ -1331,7 +1327,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                   heading,
                   style:  TextStyle(
                     fontSize: 12,
-                    color: Colors.grey[500],
+                    color: Colors.grey.shade500,
                     fontWeight: FontWeight.normal,
                   )),
                 
@@ -1419,7 +1415,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Colors.grey[400], width: 2.0),
+                                  color: Colors.grey.shade400, width: 2.0),
                             ),
                             labelText: 'Scan bin',
                             contentPadding:

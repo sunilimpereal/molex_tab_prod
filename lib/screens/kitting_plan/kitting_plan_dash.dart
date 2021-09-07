@@ -17,16 +17,16 @@ import '../../main.dart';
 
 class KittingDash extends StatefulWidget {
   Employee employee;
-  KittingDash({this.employee});
+  KittingDash({required this.employee});
   @override
   _KittingDashState createState() => _KittingDashState();
 }
 
 class _KittingDashState extends State<KittingDash> {
-  String fgNumber;
-  String orderId;
-  String qty;
-  ApiService apiService;
+  String ?fgNumber;
+  String ?orderId;
+  String? qty;
+  ApiService? apiService;
   List<KittingPost> kittingList = [];
   bool loading = false;
   bool loadingSave = false;
@@ -100,7 +100,7 @@ class _KittingDashState extends State<KittingDash> {
       drawer: Drawer(
         child: DrawerWidget(
             employee: widget.employee,
-            machineDetails: MachineDetails(),
+           
             type: "process"),
       ),
       body: Column(
@@ -240,10 +240,10 @@ class _KittingDashState extends State<KittingDash> {
                 FocusNode focusNode = FocusNode();
                 focusNode.unfocus();
                 PostKittingData postKittingData = new PostKittingData(
-                    orderNo: orderId,
-                    fgNumber: int?.parse(fgNumber),
-                    quantity: int?.parse(qty));
-                apiService.getkittingDetail(postKittingData).then((value) {
+                    orderNo: orderId??'',
+                    fgNumber: int?.parse(fgNumber??"0"),
+                    quantity: int?.parse(qty??'0'));
+                apiService!.getkittingDetail(postKittingData).then((value) {
                   //84671404
                   //369100004
                   if (value != null) {
@@ -521,12 +521,12 @@ class _KittingDashState extends State<KittingDash> {
   }
 
   Future<void> showBundleDetail(
-      {BuildContext context,
-      List<BundleMaster> bundles,
-      String fgNo,
-      String cablePartNo,
-      String awg,
-      List<BundleMaster> selectedBundles}) async {
+      {required BuildContext context,
+      required List<BundleMaster> bundles,
+      required String fgNo,
+      required String cablePartNo,
+      required String awg,
+      required List<BundleMaster> selectedBundles}) async {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {
@@ -576,7 +576,7 @@ class _KittingDashState extends State<KittingDash> {
             // SaveKitting saveKitting =
             return new SaveKitting(
               fgPartNumber: e.kittingEJobDtoList.fgNumber,
-              orderId: orderId,
+              orderId: orderId??"",
               cablePartNumber: e.kittingEJobDtoList.cableNumber.toString(),
               cableType: "",
               length: e.kittingEJobDtoList.cutLength,
@@ -592,7 +592,7 @@ class _KittingDashState extends State<KittingDash> {
                   e.selectedBundles.map((e) => e.bundleIdentification).toList(),
             );
           }).toList();
-          apiService.postKittingData(saveKitting).then((value) {
+          apiService!.postKittingData(saveKitting).then((value) {
             if (value) {
               setState(() {
                 loadingSave = false;
@@ -644,12 +644,12 @@ class ShowBundleList extends StatefulWidget {
   Function reload;
 
   ShowBundleList(
-      {this.reload,
-      this.bundleList,
-      this.selectedBundleList,
-      this.awg,
-      this.cablePartNo,
-      this.fgNo});
+      {required this.reload,
+      required this.bundleList,
+      required this.selectedBundleList,
+      required this.awg,
+      required this.cablePartNo,
+      required this.fgNo});
   @override
   _ShowBundleListState createState() => _ShowBundleListState();
 }
@@ -852,7 +852,7 @@ class _ShowBundleListState extends State<ShowBundleList> {
     );
   }
 
-  Widget field({String title, String data, double width}) {
+  Widget field({required String title, required String data, required double width}) {
     return Container(
       width: width,
       height: 50,
@@ -880,5 +880,5 @@ class _ShowBundleListState extends State<ShowBundleList> {
 class KittingPost {
   KittingEJobDtoList kittingEJobDtoList;
   List<BundleMaster> selectedBundles;
-  KittingPost({this.kittingEJobDtoList, this.selectedBundles});
+  KittingPost({required this.kittingEJobDtoList, required this.selectedBundles});
 }

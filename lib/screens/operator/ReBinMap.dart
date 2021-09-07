@@ -126,7 +126,7 @@ class _ReMapBinState extends State<ReMapBin> {
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Colors.grey[400], width: 2.0),
+                                      color: Colors.grey.shade400, width: 2.0),
                                 ),
                                 labelText: 'Scan Bundle',
                                 contentPadding: const EdgeInsets.symmetric(
@@ -199,7 +199,7 @@ class _ReMapBinState extends State<ReMapBin> {
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.grey[400], width: 2.0),
+                                    color: Colors.grey.shade400, width: 2.0),
                               ),
                               labelText: 'Scan bin',
                               contentPadding:
@@ -372,7 +372,7 @@ class _ReMapBinState extends State<ReMapBin> {
                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
                       if (states.contains(MaterialState.pressed))
-                        return Colors.green[200];
+                        return Colors.green.shade200;
                       return Colors.green; // Use the component's default.
                     },
                   ),
@@ -396,7 +396,7 @@ class _ReMapBinState extends State<ReMapBin> {
                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
                       if (states.contains(MaterialState.pressed))
-                        return Colors.green[200];
+                        return Colors.green.shade200;
                       return Colors.green; // Use the component's default.
                     },
                   ),
@@ -487,7 +487,7 @@ class _ReMapBinState extends State<ReMapBin> {
     return bundleToBin;
   }
 
-  handleKey(RawKeyEventDataAndroid key) {
+  handleKey(RawKeyEventData key) {
     setState(() {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
     });

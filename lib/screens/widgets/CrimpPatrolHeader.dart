@@ -117,12 +117,12 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
     );
   }
 
-  Widget feild({String heading, String value, double width}) {
+  Widget feild({required String heading, required String value, required double width}) {
     width = MediaQuery.of(context).size.width * width;
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: Container(
-        // color: Colors.red[100],
+        // color: Colors.red.shade100,
         width: width,
         child: Column(
           children: [
@@ -132,7 +132,7 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
                   heading,
                   style:  TextStyle(
                     fontSize: 12,
-                    color: Colors.grey[500],
+                    color: Colors.grey.shade500,
                     fontWeight: FontWeight.normal,
                   )),
                 
@@ -148,7 +148,7 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
                       padding: const EdgeInsets.symmetric(horizontal: 5.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(5)),
-                        color: Colors.grey[100],
+                        color: Colors.grey.shade100,
                       ),
                       child: Center(
                         child: TextField(
@@ -182,7 +182,7 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
     );
   }
 
-  handleKey(RawKeyEventDataAndroid key) {
+  handleKey(RawKeyEventData key) {
     setState(() {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
     });
@@ -237,7 +237,7 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.grey[400], width: 2.0),
+                              BorderSide(color: Colors.grey.shade400, width: 2.0),
                         ),
                         labelText: 'Scan Patrol Id',
                         contentPadding:
@@ -300,7 +300,7 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.grey[400], width: 2.0),
+                              BorderSide(color: Colors.grey.shade400, width: 2.0),
                         ),
                         labelText: 'QA Approval ID',
                         contentPadding:

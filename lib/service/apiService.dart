@@ -59,7 +59,7 @@ class ApiService {
   };
   //open null empty
 
-  Future<Employee> empIdlogin(String empId) async {
+  Future<Employee?> empIdlogin(String empId) async {
     var url =
         Uri.parse(baseUrl + "molex/employee/get-employee-list/empid=$empId");
     var response = await http.get(url);
@@ -79,7 +79,7 @@ class ApiService {
   }
 
   Future<List<Schedule>> getScheduelarData(
-      {String machId, String type, String sameMachine}) async {
+      {required String machId, required String type, required String sameMachine}) async {
     print("called api");
     print("called $machId");
     print("called $type");
@@ -101,7 +101,7 @@ class ApiService {
   }
   //Update Schedular Tracker information data POST method
 
-  Future<List<MachineDetails>> getmachinedetails(String machineid) async {
+  Future<List<MachineDetails>?> getmachinedetails(String machineid) async {
     print('sad');
     var url = Uri.parse(
         baseUrl + "molex/machine/get-by-machine-number?machNo=$machineid");
@@ -155,11 +155,11 @@ class ApiService {
   }
 
   Future<List<RawMaterial>> rawMaterial(
-      {String machineId,
-      String partNo,
-      String fgNo,
-      String scheduleId,
-      String type}) async {
+      {required String machineId,
+      required String partNo,
+      required String fgNo,
+      required String scheduleId,
+      required String type}) async {
     print('fgpart : ${fgNo}');
     print('schedule: ${scheduleId}');
     print('machineID: ${machineId}');
@@ -232,7 +232,7 @@ class ApiService {
 
   // Get Raw material detail
   // check where this goes
-  Future<RawMaterialDetail> getRawmaterialDetail(String partNo) async {
+  Future<RawMaterialDetail?> getRawmaterialDetail(String partNo) async {
     var url = Uri.parse(baseUrl =
         "molex/ejobticketmaster/get-raw=material-for-add?PartNo=$partNo");
     var response = await http.get(url);
@@ -264,7 +264,7 @@ class ApiService {
     }
   }
 
-  Future<FgDetails> getFgDetails(String partNo) async {
+  Future<FgDetails?> getFgDetails(String partNo) async {
     var url = Uri.parse(
         baseUrl + 'molex/ejobticketmaster/fgDetails-byfgNo?fgPartNo=$partNo');
     var response = await http.get(url);
@@ -281,7 +281,7 @@ class ApiService {
   }
 
   // Get material Tracking cable Detail
-  Future<List<MaterialDetail>> getMaterialTrackingCableDetail(
+  Future<List<MaterialDetail>?> getMaterialTrackingCableDetail(
       MatTrkPostDetail matTrkPostDetail) async {
     var url =
         Uri.parse(baseUrl + "molex/materialldg/get-material-cable-detail");
@@ -300,12 +300,12 @@ class ApiService {
   }
 
   //Get Cable Details
-  Future<CableDetails> getCableDetails(
-      {String fgpartNo,
-      String cablepartno,
-      String length,
-      String color,
-      int awg}) async {
+  Future<CableDetails?> getCableDetails(
+      {required String fgpartNo,
+      required String cablepartno,
+      required String length,
+      required String color,
+      required int awg}) async {
     var url = Uri.parse(baseUrl +
         "molex/ejobticketmaster/get-cable-Details-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg");
     var response = await http.get(url);
@@ -320,16 +320,15 @@ class ApiService {
   }
 
   //cableTerminalA
-  Future<CableTerminalA> getCableTerminalA(
-      {String cablepartno,
-      String fgpartNo,
-      String length,
-      String color,
-      int awg}) async {
+  Future<CableTerminalA?> getCableTerminalA(
+      {required String cablepartno,
+      required String fgpartNo,
+      required String length,
+      required String color,
+      required int awg}) async {
     //TODO variable in url
     print("cable No TA : $cablepartno");
-    var url = Uri.parse(baseUrl +
-        "molex/ejobticketmaster/get-cable-terminalA-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg");
+    var url = Uri.parse(baseUrl +"molex/ejobticketmaster/get-cable-terminalA-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg");
     var response = await http.get(url);
     log('Cable termianl A url molex/ejobticketmaster/get-cable-terminalA-bycableNo?cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg');
     log('Cable termianl A status code ${response.statusCode}');
@@ -347,11 +346,11 @@ class ApiService {
 
   //CableTerminalB
   Future<CableTerminalB> getCableTerminalB(
-      {String fgpartNo,
-      String cablepartno,
-      String length,
-      String color,
-      int awg}) async {
+      {required String fgpartNo,
+      required String cablepartno,
+      required String length,
+      required String color,
+      required int awg}) async {
     var url = Uri.parse(baseUrl +
         'molex/ejobticketmaster/get-cable-terminalB-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg');
     var response = await http.get(url, headers: headerList);
@@ -386,7 +385,7 @@ class ApiService {
   }
 
   //MaterialTrackingTerminalA
-  Future<List<MaterialTrackingTerminalA>> getMaterialtrackingterminalA(
+  Future<List<MaterialTrackingTerminalA>?> getMaterialtrackingterminalA(
       String partNo) async {
     var url = Uri.parse(baseUrl +
         'molex/material-tracking/tracking-cable-terminalA?partNo=$partNo');
@@ -404,7 +403,7 @@ class ApiService {
   }
 
   //MaterialTrackingTerminalB
-  Future<List<MaterialTrackingTerminalB>> getMaterialtrackingterminalB(
+  Future<List<MaterialTrackingTerminalB>?> getMaterialtrackingterminalB(
       String partNo) async {
     var url = Uri.parse(baseUrl +
         'molex/material-tracking/tracking-cable-terminalB?partNo=$partNo');
@@ -424,7 +423,7 @@ class ApiService {
   //BundleQuantity api Json missing
   //TODO
   // Generate label request model POst method
-  Future<GeneratedLabel> postGeneratelabel(
+  Future<GeneratedLabel?> postGeneratelabel(
       PostGenerateLabel postGenerateLabel, String bundleQuantiy) async {
     var url =
         Uri.parse(baseUrl + 'molex/wccr/generate-label/bdQty=$bundleQuantiy');
@@ -472,8 +471,8 @@ class ApiService {
   }
 
   //Transfer Bundle to bin
-  Future<List<BundleTransferToBin>> postTransferBundletoBin(
-      {List<TransferBundleToBin> transferBundleToBin}) async {
+  Future<List<BundleTransferToBin>?> postTransferBundletoBin(
+      {required List<TransferBundleToBin> transferBundleToBin}) async {
     var url = Uri.parse(
         baseUrl + 'molex/bin-tracking/transfer-bundle-to-bin-tracking');
     print(
@@ -517,7 +516,7 @@ class ApiService {
   }
 
   //Post transfer bin to location
-  Future<List<BinTransferToLocationTracking>> postTransferBinToLocation(
+  Future<List<BinTransferToLocationTracking>?> postTransferBinToLocation(
       List<TransferBinToLocation> transferBinToLocationList) async {
     var url =
         Uri.parse(baseUrl + 'molex/bin-tracking/update-bin-location-in-bin');
@@ -649,7 +648,7 @@ class ApiService {
 
 // Post ViSchedule data
   Future<bool> postVIinspectedBundle(
-      {ViInspectedbundle viInspectedbudle}) async {
+      {required ViInspectedbundle viInspectedbudle}) async {
     log("postVIinspectedBundle :${viInspectedbundleToJson(viInspectedbudle)}");
     var url = Uri.parse(baseUrl +
         'molex/visual-inspection/save-visual-inspected-bundle-quantity');
@@ -677,7 +676,7 @@ class ApiService {
   }
 
   Future<List<PreparationSchedule>> getPreparationSchedule(
-      {String type, String machineNo}) async {
+      {required String type, required String machineNo}) async {
     var url = Uri.parse(baseUrl +
         'molex/preparation/get-preparation-schedule-data?scheduleType=$type&machineNumber=$machineNo&sameMachine=true');
     var response = await http.get(url);
@@ -696,7 +695,7 @@ class ApiService {
 
   //post Visual Inspected Data
   Future<bool> postPreparationDetail(
-      {PostPreparationDetail postPreparationDetail}) async {
+      {required PostPreparationDetail postPreparationDetail}) async {
     var url = Uri.parse(
         baseUrl + 'molex/preparation/save-preparation-rejected-detail');
 
@@ -726,7 +725,7 @@ class ApiService {
 // CRIMPING API
   // crimping Schedule
   Future<List<CrimpingSchedule>> getCrimpingSchedule(
-      {String scheduleType, String machineNo, String sameMachine}) async {
+      {required String scheduleType, required String machineNo, required String sameMachine}) async {
     var url = Uri.parse(baseUrl +
         'molex/crimping/get-bundle-detail?machineNo=$machineNo&scheduleType=$scheduleType&sameMachine=$sameMachine');
 
@@ -747,7 +746,7 @@ class ApiService {
   }
 
   // Scan bundle Get Quantity
-  Future<String> scaBundleGetQty({String bundleID}) async {
+  Future<String?> scaBundleGetQty({required String bundleID}) async {
     var url = Uri.parse(
         baseUrl + 'molex/crimping/get-bundle-quantity?bundleId=$bundleID');
     var response = await http.get(url);
@@ -769,7 +768,7 @@ class ApiService {
   }
 
   //post crimping rejected Quantity
-  Future<CrimpingResponse> postCrimpRejectedQty(
+  Future<CrimpingResponse?> postCrimpRejectedQty(
       PostCrimpingRejectedDetail postCrimpingRejectedDetail) async {
     log('Post Rejected  body :${postCrimpingRejectedDetailToJson(postCrimpingRejectedDetail)}');
     var url =
@@ -814,7 +813,7 @@ class ApiService {
     }
   }
 
-  Future<List<Userid>> getUserList() async {
+  Future<List<Userid>?> getUserList() async {
     var url = Uri.parse(baseUrl + 'molex/employee/get-user-id');
     var response = await http.get(url);
     print('Post Rejected status Code: ${response.statusCode}');
@@ -829,7 +828,7 @@ class ApiService {
   }
 
   //Get bundle Detail
-  Future<BundleData> getBundleDetail(String bundleId) async {
+  Future<BundleData?> getBundleDetail(String bundleId) async {
     var url = Uri.parse(
         baseUrl + 'molex/material-codinator/getbundle?bundleId=$bundleId');
     var response = await http.get(url);
@@ -858,7 +857,7 @@ class ApiService {
     }
   }
 
-  Future<List<BundleDetail>> getBundlesinBin(String binId) async {
+  Future<List<BundleDetail>?> getBundlesinBin(String binId) async {
     var url = Uri.parse(baseUrl +
         'molex/material-codinator/material-codinator-ytbp-data?binId=$binId');
     var response = await http.get(url);
@@ -884,9 +883,9 @@ class ApiService {
   }
 
   // get bundle in schedule
-  Future<List<BundlesRetrieved>> getBundlesInSchedule(
-      {@required PostgetBundleMaster postgetBundleMaster,
-      @required String scheduleID}) async {
+  Future<List<BundlesRetrieved>?> getBundlesInSchedule(
+      {required PostgetBundleMaster postgetBundleMaster,
+      required String scheduleID}) async {
     var url = Uri.parse(baseUrl + 'molex/bundlemaster/');
     var response = await http.post(url,
         body: postgetBundleMasterToJson(postgetBundleMaster),
@@ -937,7 +936,7 @@ class ApiService {
   }
 
   //Kitting
-  Future<List<KittingEJobDtoList>> getkittingDetail(
+  Future<List<KittingEJobDtoList>?> getkittingDetail(
       PostKittingData postKittingData) async {
     var url = Uri.parse(baseUrl + 'molex/kitting/get-kitting-data');
     var response = await http.post(url,

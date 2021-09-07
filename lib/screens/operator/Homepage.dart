@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_progress_button/flutter_progress_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:molex/screens/operator/widgets/dateRangePickerDash.dart';
 import 'package:molex/screens/operator/widgets/schedule_data_row.dart';
 import 'package:molex/screens/utils/loadingButton.dart';
 import '../../main.dart';
@@ -113,14 +114,14 @@ class _HomepageState extends State<Homepage> {
                 // Container(
                 //   height: 25,
                 //   decoration: BoxDecoration(
-                //     // color: Colors.red[500],
+                //     // color: Colors.red.shade500,
                 //     borderRadius: BorderRadius.all(Radius.circular(50)),
-                //     // border: Border.all(color: Colors.red[500]),
+                //     // border: Border.all(color: Colors.red.shade500),
                 //   ),
                 //   child: ToggleSwitch(
                 //     minWidth: 75.0,
                 //     cornerRadius: 5.0,
-                //     activeBgColor: Colors.red[500],
+                //     activeBgColor: Colors.red.shade500,
                 //     activeFgColor: Colors.white,
                 //     initialLabelIndex: scheduleType,
                 //     inactiveBgColor: Colors.white,
@@ -157,7 +158,7 @@ class _HomepageState extends State<Homepage> {
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       height: 24,
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: Colors.grey.shade100,
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
                       child: Center(
@@ -184,7 +185,7 @@ class _HomepageState extends State<Homepage> {
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       height: 24,
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: Colors.grey.shade100,
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
                       child: Center(
@@ -255,7 +256,7 @@ class _HomepageState extends State<Homepage> {
               width: 220,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
-                color: Colors.grey[100],
+                color: Colors.grey.shade100,
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -264,7 +265,7 @@ class _HomepageState extends State<Homepage> {
                     Icon(
                       Icons.search,
                       size: 20,
-                      color: Colors.red[500],
+                      color: Colors.red.shade500,
                     ),
                     SizedBox(width: 5),
                     Container(
@@ -449,6 +450,15 @@ class _SchudleTableState extends State<SchudleTable> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            // Container(
+            //   height: 10,
+            //   color: Colors.red,
+            //   child: Row(
+            //     children: [
+            //       DateRangePickerDash()
+            //     ],
+            //   ),
+            // ),
             tableHeading(),
             SingleChildScrollView(
               child: Container(
@@ -530,7 +540,7 @@ class _SchudleTableState extends State<SchudleTable> {
                                           (Set<MaterialState> states) {
                                             if (states.contains(
                                                 MaterialState.pressed))
-                                              return Colors.green[200];
+                                              return Colors.green.shade200;
                                             return Colors.red[
                                                 400]; // Use the component's default.
                                           },
@@ -596,7 +606,7 @@ class _SchudleTableState extends State<SchudleTable> {
                                           (Set<MaterialState> states) {
                                             if (states.contains(
                                                 MaterialState.pressed))
-                                              return Colors.green[200];
+                                              return Colors.green.shade200;
                                             return Colors.red[
                                                 400]; // Use the component's default.
                                           },

@@ -24,14 +24,14 @@ import '../../service/apiService.dart';
 class HomePageOp2 extends StatefulWidget {
   final Employee employee;
   final MachineDetails machine;
-  HomePageOp2({this.employee, this.machine});
+  HomePageOp2({required this.employee, required this.machine});
   @override
   _HomePageOp2State createState() => _HomePageOp2State();
 }
 
 class _HomePageOp2State extends State<HomePageOp2> {
   int type = 0;
-  ApiService apiService;
+  late ApiService apiService;
   int scheduleType = 0;
 
   var _chosenValue = "Order Id";
@@ -100,14 +100,14 @@ class _HomePageOp2State extends State<HomePageOp2> {
                 // Container(
                 //   height: 25,
                 //   decoration: BoxDecoration(
-                //     color: Colors.red[500],
+                //     color: Colors.red.shade500,
                 //     borderRadius: BorderRadius.all(Radius.circular(5)),
-                //     border: Border.all(color: Colors.red[500]),
+                //     border: Border.all(color: Colors.red.shade500),
                 //   ),
                 //   child: ToggleSwitch(
                 //     minWidth: 75.0,
                 //     cornerRadius: 5.0,
-                //     activeBgColor: Colors.red[500],
+                //     activeBgColor: Colors.red.shade500,
                 //     activeFgColor: Colors.white,
                 //     initialLabelIndex: scheduleType,
                 //     inactiveBgColor: Colors.white,
@@ -143,7 +143,7 @@ class _HomePageOp2State extends State<HomePageOp2> {
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       height: 24,
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: Colors.grey.shade100,
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
                       child: Center(
@@ -171,7 +171,7 @@ class _HomePageOp2State extends State<HomePageOp2> {
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       height: 24,
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: Colors.grey.shade100,
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
                       child: Center(
@@ -223,7 +223,7 @@ class _HomePageOp2State extends State<HomePageOp2> {
               type: type == 0 ? "A" : "M",
               scheduleType: scheduleType == 0 ? "true" : "false",
               searchType: _chosenValue,
-              query: _searchController.text ?? "",
+              query: _searchController.text, 
             ),
           ],
         ),
@@ -248,7 +248,7 @@ class _HomePageOp2State extends State<HomePageOp2> {
               width: 220,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
-                color: Colors.grey[100],
+                color: Colors.grey.shade100,
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -257,7 +257,7 @@ class _HomePageOp2State extends State<HomePageOp2> {
                     Icon(
                       Icons.search,
                       size: 20,
-                      color: Colors.red[400],
+                      color: Colors.red.shade400,
                     ),
                     SizedBox(width: 5),
                     Container(
@@ -299,7 +299,7 @@ class _HomePageOp2State extends State<HomePageOp2> {
     }
   }
 
-  Widget dropdown({List<String> options, String name}) {
+  Widget dropdown({required List<String> options, required String name}) {
     return Container(
         child: DropdownButton<String>(
       focusColor: Colors.white,
@@ -327,9 +327,9 @@ class _HomePageOp2State extends State<HomePageOp2> {
           ),
         ],
       ),
-      onChanged: (String value) {
+      onChanged: (String? value) {
         setState(() {
-          _chosenValue = value;
+          _chosenValue = value!;
         });
       },
     ));
@@ -337,7 +337,7 @@ class _HomePageOp2State extends State<HomePageOp2> {
 }
 
 class SchudleTable extends StatefulWidget {
-  final Schedule schedule;
+
   final Employee employee;
   final MachineDetails machine;
   String scheduleType;
@@ -345,14 +345,14 @@ class SchudleTable extends StatefulWidget {
   String searchType;
   String query;
   SchudleTable(
-      {Key key,
-      this.schedule,
-      this.employee,
-      this.machine,
-      this.scheduleType,
-      this.type,
-      this.searchType,
-      this.query})
+      {Key? key,
+    
+      required this.employee,
+      required this.machine,
+      required this.scheduleType,
+      required this.type,
+      required this.searchType,
+      required this.query})
       : super(key: key);
 
   @override
@@ -361,9 +361,9 @@ class SchudleTable extends StatefulWidget {
 
 class _SchudleTableState extends State<SchudleTable> {
   List<DataRow> datarows = [];
-  ApiService apiService;
-  List<CrimpingSchedule> crimpingSchedule;
-  PostStartProcessP1 postStartprocess;
+  late ApiService apiService;
+  late List<CrimpingSchedule> crimpingSchedule;
+  late PostStartProcessP1 postStartprocess;
   @override
   void initState() {
     apiService = new ApiService();
@@ -371,22 +371,22 @@ class _SchudleTableState extends State<SchudleTable> {
     super.initState();
   }
 
-  List<CrimpingSchedule> searchfilter(List<CrimpingSchedule> scheduleList) {
+  List<CrimpingSchedule>? searchfilter(List<CrimpingSchedule>? scheduleList) {
     switch (widget.searchType) {
       case "Order Id":
-        return scheduleList
+        return scheduleList!
             .where((element) =>
                 element.purchaseOrder.toString().startsWith(widget.query))
             .toList();
         break;
       case "FG Part No.":
-        return scheduleList
+        return scheduleList!
             .where((element) =>
                 element.finishedGoods.toString().startsWith(widget.query))
             .toList();
         break;
       case "Cable Part No":
-        return scheduleList
+        return scheduleList!
             .where((element) =>
                 element.cablePartNo.toString().startsWith(widget.query))
             .toList();
@@ -422,11 +422,11 @@ class _SchudleTableState extends State<SchudleTable> {
                       scheduleType: "${widget.type}",
                       machineNo: widget.machine.machineNumber,
                       sameMachine: "${widget.scheduleType}"),
-                  builder: (context, snapshot) {
+                  builder: (context,AsyncSnapshot<List<CrimpingSchedule>> snapshot) {
                     if (snapshot.hasData) {
-                      List<CrimpingSchedule> schedulelist =
+                      List<CrimpingSchedule>? schedulelist =
                           searchfilter(snapshot.data);
-                      schedulelist = schedulelist
+                      schedulelist = schedulelist!
                           .where((element) =>
                               element.schedulestatus.toLowerCase() !=
                               "Complete".toLowerCase())
@@ -442,7 +442,7 @@ class _SchudleTableState extends State<SchudleTable> {
                               shrinkWrap: true,
                               itemCount: schedulelist.length,
                               itemBuilder: (context, index) {
-                                return  CrimpingScheduleDataRow(schedule: schedulelist[index], machine: widget.machine, employee: widget.employee);
+                                return  CrimpingScheduleDataRow(schedule: schedulelist![index], machine: widget.machine, employee: widget.employee);
                               }),
                         );
                       } else {
@@ -475,9 +475,8 @@ class _SchudleTableState extends State<SchudleTable> {
                                         (Set<MaterialState> states) {
                                           if (states
                                               .contains(MaterialState.pressed))
-                                            return Colors.green[200];
-                                          return Colors.red[
-                                              400]; // Use the component's default.
+                                            return Colors.green.shade200;
+                                          return Colors.red.shade400; // Use the component's default.
                                         },
                                       ),
                                     ),
@@ -595,7 +594,7 @@ class _SchudleTableState extends State<SchudleTable> {
     );
   }
 
-  Widget buildDataRow({CrimpingSchedule schedule, int c}) {
+  Widget buildDataRow({required CrimpingSchedule schedule, required int c}) {
     Widget cell(String name, double width) {
       return Container(
         width: MediaQuery.of(context).size.width * width,
@@ -619,7 +618,7 @@ class _SchudleTableState extends State<SchudleTable> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 50,
-          color: c % 2 == 0 ? Colors.grey[50] : Colors.white,
+          color: c % 2 == 0 ? Colors.grey.shade50 : Colors.white,
           child: Container(
             decoration: BoxDecoration(),
             child: Row(
@@ -730,8 +729,8 @@ class _SchudleTableState extends State<SchudleTable> {
                                   primary: schedule.schedulestatus
                                               .toLowerCase() ==
                                           "Partially Completed".toLowerCase()
-                                      ? Colors.green[500]
-                                      : Colors.green[500],
+                                      ? Colors.green.shade500
+                                      : Colors.green.shade500,
                                 ),
                                 child: Container(
                                     child: schedule.schedulestatus
@@ -808,7 +807,7 @@ class _SchudleTableState extends State<SchudleTable> {
                                                   employee: widget.employee,
                                                   machine: widget.machine,
                                                   materialPickType:
-                                                      MaterialPickType.newload,
+                                                      MaterialPickType.newload, reload: (){},
                                                 )),
                                       );
                                       return true;
@@ -845,7 +844,7 @@ class CrimpingStartButton extends StatefulWidget {
   Function onPressed;
   Widget child;
   ButtonStyle style;
-  CrimpingStartButton({this.onPressed, this.child, this.style}) : super();
+  CrimpingStartButton({required this.onPressed, required this.child, required this.style}) : super();
 
   @override
   _CrimpingStartButtonState createState() => _CrimpingStartButtonState();

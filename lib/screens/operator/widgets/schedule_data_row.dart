@@ -17,7 +17,7 @@ class ScheduleDataRow extends StatefulWidget {
   MachineDetails machine;
   Employee employee;
   Function onrefresh;
-  ScheduleDataRow({this.schedule, this.machine, this.employee, this.onrefresh})
+  ScheduleDataRow({required this.schedule, required this.machine, required this.employee, required this.onrefresh})
       : super();
 
   @override
@@ -25,8 +25,8 @@ class ScheduleDataRow extends StatefulWidget {
 }
 
 class _ScheduleDataRowState extends State<ScheduleDataRow> {
-  ApiService apiService;
-  bool loading;
+  late ApiService apiService;
+  late bool loading;
   @override
   void initState() {
     apiService = new ApiService();
@@ -46,7 +46,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 55,
-          color: 2 % 2 == 0 ? Colors.white : Colors.grey[50],
+          color: 2 % 2 == 0 ? Colors.white : Colors.grey.shade50,
           child: Container(
             decoration: BoxDecoration(
               border: Border(
@@ -56,8 +56,8 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                     ? Colors.green
                     : widget.schedule.scheduledStatus.toLowerCase() ==
                             "Partially".toLowerCase()
-                        ? Colors.orange[100]
-                        : Colors.blue[100],
+                        ? Colors.orange.shade100
+                        : Colors.blue.shade100,
                 width: 5,
               )),
             ),
@@ -184,12 +184,12 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                             color:
                                 widget.schedule.scheduledStatus.toLowerCase() ==
                                         'Complete'.toLowerCase()
-                                    ? Colors.green[100]
+                                    ? Colors.green.shade100
                                     : widget.schedule.scheduledStatus
                                                 .toLowerCase() ==
                                             "Partially Completed".toLowerCase()
-                                        ? Colors.red[50]
-                                        : Colors.blue[50],
+                                        ? Colors.red.shade50
+                                        : Colors.blue.shade50,
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
                           child: Center(
@@ -209,7 +209,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                                   .toLowerCase() ==
                                               "Partially Completed"
                                                   .toLowerCase()
-                                          ? Colors.red[400]
+                                          ? Colors.red.shade400
                                           : Colors.blue[900],
                                 ),
                               ),
@@ -223,7 +223,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                 width: MediaQuery.of(context).size.width * 0.07,
                                 height: 5,
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[200],
+                                  color: Colors.grey.shade200,
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(100)),
                                 ),
@@ -237,7 +237,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                                 '1'))),
                                 height: 5,
                                 decoration: BoxDecoration(
-                                  color: Colors.green[300],
+                                  color: Colors.green.shade300,
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(100)),
                                 ),
@@ -274,8 +274,8 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                                   .toLowerCase() ==
                                               "Partially Completed"
                                                   .toLowerCase()
-                                          ? Colors.green[500]
-                                          : Colors.green[500],
+                                          ? Colors.green.shade500
+                                          : Colors.green.shade500,
                                     ),
                                   ),
                                   loadingChild: Container(
@@ -388,7 +388,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                                                 widget.machine,
                                                             materialPickType:
                                                                 MaterialPickType
-                                                                    .newload,
+                                                                    .newload, homeReload: (){}, reload: (){},
                                                           )),
                                                 ).then((value) {
                                                   widget.onrefresh();
@@ -447,13 +447,13 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
     );
   }
 
-  Future<void> showScheduleDetail({Schedule schedule}) {
-    Widget feild({String heading, String value, double width}) {
+  Future<void> showScheduleDetail({required Schedule schedule}) {
+    Widget feild({required String heading, required String value, required double width}) {
       width = MediaQuery.of(context).size.width * width;
       return Padding(
         padding: const EdgeInsets.all(0.0),
         child: Container(
-          // color: Colors.red[100],
+          // color: Colors.red.shade100,
           width: width,
           child: Column(
             children: [
@@ -462,7 +462,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                   Text(heading,
                       style: TextStyle(
                         fontSize: 12,
-                        color: Colors.grey[500],
+                        color: Colors.grey.shade500,
                         fontWeight: FontWeight.normal,
                       )),
                 ],
@@ -570,7 +570,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                   heading: "Shift Type",
                                   value: "${widget.schedule.shiftType}",
                                   width: 0.14),
-                              feild(heading: "", width: 0.14)
+                              feild(heading: "", width: 0.14, value: '')
                             ],
                           )
                         ],
@@ -593,18 +593,18 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                     MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.pressed))
-                                      return Colors.green[200];
-                                    return Colors.green[
-                                        500]; // Use the component's default.
+                                      return Colors.green.shade200;
+                                    return Colors.green.shade500
+                                        ; // Use the component's default.
                                   },
                                 ),
                                 overlayColor:
                                     MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.pressed))
-                                      return Colors.green[200];
-                                    return Colors.green[
-                                        500]; // Use the component's default.
+                                      return Colors.green.shade200;
+                                    return Colors.green.shade500
+                                        ; // Use the component's default.
                                   },
                                 ),
                               ),
@@ -696,18 +696,18 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                     MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.pressed))
-                                      return Colors.green[200];
-                                    return Colors.green[
-                                        500]; // Use the component's default.
+                                      return Colors.green.shade200;
+                                    return Colors.green.shade500
+                                        ; // Use the component's default.
                                   },
                                 ),
                                 overlayColor:
                                     MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.pressed))
-                                      return Colors.green[200];
-                                    return Colors.green[
-                                        500]; // Use the component's default.
+                                      return Colors.green.shade200;
+                                    return Colors.green.shade500
+                                        ; // Use the component's default.
                                   },
                                 ),
                               ),
@@ -753,7 +753,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                                   machine: widget.machine,
                                                   homeReload: widget.onrefresh,
                                                   materialPickType:
-                                                      MaterialPickType.newload,
+                                                      MaterialPickType.newload, reload: (){},
                                                 )),
                                       );
                                     } else {

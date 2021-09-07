@@ -16,7 +16,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  final String logged;
+  final String? logged;
   MyApp({this.logged});
   // This widget is the root of your application.
 

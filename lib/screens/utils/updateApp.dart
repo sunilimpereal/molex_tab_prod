@@ -32,7 +32,7 @@ class _UpdateAppState extends State<UpdateApp> {
     try {
       var dir = await getExternalStorageDirectory();
       await dio.download(
-       baseUrl+"update/molex_tab.apk","${dir.path}/newapk.apk}",
+       baseUrl+"update/molex_tab.apk","${dir!.path}/newapk.apk}",
         onReceiveProgress: (count, total) {
           log("rec: $count , Total : $total");
           setState(() {
@@ -113,17 +113,16 @@ class _UpdateAppState extends State<UpdateApp> {
                             MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.pressed))
-                              return Colors.red[100];
+                              return Colors.red.shade100;
                             return Colors
-                                .red[500]; // Use the component's default.
+                                .red.shade500; // Use the component's default.
                           },
                         ),
                         overlayColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.pressed))
                               return Colors.red;
-                            return Colors
-                                .green[500]; // Use the component's default.
+                            return Colors.green.shade500; // Use the component's default.
                           },
                         ),
                       ),

@@ -8,9 +8,9 @@ import '../print.dart';
 
 class DrawerWidget extends StatefulWidget {
   Employee employee;
-  MachineDetails machineDetails;
+  MachineDetails? machineDetails;
   String type;
-  DrawerWidget({this.employee, this.machineDetails, this.type});
+  DrawerWidget({required this.employee,  this.machineDetails, required this.type});
   @override
   _DrawerWidgetState createState() => _DrawerWidgetState();
 }
@@ -56,7 +56,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   height: 70,
                   width: 70,
                   decoration: BoxDecoration(
-                      color: Colors.red[50],
+                      color: Colors.red.shade50,
                       borderRadius: BorderRadius.all(Radius.circular(500))),
                   child: Center(
                     child: Text(
@@ -118,7 +118,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 MaterialPageRoute(
                     builder: (context) => Location(
                           employee: widget.employee,
-                          machine: widget.machineDetails,
+                          machine: widget.machineDetails!,
                           type: widget.type,
                           locationType: LocationType.partialTransfer,
                         )),
@@ -127,7 +127,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             title: Text('Location & Bin Map'),
             trailing: Icon(
               Icons.transfer_within_a_station_outlined,
-              color: Colors.red[300],
+              color: Colors.red.shade300,
             ),
           ),
           ListTile(
@@ -140,7 +140,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             title: Text('Print test'),
             trailing: Icon(
               Icons.print,
-              color: Colors.red[300],
+              color: Colors.red.shade300,
             ),
           ),
           ListTile(
@@ -153,7 +153,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             title: Text('Logout'),
             trailing: Icon(
               Icons.logout,
-              color: Colors.red[300],
+              color: Colors.red.shade300,
             ),
           )
         ],

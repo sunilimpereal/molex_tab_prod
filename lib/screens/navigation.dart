@@ -15,7 +15,7 @@ class NavPage extends StatefulWidget {
   final String userId;
   final MachineDetails machine;
   final Schedule schedule;
-  NavPage({this.machine, this.userId, this.schedule});
+  NavPage({required this.machine, required this.userId, required this.schedule});
   @override
   _NavPageState createState() => _NavPageState(); 
 }

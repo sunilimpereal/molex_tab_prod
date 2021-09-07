@@ -8,30 +8,30 @@ class PrintTest extends StatefulWidget {
 }
 
 class _PrintTestState extends State<PrintTest> {
-  String ipaddress;
-  String bundleQty;
-  String qr;
-  String routenumber1;
-  String fgpartNumber;
-  String cutlength;
-  String cablepart;
-  String wireGauge;
-  String terminalfrom;
-  String terminalto;
+  late String ipaddress;
+  late String bundleQty;
+  late String qr;
+  late String routenumber1;
+  late String fgpartNumber;
+  late String cutlength;
+  late String cablepart;
+  late String wireGauge;
+  late String terminalfrom;
+  late String terminalto;
   static const platform = const MethodChannel('com.impereal.dev/tsc');
   String _printerStatus = 'Waiting';
 
   Future<void> _print({
-    String ipaddress,
-    String bq,
-    String qr,
-    String routenumber1,
-    String fgPartNumber,
-    String cutlength,
-    String cablepart,
-    String wireGauge,
-    String terminalfrom,
-    String terminalto,
+    required String ipaddress,
+    required String bq,
+    required String qr,
+    required String routenumber1,
+    required String fgPartNumber,
+    required String cutlength,
+    required String cablepart,
+    required String wireGauge,
+    required String terminalfrom,
+    required String terminalto,
   }) async {
     String printerStatus;
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Pageloading extends StatefulWidget {
   bool loading;
   Widget child;
-  Pageloading({ Key key,this.child,this.loading }) : super(key: key);
+  Pageloading({ Key ?key,required this.child,required this.loading }) : super(key: key);
 
   @override
   _PageloadingState createState() => _PageloadingState();

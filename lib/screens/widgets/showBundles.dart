@@ -5,7 +5,7 @@ class CustomTable extends StatefulWidget {
   List<CustomRow> rows;
   double width;
   double height;
-  CustomTable({Key key, this.height, this.colums, this.rows, this.width})
+  CustomTable({ Key? key, required this.height, required this.colums, required this.rows, required this.width})
       : super(key: key);
 
   @override
@@ -30,7 +30,7 @@ class _CustomTableState extends State<CustomTable> {
               decoration: BoxDecoration(
                 border: Border(
                     bottom: BorderSide(
-                  color: Colors.red[100],
+                  color: Colors.red.shade100,
                   width: 1,
                 )),
               ),
@@ -59,17 +59,17 @@ class CustomRow extends StatelessWidget {
   List<Widget> cells;
   bool completed = false;
 
-  CustomRow({Key key, this.cells, this.completed = false}) : super(key: key);
+  CustomRow({Key? key, required this.cells, this.completed = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
     return Container(
       decoration: BoxDecoration(
-        color: completed??false ? Colors.green[50] : Colors.white,
+        color: completed ? Colors.green.shade50 : Colors.white,
         border: Border(
             bottom: BorderSide(
-          color: Colors.grey[100],
+          color: Colors.grey.shade100,
           width: 1,
         )),
       ),
@@ -84,16 +84,16 @@ class CustomRow extends StatelessWidget {
 class CustomCell extends StatelessWidget {
   Widget child;
   double width;
-  Color color;
+  Color ?color;
 
-  CustomCell({Key key, this.child, this.color, this.width}) : super(key: key);
+  CustomCell({Key? key, required this.child,  this.color, required this.width}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: width,
       decoration: BoxDecoration(
-          color: color ?? Colors.transparent,
+          color: color,
           borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Padding(
         padding: const EdgeInsets.all(8.0),

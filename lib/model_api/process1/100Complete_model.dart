@@ -10,19 +10,19 @@ String fullyCompleteModelToJson(FullyCompleteModel data) => json.encode(data.toJ
 
 class FullyCompleteModel {
     FullyCompleteModel({
-        this.finishedGoodsNumber,
-        this.purchaseOrder,
-        this.orderId,
-        this.cablePartNumber,
-        this.length,
-        this.color,
-        this.scheduledStatus,
-        this.scheduledId,
-        this.scheduledQuantity,
-        this.machineIdentification,
-        this.bundleIdentification,
-        this.firstPieceAndPatrol,
-        this.applicatorChangeover,
+        required this.finishedGoodsNumber,
+        required this.purchaseOrder,
+        required this.orderId,
+        required this.cablePartNumber,
+        required this.length,
+        required this.color,
+        required this.scheduledStatus,
+        required this.scheduledId,
+        required this.scheduledQuantity,
+        required this.machineIdentification,
+        required this.bundleIdentification,
+        required this.firstPieceAndPatrol,
+        required this.applicatorChangeover,
     });
 
     int finishedGoodsNumber;

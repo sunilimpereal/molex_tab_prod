@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+2
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -49,6 +49,7 @@ dependencies:
   clay_containers: ^0.3.2
   input_with_keyboard_control: ^1.0.8
   visibility_detector: ^0.2.0
+  date_range_picker: ^1.0.5
   
 
 

@@ -79,7 +79,7 @@ class _DrawerWidgetWIPState extends State<DrawerWidgetWIP> {
                   height: 40,
                   width: 40,
                   decoration: BoxDecoration(
-                      color: Colors.red[50],
+                      color: Colors.red.shade50,
                       borderRadius: BorderRadius.all(Radius.circular(500))),
                   child: Center(
                     child: Text(
@@ -141,7 +141,7 @@ class _DrawerWidgetWIPState extends State<DrawerWidgetWIP> {
             title: Text('Location & Bin Map'),
             trailing: Icon(
               Icons.transfer_within_a_station_outlined,
-              color: Colors.red[300],
+              color: Colors.red.shade300,
             ),
           ),
           ListTile(
@@ -152,7 +152,7 @@ class _DrawerWidgetWIPState extends State<DrawerWidgetWIP> {
             title: Text('Realod Material'),
             trailing: Icon(
               Icons.add_box,
-              color: Colors.red[300],
+              color: Colors.red.shade300,
             ),
           ),
           ListTile(
@@ -163,7 +163,7 @@ class _DrawerWidgetWIPState extends State<DrawerWidgetWIP> {
             title: Text('Return Material'),
             trailing: Icon(
               Icons.repeat_rounded,
-              color: Colors.red[300],
+              color: Colors.red.shade300,
             ),
           ),
           ListTile(
@@ -174,7 +174,7 @@ class _DrawerWidgetWIPState extends State<DrawerWidgetWIP> {
             title: Text('Bundle Detail'),
             trailing: Icon(
               Icons.book_online_rounded,
-              color: Colors.red[300],
+              color: Colors.red.shade300,
             ),
           ),
           ListTile(
@@ -248,7 +248,7 @@ class _DrawerWidgetWIPState extends State<DrawerWidgetWIP> {
             title: Text('Return'),
             trailing: Icon(
               Icons.exit_to_app,
-              color: Colors.red[300],
+              color: Colors.red.shade300,
             ),
           ),
         ],

@@ -305,10 +305,10 @@ class _TableContentState extends State<TableContent> {
                   onPressed: () async {
                     TimeOfDay pickedTime = initialTime1;
 
-                    initialTime1 = await showTimePicker(
+                    initialTime1 = (await showTimePicker(
                       context: context,
                       initialTime: initialTime1,
-                    );
+                    ))!;
                     FocusScope.of(context).unfocus();
                   },
                 ),
@@ -331,10 +331,10 @@ class _TableContentState extends State<TableContent> {
                   onPressed: () async {
                     TimeOfDay pickedTime = initialTime2;
 
-                    initialTime2 = await showTimePicker(
+                    initialTime2 = (await showTimePicker(
                       context: context,
                       initialTime: initialTime2,
-                    );
+                    ))!;
                     FocusScope.of(context).unfocus();
                   },
                 ),
@@ -357,10 +357,10 @@ class _TableContentState extends State<TableContent> {
                   onPressed: () async {
                     TimeOfDay pickedTime = initialTime1;
 
-                    initialTime3 = await showTimePicker(
+                    initialTime3 = (await showTimePicker(
                       context: context,
                       initialTime: initialTime3,
-                    );
+                    ))!;
                     Future.delayed(
                       const Duration(milliseconds: 10),
                       () {
@@ -385,7 +385,7 @@ class _TableContentState extends State<TableContent> {
   }
 
   Widget fieldsItem( 
-      {String name, String fiels1, String fiels2, String fiels3}) {
+      {required String name, required String fiels1, required String fiels2, required String fiels3}) {
     return Container(
       child: Row(
         children: [
@@ -410,7 +410,7 @@ class _TableContentState extends State<TableContent> {
                           padding: const EdgeInsets.symmetric(horizontal: 5.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
-                            color: Colors.grey[100],
+                            color: Colors.grey.shade100,
                           ),
                           child: Center(
                             child: TextField(
@@ -457,7 +457,7 @@ class _TableContentState extends State<TableContent> {
                           padding: const EdgeInsets.symmetric(horizontal: 5.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
-                            color: Colors.grey[100],
+                            color: Colors.grey.shade100,
                           ),
                           child: Center(
                             child: TextField(
@@ -504,7 +504,7 @@ class _TableContentState extends State<TableContent> {
                           padding: const EdgeInsets.symmetric(horizontal: 5.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
-                            color: Colors.grey[100],
+                            color: Colors.grey.shade100,
                           ),
                           child: Center(
                             child: TextField(
@@ -544,12 +544,12 @@ class _TableContentState extends State<TableContent> {
 
 class TableItem extends StatefulWidget {
   TableItem({
-    Key key,
-    @required this.context,
-    this.name,
-    this.valueFP,
-    this.valueLP,
-    this.valueP,
+    Key? key,
+    required this.context,
+    required this.name,
+    required this.valueFP,
+    required this.valueLP,
+    required this.valueP,
   }) : super(key: key);
 
   final BuildContext context;
@@ -600,16 +600,16 @@ class _TableItemState extends State<TableItem> {
                 Radio(
                   value: 1,
                   groupValue: widget.valueFP,
-                  onChanged: (a) {
+                  onChanged: (int?a) {
                     print('value $a');
-                    onChangedFP(a);
+                    onChangedFP(a!);
                   },
                 ),
                 Radio(
                   value: 2,
                   groupValue: widget.valueFP,
-                  onChanged: (a) {
-                    onChangedFP(a);
+                  onChanged: (int?a) {
+                    onChangedFP(a!);
                     print('value $a');
                   },
                 ),
@@ -624,15 +624,15 @@ class _TableItemState extends State<TableItem> {
                 Radio(
                   value: 1,
                   groupValue: widget.valueLP,
-                  onChanged: (a) {
-                    onChangedLP(a);
+                  onChanged: (int? a) {
+                    onChangedLP(a!);
                   },
                 ),
                 Radio(
                   value: 2,
                   groupValue: widget.valueLP,
-                  onChanged: (a) {
-                    onChangedLP(a);
+                  onChanged: (int ?a) {
+                    onChangedLP(a!);
                   },
                 ),
               ],
@@ -646,15 +646,15 @@ class _TableItemState extends State<TableItem> {
                 Radio(
                   value: 1,
                   groupValue: widget.valueP,
-                  onChanged: (a) {
-                    onChangedP(a);
+                  onChanged: (int?a) {
+                    onChangedP(a!);
                   },
                 ),
                 Radio(
                   value: 2,
                   groupValue: widget.valueP,
-                  onChanged: (a) {
-                    onChangedP(a);
+                  onChanged: (int?a) {
+                    onChangedP(a!);
                   },
                 ),
               ],

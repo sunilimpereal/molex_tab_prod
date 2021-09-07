@@ -148,7 +148,7 @@ class _MaterialPickState extends State<MaterialPick> {
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         height: 24,
                         decoration: BoxDecoration(
-                          color: Colors.grey[100],
+                          color: Colors.grey.shade100,
                           borderRadius: BorderRadius.all(Radius.circular(100)),
                         ),
                         child: Center(
@@ -176,7 +176,7 @@ class _MaterialPickState extends State<MaterialPick> {
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         height: 24,
                         decoration: BoxDecoration(
-                          color: Colors.grey[100],
+                          color: Colors.grey.shade100,
                           borderRadius: BorderRadius.all(Radius.circular(100)),
                         ),
                         child: Center(
@@ -1002,7 +1002,7 @@ class _MaterialPickState extends State<MaterialPick> {
   }
 
   handleKey(
-    RawKeyEventDataAndroid key,
+    RawKeyEventData key,
   ) {
     keyBoard
         ? SystemChannels.textInput.invokeMethod('TextInput.show')
@@ -1548,7 +1548,7 @@ class _MaterialPickState extends State<MaterialPick> {
         child: Center(
           child: Text(
             name,
-            style: TextStyle(color: Colors.grey[600], fontSize: 12),
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
           ),
         ),
       );

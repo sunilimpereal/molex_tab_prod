@@ -21,10 +21,10 @@ class LoginScan extends StatefulWidget {
 class _LoginScanState extends State<LoginScan> {
   TextEditingController _textController = new TextEditingController();
   FocusNode _textNode = new FocusNode();
-  String userId;
-  ApiService apiService;
-  Employee employee;
-  bool loading;
+  late String userId;
+  late ApiService apiService;
+  late Employee employee;
+  late bool loading;
 
   @override
   void initState() {
@@ -49,7 +49,7 @@ class _LoginScanState extends State<LoginScan> {
     super.dispose();
   }
 
-  handleKey(RawKeyEventDataAndroid key) {
+  handleKey(RawKeyEventData key) {
     // setState(() {
     //   SystemChannels.textInput.invokeMethod('TextInput.hide');
     // });
@@ -97,7 +97,7 @@ class _LoginScanState extends State<LoginScan> {
                               "Login",
                               style: TextStyle(
                                   fontSize: 30,
-                                  color: Colors.red[600],
+                                  color: Colors.red.shade600,
                                   fontWeight: FontWeight.bold,
 
                               ),
@@ -108,7 +108,7 @@ class _LoginScanState extends State<LoginScan> {
                                   height: 3,
                                   width: 280,
                                   child: LinearProgressIndicator(
-                                    backgroundColor: Colors.grey[50],
+                                    backgroundColor: Colors.grey.shade50,
                                     valueColor: AlwaysStoppedAnimation<Color>(
                                         Colors.red),
                                   ),
@@ -128,7 +128,7 @@ class _LoginScanState extends State<LoginScan> {
                           ),
                           userId != ''
                               ? Text(
-                                  userId ?? '',
+                                  userId,
                                   style:  TextStyle(
                                       color: Colors.black,
                                       fontSize: 18,
@@ -262,7 +262,7 @@ class _LoginScanState extends State<LoginScan> {
                                         textColor: Colors.white,
                                         fontSize: 16.0);
                                     setState(() {
-                                      userId = null;
+                                      userId = "";
                                     });
                                   }
                                   handleKey(event.data);
@@ -452,7 +452,7 @@ class _LoginScanState extends State<LoginScan> {
           fontSize: 16.0,
         );
         setState(() {
-          userId = null;
+          userId = "";
           _textController.clear();
           scanController.clear();
         });

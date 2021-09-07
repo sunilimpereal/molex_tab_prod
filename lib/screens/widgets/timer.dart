@@ -7,15 +7,15 @@ import 'package:intl/intl.dart';
 class ProcessTimer extends StatefulWidget {
   DateTime startTime;
   String endTime;
-  ProcessTimer({Key key, this.startTime, this.endTime}) : super(key: key);
+  ProcessTimer({Key? key, required this.startTime, required this.endTime}) : super(key: key);
 
   @override
   Process_TimerState createState() => Process_TimerState();
 }
 
 class Process_TimerState extends State<ProcessTimer> {
-  DateTime startTime;
-  DateTime endTime;
+  late DateTime startTime;
+  late DateTime endTime;
   Duration timeRemaining = Duration(seconds: 30);
   updateTime() {
     Timer.periodic(Duration(seconds: 30), (timer) {
@@ -53,7 +53,7 @@ class Process_TimerState extends State<ProcessTimer> {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(
-            color: timeRemaining?.toString().contains("-")
+            color: timeRemaining.toString().contains("-")
                 ? Colors.red
                 : Colors.green,
           )),
@@ -134,7 +134,7 @@ class Process_TimerState extends State<ProcessTimer> {
               Icon(
                 Icons.timer_rounded,
                 size: 14,
-                color: timeRemaining?.toString().contains("-")
+                color: timeRemaining.toString().contains("-")
                     ? Colors.red
                     : Colors.green,
               ),
@@ -142,11 +142,11 @@ class Process_TimerState extends State<ProcessTimer> {
                 width: 4,
               ),
               Text(
-                "${timeRemaining?.toString().contains("-")?timeRemaining.toString().substring(0,5):timeRemaining.toString().substring(0,4)}",
+                "${timeRemaining.toString().contains("-")?timeRemaining.toString().substring(0,5):timeRemaining.toString().substring(0,4)}",
 
                 // "${timeRemaining.inHours}:${(timeRemaining.inMinutes % 60)}",
                 style: TextStyle(
-                  color: timeRemaining?.toString().contains("-")
+                  color: timeRemaining.toString().contains("-")
                       ? Colors.red
                       : Colors.green,
                   fontSize: 18,

@@ -38,7 +38,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
                       width: MediaQuery.of(context).size.width * 0.48,
                       child: Column(children: [
                         row('Part No.', 'UOM', 'REQUIRED', 'LOADED',
-                            'AVAILABLE', Colors.blue[100]),
+                            'AVAILABLE', Colors.blue.shade100),
                         Container(
                           height: 63,
                           child: ListView.builder(
@@ -51,7 +51,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
                                     "${matList[index].requiredQty.toString()}",
                                     "${matList[index].loadedQty.toString()}",
                                     "${matList[index].availableQty.toString()}",
-                                    Colors.grey[100]);
+                                    Colors.grey.shade100);
                               }),
                         ),
                       ])),
@@ -63,7 +63,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
                   child: Column(
                     children: [
                       row('Part No.', 'UOM', 'REQUIRED', 'LOADED', 'AVAILABLE',
-                          Colors.blue[100]),
+                          Colors.blue.shade100),
                       SizedBox(height: 10),
                       Text(
                         "no stock found",
@@ -78,7 +78,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
                 child: Column(
                   children: [
                     row('Part No.', 'UOM', 'REQUIRED', 'LOADED', 'AVAILABLE',
-                        Colors.blue[100]),
+                        Colors.blue.shade100),
                     Text(
                       "no stock found",
                       style: TextStyle(color: Colors.black),
@@ -99,14 +99,14 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
           children: [
             Container(
                 decoration: BoxDecoration(
-                    border: Border.all(width: 0.5, color: Colors.grey[100])),
+                    border: Border.all(width: 0.5, color: Colors.grey.shade100)),
                 height: 20,
                 width: MediaQuery.of(context).size.width * 0.1,
                 child: Center(
                     child: Text(partno, style: TextStyle(fontSize: 12)))),
             Container(
               decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.grey[100])),
+                  border: Border.all(width: 0.5, color: Colors.grey.shade100)),
               height: 20,
               width: MediaQuery.of(context).size.width * 0.1,
               child: Center(
@@ -118,7 +118,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
             ),
             Container(
               decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.grey[100])),
+                  border: Border.all(width: 0.5, color: Colors.grey.shade100)),
               height: 20,
               width: MediaQuery.of(context).size.width * 0.1,
               child: Center(
@@ -130,7 +130,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
             ),
             Container(
               decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.grey[100])),
+                  border: Border.all(width: 0.5, color: Colors.grey.shade100)),
               height: 20,
               width: MediaQuery.of(context).size.width * 0.08,
               child: Center(
@@ -142,7 +142,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
             ),
             Container(
               decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.grey[100])),
+                  border: Border.all(width: 0.5, color: Colors.grey.shade100)),
               height: 20,
               width: MediaQuery.of(context).size.width * 0.1,
               child: Center(
@@ -188,7 +188,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
           width: MediaQuery.of(context).size.width * width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(8)),
-            // color: Colors.red[50],
+            // color: Colors.red.shade50,
           ),
           padding: EdgeInsets.all(2),
           child: Center(
@@ -210,7 +210,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
         child: Container(
           width: 320,
           decoration: BoxDecoration(
-              color: Colors.red[500],
+              color: Colors.red.shade500,
               borderRadius: BorderRadius.all(Radius.circular(4))),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

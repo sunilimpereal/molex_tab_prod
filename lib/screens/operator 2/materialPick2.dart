@@ -27,11 +27,11 @@ class MaterialPickOp2 extends StatefulWidget {
   @required
   final MaterialPickType materialPickType;
   MaterialPickOp2(
-      {this.employee,
-      this.machine,
-      this.schedule,
-      this.reload,
-      this.materialPickType});
+      {required this.employee,
+      required this.machine,
+      required this.schedule,
+      required this.reload,
+      required this.materialPickType});
   @override
   _MaterialPickOp2State createState() => _MaterialPickOp2State();
 }
@@ -43,17 +43,17 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
   FocusNode _textNode = new FocusNode();
   FocusNode _trackingNumber = new FocusNode();
   FocusNode _qty = new FocusNode();
-  String partNumber;
-  String trackingNumber;
-  String qty;
+  late String partNumber;
+  late String trackingNumber;
+  late String qty;
   List<ItemPart> selectditems = [];
   bool isCollapsedRawMaterial = false;
   bool isCollapsedScannedMaterial = false;
   DateTime selectedDate = DateTime.now();
-  ApiService apiService;
+  late ApiService apiService;
   List<RawMaterial> rawMaterial = [];
   bool keyBoard = true;
-  List<RawMaterial> rawmaterial1;
+  late List<RawMaterial> rawmaterial1;
   List<PostRawMaterial> selectdItems = [];
 
   bool nextPageLoading = false;
@@ -149,7 +149,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       height: 24,
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: Colors.grey.shade100,
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
                       child: Center(
@@ -176,7 +176,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       height: 24,
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: Colors.grey.shade100,
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
                       child: Center(
@@ -216,7 +216,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
               color: Colors.redAccent,
               thickness: 2,
             ),
-            scheduleDetail(schedule: widget.schedule),
+            scheduleDetail(schedule: widget.schedule, c: 2),
 
             //Raw material
             buildDataRawMaterial(),
@@ -332,7 +332,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                             controller: _trackingNumberController,
                             onSubmitted: (value) async {
                               trackingNumber = value;
-                              final DateTime picked = await showDatePicker(
+                              final DateTime? picked = await showDatePicker(
                                   context: context,
                                   initialDate: selectedDate, // Refer step 1
                                   firstDate: DateTime(2000),
@@ -395,7 +395,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                             color: keyBoard ? Colors.green : Colors.grey)),
                     GestureDetector(
                       onTap: () async {
-                        final DateTime picked = await showDatePicker(
+                        final DateTime? picked = await showDatePicker(
                             context: context,
                             initialDate: selectedDate, // Refer step 1
                             firstDate: DateTime(2000),
@@ -477,7 +477,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                 MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.pressed))
-                                  return Colors.green[200];
+                                  return Colors.green.shade200;
                                 return Colors
                                     .blue; // Use the component's default.
                               },
@@ -533,9 +533,9 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                       _partNumberController.clear();
                                       _trackingNumberController.clear();
                                       _qtyController.clear();
-                                      partNumber = null;
-                                      trackingNumber = null;
-                                      qty = null;
+                                      partNumber = "";
+                                      trackingNumber = "";
+                                      qty = "";
                                       _textNode.requestFocus();
                                       Future.delayed(
                                         const Duration(milliseconds: 100),
@@ -721,7 +721,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                             controller: _trackingNumberController,
                             onSubmitted: (value) async {
                               trackingNumber = value;
-                              final DateTime picked = await showDatePicker(
+                              final DateTime? picked = await showDatePicker(
                                   context: context,
                                   initialDate: selectedDate, // Refer step 1
                                   firstDate: DateTime(2000),
@@ -784,7 +784,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                             color: keyBoard ? Colors.green : Colors.grey)),
                     GestureDetector(
                       onTap: () async {
-                        final DateTime picked = await showDatePicker(
+                        final DateTime? picked = await showDatePicker(
                             context: context,
                             initialDate: selectedDate, // Refer step 1
                             firstDate: DateTime(2000),
@@ -860,7 +860,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                 MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.pressed))
-                                  return Colors.green[200];
+                                  return Colors.green.shade200;
                                 return Colors
                                     .blue; // Use the component's default.
                               },
@@ -1013,7 +1013,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
     );
   }
 
-  handleKey(RawKeyEventDataAndroid key) {
+  handleKey(RawKeyEventData key) {
     setState(() {
       keyBoard
           ? SystemChannels.textInput.invokeMethod('TextInput.show')
@@ -1061,7 +1061,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                   machineId: widget.machine.machineNumber,
                   fgNo: "${widget.schedule.finishedGoods}",
                   scheduleId: "${widget.schedule.scheduleId}",
-                  type: "${widget.machine.category}"),
+                  type: "${widget.machine.category}", partNo: ''),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   List<RawMaterial> rawmaterial = snapshot.data;
@@ -1420,7 +1420,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
     );
   }
 
-  Widget scheduleDetail({CrimpingSchedule schedule, int c}) {
+  Widget scheduleDetail({required CrimpingSchedule schedule, required int c}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Material(
@@ -1439,7 +1439,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               tableHeading(),
-              buildDataRow(schedule: widget.schedule),
+              buildDataRow(schedule: widget.schedule, c: 2),
             ],
           ),
         ),
@@ -1456,7 +1456,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
         child: Center(
           child: Text(
             name,
-            style: TextStyle(color: Colors.grey[600], fontSize: 12),
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
           ),
         ),
       );
@@ -1487,7 +1487,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
     );
   }
 
-  Widget buildDataRow({CrimpingSchedule schedule, int c}) {
+  Widget buildDataRow({required CrimpingSchedule schedule, required int c}) {
     double width = MediaQuery.of(context).size.width;
 
     Widget cell(String name, double d) {
@@ -1517,7 +1517,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
             //       ? Colors.green
             //       : schedule.scheduledStatus == "Pending"
             //           ? Colors.red
-            //           : Colors.green[100],
+            //           : Colors.green.shade100,
             //   width: 5,
             // )),
             ),

@@ -10,7 +10,7 @@ import '../../service/apiService.dart';
 
 class PrepMachine extends StatefulWidget {
    Employee employee;
-   PrepMachine({this.employee});
+   PrepMachine({required this.employee});
   @override
   _PrepMachineState createState() => _PrepMachineState();
 }
@@ -18,8 +18,8 @@ class PrepMachine extends StatefulWidget {
 class _PrepMachineState extends State<PrepMachine> {
     TextEditingController _textController = new TextEditingController();
   FocusNode _textNode = new FocusNode();
-  String machineId;
-  ApiService apiService;
+  late String machineId;
+  late ApiService apiService;
     @override
   void initState() {
     apiService = new ApiService();
@@ -33,9 +33,9 @@ class _PrepMachineState extends State<PrepMachine> {
     super.initState();
   }
 
-  handleKey(RawKeyEventDataAndroid key) {
+  handleKey(RawKeyEventData key) {
     String _keyCode;
-    _keyCode = key.keyCode.toString(); //keyCode of key event(66 is return )
+    _keyCode = key.keyLabel.toString(); //keyCode of key event(66 is return )
     print("why does this run twice $_keyCode");
     setState(() {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
@@ -56,7 +56,7 @@ class _PrepMachineState extends State<PrepMachine> {
                   "Scan Machine",
                   style: TextStyle(
                     fontSize: 35,
-                    color: Colors.red[600],
+                    color: Colors.red.shade600,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -68,7 +68,7 @@ class _PrepMachineState extends State<PrepMachine> {
                       borderRadius: BorderRadius.all(Radius.circular(30)),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey[200],
+                          color: Colors.grey.shade200,
                           blurRadius: 5.0,
                         ),
                       ]),
@@ -176,7 +176,7 @@ class _PrepMachineState extends State<PrepMachine> {
                 SizedBox(width: 15),
                 Material(
                   elevation: 5,
-                  shadowColor: Colors.grey[200],
+                  shadowColor: Colors.grey.shade200,
                   shape:  RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(100.0)),
                   child: Container(

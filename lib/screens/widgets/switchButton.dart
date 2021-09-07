@@ -9,8 +9,8 @@ class SwitchButton extends StatefulWidget {
   ///list of sting with options max 2
   List<String> options;
   SwitchButton({
-    this.onToggle,
-    this.options,
+    required this.onToggle,
+    required this.options,
   });
 
   @override
@@ -32,7 +32,7 @@ class _SwitchButtonState extends State<SwitchButton> {
         width: 138,
         padding: EdgeInsets.all(4),
         decoration: BoxDecoration(
-            color: Colors.red[50],
+            color: Colors.red.shade50,
             borderRadius: BorderRadius.all(Radius.circular(50))),
         child: Stack(
           children: [
@@ -42,7 +42,7 @@ class _SwitchButtonState extends State<SwitchButton> {
               children: [
                 Material(
                   elevation: 2,
-                  shadowColor: Colors.red[50],
+                  shadowColor: Colors.red.shade50,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100.0)),
                   child: Container(
@@ -91,8 +91,8 @@ class _SwitchButtonState extends State<SwitchButton> {
                                       ? FontWeight.w500
                                       : FontWeight.w400,
                                   color: index == 0
-                                      ? Colors.red[500]
-                                      : Colors.red[400],
+                                      ? Colors.red.shade500
+                                      : Colors.red.shade400,
                                   fontSize: 11),
                             )
                       ),
@@ -127,8 +127,8 @@ class _SwitchButtonState extends State<SwitchButton> {
                                     ? FontWeight.w500
                                     : FontWeight.w400,
                                 color: index == 1
-                                    ? Colors.red[500]
-                                    : Colors.red[400],
+                                    ? Colors.red.shade500
+                                    : Colors.red.shade400,
                                 fontSize: 11),
                           
                         ),

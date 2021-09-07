@@ -28,7 +28,7 @@ enum Status {
 
 class VIWIP_Home_joint extends StatefulWidget {
   Employee employee;
-  VIWIP_Home_joint({this.employee});
+  VIWIP_Home_joint({required this.employee});
   @override
   _VIWIP_Home_jointState createState() => _VIWIP_Home_jointState();
 }
@@ -38,8 +38,8 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
   FocusNode _userScanFocus = new FocusNode();
   TextEditingController _bundleIdScanController = new TextEditingController();
   FocusNode _bundleIdScanFocus = new FocusNode();
-  String userId;
-  String bundleId;
+  late String userId;
+  late String bundleId;
   List<ViInspectedbundle> viIspectionBundleList = [];
   TextEditingController scanBundleController = new TextEditingController();
   TextEditingController crimpInslController = new TextEditingController();
@@ -72,7 +72,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
   TextEditingController _binController = new TextEditingController();
   TextEditingController _locationController = new TextEditingController();
 
-  String binId;
+  late String binId;
 
   TextEditingController passedQtyController = new TextEditingController();
   TextEditingController bundleQtyController = new TextEditingController();
@@ -83,7 +83,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
   Status status = Status.dash;
 
   int selectedindex = 0;
-  ApiService apiService;
+  late ApiService apiService;
   List<String> usersList = [];
 
   bool loading = false;
@@ -95,19 +95,19 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
     apiService = new ApiService();
     apiService.getUserList().then((value) {
       setState(() {
-        usersList = value.map((e) => e.empId).toList();
+        usersList = value!.map((e) => e.empId).toList();
       });
     });
   }
 
-  CableTerminalA terminalA;
-  CableTerminalB terminalB;
+  late CableTerminalA terminalA;
+  late CableTerminalB terminalB;
   getTerminal(
-      {String fgNumber,
-      String cablePtNo,
-      String length,
-      String color,
-      int awg}) {
+      {required String fgNumber,
+      required String cablePtNo,
+      required String length,
+      required String color,
+      required int awg}) {
     ApiService apiService = new ApiService();
     apiService
         .getCableTerminalA(
@@ -126,7 +126,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
               awg: awg)
           .then((termiB) {
         setState(() {
-          terminalA = termiA;
+          terminalA = termiA!;
           terminalB = termiB;
         });
       });
@@ -312,12 +312,12 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                                       .toString(),
                                   binId: bundleData.binId.toString(),
                                   employeeid: userId,
-                                  orderId: bundleData.orderId ?? '',
+                                  orderId: bundleData.orderId ,
                                   awg: bundleData.awg,
                                   fgPart:
                                       bundleData.finishedGoodsPart.toString(),
                                   scheduleId:
-                                      bundleData.scheduledId.toString() ?? '',
+                                      bundleData.scheduledId.toString(),
                                   bundleQuantity: bundleData.bundleQuantity,
                                   status: "Not Completed",
                                   viCompleted: "1",
@@ -340,10 +340,10 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                                 bundleData.bundleIdentification.toString(),
                             binId: bundleData.binId.toString(),
                             employeeid: userId,
-                            orderId: bundleData.orderId ?? '',
+                            orderId: bundleData.orderId,
                             awg: bundleData.awg,
                             fgPart: bundleData.finishedGoodsPart.toString(),
-                            scheduleId: bundleData.scheduledId.toString() ?? '',
+                            scheduleId: bundleData.scheduledId.toString(),
                             bundleQuantity: bundleData.bundleQuantity,
                             status: "Not Completed",
                             viCompleted: "1",
@@ -373,10 +373,10 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                               bundleData.bundleIdentification.toString(),
                           binId: bundleData.binId.toString(),
                           employeeid: userId,
-                          orderId: bundleData.orderId ?? '',
+                          orderId: bundleData.orderId,
                           awg: bundleData.awg,
                           fgPart: bundleData.finishedGoodsPart.toString(),
-                          scheduleId: bundleData.scheduledId.toString() ?? '',
+                          scheduleId: bundleData.scheduledId.toString(),
                           bundleQuantity: bundleData.bundleQuantity,
                           status: "Not Completed",
                           crimpFromSchId: bundleData.crimpFromSchId,
@@ -435,7 +435,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
     }
   }
 
-  handleKey(RawKeyEventDataAndroid key) {
+  handleKey(RawKeyEventData key) {
     setState(() {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
     });
@@ -541,7 +541,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Colors.grey[400], width: 2.0),
+                                      color: Colors.grey.shade400, width: 2.0),
                                 ),
                                 labelText: '  Scan User  ',
                                 contentPadding: const EdgeInsets.symmetric(
@@ -613,7 +613,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.grey[400], width: 2.0),
+                                    color: Colors.grey.shade400, width: 2.0),
                               ),
                               labelText: '  Scan Bundle ID  ',
                               contentPadding: const EdgeInsets.symmetric(
@@ -707,11 +707,11 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                         style: TextStyle(fontSize: 12),
                       )),
                       DataCell(Text(
-                        e.binId ?? '-',
+                        e.binId ,
                         style: TextStyle(fontSize: 12),
                       )),
                       DataCell(Text(
-                        e.status ?? "",
+                        e.status ,
                         style: TextStyle(fontSize: 12),
                       )),
                       DataCell(Text(""))
@@ -900,8 +900,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                               Text(
                                 viIspectionBundleList[selectedindex]
                                         .bundleQuantity
-                                        .toString() ??
-                                    "0",
+                                        .toString(),
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 14),
                               ),
@@ -949,9 +948,8 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                                               (Set<MaterialState> states) {
                                                 if (states.contains(
                                                     MaterialState.pressed))
-                                                  return Colors.green[200];
-                                                return Colors.green[
-                                                    500]; // Use the component's default.
+                                                  return Colors.green.shade200;
+                                                return Colors.green.shade500; // Use the component's default.
                                               },
                                             ),
                                             overlayColor: MaterialStateProperty
@@ -960,8 +958,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                                                 if (states.contains(
                                                     MaterialState.pressed))
                                                   return Colors.green;
-                                                return Colors.green[
-                                                    500]; // Use the component's default.
+                                                return Colors.green.shade500; // Use the component's default.
                                               },
                                             ),
                                           ),
@@ -990,9 +987,8 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                                               (Set<MaterialState> states) {
                                                 if (states.contains(
                                                     MaterialState.pressed))
-                                                  return Colors.green[200];
-                                                return Colors.green[
-                                                    500]; // Use the component's default.
+                                                  return Colors.green.shade200;
+                                                return Colors.green.shade500; // Use the component's default.
                                               },
                                             ),
                                             overlayColor: MaterialStateProperty
@@ -1001,8 +997,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                                                 if (states.contains(
                                                     MaterialState.pressed))
                                                   return Colors.green;
-                                                return Colors.green[
-                                                    500]; // Use the component's default.
+                                                return Colors.green.shade500; // Use the component's default.
                                               },
                                             ),
                                           ),
@@ -1269,10 +1264,9 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
   }
 
   Widget quantitycell(
-      {String name,
-      int quantity,
-      TextEditingController textEditingController,
-      FocusNode focusNode}) {
+      {required String name,
+      required int quantity,
+      required TextEditingController textEditingController,}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 3.0),
       child: Container(
@@ -1286,7 +1280,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                 child: TextField(
                   showCursor: false,
                   controller: textEditingController,
-                  focusNode: focusNode,
+                  focusNode: FocusNode(),
                   onTap: () {
                     SystemChannels.textInput.invokeMethod('TextInput.hide');
                     setState(() {
@@ -1314,12 +1308,12 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
     );
   }
 
-  Widget feild({String heading, String value, double width}) {
+  Widget feild({required String heading, required String value, required double width}) {
     width = MediaQuery.of(context).size.width * width;
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: Container(
-        // color: Colors.red[100],
+        // color: Colors.red.shade100,
         width: width,
         child: Column(
           children: [
@@ -1329,7 +1323,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                   heading,
                   style:  TextStyle(
                     fontSize: 12,
-                    color: Colors.grey[500],
+                    color: Colors.grey.shade500,
                     fontWeight: FontWeight.normal,
                   )),
                 
@@ -1340,7 +1334,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
               child: Row(
                 children: [
                   Text(
-                    value ?? '',
+                    value,
                     style:  
                           TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
                     
@@ -1417,7 +1411,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Colors.grey[400], width: 2.0),
+                                  color: Colors.grey.shade400, width: 2.0),
                             ),
                             labelText: 'Scan bin',
                             contentPadding:
@@ -1487,7 +1481,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                                         bundleTransferToBinTracking = value[0];
                                     Fluttertoast.showToast(
                                         msg:
-                                            "Transfered Bundle-${bundleTransferToBinTracking.bundleIdentification} to Bin- ${_binController.text ?? ''}",
+                                            "Transfered Bundle-${bundleTransferToBinTracking.bundleIdentification} to Bin- ${_binController.text}",
                                         toastLength: Toast.LENGTH_SHORT,
                                         gravity: ToastGravity.BOTTOM,
                                         timeInSecForIosWeb: 1,

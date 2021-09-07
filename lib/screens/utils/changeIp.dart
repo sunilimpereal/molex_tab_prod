@@ -11,8 +11,8 @@ class ChangeIp extends StatefulWidget {
 }
 
 class _ChangeIpState extends State<ChangeIp> {
-  SharedPreferences preferences;
-  String baseip;
+  late SharedPreferences preferences;
+  late String baseip;
     List<String> ipList = [
     "http://10.221.46.8:8080/wipts/",//client
     "http://192.168.1.252:8080/wipts/",//just
@@ -25,22 +25,22 @@ class _ChangeIpState extends State<ChangeIp> {
   //   "http://mlxbngvwqwip01.molex.com:8080/wiptst/",
   //   "http://10.221.46.8:8080/wiptst/",
   // ];
-  String newIp;
+  late String newIp;
   List<String> ipList1 = [];
 
   getSharedPref() async {
     SharedPreferences preferenc = await SharedPreferences.getInstance();
     setState(() {
       preferences = preferenc;
-      baseip = preferences.getString('baseIp');
+      baseip = preferences.getString('baseIp')!;
       try {
-        ipList1 = preferences.getStringList('ipList');
+        ipList1 = preferences.getStringList('ipList')!;
          
         if (ipList1 == null) {
           preferences.setStringList('ipList', ipList);
-          ipList = preferences.getStringList('ipList');
+          ipList = preferences.getStringList('ipList')!;
         } else {
-          ipList = preferences.getStringList('ipList');
+          ipList = preferences.getStringList('ipList')!;
         }
       } catch (e) {
         preferences.setStringList('ipList', ipList);
@@ -74,7 +74,7 @@ class _ChangeIpState extends State<ChangeIp> {
                   children: [
                     ListTile(
                       tileColor: baseip == ipList[index]
-                          ? Colors.red[200]
+                          ? Colors.red.shade200
                           : Colors.white,
                       title: Text(" ${ipList[index]}"),
                       onLongPress: () {
@@ -139,8 +139,8 @@ class _ChangeIpState extends State<ChangeIp> {
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.pressed))
-                return Colors.red[200];
-              return Colors.red[500]; // Use the component's default.
+                return Colors.red.shade200;
+              return Colors.red.shade500; // Use the component's default.
             },
           ),
         ),
@@ -152,7 +152,7 @@ class _ChangeIpState extends State<ChangeIp> {
         setState(() {
           ipList.remove(ip);
           try {
-            ipList1 = preferences.getStringList('ipList');
+            ipList1 = preferences.getStringList('ipList')!;
 
             preferences.setStringList('ipList', ipList);
           } catch (e) {
@@ -259,7 +259,7 @@ class _ChangeIpState extends State<ChangeIp> {
 
 // ListTile(
 //   tileColor: baseip == "http://justerp.in:8080/wipts/"
-//       ? Colors.red[200]
+//       ? Colors.red.shade200
 //       : Colors.white,
 //   title: Text("http://justerp.in:8080/wipts/"),
 //   onTap: () {
@@ -275,7 +275,7 @@ class _ChangeIpState extends State<ChangeIp> {
 // ),
 // ListTile(
 //   tileColor: baseip == "http://10.221.46.8:8080/wipts/"
-//       ? Colors.red[200]
+//       ? Colors.red.shade200
 //       : Colors.white,
 //   title: Text("http://10.221.46.8:8080/wipts/"),
 //   onTap: () {
@@ -291,7 +291,7 @@ class _ChangeIpState extends State<ChangeIp> {
 // ),
 // ListTile(
 //   tileColor: baseip == "http://192.168.1.252:8080/wipts/"
-//       ? Colors.red[200]
+//       ? Colors.red.shade200
 //       : Colors.white,
 //   title: Text("http://192.168.1.252:8080/wipts/"),
 //   onTap: () {
@@ -307,7 +307,7 @@ class _ChangeIpState extends State<ChangeIp> {
 // ),
 // ListTile(
 //   tileColor: baseip == "http://mlxbngvwqwip01.molex.com:8080/wipts/"
-//       ? Colors.red[200]
+//       ? Colors.red.shade200
 //       : Colors.white,
 //   title: Text("http://mlxbngvwqwip01.molex.com:8080/wipts/"),
 //   onTap: () {

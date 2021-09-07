@@ -22,8 +22,8 @@ class ViLocationTransfer extends StatefulWidget {
   MachineDetails machine;
   String type;
   LocationType locationType;
-  Function transferedbundles;
-  ViLocationTransfer({this.employee, this.machine, this.type, this.locationType,this.transferedbundles});
+  
+  ViLocationTransfer({required this.employee, required this.machine, required this.type, required this.locationType,});
   @override
   _ViLocationTransferState createState() => _ViLocationTransferState();
 }
@@ -36,8 +36,8 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
   FocusNode _locationFocus = new FocusNode();
   List<TransferBinToLocation> transferList = [];
 
-  String locationId;
-  String binId;
+  late String locationId;
+  late String binId;
   bool hasLocation = false;
   ApiService apiService = new ApiService();
   @override
@@ -88,7 +88,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             height: 24,
                             decoration: BoxDecoration(
-                              color: Colors.grey[100],
+                              color: Colors.grey.shade100,
                               borderRadius: BorderRadius.all(Radius.circular(100)),
                             ),
                             child: Center(
@@ -116,7 +116,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             height: 24,
                             decoration: BoxDecoration(
-                              color: Colors.grey[100],
+                              color: Colors.grey.shade100,
                               borderRadius: BorderRadius.all(Radius.circular(100)),
                             ),
                             child: Center(
@@ -198,7 +198,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
     );
   }
 
-  handleKey(RawKeyEventDataAndroid key) {
+  handleKey(RawKeyEventData key) {
     setState(() {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
     });
@@ -256,7 +256,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Colors.grey[400], width: 2.0),
+                                      color: Colors.grey.shade400, width: 2.0),
                                 ),
                                 labelText: 'Scan Location',
                                 contentPadding: const EdgeInsets.symmetric(
@@ -316,7 +316,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
                     }
                     setState(() {
                       _binController.clear();
-                      binId = null;
+                      binId = "";
                     });
                   } else {
                     Fluttertoast.showToast(
@@ -406,7 +406,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
                                 .invokeMethod('TextInput.hide');
                             setState(() {
                               _binController.clear();
-                              binId = null;
+                              binId = "";
                             });
                           },
                           onSubmitted: (value) {},
@@ -435,7 +435,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.grey[400], width: 2.0),
+                                    color: Colors.grey.shade400, width: 2.0),
                               ),
                               labelText: 'Scan bin',
                               contentPadding:
@@ -520,7 +520,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
       child: FutureBuilder(
         future: apiService.getBundlesinBin(binId),
         builder: (context, snapshot) {
-          List<BundleDetail> bundleList = snapshot.data ?? [];
+          List<BundleDetail>? bundleList = (snapshot.data!) as List<BundleDetail>?;
           if (snapshot.hasData) {
             return Container(
               height: 300,
@@ -550,7 +550,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
       },
     );
     return showDialog<void>(
-      context: _scaffoldKey1.currentContext,
+      context: _scaffoldKey1.currentContext??context,
       barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return Center(
@@ -606,7 +606,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
                               .getmachinedetails(widget.machine.machineNumber)
                               .then((value) {
                             // Navigator.pop(context);
-                            MachineDetails machineDetails = value[0];
+                            MachineDetails machineDetails = value![0];
                             Fluttertoast.showToast(
                                 msg: widget.machine.machineNumber,
                                 toastLength: Toast.LENGTH_SHORT,
@@ -685,7 +685,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => HomeVisualInspector(
-                                      employee: widget.employee,
+                                      employee: widget.employee, machineId: '',
                                     )),
                           );
                         }
@@ -745,7 +745,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
               .getmachinedetails(widget.machine.machineNumber)
               .then((value) {
             // Navigator.pop(context);
-            MachineDetails machineDetails = value[0];
+            MachineDetails machineDetails = value![0];
             Fluttertoast.showToast(
                 msg: widget.machine.machineNumber,
                 toastLength: Toast.LENGTH_SHORT,
@@ -824,7 +824,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
             context,
             MaterialPageRoute(
                 builder: (context) => HomeVisualInspector(
-                      employee: widget.employee,
+                      employee: widget.employee, machineId: '',
                     )),
           );
         }

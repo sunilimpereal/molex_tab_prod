@@ -13,14 +13,14 @@ import '../../service/apiService.dart';
 class HomeVisualInspector extends StatefulWidget {
   Employee employee;
   String machineId;
-  HomeVisualInspector({this.employee, this.machineId});
+  HomeVisualInspector({required this.employee, required this.machineId});
   @override
   _HomeVisualInspectorState createState() => _HomeVisualInspectorState();
 }
 
 class _HomeVisualInspectorState extends State<HomeVisualInspector> {
   String _chosenValue = "Order ID";
-  ApiService apiService;
+  late ApiService apiService;
 
   TextEditingController _searchController = new TextEditingController();
   @override
@@ -58,7 +58,7 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         height: 24,
                         decoration: BoxDecoration(
-                          color: Colors.grey[100],
+                          color: Colors.grey.shade100,
                           borderRadius: BorderRadius.all(Radius.circular(100)),
                         ),
                         child: Center(
@@ -129,7 +129,7 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(5)),
-                                        color: Colors.grey[100],
+                                        color: Colors.grey.shade100,
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
@@ -139,7 +139,7 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
                                             Icon(
                                               Icons.search,
                                               size: 20,
-                                              color: Colors.red[400],
+                                              color: Colors.red.shade400,
                                             ),
                                             SizedBox(width: 5),
                                             Container(
@@ -201,9 +201,8 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
                                         (Set<MaterialState> states) {
                                           if (states
                                               .contains(MaterialState.pressed))
-                                            return Colors.green[200];
-                                          return Colors.green[
-                                              500]; // Use the component's default.
+                                            return Colors.green.shade200;
+                                          return Colors.green.shade500; // Use the component's default.
                                         },
                                       ),
                                     ),
@@ -264,7 +263,7 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
         ));
   }
 
-  Widget dropdown({List<String> options, String name}) {
+  Widget dropdown({required List<String> options, required String name}) {
     return Container(
         child: DropdownButton<String>(
       focusColor: Colors.white,
@@ -285,9 +284,9 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
         style: TextStyle(
             color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
       ),
-      onChanged: (String value) {
+      onChanged: (String? value) {
         setState(() {
-          _chosenValue = value;
+          _chosenValue = value!;
         });
       },
     ));
@@ -295,22 +294,22 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
 }
 
 class ViScheduleTable extends StatefulWidget {
-  List<ViSchedule> viScheduleList;
-  Schedule schedule;
+ 
+  
   String searchType;
   String query;
   ViScheduleTable({
-    this.viScheduleList,
-    this.schedule,
-    this.searchType,
-    this.query,
+   
+  
+    required this.searchType,
+    required this.query,
   });
   @override
   _ViScheduleTableState createState() => _ViScheduleTableState();
 }
 
 class _ViScheduleTableState extends State<ViScheduleTable> {
-  ApiService apiService;
+  late ApiService apiService;
   @override
   void initState() {
     apiService = new ApiService();
@@ -355,14 +354,10 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
                 // height: double.parse("${rowList.length*60}"),
                 child: FutureBuilder(
                     future: apiService.getviSchedule(),
-                    builder: (context, snapshot) {
+                    builder: (context,AsyncSnapshot<List<ViScheduler>> snapshot) {
                       if (snapshot.hasData) {
                         List<ViScheduler> vischedule =
-                            searchfilter(snapshot.data) +
-                                searchfilter(snapshot.data) +
-                                searchfilter(snapshot.data) +
-                                searchfilter(snapshot.data) +
-                                searchfilter(snapshot.data);
+                            searchfilter(snapshot.data??[]);
                         return ListView.builder(
                             shrinkWrap: true,
                             itemCount: vischedule.length,
@@ -438,7 +433,7 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
     );
   }
 
-  Widget buildDataRow({ViScheduler viSchedule, int c}) {
+  Widget buildDataRow({required ViScheduler viSchedule, required int c}) {
     Widget cell(String name, double width) {
       return Container(
         width: MediaQuery.of(context).size.width * width,
@@ -463,7 +458,7 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 50,
-          color: c % 2 == 0 ? Colors.white : Colors.grey[100],
+          color: c % 2 == 0 ? Colors.white : Colors.grey.shade100,
           child: Container(
             decoration: BoxDecoration(
                 // border: Border(
@@ -472,7 +467,7 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
                 //       ? Colors.green
                 //       : schedule.scheduledStatus == "Pending"
                 //           ? Colors.red
-                //           : Colors.green[100],
+                //           : Colors.green.shade100,
                 //   width: 5,
                 // )),
                 ),

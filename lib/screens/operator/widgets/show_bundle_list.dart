@@ -266,7 +266,7 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
                                     CustomCell(
                                       width: 100,
                                       color: e.bundleDetail.binId == null
-                                          ? Colors.red[100]
+                                          ? Colors.red.shade100
                                           : Colors.transparent,
                                       child: Text(
                                         "${e.bundleDetail.binId ?? "-"}",
@@ -276,7 +276,7 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
                                     CustomCell(
                                       width: 100,
                                       color: e.bundleDetail.locationId == null
-                                          ? Colors.red[100]
+                                          ? Colors.red.shade100
                                           : Colors.transparent,
                                       child: Text(
                                         e.bundleDetail.locationId ?? "-",

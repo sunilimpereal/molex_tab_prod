@@ -34,19 +34,19 @@ class ProcessPage extends StatefulWidget {
   MachineDetails machine;
   MatTrkPostDetail matTrkPostDetail;
   ProcessPage(
-      {this.schedule,
-      this.rightside,
-      this.machine,
-      this.employee,
-      this.homeReload,
-      this.matTrkPostDetail});
+      {required this.schedule,
+      required this.rightside,
+      required this.machine,
+      required this.employee,
+      required this.homeReload,
+      required this.matTrkPostDetail});
   @override
   _ProcessPageState createState() => _ProcessPageState();
 }
 
 class _ProcessPageState extends State<ProcessPage> {
-  String _chosenValue;
-  String value;
+  String ?_chosenValue= "Crimp From, Cutlength, Crimp To";
+  String ?value;
   String output = '';
   String _output = '';
   TextEditingController _qtyController = new TextEditingController();
@@ -56,9 +56,9 @@ class _ProcessPageState extends State<ProcessPage> {
   String _printerStatus = 'Waiting';
   bool orderDetailExpanded = true;
   String rightside = 'label';
-  ApiService apiService;
+  ApiService ?apiService;
   String method = '';
-  List<String> items;
+  List<String>? items;
   int totalquantity = 0;
   @override
   void initState() {
@@ -72,10 +72,10 @@ class _ProcessPageState extends State<ProcessPage> {
             'Cutlength, Crimp To',
             'Cutlength & both Side Stripping',
           ];
-    _chosenValue = items.contains(widget.schedule.process)
+    _chosenValue = items!.contains(widget.schedule.process)
         ? widget.schedule.process
         : null;
-    getMethod(_chosenValue);
+    getMethod(_chosenValue!);
     // _chosenValue = widget.machine.category.contains("Cutting")
     //     ? 'Cutlength & both side stripping'
     //     : 'Crimp-From,Cutlength,Crimp-To';
@@ -140,21 +140,24 @@ class _ProcessPageState extends State<ProcessPage> {
   Widget build(BuildContext context) {
     // SystemChannels.textInput.invokeMethod('TextInput.hide');
     return new WillPopScope(
-        onWillPop: () => showDialog<bool>(
+        onWillPop: () async {
+           showDialog<bool>(
               context: context,
               builder: (c) => AlertDialog(
                 title: Text('Warning'),
                 content: Text('Do not use back button to exit'),
                 actions: [
+                  // ignore: deprecated_member_use
                   FlatButton(
                     child: Text('Ok'),
                     onPressed: () => Navigator.pop(c, false),
                   ),
                 ],
               ),
-            ),
+            );
+        },
         child: Scaffold(
-          backgroundColor: Colors.blueGrey[50],
+          backgroundColor: Colors.blueGrey.shade50,
           appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(
@@ -181,7 +184,7 @@ class _ProcessPageState extends State<ProcessPage> {
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           height: 24,
                           decoration: BoxDecoration(
-                            color: Colors.grey[100],
+                            color: Colors.grey.shade100,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(100)),
                           ),
@@ -216,7 +219,7 @@ class _ProcessPageState extends State<ProcessPage> {
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             height: 24,
                             decoration: BoxDecoration(
-                              color: Colors.grey[100],
+                              color: Colors.grey.shade100,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100)),
                             ),
@@ -254,7 +257,6 @@ class _ProcessPageState extends State<ProcessPage> {
           drawer: DrawerWidgetWIP(
             employee: widget.employee,
             machineDetails: widget.machine,
-            schedule: widget.schedule,
             homeReload: widget.homeReload,
             returnmaterial: () {
               showReturnMaterial(
@@ -284,7 +286,7 @@ class _ProcessPageState extends State<ProcessPage> {
                           employee: widget.employee,
                           reload: reload,
                           machine: widget.machine,
-                          materialPickType: MaterialPickType.reload,
+                          materialPickType: MaterialPickType.reload, homeReload: (){},
                         )),
               );
             },
@@ -319,7 +321,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                         machine: widget.machine,
                                         employee: widget.employee,
                                         processStarted: processStarted,
-                                        processType: _chosenValue,
+                                        processType: _chosenValue??"",
                                         matTrkPostDetail:
                                             widget.matTrkPostDetail,
                                         toalQuantity: totalquantity,
@@ -386,7 +388,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                                     .machine.machineNumber,
                                                 //TODO bundle ID
                                               );
-                                              apiService
+                                              apiService!
                                                   .post100Complete(
                                                       fullyComplete)
                                                   .then((value) {
@@ -400,7 +402,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                                               employee: widget
                                                                   .employee,
                                                               machine: widget
-                                                                  .machine,
+                                                                  .machine, locationType: LocationType.finaTtransfer,
                                                             )),
                                                   ).then((value) {
                                                     setState(() {
@@ -632,16 +634,16 @@ class _ProcessPageState extends State<ProcessPage> {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
           side: BorderSide(color: Colors.transparent)),
-      shadowColor: Colors.grey[100],
+      shadowColor: Colors.grey.shade100,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 2.0),
         // height: 91,
 
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: color ? Colors.red[50] : Colors.white,
+          color: color ? Colors.red.shade50 : Colors.white,
           border: Border.all(
-              width: 1.5, color: color ? Colors.red[300] : Colors.white),
+              width: 1.5, color: color ? Colors.red.shade300 : Colors.white),
         ),
         child: Row(
           children: [
@@ -705,16 +707,16 @@ class _ProcessPageState extends State<ProcessPage> {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
           side: BorderSide(color: Colors.transparent)),
-      shadowColor: Colors.grey[100],
+      shadowColor: Colors.grey.shade100,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 2.0),
         // // height: 91,
         // width: MediaQuery.of(context).size.width * width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: color ? Colors.red[50] : Colors.white,
+          color: color ? Colors.red.shade50 : Colors.white,
           border: Border.all(
-              width: 1.5, color: color ? Colors.red[300] : Colors.white),
+              width: 1.5, color: color ? Colors.red.shade300 : Colors.white),
         ),
         child: Row(
           children: [
@@ -822,7 +824,7 @@ class _ProcessPageState extends State<ProcessPage> {
         child: Center(
           child: Text(
             name,
-            style: TextStyle(color: Colors.grey[600], fontSize: 12),
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
           ),
         ),
       );
@@ -873,7 +875,7 @@ class _ProcessPageState extends State<ProcessPage> {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 20,
-      color: Colors.grey[100],
+      color: Colors.grey.shade100,
       child: Container(
         decoration: BoxDecoration(
           border: Border(
