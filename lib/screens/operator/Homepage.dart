@@ -22,6 +22,8 @@ import '../widgets/time.dart';
 import '../../service/apiService.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+
 // Process 1 Auto Cut and Crimp
 class Homepage extends StatefulWidget {
   Employee employee;
@@ -35,7 +37,7 @@ class _HomepageState extends State<Homepage> {
   int type = 0;
   String sameMachine = 'true';
   int scheduleType = 0;
-  ApiService ?apiService;
+  ApiService? apiService;
 
   String dropdownName = "FG part";
 
@@ -46,7 +48,7 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     apiService = new ApiService();
-   
+
     SystemChrome.setEnabledSystemUIOverlays([]);
     super.initState();
   }
@@ -231,7 +233,7 @@ class _HomepageState extends State<Homepage> {
             type: type == 0 ? "A" : "M",
             scheduleType: scheduleType == 0 ? "true" : "false",
             searchType: _chosenValue,
-            query: _searchController.text ?? "",
+            query: _searchController.text,
           ),
         ],
       ),
@@ -350,7 +352,7 @@ class _HomepageState extends State<Homepage> {
         style: TextStyle(
             color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
       ),
-      onChanged: (String ?value) {
+      onChanged: (String? value) {
         setState(() {
           _chosenValue = value!;
         });
@@ -360,7 +362,6 @@ class _HomepageState extends State<Homepage> {
 }
 
 class SchudleTable extends StatefulWidget {
-
   Employee employee;
   MachineDetails machine;
   String scheduleType;
@@ -385,12 +386,18 @@ class _SchudleTableState extends State<SchudleTable> {
   List<Schedule> schedualrList = [];
 
   List<DataRow> datarows = [];
-  ApiService ?apiService;
+  ApiService? apiService;
 
   PostStartProcessP1? postStartprocess;
+  //Filter
+  late DateTime startDate = DateTime.now().subtract(const Duration(days: 4));
+  late DateTime endDate = DateTime.now().add(const Duration(days: 3));
+  bool floatingActionLoading = false;
+  List<String> selectedMachine = [];
   @override
   void initState() {
     apiService = new ApiService();
+    selectedMachine = [widget.machine.machineNumber ?? ''];
 
     super.initState();
   }
@@ -442,211 +449,274 @@ class _SchudleTableState extends State<SchudleTable> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            // Container(
-            //   height: 10,
-            //   color: Colors.red,
-            //   child: Row(
-            //     children: [
-            //       DateRangePickerDash()
-            //     ],
-            //   ),
-            // ),
-            tableHeading(),
-            SingleChildScrollView(
-              child: Container(
-                  height: widget.type == "M" ? 425 : 495,
-                  // height: double.parse("${rowList.length*60}"),
-                  child: FutureBuilder(
-                    future: apiService!.getScheduelarData(
-                        machId: widget.machine.machineNumber??'',
-                        type: widget.type,
-                        sameMachine: widget.scheduleType),
-                    builder: (context,AsyncSnapshot<List<Schedule>> snapshot) {
-                      if (snapshot.hasData) {
-                        // return  buildDataRow(schedule:widget.schedule,c:2);
-                        List<Schedule>? schedulelist =
-                            searchfilter(snapshot.data);
-                        schedulelist = schedulelist!
-                            .where((element) =>
-                                element.scheduledStatus.toLowerCase() !=
-                                "complete".toLowerCase())
-                            .toList();
-                        schedulelist = schedulelist
-                            .where((element) =>
-                                element.currentDate.compareTo(DateTime(
-                                  DateTime.now().year,
-                                  DateTime.now().month,
-                                  DateTime.now().day,
-                                ).add(Duration(days: 7))) <=
-                                0)
-                            .toList();
-                        schedulelist.sort(
-                            (a, b) => a.currentDate.compareTo(b.currentDate));
-                        //  schedulelist =  schedulelist+ schedulelist+ schedulelist+ schedulelist+ schedulelist;
+    log("messagedate ${selectedMachine}");
+    return Container(
+      height: widget.type == "M" ? 465 : 535,
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Container(
+            color: Colors.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                tableHeading(),
+                SingleChildScrollView(
+                  child: Container(
+                      height: widget.type == "M" ? 425 : 495,
+                      // height: double.parse("${rowList.length*60}"),
+                      child: FutureBuilder(
+                        future: apiService!.getScheduelarData(
+                            machId: widget.machine.machineNumber ?? '',
+                            type: widget.type,
+                            sameMachine: widget.scheduleType),
+                        builder:
+                            (context, AsyncSnapshot<List<Schedule>> snapshot) {
+                          if (snapshot.hasData) {
+                            // return  buildDataRow(schedule:widget.schedule,c:2);
+                            List<Schedule>? schedulelist =
+                                searchfilter(snapshot.data);
+                            schedulelist = schedulelist!
+                                .where((element) =>
+                                    element.scheduledStatus.toLowerCase() !=
+                                    "complete".toLowerCase())
+                                .toList();
+                            schedulelist = schedulelist
+                                .where((element) =>
+                                    element.currentDate.isBefore(endDate) &&
+                                        element.currentDate
+                                            .isAfter(startDate) ||
+                                    element.currentDate == startDate ||
+                                    element.currentDate == endDate)
 
-                        if (schedulelist.length > 0) {
-                          return RefreshIndicator(
-                            onRefresh: _onRefresh,
-                            child: ListView.builder(
-                                physics: const AlwaysScrollableScrollPhysics(),
-                                controller: _scrollController,
-                                shrinkWrap: true,
-                                itemCount: schedulelist.length,
-                                itemBuilder: (context, index) {
-                                  return ScheduleDataRow(
-                                    schedule: schedulelist![index],
-                                    machine: widget.machine,
-                                    employee: widget.employee,
-                                    onrefresh: _onRefresh,
-                                  );
-                                }),
-                          );
-                        } else {
-                          return Padding(
-                            padding: const EdgeInsets.all(108.0),
-                            child: Center(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    child: Text('No Schedule Found',
-                                        style: TextStyle(color: Colors.black)),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    width: 150,
-                                    child: ElevatedButton(
-                                      style: ButtonStyle(
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        100.0),
-                                                side: BorderSide(
-                                                    color:
-                                                        Colors.transparent))),
-                                        backgroundColor: MaterialStateProperty
-                                            .resolveWith<Color>(
-                                          (Set<MaterialState> states) {
-                                            if (states.contains(
-                                                MaterialState.pressed))
-                                              return Colors.green.shade200;
-                                            return Colors.red.shade400; // Use the component's default.
+                                // compareTo(DateTime(
+                                //   DateTime.now().year,
+                                //   DateTime.now().month,
+                                //   DateTime.now().day,
+                                // ).add(Duration(days: 7))) <=
+                                // 0)
+                                .toList();
+                            schedulelist = schedulelist
+                                .where((element) => selectedMachine.length <= 1
+                                    ? true
+                                    : selectedMachine.contains(element.machineNumber))
+                                .toList();
+                            schedulelist.sort((a, b) =>
+                                a.currentDate.compareTo(b.currentDate));
+
+                            //  schedulelist =  schedulelist+ schedulelist+ schedulelist+ schedulelist+ schedulelist;
+
+                            if (schedulelist.length > 0) {
+                              return RefreshIndicator(
+                                onRefresh: _onRefresh,
+                                child: ListView.builder(
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    controller: _scrollController,
+                                    shrinkWrap: true,
+                                    itemCount: schedulelist.length,
+                                    itemBuilder: (context, index) {
+                                      return ScheduleDataRow(
+                                        schedule: schedulelist![index],
+                                        machine: widget.machine,
+                                        employee: widget.employee,
+                                        onrefresh: _onRefresh,
+                                      );
+                                    }),
+                              );
+                            } else {
+                              return Padding(
+                                padding: const EdgeInsets.all(108.0),
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        child: Text('No Schedule Found',
+                                            style:
+                                                TextStyle(color: Colors.black)),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                        width: 150,
+                                        child: ElevatedButton(
+                                          style: ButtonStyle(
+                                            shape: MaterialStateProperty.all<
+                                                    RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100.0),
+                                                    side: BorderSide(
+                                                        color: Colors
+                                                            .transparent))),
+                                            backgroundColor:
+                                                MaterialStateProperty
+                                                    .resolveWith<Color>(
+                                              (Set<MaterialState> states) {
+                                                if (states.contains(
+                                                    MaterialState.pressed))
+                                                  return Colors.green.shade200;
+                                                return Colors.red
+                                                    .shade400; // Use the component's default.
+                                              },
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Refresh  ",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Icon(
+                                                Icons.replay_outlined,
+                                                color: Colors.white,
+                                                size: 18,
+                                              )
+                                            ],
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              setState(() {});
+                                            });
                                           },
                                         ),
                                       ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Refresh  ",
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                          Icon(
-                                            Icons.replay_outlined,
-                                            color: Colors.white,
-                                            size: 18,
-                                          )
-                                        ],
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          setState(() {});
-                                        });
-                                      },
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }
-                      } else {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          return Padding(
-                            padding: const EdgeInsets.all(108.0),
-                            child: Center(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    child: Text('No Schedule Found',
-                                        style: TextStyle(color: Colors.black)),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    width: 150,
-                                    child: ElevatedButton(
-                                      style: ButtonStyle(
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        100.0),
-                                                side: BorderSide(
-                                                    color:
-                                                        Colors.transparent))),
-                                        backgroundColor: MaterialStateProperty
-                                            .resolveWith<Color>(
-                                          (Set<MaterialState> states) {
-                                            if (states.contains(
-                                                MaterialState.pressed))
-                                              return Colors.green.shade200;
-                                            return Colors.red.shade400; // Use the component's default.
-                                          },
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Refresh  ",
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                          Icon(
-                                            Icons.replay_outlined,
-                                            color: Colors.white,
-                                            size: 18,
-                                          )
-                                        ],
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          setState(() {});
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        } else {
-                          return Center(
-                            child: CircularProgressIndicator(
-                                // color: Colors.red,
                                 ),
-                          );
-                        }
-                      }
-                    },
-                  )),
+                              );
+                            }
+                          } else {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              return Padding(
+                                padding: const EdgeInsets.all(108.0),
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        child: Text('No Schedule Found',
+                                            style:
+                                                TextStyle(color: Colors.black)),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                        width: 150,
+                                        child: ElevatedButton(
+                                          style: ButtonStyle(
+                                            shape: MaterialStateProperty.all<
+                                                    RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100.0),
+                                                    side: BorderSide(
+                                                        color: Colors
+                                                            .transparent))),
+                                            backgroundColor:
+                                                MaterialStateProperty
+                                                    .resolveWith<Color>(
+                                              (Set<MaterialState> states) {
+                                                if (states.contains(
+                                                    MaterialState.pressed))
+                                                  return Colors.green.shade200;
+                                                return Colors.red
+                                                    .shade400; // Use the component's default.
+                                              },
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Refresh  ",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Icon(
+                                                Icons.replay_outlined,
+                                                color: Colors.white,
+                                                size: 18,
+                                              )
+                                            ],
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              setState(() {});
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                    // color: Colors.red,
+                                    ),
+                              );
+                            }
+                          }
+                        },
+                      )),
+                ),
+              ],
             ),
-          ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.red,
+          onPressed: () async {
+            setState(() {
+              floatingActionLoading = !floatingActionLoading;
+            });
+            apiService!
+                .getScheduelarData(
+                    machId: widget.machine.machineNumber ?? '',
+                    type: widget.type,
+                    sameMachine: widget.scheduleType)
+                .then((value) {
+              setState(() {
+                floatingActionLoading = !floatingActionLoading;
+              });
+             floatingActionLoading?null: showDateRangeSelector(
+                  context: context,
+                  startDate: startDate,
+                  endDate: endDate,
+                  //machine
+                  machineIds: value
+                      .map((e) => e.machineNumber.toString())
+                      .toSet()
+                      .toList(),
+                  selectedMachine: selectedMachine,
+                  onChangedMachine: (selectedList){
+                    setState(() {
+                      selectedMachine = selectedList;
+                    });
+
+                  },
+                  onchangedDateRange: (startDate1, endDate1) {
+                    setState(() {
+                      startDate = startDate1;
+                      endDate =
+                          endDate1 ?? DateTime.now().add(Duration(days: 7));
+                      log("dater ${startDate.toString()}");
+                    });
+                  });
+            });
+          },
+          child: floatingActionLoading
+              ? CircularProgressIndicator(color: Colors.white)
+              : Icon(Icons.sort),
         ),
       ),
     );

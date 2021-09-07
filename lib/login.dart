@@ -21,7 +21,7 @@ class LoginScan extends StatefulWidget {
 class _LoginScanState extends State<LoginScan> {
   TextEditingController _textController = new TextEditingController();
   FocusNode _textNode = new FocusNode();
-  late String userId;
+  late String userId ="";
   late ApiService apiService;
 
   late bool loading;

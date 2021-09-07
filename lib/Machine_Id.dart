@@ -22,7 +22,7 @@ class MachineId extends StatefulWidget {
 class _MachineIdState extends State<MachineId> {
   TextEditingController _textController = new TextEditingController();
   FocusNode _textNode = new FocusNode();
-  late String machineId;
+  late String machineId='';
   late ApiService apiService;
   late bool loading;
   @override

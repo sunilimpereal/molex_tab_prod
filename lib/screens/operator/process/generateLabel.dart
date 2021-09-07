@@ -2598,6 +2598,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                         ),
                         onPressed: () {
                           setState(() {
+                              getBundles();
                             widget.sendData(generatedBundleList.length+1);
                             status = Status.generateLabel;
                             clear();
@@ -2719,6 +2720,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                       fontSize: 16.0);
 
                                   setState(() {
+                                     getBundles();
                                     widget.sendData(generatedBundleList.length+1);
                                     clear();
                                     _bundleScanController.clear();
@@ -2886,7 +2888,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                         fontSize: 16.0);
 
                                     setState(() {
-                                    
+                                     getBundles();
                                       widget
                                           .sendData(generatedBundleList.length+1);
                                       clear();

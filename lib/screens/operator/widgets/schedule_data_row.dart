@@ -118,7 +118,9 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                           "${widget.schedule.shiftType}",
                           style: TextStyle(
                               fontSize: 11, fontWeight: FontWeight.w500),
+                              
                         ),
+                        
                       ],
                     ),
                   ),
