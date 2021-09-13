@@ -8,6 +8,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:intl/intl.dart';
 import 'package:molex/screens/operator%202/widgets/crimpig_schedule_data_row.dart';
+import 'package:molex/screens/operator%202/widgets/filter%20_dashboard_crimping.dart';
+import 'package:molex/screens/operator/widgets/filter_dashboard.dart';
 import '../../model_api/crimping/getCrimpingSchedule.dart';
 import '../../model_api/login_model.dart';
 import '../../model_api/machinedetails_model.dart';
@@ -223,7 +225,7 @@ class _HomePageOp2State extends State<HomePageOp2> {
               type: type == 0 ? "A" : "M",
               scheduleType: scheduleType == 0 ? "true" : "false",
               searchType: _chosenValue,
-              query: _searchController.text, 
+              query: _searchController.text,
             ),
           ],
         ),
@@ -337,7 +339,6 @@ class _HomePageOp2State extends State<HomePageOp2> {
 }
 
 class SchudleTable extends StatefulWidget {
-
   final Employee employee;
   final MachineDetails machine;
   String scheduleType;
@@ -346,7 +347,6 @@ class SchudleTable extends StatefulWidget {
   String query;
   SchudleTable(
       {Key? key,
-    
       required this.employee,
       required this.machine,
       required this.scheduleType,
@@ -364,10 +364,17 @@ class _SchudleTableState extends State<SchudleTable> {
   late ApiService apiService;
   late List<CrimpingSchedule> crimpingSchedule;
   late PostStartProcessP1 postStartprocess;
+
+  //Filter
+  late DateTime startDate = DateTime.now().subtract(const Duration(days: 5));
+  late DateTime endDate = DateTime.now().add(const Duration(days: 5));
+  bool floatingActionLoading = false;
+  List<String> selectedMachine = [];
   @override
   void initState() {
     apiService = new ApiService();
-
+    startDate = DateUtils.dateOnly(startDate);
+    endDate = DateUtils.dateOnly(endDate);
     super.initState();
   }
 
@@ -408,125 +415,181 @@ class _SchudleTableState extends State<SchudleTable> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          tableHeading(),
-          SingleChildScrollView(
-            child: Container(
-                height: widget.type == "M" ? 430 : 490,
-                // height: double.parse("${rowList.length*60}"),
-                child: FutureBuilder(
-                  future: apiService.getCrimpingSchedule(
-                      scheduleType: "${widget.type}",
-                      machineNo: widget.machine.machineNumber??'',
-                      sameMachine: "${widget.scheduleType}"),
-                  builder: (context,AsyncSnapshot<List<CrimpingSchedule>> snapshot) {
-                    if (snapshot.hasData) {
-                      List<CrimpingSchedule>? schedulelist =
-                          searchfilter(snapshot.data);
-                      schedulelist = schedulelist!
-                          .where((element) =>
-                              element.schedulestatus.toLowerCase() !=
-                              "Complete".toLowerCase())
-                          .toList();
-                           
-                      log("aaa ${schedulelist}");
-
-                      if (schedulelist.length > 0) {
-                        return RefreshIndicator(
-                          onRefresh: _onRefresh,
-                          child: ListView.builder(
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: schedulelist.length,
-                              itemBuilder: (context, index) {
-                                return  CrimpingScheduleDataRow(schedule: schedulelist![index], machine: widget.machine, employee: widget.employee);
-                              }),
-                        );
-                      } else {
-                        return Padding(
-                          padding: const EdgeInsets.all(108.0),
-                          child: Center(
-                            child: Column(
-                              children: [
-                                Container(
-                                    child: Text(
-                                  'No Schedule Found',
-                                  style: TextStyle(color: Colors.black),
-                                )),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  width: 150,
-                                  child: ElevatedButton(
-                                    style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(100.0),
-                                              side: BorderSide(
-                                                  color: Colors.transparent))),
-                                      backgroundColor: MaterialStateProperty
-                                          .resolveWith<Color>(
-                                        (Set<MaterialState> states) {
-                                          if (states
-                                              .contains(MaterialState.pressed))
-                                            return Colors.green.shade200;
-                                          return Colors.red.shade400; // Use the component's default.
+      height: widget.type == "M" ? 465 : 538,
+      child: Scaffold(
+        body: Container(
+          color: Colors.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              tableHeading(),
+              SingleChildScrollView(
+                child: Container(
+                    height: widget.type == "M" ? 430 : 490,
+                    // height: double.parse("${rowList.length*60}"),
+                    child: FutureBuilder(
+                      future: apiService.getCrimpingSchedule(
+                          scheduleType: "${widget.type}",
+                          machineNo: widget.machine.machineNumber ?? '',
+                          sameMachine: "${widget.scheduleType}"),
+                      builder: (context,
+                          AsyncSnapshot<List<CrimpingSchedule>> snapshot) {
+                        if (snapshot.hasData) {
+                          List<CrimpingSchedule>? schedulelist =
+                              searchfilter(snapshot.data);
+                          schedulelist = schedulelist!
+                              .where((element) =>
+                                  element.schedulestatus.toLowerCase() !=
+                                  "Complete".toLowerCase())
+                              .toList();
+                          schedulelist = schedulelist
+                              .where((element) =>
+                                  element.scheduleDate.isBefore(endDate) &&
+                                      element.scheduleDate.isAfter(startDate) ||
+                                  element.scheduleDate == startDate ||
+                                  element.scheduleDate == endDate)
+                              .toList();
+                          schedulelist.sort((a, b) =>
+                              a.scheduleDate.compareTo(b.scheduleDate));
+                          if (schedulelist.length > 0) {
+                            return RefreshIndicator(
+                              onRefresh: _onRefresh,
+                              child: ListView.builder(
+                                  physics:
+                                      const AlwaysScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: schedulelist.length,
+                                  itemBuilder: (context, index) {
+                                    return CrimpingScheduleDataRow(
+                                        schedule: schedulelist![index],
+                                        machine: widget.machine,
+                                        employee: widget.employee);
+                                  }),
+                            );
+                          } else {
+                            return Padding(
+                              padding: const EdgeInsets.all(108.0),
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                        child: Text(
+                                      'No Schedule Found',
+                                      style: TextStyle(color: Colors.black),
+                                    )),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      width: 150,
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                          shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100.0),
+                                                  side: BorderSide(
+                                                      color:
+                                                          Colors.transparent))),
+                                          backgroundColor: MaterialStateProperty
+                                              .resolveWith<Color>(
+                                            (Set<MaterialState> states) {
+                                              if (states.contains(
+                                                  MaterialState.pressed))
+                                                return Colors.green.shade200;
+                                              return Colors.red
+                                                  .shade400; // Use the component's default.
+                                            },
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Refresh  ",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            Icon(
+                                              Icons.replay_outlined,
+                                              color: Colors.white,
+                                              size: 18,
+                                            )
+                                          ],
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            setState(() {});
+                                          });
                                         },
                                       ),
                                     ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Refresh  ",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        Icon(
-                                          Icons.replay_outlined,
-                                          color: Colors.white,
-                                          size: 18,
-                                        )
-                                      ],
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        setState(() {});
-                                      });
-                                    },
-                                  ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-                    } else {
-                      if (snapshot.connectionState == ConnectionState.active) {
-                        return CircularProgressIndicator();
-                      }
+                              ),
+                            );
+                          }
+                        } else {
+                          if (snapshot.connectionState ==
+                              ConnectionState.active) {
+                            return CircularProgressIndicator();
+                          }
 
-                      return Padding(
-                        padding: const EdgeInsets.all(108.0),
-                        child: Center(
-                          child: Container(
-                              child: Text(
-                            'No Schedule Found',
-                            style: TextStyle(color: Colors.black),
-                          )),
-                        ),
-                      );
-                    }
-                  },
-                )),
+                          return Padding(
+                            padding: const EdgeInsets.all(108.0),
+                            child: Center(
+                              child: Container(
+                                  child: Text(
+                                'No Schedule Found',
+                                style: TextStyle(color: Colors.black),
+                              )),
+                            ),
+                          );
+                        }
+                      },
+                    )),
+              ),
+            ],
           ),
-        ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.red,
+          onPressed: () async {
+            setState(() {
+              floatingActionLoading = !floatingActionLoading;
+            });
+            apiService
+                .getCrimpingSchedule(
+                    scheduleType: "${widget.type}",
+                    machineNo: widget.machine.machineNumber ?? '',
+                    sameMachine: "${widget.scheduleType}")
+                .then((value) {
+              setState(() {
+                floatingActionLoading = !floatingActionLoading;
+              });
+              floatingActionLoading
+                  ? null
+                  : showFilterDashBoardCrimping(
+                      context: context,
+                      startDate: startDate,
+                      endDate: endDate,
+                      onchangedDateRange: (startDate1, endDate1) {
+                        setState(() {
+                          startDate = DateUtils.dateOnly(startDate1);
+                          endDate = DateUtils.dateOnly(endDate1 ??
+                              DateTime.now().add(Duration(days: 7)));
+                          log("dater ${startDate.toString()}");
+                        });
+                      });
+            });
+          },
+          child: floatingActionLoading
+              ? CircularProgressIndicator(color: Colors.white)
+              : Icon(Icons.sort),
+        ),
       ),
     );
   }
@@ -807,7 +870,8 @@ class _SchudleTableState extends State<SchudleTable> {
                                                   employee: widget.employee,
                                                   machine: widget.machine,
                                                   materialPickType:
-                                                      MaterialPickType.newload, reload: (){},
+                                                      MaterialPickType.newload,
+                                                  reload: () {},
                                                 )),
                                       );
                                       return true;
@@ -835,8 +899,6 @@ class _SchudleTableState extends State<SchudleTable> {
         ),
       ),
     );
- 
- 
   }
 }
 
@@ -844,7 +906,9 @@ class CrimpingStartButton extends StatefulWidget {
   Function onPressed;
   Widget child;
   ButtonStyle style;
-  CrimpingStartButton({required this.onPressed, required this.child, required this.style}) : super();
+  CrimpingStartButton(
+      {required this.onPressed, required this.child, required this.style})
+      : super();
 
   @override
   _CrimpingStartButtonState createState() => _CrimpingStartButtonState();
@@ -870,9 +934,9 @@ class _CrimpingStartButtonState extends State<CrimpingStartButton> {
                   loading = true;
                 });
                 bool a = true;
-                try{
-                 a = await widget.onPressed();
-                }catch(e){
+                try {
+                  a = await widget.onPressed();
+                } catch (e) {
                   setState(() {
                     loading = false;
                   });

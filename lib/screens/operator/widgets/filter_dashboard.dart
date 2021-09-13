@@ -8,7 +8,7 @@ enum FilterSelected {
   machine,
 }
 
-Future<void> showDateRangeSelector({
+Future<void> showFilterDashBoard({
   required BuildContext context,
   required Function onchangedDateRange,
   required DateTime startDate,

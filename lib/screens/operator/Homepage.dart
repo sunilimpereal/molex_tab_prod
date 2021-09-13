@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_progress_button/flutter_progress_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:molex/screens/operator/widgets/dateRangePickerDash.dart';
+import 'package:molex/screens/operator/widgets/filter_dashboard.dart';
 import 'package:molex/screens/operator/widgets/schedule_data_row.dart';
 import 'package:molex/screens/utils/loadingButton.dart';
 import '../../main.dart';
@@ -390,8 +390,10 @@ class _SchudleTableState extends State<SchudleTable> {
 
   PostStartProcessP1? postStartprocess;
   //Filter
-  late DateTime startDate = DateTime.now().subtract(const Duration(days: 4));
-  late DateTime endDate = DateTime.now().add(const Duration(days: 3));
+  late DateTime startDate =
+      DateUtils.dateOnly(DateTime.now().subtract(const Duration(days: 5)));
+  late DateTime endDate =
+      DateUtils.dateOnly(DateTime.now().add(const Duration(days: 3)));
   bool floatingActionLoading = false;
   List<String> selectedMachine = [];
   @override
@@ -498,7 +500,8 @@ class _SchudleTableState extends State<SchudleTable> {
                             schedulelist = schedulelist
                                 .where((element) => selectedMachine.length <= 1
                                     ? true
-                                    : selectedMachine.contains(element.machineNumber))
+                                    : selectedMachine
+                                        .contains(element.machineNumber))
                                 .toList();
                             schedulelist.sort((a, b) =>
                                 a.currentDate.compareTo(b.currentDate));
@@ -688,30 +691,31 @@ class _SchudleTableState extends State<SchudleTable> {
               setState(() {
                 floatingActionLoading = !floatingActionLoading;
               });
-             floatingActionLoading?null: showDateRangeSelector(
-                  context: context,
-                  startDate: startDate,
-                  endDate: endDate,
-                  //machine
-                  machineIds: value
-                      .map((e) => e.machineNumber.toString())
-                      .toSet()
-                      .toList(),
-                  selectedMachine: selectedMachine,
-                  onChangedMachine: (selectedList){
-                    setState(() {
-                      selectedMachine = selectedList;
-                    });
-
-                  },
-                  onchangedDateRange: (startDate1, endDate1) {
-                    setState(() {
-                      startDate = startDate1;
-                      endDate =
-                          endDate1 ?? DateTime.now().add(Duration(days: 7));
-                      log("dater ${startDate.toString()}");
-                    });
-                  });
+              floatingActionLoading
+                  ? null
+                  : showFilterDashBoard(
+                      context: context,
+                      startDate: startDate,
+                      endDate: endDate,
+                      //machine
+                      machineIds: value
+                          .map((e) => e.machineNumber.toString())
+                          .toSet()
+                          .toList(),
+                      selectedMachine: selectedMachine,
+                      onChangedMachine: (selectedList) {
+                        setState(() {
+                          selectedMachine = selectedList;
+                        });
+                      },
+                      onchangedDateRange: (startDate1, endDate1) {
+                        setState(() {
+                          startDate = DateUtils.dateOnly(startDate1);
+                          endDate = endDate1 ??
+                              DateUtils.dateOnly(
+                                  DateTime.now().add(Duration(days: 7)));
+                        });
+                      });
             });
           },
           child: floatingActionLoading

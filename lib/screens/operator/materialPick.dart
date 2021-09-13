@@ -1022,7 +1022,7 @@ class _MaterialPickState extends State<MaterialPick> {
           child: FutureBuilder(
               future: rawMaterial!.length == 0
                   ? apiService!.rawMaterial(
-                      machineId: widget.machine.machineNumber??'',
+                      machineId: widget.schedule.machineNumber??'',
                       fgNo: widget.schedule.finishedGoodsNumber,
                       type: widget.machine.category??'',
                       scheduleId: widget.schedule.scheduledId, partNo: '')

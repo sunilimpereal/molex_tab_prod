@@ -3,19 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../login.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import '../../main.dart';
 class ChangeIp extends StatefulWidget {
   @override
   _ChangeIpState createState() => _ChangeIpState();
 }
 
 class _ChangeIpState extends State<ChangeIp> {
-  late SharedPreferences preferences;
-  late String baseip;
-    List<String> ipList = [
-    "http://10.221.46.8:8080/wipts/",//client
-    "http://192.168.1.252:8080/wipts/",//just
+  late String baseip = sharedPref.baseIp ?? "";
+  List<String> ipList1 = [
+    "http://10.221.46.10:8080/wipts/", //client
+    "http://10.221.46.8:8080/wipts/",
+    "http://justerp.in:8080/wipts/",
   ];
   // List<String> ipList = [
   //   "http://justerp.in:8080/wipts/",
@@ -26,44 +25,30 @@ class _ChangeIpState extends State<ChangeIp> {
   //   "http://10.221.46.8:8080/wiptst/",
   // ];
   late String newIp;
-  List<String> ipList1 = [];
-
-  getSharedPref() async {
-    SharedPreferences preferenc = await SharedPreferences.getInstance();
-    setState(() {
-      preferences = preferenc;
-      baseip = preferences.getString('baseIp')!;
-      try {
-        ipList1 = preferences.getStringList('ipList')!;
-         
-        if (ipList1 == null) {
-          preferences.setStringList('ipList', ipList);
-          ipList = preferences.getStringList('ipList')!;
-        } else {
-          ipList = preferences.getStringList('ipList')!;
-        }
-      } catch (e) {
-        preferences.setStringList('ipList', ipList);
-      }
-    });
-  }
+  late List<String> ipList;
 
   @override
   void initState() {
-    getSharedPref();
     super.initState();
+    ipList = sharedPref.ipList ?? ipList1;
   }
 
   bool delOption = false;
 
   @override
   Widget build(BuildContext context) {
-   
-    print(baseip);
     return Scaffold(
       appBar: AppBar(
         title: Text("Change Ip "),
-       
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  delOption = !delOption;
+                });
+              },
+              icon: !delOption ? Icon(Icons.delete) : Icon(Icons.cancel))
+        ],
       ),
       body: Container(
         child: Container(
@@ -74,7 +59,7 @@ class _ChangeIpState extends State<ChangeIp> {
                   children: [
                     ListTile(
                       tileColor: baseip == ipList[index]
-                          ? Colors.red.shade200
+                          ? Colors.red[200]
                           : Colors.white,
                       title: Text(" ${ipList[index]}"),
                       onLongPress: () {
@@ -84,7 +69,7 @@ class _ChangeIpState extends State<ChangeIp> {
                       },
                       onTap: () {
                         setState(() {
-                          preferences.setString('baseIp', "${ipList[index]}");
+                          sharedPref.setbaseip(baseip: "${ipList[index]}");
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -125,48 +110,58 @@ class _ChangeIpState extends State<ChangeIp> {
   showAlertDialog(BuildContext context, String ip) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel",style: TextStyle(color: Colors.red),),
+      child: Text(
+        "Cancel",
+        style: TextStyle(fontSize: 18, color: Colors.red),
+      ),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-       style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  side: BorderSide(color: Colors.transparent))),
-          backgroundColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
-              if (states.contains(MaterialState.pressed))
-                return Colors.red.shade200;
-              return Colors.red.shade500; // Use the component's default.
-            },
-          ),
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+                side: BorderSide(color: Colors.transparent))),
+        backgroundColor: MaterialStateProperty.resolveWith<Color>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.pressed))
+              return Colors.red.shade200;
+            return Colors.red.shade500; // Use the component's default.
+          },
         ),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: Text("   Delete   ",style: TextStyle(color: Colors.white),),
+        padding: const EdgeInsets.all(10.0),
+        child: Text(
+          "   Delete   ",
+          style: TextStyle(fontSize: 18, color: Colors.white),
+        ),
       ),
       onPressed: () {
         setState(() {
           ipList.remove(ip);
           try {
-            ipList1 = preferences.getStringList('ipList')!;
-
-            preferences.setStringList('ipList', ipList);
+            sharedPref.setipList(ipList);
           } catch (e) {
-            preferences.setStringList('ipList', ipList);
+            sharedPref.setipList(ipList);
           }
         });
-          Navigator.pop(context);
+        Navigator.pop(context);
       },
     );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Confirm delete"),
-      content: Text("Are you sure you want to delete ip: $ip ?"),
+      title: Text(
+        "Confirm delete",
+        style: TextStyle(fontSize: 22, fontFamily: fonts.openSans),
+      ),
+      content: Text(
+        "Are you sure you want to delete ip: $ip ?",
+        style: TextStyle(fontFamily: fonts.openSans, fontSize: 16),
+      ),
       actions: [
         cancelButton,
         continueButton,
@@ -233,7 +228,7 @@ class _ChangeIpState extends State<ChangeIp> {
                     if (newIp != null) {
                       setState(() {
                         ipList.add(newIp);
-                        preferences.setStringList('ipList', ipList);
+                        sharedPref.setipList(ipList);
                       });
                       Navigator.pop(context);
                     } else {
@@ -257,67 +252,3 @@ class _ChangeIpState extends State<ChangeIp> {
   }
 }
 
-// ListTile(
-//   tileColor: baseip == "http://justerp.in:8080/wipts/"
-//       ? Colors.red.shade200
-//       : Colors.white,
-//   title: Text("http://justerp.in:8080/wipts/"),
-//   onTap: () {
-//     setState(() {
-//       preferences.setString(
-//           'baseIp', "http://justerp.in:8080/wipts/");
-//       Navigator.pushReplacement(
-//         context,
-//         MaterialPageRoute(builder: (context) => LoginScan()),
-//       );
-//     });
-//   },
-// ),
-// ListTile(
-//   tileColor: baseip == "http://10.221.46.8:8080/wipts/"
-//       ? Colors.red.shade200
-//       : Colors.white,
-//   title: Text("http://10.221.46.8:8080/wipts/"),
-//   onTap: () {
-//     setState(() {
-//       preferences.setString(
-//           'baseIp', "http://10.221.46.8:8080/wipts/");
-//       Navigator.pushReplacement(
-//         context,
-//         MaterialPageRoute(builder: (context) => LoginScan()),
-//       );
-//     });
-//   },
-// ),
-// ListTile(
-//   tileColor: baseip == "http://192.168.1.252:8080/wipts/"
-//       ? Colors.red.shade200
-//       : Colors.white,
-//   title: Text("http://192.168.1.252:8080/wipts/"),
-//   onTap: () {
-//     setState(() {
-//       preferences.setString(
-//           'baseIp', "http://192.168.1.252:8080/wipts/");
-//       Navigator.pushReplacement(
-//         context,
-//         MaterialPageRoute(builder: (context) => LoginScan()),
-//       );
-//     });
-//   },
-// ),
-// ListTile(
-//   tileColor: baseip == "http://mlxbngvwqwip01.molex.com:8080/wipts/"
-//       ? Colors.red.shade200
-//       : Colors.white,
-//   title: Text("http://mlxbngvwqwip01.molex.com:8080/wipts/"),
-//   onTap: () {
-//     setState(() {
-//       preferences.setString(
-//           'baseIp', "http://mlxbngvwqwip01.molex.com:8080/wipts/");
-//       Navigator.pushReplacement(
-//         context,
-//         MaterialPageRoute(builder: (context) => LoginScan()),
-//       );
-//     });
-//   },
-// )
