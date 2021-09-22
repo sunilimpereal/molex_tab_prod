@@ -4,7 +4,8 @@ import '../../../service/apiService.dart';
 
 class MaterialtableWIP extends StatefulWidget {
   MatTrkPostDetail matTrkPostDetail;
-  MaterialtableWIP({Key? key, required this.matTrkPostDetail}) : super(key: key);
+  MaterialtableWIP({Key? key, required this.matTrkPostDetail})
+      : super(key: key);
 
   @override
   _MaterialtableWIPState createState() => _MaterialtableWIPState();
@@ -20,141 +21,6 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: table1(),
-    );
-  }
-
-  Widget table() {
-    ApiService apiService = new ApiService();
-    return FutureBuilder(
-        future:
-            apiService.getMaterialTrackingCableDetail(widget.matTrkPostDetail),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<MaterialDetail>? matList = snapshot.data as List<MaterialDetail>?;
-            if (matList!.length > 0) {
-              return Row(
-                children: [
-                  Container(
-                      width: MediaQuery.of(context).size.width * 0.48,
-                      child: Column(children: [
-                        row('Part No.', 'UOM', 'REQUIRED', 'LOADED',
-                            'AVAILABLE', Colors.blue.shade100),
-                        Container(
-                          height: 63,
-                          child: ListView.builder(
-                              itemCount: matList.length,
-                              scrollDirection: Axis.vertical,
-                              itemBuilder: (context, index) {
-                                return row(
-                                    "${matList[index].cablePartNo}",
-                                    "${matList[index].uom.toString()}",
-                                    "${matList[index].requiredQty.toString()}",
-                                    "${matList[index].loadedQty.toString()}",
-                                    "${matList[index].availableQty.toString()}",
-                                    Colors.grey.shade100);
-                              }),
-                        ),
-                      ])),
-                ],
-              );
-            } else {
-              return Container(
-                  width: MediaQuery.of(context).size.width * 0.48,
-                  child: Column(
-                    children: [
-                      row('Part No.', 'UOM', 'REQUIRED', 'LOADED', 'AVAILABLE',
-                          Colors.blue.shade100),
-                      SizedBox(height: 10),
-                      Text(
-                        "no stock found",
-                        style: TextStyle(color: Colors.black),
-                      )
-                    ],
-                  ));
-            }
-          } else {
-            return Container(
-                width: MediaQuery.of(context).size.width * 0.48,
-                child: Column(
-                  children: [
-                    row('Part No.', 'UOM', 'REQUIRED', 'LOADED', 'AVAILABLE',
-                        Colors.blue.shade100),
-                    Text(
-                      "no stock found",
-                      style: TextStyle(color: Colors.black),
-                    )
-                  ],
-                ));
-          }
-        });
-  }
-
-  Widget row(String partno, String uom, String require, String loaded,
-      String available, Color color) {
-    return Container(
-      color: color,
-      child: Row(children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-                decoration: BoxDecoration(
-                    border: Border.all(width: 0.5, color: Colors.grey.shade100)),
-                height: 20,
-                width: MediaQuery.of(context).size.width * 0.1,
-                child: Center(
-                    child: Text(partno, style: TextStyle(fontSize: 12)))),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.grey.shade100)),
-              height: 20,
-              width: MediaQuery.of(context).size.width * 0.1,
-              child: Center(
-                child: Text(
-                  uom,
-                  style: TextStyle(fontSize: 10),
-                ),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.grey.shade100)),
-              height: 20,
-              width: MediaQuery.of(context).size.width * 0.1,
-              child: Center(
-                child: Text(
-                  require,
-                  style: TextStyle(fontSize: 10),
-                ),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.grey.shade100)),
-              height: 20,
-              width: MediaQuery.of(context).size.width * 0.08,
-              child: Center(
-                child: Text(
-                  loaded,
-                  style: TextStyle(fontSize: 10),
-                ),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.grey.shade100)),
-              height: 20,
-              width: MediaQuery.of(context).size.width * 0.1,
-              child: Center(
-                child: Text(
-                  available,
-                  style: TextStyle(fontSize: 10),
-                ),
-              ),
-            ),
-          ],
-        )
-      ]),
     );
   }
 
@@ -194,7 +60,8 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
           child: Center(
               child: Text(
             "$title",
-            style: TextStyle(fontSize: 11,color: Colors.white,fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 11, color: Colors.white, fontWeight: FontWeight.bold),
           )),
         ),
       );
@@ -215,7 +82,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              cell("Part No.", 0.07),
+              cell("Part No.", 0.1),
               cell("UOM", 0.04),
               cell("Required", 0.06),
               cell("Loaded", 0.06),
@@ -257,7 +124,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            cell(partNo, 0.07),
+            cell(partNo, 0.1),
             cell(uom, 0.04),
             cell(require, 0.06),
             cell(loaded, 0.06),
@@ -273,7 +140,8 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
             apiService.getMaterialTrackingCableDetail(widget.matTrkPostDetail),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<MaterialDetail>? matList = snapshot.data as List<MaterialDetail>?;
+            List<MaterialDetail>? matList =
+                snapshot.data as List<MaterialDetail>?;
 
             if (matList!.length > 0) {
               return Container(
@@ -295,7 +163,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
             } else {
               return Container(
                   width: 320,
-                    height: 68,
+                  height: 68,
                   child: Column(
                     children: [
                       SizedBox(height: 10),
@@ -307,18 +175,18 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
                   ));
             }
           } else {
-           return Container(
-                  width: 320,
-                    height: 68,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 10),
-                      Text(
-                        "no stock found",
-                        style: TextStyle(color: Colors.black),
-                      )
-                    ],
-                  ));
+            return Container(
+                width: 320,
+                height: 68,
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    Text(
+                      "no stock found",
+                      style: TextStyle(color: Colors.black),
+                    )
+                  ],
+                ));
           }
         });
   }

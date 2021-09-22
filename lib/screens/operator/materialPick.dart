@@ -1035,7 +1035,7 @@ class _MaterialPickState extends State<MaterialPick> {
 
                   rawMaterial = snapshot.data as List<RawMaterial>?;
                   MatTrkPostDetail matTrkPostDetail = new MatTrkPostDetail(
-                    machineId: widget.machine.machineNumber??'',
+                    machineId: widget.schedule.machineNumber??'',
                     schedulerId: widget.schedule.scheduledId,
                     cablePartNumbers: rawMaterial!
                         .map((e) => e.partNunber.toString())

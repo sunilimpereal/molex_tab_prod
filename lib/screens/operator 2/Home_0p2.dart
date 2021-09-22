@@ -449,8 +449,9 @@ class _SchudleTableState extends State<SchudleTable> {
                                   element.scheduleDate == startDate ||
                                   element.scheduleDate == endDate)
                               .toList();
-                          schedulelist.sort((a, b) =>
-                              a.scheduleDate.compareTo(b.scheduleDate));
+                          schedulelist.sort(
+                              (a, b) => a.scheduleId.compareTo(b.scheduleId));
+
                           if (schedulelist.length > 0) {
                             return RefreshIndicator(
                               onRefresh: _onRefresh,

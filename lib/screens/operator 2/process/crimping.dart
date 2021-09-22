@@ -36,7 +36,6 @@ enum Status {
 }
 
 class ScanBundle extends StatefulWidget {
-  
   String userId;
   String machineId;
   String method;
@@ -53,8 +52,7 @@ class ScanBundle extends StatefulWidget {
   String processName;
   Function startProcess;
   ScanBundle(
-      {
-      required this.machineId,
+      {required this.machineId,
       required this.method,
       required this.userId,
       required this.schedule,
@@ -121,17 +119,17 @@ class _ScanBundleState extends State<ScanBundle> {
 
   bool? hasBin;
   bool loading = false;
-  BundlesRetrieved ?scannedBundle;
+  BundlesRetrieved? scannedBundle;
   bool checkmappingdone = false;
   bool donotrepeatalert = false;
   bool visibility = true;
 
-  String ?binId;
+  String? binId;
   //to store the bundle Quantity fetched from api after scanning bundle Id
   String bundleQty = '';
   ApiService apiService = new ApiService();
   late CableTerminalA? terminalA;
-  late CableTerminalB ?terminalB;
+  late CableTerminalB? terminalB;
   getTerminal() {
     ApiService apiService = new ApiService();
     apiService
@@ -171,7 +169,7 @@ class _ScanBundleState extends State<ScanBundle> {
     );
     super.initState();
   }
-  
+
   //8765902
   @override
   Widget build(BuildContext context) {
@@ -316,7 +314,8 @@ class _ScanBundleState extends State<ScanBundle> {
                                             if (states.contains(
                                                 MaterialState.pressed))
                                               return Colors.green.shade200;
-                                            return Colors.green.shade500; // Use the component's default.
+                                            return Colors.green
+                                                .shade500; // Use the component's default.
                                           },
                                         ),
                                         overlayColor: MaterialStateProperty
@@ -325,7 +324,8 @@ class _ScanBundleState extends State<ScanBundle> {
                                             if (states.contains(
                                                 MaterialState.pressed))
                                               return Colors.green;
-                                            return Colors.green.shade500; // Use the component's default.
+                                            return Colors.green
+                                                .shade500; // Use the component's default.
                                           },
                                         ),
                                       ),
@@ -414,7 +414,8 @@ class _ScanBundleState extends State<ScanBundle> {
         ),
         backgroundColor: MaterialStateProperty.resolveWith<Color>(
           (Set<MaterialState> states) {
-            if (states.contains(MaterialState.pressed)) return Colors.red.shade200;
+            if (states.contains(MaterialState.pressed))
+              return Colors.red.shade200;
             return Colors.red.shade500; // Use the component's default.
           },
         ),
@@ -579,7 +580,9 @@ class _ScanBundleState extends State<ScanBundle> {
                                 ],
                                 rows: totalbundleList
                                     .map((e) => CustomRow(
-                                            completed: e.updateFromProcess.toLowerCase().contains(widget.processName
+                                            completed: e.updateFromProcess
+                                                .toLowerCase()
+                                                .contains(widget.processName
                                                     .toLowerCase()),
                                             cells: [
                                               CustomCell(
@@ -725,7 +728,8 @@ class _ScanBundleState extends State<ScanBundle> {
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.pressed))
                                     return Colors.green.shade200;
-                                  return Colors.green.shade400; // Use the component's default.
+                                  return Colors.green
+                                      .shade400; // Use the component's default.
                                 },
                               ),
                               overlayColor:
@@ -733,7 +737,8 @@ class _ScanBundleState extends State<ScanBundle> {
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.pressed))
                                     return Colors.green;
-                                  return Colors.green.shade500; // Use the component's default.
+                                  return Colors.green
+                                      .shade500; // Use the component's default.
                                 },
                               ),
                             ),
@@ -766,10 +771,9 @@ class _ScanBundleState extends State<ScanBundle> {
                 child: Text(
                   "$title",
                   style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w400),
-                  
+                      fontSize: 14,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w400),
                 ),
               ),
             ],
@@ -781,11 +785,10 @@ class _ScanBundleState extends State<ScanBundle> {
                 padding: const EdgeInsets.all(0.0),
                 child: Text(
                   "$data",
-                  style:  TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400),
-                  
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400),
                 ),
               )
             ],
@@ -1048,9 +1051,7 @@ class _ScanBundleState extends State<ScanBundle> {
       cablePartNumber: 0,
       orderId: "",
     );
-    apiService.getBundlesInSchedule(
-        postgetBundleMaster: postgetBundleMaste,
-        scheduleID: widget.schedule.scheduleId.toString());
+
     if (_scanIdController.text.length > 0) {
       apiService
           .getBundlesInSchedule(
@@ -1058,6 +1059,7 @@ class _ScanBundleState extends State<ScanBundle> {
           .then((value) {
         List<BundlesRetrieved> bundleList = value!;
         BundlesRetrieved bundleDetail = bundleList[0];
+
         if (value != null) {
           if (validateBundle(bundleDetail)) {
             if (bundleDetail.bundleStatus.toLowerCase() == "dropped") {
@@ -1104,7 +1106,9 @@ class _ScanBundleState extends State<ScanBundle> {
             }
           }
         } else {
-          _scanIdController.clear();
+          setState(() {
+            _scanIdController.clear();
+          });
         }
       });
     }
@@ -1116,18 +1120,21 @@ class _ScanBundleState extends State<ScanBundle> {
       String crimpfrom,
       String crimpto,
     ) {
+      log("message1");
       if (widget.processName == "Crimp From" &&
-          (crimpfrom == null || crimpfrom.length < 1)) {
+          (crimpfrom == null || crimpfrom.length <= 1)) {
         return true;
       }
       if (widget.processName == "Crimp To" &&
-          (crimpto == null || crimpto.length < 1)) {
+          (crimpto == null || crimpto.length <= 1)) {
+        log("message1");
+
         return true;
       }
       // ignore: null_aware_before_operator
       if (widget.processName == "Crimp From & To" &&
-          (crimpto == null || crimpto.length < 1) &&
-          (crimpto == null || crimpto.length < 1)) {
+          (crimpto == null || crimpto.length <= 1) &&
+          (crimpto == null || crimpto.length <= 1)) {
         return true;
       }
       return false;
@@ -1145,7 +1152,7 @@ class _ScanBundleState extends State<ScanBundle> {
               .toLowerCase()
               .contains(widget.processName.toLowerCase()) &&
           checkCrimping(
-              bundleDetail.crimpFromSchId, bundleDetail.crimpFromSchId)) {
+              bundleDetail.crimpFromSchId, bundleDetail.crimpToSchId)) {
         return true;
       }
       Fluttertoast.showToast(
@@ -1447,7 +1454,8 @@ class _ScanBundleState extends State<ScanBundle> {
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.pressed))
                                       return Colors.green.shade200;
-                                    return Colors.green.shade500; // Use the component's default.
+                                    return Colors.green
+                                        .shade500; // Use the component's default.
                                   },
                                 ),
                               ),
@@ -1737,7 +1745,6 @@ class _ScanBundleState extends State<ScanBundle> {
 
   Widget tripleQuantityCell({
     required String name,
-
     required TextEditingController textEditingControllerFrom,
     required TextEditingController textEditingControllerCable,
     required TextEditingController textEditingControllerTo,
@@ -1854,7 +1861,6 @@ class _ScanBundleState extends State<ScanBundle> {
 
   Widget doubleQuantityCell({
     required String name,
-    
     required TextEditingController textEditingControllerFrom,
     required TextEditingController textEditingControllerTo,
   }) {
@@ -1929,10 +1935,10 @@ class _ScanBundleState extends State<ScanBundle> {
     );
   }
 
-  Widget quantitycell(
-      {required String name,
-      required TextEditingController textEditingController,
-      }) {
+  Widget quantitycell({
+    required String name,
+    required TextEditingController textEditingController,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 3.0),
       child: Container(
@@ -1945,7 +1951,6 @@ class _ScanBundleState extends State<ScanBundle> {
                 width: 140,
                 child: TextField(
                   controller: textEditingController,
-                
                   onTap: () {
                     setState(() {
                       _output = '';
@@ -2095,8 +2100,8 @@ class _ScanBundleState extends State<ScanBundle> {
                               BorderSide(color: Colors.redAccent, width: 2.0),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.grey.shade400, width: 2.0),
+                          borderSide: BorderSide(
+                              color: Colors.grey.shade400, width: 2.0),
                         ),
                         labelText: 'Scan bin',
                         contentPadding:
@@ -2186,7 +2191,7 @@ class _ScanBundleState extends State<ScanBundle> {
     if (_binController.text.length > 0) {
       TransferBundleToBin bundleToBin = TransferBundleToBin(
           userId: widget.userId,
-          binIdentification: binId??'',
+          binIdentification: binId ?? '',
           locationId: "",
           bundleId: _scanIdController.text);
       apiService.postTransferBundletoBin(

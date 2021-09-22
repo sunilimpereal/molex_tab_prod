@@ -41,6 +41,8 @@ class _KittingDashState extends State<KittingDash> {
 
   @override
   Widget build(BuildContext context) {
+    //367690270
+    //846951441
     SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
       appBar: AppBar(
@@ -83,7 +85,7 @@ class _KittingDashState extends State<KittingDash> {
                             ),
                           ),
                           Text(
-                            widget.employee.empId ?? '',
+                            "${widget.employee.empId}",
                             style: TextStyle(fontSize: 13, color: Colors.black),
                           ),
                         ],

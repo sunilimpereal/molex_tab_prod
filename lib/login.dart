@@ -409,7 +409,7 @@ class _LoginScanState extends State<LoginScan> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text("v 1.0.0+15"),
+                          child: Text("v 1.0.0+20"),
                         )
                       ],
                     ),

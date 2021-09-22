@@ -27,6 +27,7 @@ import '../../widgets/time.dart';
 import '../../widgets/timer.dart';
 import '../../../service/apiService.dart';
 
+
 class ProcessPage2 extends StatefulWidget {
   Employee employee;
   MachineDetails machine;
@@ -67,7 +68,8 @@ class _ProcessPage2State extends State<ProcessPage2> {
       'Crimp From',
       'Crimp To',
       'Crimp From & To',
-      'Double Crimping',
+      'Double Crimp From'
+      'Double Crimp To',
     ];
 
     _chosenValue = items!.contains(widget.schedule.process)
@@ -389,7 +391,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
               child: FutureBuilder(
                   future: apiService!.getCableDetails(
                       fgpartNo: "${widget.schedule.finishedGoods}",
-                      cablepartno: "${widget.schedule.cablePartNo}" ?? "0",
+                      cablepartno: "${widget.schedule.cablePartNo}",
                       length: "${widget.schedule.length}",
                       color: widget.schedule.wireColour,
                       awg: int.parse(widget.schedule.awg ?? '0')),

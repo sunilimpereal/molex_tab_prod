@@ -52,7 +52,7 @@ class _DrawerWidgetWIPState extends State<DrawerWidgetWIP> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "v 1.0.0+15",
+                    "v 1.0.0+20",
                     style: TextStyle(
                       color: Colors.red,
                       letterSpacing: 2,

@@ -503,8 +503,8 @@ class _SchudleTableState extends State<SchudleTable> {
                                     : selectedMachine
                                         .contains(element.machineNumber))
                                 .toList();
-                            schedulelist.sort((a, b) =>
-                                a.currentDate.compareTo(b.currentDate));
+                            schedulelist.sort((a, b) => int.parse(a.scheduledId)
+                                .compareTo(int.parse(b.scheduledId)));
 
                             //  schedulelist =  schedulelist+ schedulelist+ schedulelist+ schedulelist+ schedulelist;
 

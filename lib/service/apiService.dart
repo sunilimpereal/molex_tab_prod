@@ -427,6 +427,8 @@ class ApiService {
       PostGenerateLabel postGenerateLabel, String bundleQuantiy) async {
     var url =
         Uri.parse(baseUrl + 'molex/wccr/generate-label/bdQty=$bundleQuantiy');
+         print(
+        'url generate label :${baseUrl + 'molex/wccr/generate-label/bdQty=$bundleQuantiy'}' );
     print(
         'body generate label :${postGenerateLabelToJson(postGenerateLabel)} ');
     var response = await http.post(url,
@@ -891,11 +893,10 @@ class ApiService {
         body: postgetBundleMasterToJson(postgetBundleMaster),
         headers: headerList);
     log('Get Bundles  post: ${postgetBundleMasterToJson(postgetBundleMaster)}');
-    log('Get Bundles From Bin status Code: ${response.statusCode}');
-    log('Get Bundleslist From Bin  response body :${response.body}');
-    log('Get Bundleslistp From Bin  response body :${postgetBundleMasterToJson(postgetBundleMaster)}');
+    log('Get Bundles From BundleID status Code: ${response.statusCode}');
+    log('Get Bundleslist From BundleID  response body :${response.body}');
     if (response.statusCode == 200) {
-      try {
+      try{
         GetBundleListGl getBundleListGl =
             getBundleListGlFromJson(response.body);
         List<BundlesRetrieved> bundleList =

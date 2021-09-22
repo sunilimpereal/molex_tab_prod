@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../main.dart';
+
 class ChangeIp extends StatefulWidget {
   @override
   _ChangeIpState createState() => _ChangeIpState();
@@ -14,7 +17,7 @@ class _ChangeIpState extends State<ChangeIp> {
   List<String> ipList1 = [
     "http://10.221.46.10:8080/wipts/", //client
     "http://10.221.46.8:8080/wipts/",
-    "http://justerp.in:8080/wipts/",
+
   ];
   // List<String> ipList = [
   //   "http://justerp.in:8080/wipts/",
@@ -23,6 +26,7 @@ class _ChangeIpState extends State<ChangeIp> {
   //   "http://mlxbngvwqwip01.molex.com:8080/wipts/",
   //   "http://mlxbngvwqwip01.molex.com:8080/wiptst/",
   //   "http://10.221.46.8:8080/wiptst/",
+  //"http://mlxbngvwqwip01.molex.com:8080/testwip"
   // ];
   late String newIp;
   late List<String> ipList;
@@ -160,7 +164,7 @@ class _ChangeIpState extends State<ChangeIp> {
       ),
       content: Text(
         "Are you sure you want to delete ip: $ip ?",
-        style: TextStyle(fontFamily: fonts.openSans, fontSize: 16),
+        style: TextStyle(fontFamily: fonts.openSans,fontSize: 16),
       ),
       actions: [
         cancelButton,
@@ -252,3 +256,67 @@ class _ChangeIpState extends State<ChangeIp> {
   }
 }
 
+// ListTile(
+//   tileColor: baseip == "http://justerp.in:8080/wipts/"
+//       ? Colors.red[200]
+//       : Colors.white,
+//   title: Text("http://justerp.in:8080/wipts/"),
+//   onTap: () {
+//     setState(() {
+//       preferences.setString(
+//           'baseIp', "http://justerp.in:8080/wipts/");
+//       Navigator.pushReplacement(
+//         context,
+//         MaterialPageRoute(builder: (context) => LoginScan()),
+//       );
+//     });
+//   },
+// ),
+// ListTile(
+//   tileColor: baseip == "http://10.221.46.8:8080/wipts/"
+//       ? Colors.red[200]
+//       : Colors.white,
+//   title: Text("http://10.221.46.8:8080/wipts/"),
+//   onTap: () {
+//     setState(() {
+//       preferences.setString(
+//           'baseIp', "http://10.221.46.8:8080/wipts/");
+//       Navigator.pushReplacement(
+//         context,
+//         MaterialPageRoute(builder: (context) => LoginScan()),
+//       );
+//     });
+//   },
+// ),
+// ListTile(
+//   tileColor: baseip == "http://192.168.1.252:8080/wipts/"
+//       ? Colors.red[200]
+//       : Colors.white,
+//   title: Text("http://192.168.1.252:8080/wipts/"),
+//   onTap: () {
+//     setState(() {
+//       preferences.setString(
+//           'baseIp', "http://192.168.1.252:8080/wipts/");
+//       Navigator.pushReplacement(
+//         context,
+//         MaterialPageRoute(builder: (context) => LoginScan()),
+//       );
+//     });
+//   },
+// ),
+// ListTile(
+//   tileColor: baseip == "http://mlxbngvwqwip01.molex.com:8080/wipts/"
+//       ? Colors.red[200]
+//       : Colors.white,
+//   title: Text("http://mlxbngvwqwip01.molex.com:8080/wipts/"),
+//   onTap: () {
+//     setState(() {
+//       preferences.setString(
+//           'baseIp', "http://mlxbngvwqwip01.molex.com:8080/wipts/");
+//       Navigator.pushReplacement(
+//         context,
+//         MaterialPageRoute(builder: (context) => LoginScan()),
+//       );
+//     });
+//   },
+// )

@@ -4,6 +4,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:molex/screens/Preparation/preparationDash.dart';
+import 'package:molex/screens/operator%202/Home_0p2.dart';
+import 'package:molex/screens/operator/Homepage.dart';
 import '../../../model_api/cableDetails_model.dart';
 import '../../../model_api/cableTerminalA_model.dart';
 import '../../../model_api/cableTerminalB_model.dart';
@@ -392,22 +395,23 @@ class _ProcessPageState extends State<ProcessPage> {
                                                       fullyComplete)
                                                   .then((value) {
                                                 if (value) {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            Location(
-                                                              type: "process",
-                                                              employee: widget
-                                                                  .employee,
-                                                              machine: widget
-                                                                  .machine, locationType: LocationType.finaTtransfer,
-                                                            )),
-                                                  ).then((value) {
-                                                    setState(() {
-                                                      rightside = 'label';
-                                                    });
-                                                  });
+                                                  postCompleteTransfer();
+                                                  // Navigator.push(
+                                                  //   context,
+                                                  //   MaterialPageRoute(
+                                                  //       builder: (context) =>
+                                                  //           Location(
+                                                  //             type: "process",
+                                                  //             employee: widget
+                                                  //                 .employee,
+                                                  //             machine: widget
+                                                  //                 .machine, locationType: LocationType.finaTtransfer,
+                                                  //           )),
+                                                  // ).then((value) {
+                                                  //   setState(() {
+                                                  //     rightside = 'label';
+                                                  //   });
+                                                  // });
                                                 } else {}
                                               });
                                             });
@@ -457,6 +461,91 @@ class _ProcessPageState extends State<ProcessPage> {
           ),
         ));
   }
+  postCompleteTransfer() {
+    ApiService apiService = new ApiService();
+    
+   
+  
+          apiService
+              .getmachinedetails(widget.machine.machineNumber??'')
+              .then((value) {
+            // Navigator.pop(context);
+            MachineDetails machineDetails = value![0];
+            Fluttertoast.showToast(
+                msg: widget.machine.machineNumber??'',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+
+            print("machineID:${widget.machine.machineNumber}");
+            switch (machineDetails.category) {
+              case "Manual Crimping":
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomePageOp2(
+                            employee: widget.employee,
+                            machine: machineDetails,
+                          )),
+                );
+                break;
+              case "Manual Cutting":
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Homepage(
+                            employee: widget.employee,
+                            machine: machineDetails,
+                          )),
+                );
+                break;
+              case "Automatic Cut & Crimp":
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Homepage(
+                            employee: widget.employee,
+                            machine: machineDetails,
+                          )),
+                );
+                break;
+              case "Semi Automatic Strip and Crimp machine":
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomePageOp2(
+                            employee: widget.employee,
+                            machine: machineDetails,
+                          )),
+                );
+                break;
+              case "Automatic Cutting":
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Homepage(
+                            employee: widget.employee,
+                            machine: machineDetails,
+                          )),
+                );
+                break;
+              default:
+                Fluttertoast.showToast(
+                    msg: "Machine not Found",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+            }
+          });
+        }
+
+  
 
   Future<void> _showConfirmationDialog() async {
     Future.delayed(
