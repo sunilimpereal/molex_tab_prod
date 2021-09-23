@@ -7,6 +7,7 @@ import 'package:flutter_progress_button/flutter_progress_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:intl/intl.dart';
+import 'package:molex/main.dart';
 import 'package:molex/screens/operator%202/widgets/crimpig_schedule_data_row.dart';
 import 'package:molex/screens/operator%202/widgets/filter%20_dashboard_crimping.dart';
 import 'package:molex/screens/operator/widgets/filter_dashboard.dart';
@@ -366,8 +367,10 @@ class _SchudleTableState extends State<SchudleTable> {
   late PostStartProcessP1 postStartprocess;
 
   //Filter
-  late DateTime startDate = DateTime.now().subtract(const Duration(days: 5));
-  late DateTime endDate = DateTime.now().add(const Duration(days: 5));
+  late DateTime startDate =
+      sharedPref.startDate ?? DateTime.now().subtract(const Duration(days: 5));
+  late DateTime endDate =
+      sharedPref.endDate ?? DateTime.now().add(const Duration(days: 5));
   bool floatingActionLoading = false;
   List<String> selectedMachine = [];
   @override
@@ -579,6 +582,8 @@ class _SchudleTableState extends State<SchudleTable> {
                       endDate: endDate,
                       onchangedDateRange: (startDate1, endDate1) {
                         setState(() {
+                          sharedPref.setStartandEndDate(
+                              startDate: startDate1, endDate: endDate1);
                           startDate = DateUtils.dateOnly(startDate1);
                           endDate = DateUtils.dateOnly(endDate1 ??
                               DateTime.now().add(Duration(days: 7)));

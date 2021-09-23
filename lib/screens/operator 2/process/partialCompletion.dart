@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:molex/screens/operator/process/process.dart';
 import '../../../main.dart';
 import '../../../model_api/crimping/getCrimpingSchedule.dart';
 import '../../../model_api/login_model.dart';
@@ -657,15 +658,16 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                                       int.parse(widget.schedule.awg))
                                   .then((value) {
                                 if (value) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Location(
-                                              type: "process",
-                                              employee: widget.employee,
-                                              machine: widget.machine, locationType: LocationType.finaTtransfer,
-                                            )),
-                                  );
+                                  postCompleteTransfer(context: context, machine: widget.machine, employee: widget.employee);
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) => Location(
+                                  //             type: "process",
+                                  //             employee: widget.employee,
+                                  //             machine: widget.machine, locationType: LocationType.finaTtransfer,
+                                  //           )),
+                                  // );
                                 }
                               });
                             }),

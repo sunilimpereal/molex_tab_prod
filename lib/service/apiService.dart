@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:molex/model_api/error_model.dart';
 import '../main.dart';
 import '../model_api/Preparation/getpreparationSchedule.dart';
 import '../model_api/Preparation/postPreparationDetail.dart';
@@ -78,8 +79,10 @@ class ApiService {
     }
   }
 
-  Future<List<Schedule>> getScheduelarData(
-      {required String machId, required String type, required String sameMachine}) async {
+  Future<List<Schedule>?> getScheduelarData(
+      {required String machId,
+      required String type,
+      required String sameMachine}) async {
     print("called api");
     print("called $machId");
     print("called $type");
@@ -91,10 +94,29 @@ class ApiService {
     var response = await http.get(url);
     print('schedular data status code ${response.statusCode}');
     if (response.statusCode == 200) {
-      Schedular schedualr = schedularFromJson(response.body);
-      log(" sch data ${response.body}");
-      List<Schedule> scheduleList = schedualr.data.employeeList;
-      return scheduleList;
+      try {
+        Schedular schedualr = schedularFromJson(response.body);
+        log(" sch data ${response.body}");
+        List<Schedule> scheduleList = schedualr.data.employeeList;
+        return scheduleList;
+      } catch (e) {
+        try {
+          ErrorModel errorGenerateLabel =
+              errorModelFromJson(response.body);
+          Fluttertoast.showToast(
+            msg: "${errorGenerateLabel.statusMsg}",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          return null;
+        } catch (e) {
+          return null;
+        }
+      }
     } else {
       return [];
     }
@@ -135,12 +157,12 @@ class ApiService {
     List<RawMaterial> newList = [];
     for (RawMaterial rawmat in rawmaterial) {
       if (temp.partNunber == rawmat.partNunber) {
-        temp.requireQuantity = (double.parse(temp.requireQuantity??"") +
-                double.parse(rawmat.requireQuantity??''))
+        temp.requireQuantity = (double.parse(temp.requireQuantity ?? "") +
+                double.parse(rawmat.requireQuantity ?? ''))
             .toString();
         temp.toatalScheduleQuantity =
-            (double.parse(temp.toatalScheduleQuantity??'') +
-                    double.parse(rawmat.toatalScheduleQuantity??''))
+            (double.parse(temp.toatalScheduleQuantity ?? '') +
+                    double.parse(rawmat.toatalScheduleQuantity ?? ''))
                 .toString();
         newList.removeLast();
 
@@ -328,7 +350,8 @@ class ApiService {
       required int awg}) async {
     //TODO variable in url
     print("cable No TA : $cablepartno");
-    var url = Uri.parse(baseUrl +"molex/ejobticketmaster/get-cable-terminalA-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg");
+    var url = Uri.parse(baseUrl +
+        "molex/ejobticketmaster/get-cable-terminalA-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg");
     var response = await http.get(url);
     log('Cable termianl A url molex/ejobticketmaster/get-cable-terminalA-bycableNo?cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg');
     log('Cable termianl A status code ${response.statusCode}');
@@ -427,8 +450,8 @@ class ApiService {
       PostGenerateLabel postGenerateLabel, String bundleQuantiy) async {
     var url =
         Uri.parse(baseUrl + 'molex/wccr/generate-label/bdQty=$bundleQuantiy');
-         print(
-        'url generate label :${baseUrl + 'molex/wccr/generate-label/bdQty=$bundleQuantiy'}' );
+    print(
+        'url generate label :${baseUrl + 'molex/wccr/generate-label/bdQty=$bundleQuantiy'}');
     print(
         'body generate label :${postGenerateLabelToJson(postGenerateLabel)} ');
     var response = await http.post(url,
@@ -727,7 +750,9 @@ class ApiService {
 // CRIMPING API
   // crimping Schedule
   Future<List<CrimpingSchedule>> getCrimpingSchedule(
-      {required String scheduleType, required String machineNo, required String sameMachine}) async {
+      {required String scheduleType,
+      required String machineNo,
+      required String sameMachine}) async {
     var url = Uri.parse(baseUrl +
         'molex/crimping/get-bundle-detail?machineNo=$machineNo&scheduleType=$scheduleType&sameMachine=$sameMachine');
 
@@ -896,7 +921,7 @@ class ApiService {
     log('Get Bundles From BundleID status Code: ${response.statusCode}');
     log('Get Bundleslist From BundleID  response body :${response.body}');
     if (response.statusCode == 200) {
-      try{
+      try {
         GetBundleListGl getBundleListGl =
             getBundleListGlFromJson(response.body);
         List<BundlesRetrieved> bundleList =
@@ -906,18 +931,18 @@ class ApiService {
               .where((element) => element.scheduledId.toString() == scheduleID)
               .toList();
         } else {}
-        if (bundleList.length < 1) {
-          log(" mesd true");
-          Fluttertoast.showToast(
-            msg: "Unable to find bundle",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0,
-          );
-        }
+        // if (bundleList.length < 1) {
+        //   log(" mesd true");
+        //   Fluttertoast.showToast(
+        //     msg: "Unable to find bundle",
+        //     toastLength: Toast.LENGTH_SHORT,
+        //     gravity: ToastGravity.BOTTOM,
+        //     timeInSecForIosWeb: 1,
+        //     backgroundColor: Colors.red,
+        //     textColor: Colors.white,
+        //     fontSize: 16.0,
+        //   );
+        // }
         return bundleList;
       } catch (e) {
         return null;

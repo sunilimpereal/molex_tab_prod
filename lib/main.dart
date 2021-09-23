@@ -28,6 +28,11 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIOverlays([]);
+    sharedPref.setStartandEndDate(
+        startDate: DateUtils.dateOnly(
+            DateTime.now().subtract(const Duration(days: 5))),
+        endDate:
+            DateUtils.dateOnly(DateTime.now().add(const Duration(days: 5))));
     super.initState();
   }
 
@@ -36,12 +41,10 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Molex',
-    
-    theme: ThemeData(
+        theme: ThemeData(
           // fontFamily: 'OpenSans',
           primarySwatch: Colors.blue,
         ),
-        home: ChangeIp()
-        );
+        home: ChangeIp());
   }
 }

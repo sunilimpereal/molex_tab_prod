@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:molex/screens/operator/process/process.dart';
 import '../../../main.dart';
 import '../../../model_api/crimping/getCrimpingSchedule.dart';
 import '../../../model_api/login_model.dart';
@@ -18,13 +19,16 @@ class FullCompleteP2 extends StatefulWidget {
   CrimpingSchedule schedule;
   Function continueProcess;
   FullCompleteP2(
-      {required this.employee, required this.machine, required this.schedule, required this.continueProcess});
+      {required this.employee,
+      required this.machine,
+      required this.schedule,
+      required this.continueProcess});
   @override
   _FullCompleteP2State createState() => _FullCompleteP2State();
 }
 
 class _FullCompleteP2State extends State<FullCompleteP2> {
-  PostStartProcessP1 ?postStartprocess;
+  PostStartProcessP1? postStartprocess;
   TextEditingController mainController = new TextEditingController();
   TextEditingController noRawmaterialController = new TextEditingController();
   TextEditingController machineBreakdownController =
@@ -246,7 +250,8 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.pressed))
                                     return Colors.green.shade200;
-                                  return Colors.green.shade500; // Use the component's default.
+                                  return Colors.green
+                                      .shade500; // Use the component's default.
                                 },
                               ),
                             ),
@@ -285,23 +290,30 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
                                         scheduledQuantity:
                                             widget.schedule.bundleQuantityTotal,
                                         machineIdentification:
-                                            widget.machine.machineNumber??'',
+                                            widget.machine.machineNumber ?? '',
                                         //TODO bundle ID
                                         firstPieceAndPatrol: 0,
-                                        applicatorChangeover: 0, bundleIdentification: '');
+                                        applicatorChangeover: 0,
+                                        bundleIdentification: '');
                                 apiService
                                     .post100Complete(fullyComplete)
                                     .then((value) {
                                   if (value) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Location(
-                                                type: "process",
-                                                employee: widget.employee,
-                                                machine: widget.machine, locationType: LocationType.finaTtransfer,
-                                              )),
+                                    postCompleteTransfer(
+                                      context: context,
+                                      employee: widget.employee,
+                                      machine: widget.machine,
                                     );
+                                    // Navigator.push(
+
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //       builder: (context) => Location(
+                                    //             type: "process",
+                                    //             employee: widget.employee,
+                                    //             machine: widget.machine, locationType: LocationType.finaTtransfer,
+                                    //           )),
+                                    // );
                                   } else {}
                                 });
                               });
@@ -326,10 +338,11 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
     );
   }
 
-  Widget quantitycell(
-      {required String name,
-      required int quantity,
-      required TextEditingController textEditingController,}) {
+  Widget quantitycell({
+    required String name,
+    required int quantity,
+    required TextEditingController textEditingController,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 3.0),
       child: Container(
@@ -343,7 +356,6 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
                 child: TextField(
                   showCursor: false,
                   controller: textEditingController,
-                
                   onTap: () {
                     setState(() {
                       _output = '';

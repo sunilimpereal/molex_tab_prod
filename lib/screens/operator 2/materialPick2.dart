@@ -43,9 +43,9 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
   FocusNode _textNode = new FocusNode();
   FocusNode _trackingNumber = new FocusNode();
   FocusNode _qty = new FocusNode();
-  late String partNumber;
-  late String trackingNumber;
-  late String qty;
+  String partNumber="";
+  String trackingNumber="";
+  String qty="";
   List<ItemPart> selectditems = [];
   bool isCollapsedRawMaterial = false;
   bool isCollapsedScannedMaterial = false;

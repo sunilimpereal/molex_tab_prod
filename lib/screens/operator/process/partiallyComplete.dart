@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:molex/screens/operator/process/process.dart';
 
 import '../../../main.dart';
 import '../../../model_api/login_model.dart';
@@ -17,7 +18,10 @@ class PartiallyComplete extends StatefulWidget {
   Employee employee;
   Function continueProcess;
   PartiallyComplete(
-      {required this.machine, required this.employee, required this.continueProcess, required this.schedule});
+      {required this.machine,
+      required this.employee,
+      required this.continueProcess,
+      required this.schedule});
   @override
   _PartiallyCompleteState createState() => _PartiallyCompleteState();
 }
@@ -145,7 +149,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
     "System Fault",
   ];
   List<String> selectedreasons = [];
-  ApiService ?apiService;
+  ApiService? apiService;
   @override
   void initState() {
     apiService = new ApiService();
@@ -250,12 +254,11 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                   ))
               : new Text(
                   buttonText,
-                  style:  TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16.0,
-                    ),
-                  
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16.0,
+                  ),
                 ),
           onPressed: () => {buttonPressed(buttonText)},
         ),
@@ -345,7 +348,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                                   fontFamily: fonts.openSans,
                                 )),
                           ],
-                        ), 
+                        ),
                       ),
                       Text('Note: Update Reason in terms of minutes',
                           style: TextStyle(
@@ -379,13 +382,11 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                   ),
                   child: Row(
                     children: [
-                      Text(
-                        'Reason',
-                        style: TextStyle(
-                                color: Colors.red,
-                                fontFamily: fonts.openSans,
-                                fontSize: 14)
-                      ),
+                      Text('Reason',
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontFamily: fonts.openSans,
+                              fontSize: 14)),
                       Icon(
                         Icons.edit,
                         color: Colors.red,
@@ -786,8 +787,8 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                             (Set<MaterialState> states) {
                               if (states.contains(MaterialState.pressed))
                                 return Colors.green.shade200;
-                              return Colors
-                                  .green.shade500; // Use the component's default.
+                              return Colors.green
+                                  .shade500; // Use the component's default.
                             },
                           ),
                         ),
@@ -815,17 +816,21 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                                   postpartiallyComplete, widget.schedule.awg)
                               .then((value) {
                             if (value) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Location(
-                                          type: "process",
-                                          employee: widget.employee,
-                                          machine: widget.machine,
-                                          locationType:
-                                              LocationType.finaTtransfer,
-                                        )),
-                              );
+                              postCompleteTransfer(
+                                  context: context,
+                                  machine: widget.machine,
+                                  employee: widget.employee);
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //       builder: (context) => Location(
+                              //             type: "process",
+                              //             employee: widget.employee,
+                              //             machine: widget.machine,
+                              //             locationType:
+                              //                 LocationType.finaTtransfer,
+                              //           )),
+                              // );
                             } else {
                               // Fluttertoast.showToast(
                               //     msg: "Post Partial Completion data failed",
@@ -850,10 +855,11 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
     );
   }
 
-  Widget quantitycell(
-      {required String name,
-      required int quantity,
-      required TextEditingController textEditingController,}) {
+  Widget quantitycell({
+    required String name,
+    required int quantity,
+    required TextEditingController textEditingController,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 3.0),
       child: Container(
@@ -867,7 +873,6 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                 child: TextField(
                   readOnly: true,
                   controller: textEditingController,
- 
                   onTap: () {
                     setState(() {
                       if (textEditingController.text.length > 0) {
@@ -1021,9 +1026,8 @@ class _ReasonSelectionState extends State<ReasonSelection> {
                                     Text(
                                       e,
                                       style: TextStyle(
-                                          fontSize: 13,
-                                        ),
-
+                                        fontSize: 13,
+                                      ),
                                     ),
                                     SizedBox(width: 4),
                                     GestureDetector(
@@ -1063,12 +1067,10 @@ class _ReasonSelectionState extends State<ReasonSelection> {
                     });
                   },
                   contentPadding: EdgeInsets.all(0),
-                  title: Text(
-                    reasonList[index],
-                    style: TextStyle(
-                      fontSize: 13,
-                    )
-                  ),
+                  title: Text(reasonList[index],
+                      style: TextStyle(
+                        fontSize: 13,
+                      )),
                   trailing: selectedreasons.contains(reasonList[index])
                       ? Icon(
                           Icons.check_rounded,

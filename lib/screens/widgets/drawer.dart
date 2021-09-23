@@ -10,7 +10,8 @@ class DrawerWidget extends StatefulWidget {
   Employee employee;
   MachineDetails? machineDetails;
   String type;
-  DrawerWidget({required this.employee,  this.machineDetails, required this.type});
+  DrawerWidget(
+      {required this.employee, this.machineDetails, required this.type});
   @override
   _DrawerWidgetState createState() => _DrawerWidgetState();
 }
@@ -25,19 +26,18 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             children: [profileView()],
           ),
           Positioned(
-              bottom: 0,
-              right: 0,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "v 1.0.0+20",
+            bottom: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("v 1.0.0+21",
                   style: TextStyle(
                     color: Colors.red,
                     letterSpacing: 2,
                     fontWeight: FontWeight.w500,
                   )),
-                ),
-              )
+            ),
+          )
         ],
       ),
     );
@@ -60,12 +60,11 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       borderRadius: BorderRadius.all(Radius.circular(500))),
                   child: Center(
                     child: Text(
-                      "${widget.employee.employeeName.substring(0, 2).toUpperCase()}", // TODO
-                      style:  TextStyle(
-                              color: Colors.black,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w500)
-                    ),
+                        "${widget.employee.employeeName.substring(0, 2).toUpperCase()}", // TODO
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w500)),
                   ),
                 ),
               ),
@@ -77,14 +76,12 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       children: [
                         Container(
                           width: 200,
-                          child: Text(
-                            "${widget.employee.employeeName}",
-                            style:  TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500)),
-                          ),
-                        
+                          child: Text("${widget.employee.employeeName}",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500)),
+                        ),
                       ],
                     ),
                   ),
@@ -94,14 +91,12 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       children: [
                         Container(
                           width: 200,
-                          child: Text(
-                            "${widget.employee.empId}",
-                            style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500)),
-                          ),
-                        
+                          child: Text("${widget.employee.empId}",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500)),
+                        ),
                       ],
                     ),
                   )

@@ -193,6 +193,7 @@ class _DateRangePickerDashCrimpingState extends State<DateRangePickerDashCrimpin
             height: 350,
             child: SfDateRangePicker(
               todayHighlightColor: Colors.red,
+              initialDisplayDate: startDate,
               rangeSelectionColor: Colors.redAccent.withOpacity(0.1),
               selectionColor: Colors.red,
               endRangeSelectionColor: Colors.red,

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:molex/screens/utils/loadingButton.dart';
 import '../../../model_api/Transfer/binToLocation_model.dart';
 import '../../../model_api/Transfer/postgetBundleMaster.dart';
 import '../../../model_api/materialTrackingCableDetails_model.dart';
@@ -123,6 +124,7 @@ class _ScanBundleState extends State<ScanBundle> {
   bool checkmappingdone = false;
   bool donotrepeatalert = false;
   bool visibility = true;
+  bool scanbundleLoading = false;
 
   String? binId;
   //to store the bundle Quantity fetched from api after scanning bundle Id
@@ -293,7 +295,7 @@ class _ScanBundleState extends State<ScanBundle> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             //100% complete
-                            widget.totalQuantity ==
+                            widget.totalQuantity >=
                                     int.parse(widget.schedule.schdeuleQuantity)
                                 ? Container(
                                     height: 40,
@@ -1006,30 +1008,36 @@ class _ScanBundleState extends State<ScanBundle> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: 200,
-                          child: ElevatedButton(
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        side: BorderSide(color: Colors.red))),
-                                backgroundColor:
-                                    MaterialStateProperty.resolveWith<Color>(
-                                  (Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.pressed))
-                                      return Colors.red.shade900;
-                                    return Colors
-                                        .red; // Use the component's default.
-                                  },
+                            width: 200,
+                            child: LoadingButton(
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
+                                          side: BorderSide(color: Colors.red))),
+                                  backgroundColor:
+                                      MaterialStateProperty.resolveWith<Color>(
+                                    (Set<MaterialState> states) {
+                                      if (states
+                                          .contains(MaterialState.pressed))
+                                        return Colors.red.shade900;
+                                      return Colors
+                                          .red; // Use the component's default.
+                                    },
+                                  ),
                                 ),
-                              ),
-                              onPressed: () {
-                                getScannedBundle();
-                              },
-                              child: Text('Scan Bundle  ')),
-                        ),
+                                child: Text('Scan Bundle  '),
+                                loading: false,
+                                loadingChild: Container(
+                                    height: 30,
+                                    width: 30,
+                                    child: CircularProgressIndicator(
+                                        color: Colors.white)),
+                                onPressed: () {
+                                  getScannedBundle();
+                                }))
                       ],
                     ),
                   ),
@@ -1061,39 +1069,23 @@ class _ScanBundleState extends State<ScanBundle> {
         BundlesRetrieved bundleDetail = bundleList[0];
 
         if (value != null) {
-          if (validateBundle(bundleDetail)) {
-            if (bundleDetail.bundleStatus.toLowerCase() == "dropped") {
-              setState(() {
-                scannedBundle = bundleDetail;
-                clear();
-                bundleQty = "${bundleDetail.bundleQuantity}";
-                bundlQtyController.text = "${bundleDetail.bundleQuantity}";
-                next = !next;
-                status = Status.rejection;
-              });
-            } else {
-              if (!donotrepeatalert) {
-                showBundleAlertCrimping(
-                    context: context,
-                    bundleStaus: bundleDetail.bundleStatus,
-                    onDoNotRemindAgain: (value) {
-                      setState(() {
-                        donotrepeatalert = value;
-                        log("message donotrepeatalert $donotrepeatalert");
-                      });
-                    },
-                    onSubmitted: () {
-                      setState(() {
-                        scannedBundle = bundleDetail;
-                        clear();
-                        bundleQty = "${bundleDetail.bundleQuantity}";
-                        bundlQtyController.text =
-                            "${bundleDetail.bundleQuantity}";
-                        next = !next;
-                        status = Status.rejection;
-                      });
-                    });
-              } else {
+          if ((widget.totalQuantity + bundleDetail.bundleQuantity) >
+              int.parse(widget.schedule.schdeuleQuantity)) {
+                setState(() {
+                  
+                });
+            Fluttertoast.showToast(
+                msg: "Total Quantity Exceeds Schedule Qty",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+            return true;
+          } else {
+            if (validateBundle(bundleDetail)) {
+              if (bundleDetail.bundleStatus.toLowerCase() == "dropped") {
                 setState(() {
                   scannedBundle = bundleDetail;
                   clear();
@@ -1102,6 +1094,38 @@ class _ScanBundleState extends State<ScanBundle> {
                   next = !next;
                   status = Status.rejection;
                 });
+              } else {
+                if (!donotrepeatalert) {
+                  showBundleAlertCrimping(
+                      context: context,
+                      bundleStaus: bundleDetail.bundleStatus,
+                      onDoNotRemindAgain: (value) {
+                        setState(() {
+                          donotrepeatalert = value;
+                          log("message donotrepeatalert $donotrepeatalert");
+                        });
+                      },
+                      onSubmitted: () {
+                        setState(() {
+                          scannedBundle = bundleDetail;
+                          clear();
+                          bundleQty = "${bundleDetail.bundleQuantity}";
+                          bundlQtyController.text =
+                              "${bundleDetail.bundleQuantity}";
+                          next = !next;
+                          status = Status.rejection;
+                        });
+                      });
+                } else {
+                  setState(() {
+                    scannedBundle = bundleDetail;
+                    clear();
+                    bundleQty = "${bundleDetail.bundleQuantity}";
+                    bundlQtyController.text = "${bundleDetail.bundleQuantity}";
+                    next = !next;
+                    status = Status.rejection;
+                  });
+                }
               }
             }
           }

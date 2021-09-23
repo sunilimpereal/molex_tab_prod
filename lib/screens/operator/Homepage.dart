@@ -390,9 +390,9 @@ class _SchudleTableState extends State<SchudleTable> {
 
   PostStartProcessP1? postStartprocess;
   //Filter
-  late DateTime startDate =
+  late DateTime startDate = sharedPref.startDate ??
       DateUtils.dateOnly(DateTime.now().subtract(const Duration(days: 5)));
-  late DateTime endDate =
+  late DateTime endDate = sharedPref.endDate ??
       DateUtils.dateOnly(DateTime.now().add(const Duration(days: 3)));
   bool floatingActionLoading = false;
   List<String> selectedMachine = [];
@@ -466,13 +466,13 @@ class _SchudleTableState extends State<SchudleTable> {
                   child: Container(
                       height: widget.type == "M" ? 425 : 495,
                       // height: double.parse("${rowList.length*60}"),
-                      child: FutureBuilder(
+                      child: FutureBuilder<List<Schedule>?>(
                         future: apiService!.getScheduelarData(
                             machId: widget.machine.machineNumber ?? '',
                             type: widget.type,
                             sameMachine: widget.scheduleType),
                         builder:
-                            (context, AsyncSnapshot<List<Schedule>> snapshot) {
+                            (context, AsyncSnapshot<List<Schedule>?> snapshot) {
                           if (snapshot.hasData) {
                             // return  buildDataRow(schedule:widget.schedule,c:2);
                             List<Schedule>? schedulelist =
@@ -698,7 +698,7 @@ class _SchudleTableState extends State<SchudleTable> {
                       startDate: startDate,
                       endDate: endDate,
                       //machine
-                      machineIds: value
+                      machineIds: value!
                           .map((e) => e.machineNumber.toString())
                           .toSet()
                           .toList(),
@@ -710,6 +710,8 @@ class _SchudleTableState extends State<SchudleTable> {
                       },
                       onchangedDateRange: (startDate1, endDate1) {
                         setState(() {
+                          sharedPref.setStartandEndDate(
+                              startDate: startDate1, endDate: endDate1);
                           startDate = DateUtils.dateOnly(startDate1);
                           endDate = endDate1 ??
                               DateUtils.dateOnly(

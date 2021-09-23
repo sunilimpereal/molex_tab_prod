@@ -323,7 +323,7 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
 
                                             userid: "${widget.employee.empId}",
                                             shift:
-                                                "${widget.schedule.shiftNumber}",
+                                                "${getShift()}",
                                             machine:
                                                 "${widget.machine.machineNumber}",
                                           );
@@ -365,6 +365,17 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
         ),
       ),
     );
+  }
+  String getShift() {
+    DateTime time = DateTime.now();
+    log(DateTime.now().toString());
+    if (time.hour >= 6 && time.hour < 14) {
+      return "1";
+    } else if (time.hour >= 14 && time.hour < 22) {
+      return "2";
+    } else {
+      return "3";
+    }
   }
 
   Future<void> showBundleDetail(GeneratedBundle generatedBundle) async {

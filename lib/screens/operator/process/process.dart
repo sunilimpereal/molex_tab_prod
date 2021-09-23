@@ -46,8 +46,8 @@ class ProcessPage extends StatefulWidget {
 }
 
 class _ProcessPageState extends State<ProcessPage> {
-  String ?_chosenValue= "Crimp From, Cutlength, Crimp To";
-  String ?value;
+  String? _chosenValue = "Crimp From, Cutlength, Crimp To";
+  String? value;
   String output = '';
   String _output = '';
   TextEditingController _qtyController = new TextEditingController();
@@ -57,7 +57,7 @@ class _ProcessPageState extends State<ProcessPage> {
   String _printerStatus = 'Waiting';
   bool orderDetailExpanded = true;
   String rightside = 'label';
-  ApiService ?apiService;
+  ApiService? apiService;
   String method = '';
   List<String>? items;
   int totalquantity = 0;
@@ -80,7 +80,7 @@ class _ProcessPageState extends State<ProcessPage> {
     // _chosenValue = widget.machine.category.contains("Cutting")
     //     ? 'Cutlength & both side stripping'
     //     : 'Crimp-From,Cutlength,Crimp-To';
-    totalquantity = widget.schedule.actualQuantity??0;
+    totalquantity = widget.schedule.actualQuantity ?? 0;
     super.initState();
   }
 
@@ -142,21 +142,21 @@ class _ProcessPageState extends State<ProcessPage> {
     // SystemChannels.textInput.invokeMethod('TextInput.hide');
     return new WillPopScope(
         onWillPop: () async {
-           showDialog<bool>(
-              context: context,
-              builder: (c) => AlertDialog(
-                title: Text('Warning'),
-                content: Text('Do not use back button to exit'),
-                actions: [
-                  // ignore: deprecated_member_use
-                  FlatButton(
-                    child: Text('Ok'),
-                    onPressed: () => Navigator.pop(c, false),
-                  ),
-                ],
-              ),
-            );
-            return false;
+          showDialog<bool>(
+            context: context,
+            builder: (c) => AlertDialog(
+              title: Text('Warning'),
+              content: Text('Do not use back button to exit'),
+              actions: [
+                // ignore: deprecated_member_use
+                FlatButton(
+                  child: Text('Ok'),
+                  onPressed: () => Navigator.pop(c, false),
+                ),
+              ],
+            ),
+          );
+          return false;
         },
         child: Scaffold(
           backgroundColor: Colors.blueGrey.shade50,
@@ -288,7 +288,8 @@ class _ProcessPageState extends State<ProcessPage> {
                           employee: widget.employee,
                           reload: reload,
                           machine: widget.machine,
-                          materialPickType: MaterialPickType.reload, homeReload: (){},
+                          materialPickType: MaterialPickType.reload,
+                          homeReload: () {},
                         )),
               );
             },
@@ -323,7 +324,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                         machine: widget.machine,
                                         employee: widget.employee,
                                         processStarted: processStarted,
-                                        processType: _chosenValue??"",
+                                        processType: _chosenValue ?? "",
                                         matTrkPostDetail:
                                             widget.matTrkPostDetail,
                                         toalQuantity: totalquantity,
@@ -354,8 +355,8 @@ class _ProcessPageState extends State<ProcessPage> {
                                         },
                                         fullcomplete: () {
                                           if (widget.machine.category ==
-                                                  "Automatic Cutting"||
-                                                  widget.machine.category ==
+                                                  "Automatic Cutting" ||
+                                              widget.machine.category ==
                                                   "Manual Cutting" ||
                                               widget.schedule.process ==
                                                   "Cutting") {
@@ -387,7 +388,12 @@ class _ProcessPageState extends State<ProcessPage> {
                                                     widget.schedule
                                                         .scheduledQuantity),
                                                 machineIdentification: widget
-                                                    .machine.machineNumber??"", applicatorChangeover: 0, bundleIdentification: '', firstPieceAndPatrol: 0,
+                                                        .machine
+                                                        .machineNumber ??
+                                                    "",
+                                                applicatorChangeover: 0,
+                                                bundleIdentification: '',
+                                                firstPieceAndPatrol: 0,
                                                 //TODO bundle ID
                                               );
                                               apiService!
@@ -395,7 +401,11 @@ class _ProcessPageState extends State<ProcessPage> {
                                                       fullyComplete)
                                                   .then((value) {
                                                 if (value) {
-                                                  postCompleteTransfer();
+                                                  postCompleteTransfer(
+                                                    context: context,
+                                                    employee: widget.employee,
+                                                    machine: widget.machine,
+                                                  );
                                                   // Navigator.push(
                                                   //   context,
                                                   //   MaterialPageRoute(
@@ -461,91 +471,6 @@ class _ProcessPageState extends State<ProcessPage> {
           ),
         ));
   }
-  postCompleteTransfer() {
-    ApiService apiService = new ApiService();
-    
-   
-  
-          apiService
-              .getmachinedetails(widget.machine.machineNumber??'')
-              .then((value) {
-            // Navigator.pop(context);
-            MachineDetails machineDetails = value![0];
-            Fluttertoast.showToast(
-                msg: widget.machine.machineNumber??'',
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0);
-
-            print("machineID:${widget.machine.machineNumber}");
-            switch (machineDetails.category) {
-              case "Manual Crimping":
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => HomePageOp2(
-                            employee: widget.employee,
-                            machine: machineDetails,
-                          )),
-                );
-                break;
-              case "Manual Cutting":
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Homepage(
-                            employee: widget.employee,
-                            machine: machineDetails,
-                          )),
-                );
-                break;
-              case "Automatic Cut & Crimp":
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Homepage(
-                            employee: widget.employee,
-                            machine: machineDetails,
-                          )),
-                );
-                break;
-              case "Semi Automatic Strip and Crimp machine":
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => HomePageOp2(
-                            employee: widget.employee,
-                            machine: machineDetails,
-                          )),
-                );
-                break;
-              case "Automatic Cutting":
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Homepage(
-                            employee: widget.employee,
-                            machine: machineDetails,
-                          )),
-                );
-                break;
-              default:
-                Fluttertoast.showToast(
-                    msg: "Machine not Found",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-            }
-          });
-        }
-
-  
 
   Future<void> _showConfirmationDialog() async {
     Future.delayed(
@@ -621,7 +546,8 @@ class _ProcessPageState extends State<ProcessPage> {
                         color: widget.schedule.color,
                         awg: widget.schedule.awg),
                     builder: (context, snapshot) {
-                      CableTerminalA? terminalA = snapshot.data as CableTerminalA?;
+                      CableTerminalA? terminalA =
+                          snapshot.data as CableTerminalA?;
                       if (snapshot.hasData) {
                         return process(
                             'From Process',
@@ -688,7 +614,8 @@ class _ProcessPageState extends State<ProcessPage> {
                       awg: widget.schedule.awg),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      CableTerminalB? cableTerminalB = snapshot.data as CableTerminalB?;
+                      CableTerminalB? cableTerminalB =
+                          snapshot.data as CableTerminalB?;
                       return process(
                           'To Process',
                           '',
@@ -763,17 +690,17 @@ class _ProcessPageState extends State<ProcessPage> {
                       style: TextStyle(fontSize: 10),
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width * width,
-                      child: Text(p4,
+                        width: MediaQuery.of(context).size.width * width,
+                        child: Text(
+                          p4,
                           textAlign: TextAlign.center,
-                          style:TextStyle(
-                              fontSize: 11,
-                              color: Colors.red,
-                              fontFamily: fonts.openSans,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          )
-                    ),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.red,
+                            fontFamily: fonts.openSans,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )),
                     SizedBox(height: 4),
                     Text(
                       p5,
@@ -802,9 +729,10 @@ class _ProcessPageState extends State<ProcessPage> {
         // width: MediaQuery.of(context).size.width * width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: color??false ? Colors.red.shade50 : Colors.white,
+          color: color ?? false ? Colors.red.shade50 : Colors.white,
           border: Border.all(
-              width: 1.5, color: color??false ? Colors.red.shade300 : Colors.white),
+              width: 1.5,
+              color: color ?? false ? Colors.red.shade300 : Colors.white),
         ),
         child: Row(
           children: [
@@ -836,18 +764,17 @@ class _ProcessPageState extends State<ProcessPage> {
                       style: TextStyle(fontSize: 10),
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width * width!,
-                      child: Text(
+                        width: MediaQuery.of(context).size.width * width!,
+                        child: Text(
                           "${cableDetails.cablePartNumber}(${cableDetails.description})",
                           textAlign: TextAlign.center,
-                          style:  TextStyle(
-                              fontSize: 11,
-                              color: Colors.red,
-                              fontFamily: fonts.openSans,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          )
-                    ),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.red,
+                            fontFamily: fonts.openSans,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )),
                     SizedBox(height: 1),
                     Container(
                       width: MediaQuery.of(context).size.width * width * 0.9,
@@ -1034,7 +961,8 @@ class _ProcessPageState extends State<ProcessPage> {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          boxes("FG Description", fgDetail!.fgDescription ?? ''),
+                          boxes(
+                              "FG Description", fgDetail!.fgDescription ?? ''),
                           boxes("FG Scheduled", fgDetail.fgScheduleDate ?? ''),
                           boxes("Customer", fgDetail.customer ?? ''),
                           boxes("Drg Rev", fgDetail.drgRev ?? ''),
@@ -1162,7 +1090,7 @@ class _ProcessPageState extends State<ProcessPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  _chosenValue??'',
+                  _chosenValue ?? '',
                   style: TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.w600,
@@ -1188,7 +1116,8 @@ class _ProcessPageState extends State<ProcessPage> {
   }
 
   Future<void> machineDetail(
-      {required BuildContext context, required MachineDetails machineDetails}) async {
+      {required BuildContext context,
+      required MachineDetails machineDetails}) async {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {},
@@ -1217,44 +1146,29 @@ class _ProcessPageState extends State<ProcessPage> {
                       ),
                       Row(
                         children: [
-                          Text(
-                            'Machine Id : ',
-                            style: TextStyle(fontSize: 16)),
-                          
-                          Text(
-                            '${machineDetails.machineNumber}',
-                            style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.w600)),
-                          
+                          Text('Machine Id : ', style: TextStyle(fontSize: 16)),
+                          Text('${machineDetails.machineNumber}',
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w600)),
                         ],
                       ),
                       SizedBox(height: 10),
                       Row(
                         children: [
-                          Text(
-                            'Printer Id : ',
-                            style: TextStyle(fontSize: 15)),
-                   
-                          Text(
-                            '${machineDetails.printerIp}',
-                            style:  TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.w600)),
-                        
+                          Text('Printer Id : ', style: TextStyle(fontSize: 15)),
+                          Text('${machineDetails.printerIp}',
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w600)),
                         ],
                       ),
                       SizedBox(height: 10),
                       Row(
                         children: [
-                          Text(
-                            'Machine Location :',
-                            style:
-                                 TextStyle(fontSize: 15)),
-                          
-                          Text(
-                            " ${machineDetails.machineLocation}",
-                            style:TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.w600)),
-                          
+                          Text('Machine Location :',
+                              style: TextStyle(fontSize: 15)),
+                          Text(" ${machineDetails.machineLocation}",
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w600)),
                         ],
                       ),
                     ],
@@ -1274,35 +1188,24 @@ class _ProcessPageState extends State<ProcessPage> {
                       ),
                       Row(
                         children: [
-                          Text(
-                            'Model Name : ',
-                            style: TextStyle(fontSize: 16)),
-                          
-                          Text(
-                            '${machineDetails.modelName}',
-                            style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w600)),
-                          
+                          Text('Model Name : ', style: TextStyle(fontSize: 16)),
+                          Text('${machineDetails.modelName}',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600)),
                         ],
                       ),
                       SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            '',
-                            style:  TextStyle(fontSize: 15)),
-                          
+                          Text('', style: TextStyle(fontSize: 15)),
                         ],
                       ),
                       SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            '',
-                            style: TextStyle(fontSize: 15)),
-                          
+                          Text('', style: TextStyle(fontSize: 15)),
                         ],
                       ),
                     ],
@@ -1315,4 +1218,87 @@ class _ProcessPageState extends State<ProcessPage> {
       },
     );
   }
+}
+
+postCompleteTransfer(
+    {required BuildContext context,
+    required MachineDetails machine,
+    required Employee employee}) {
+  ApiService apiService = new ApiService();
+
+  apiService.getmachinedetails(machine.machineNumber ?? '').then((value) {
+    // Navigator.pop(context);
+    MachineDetails machineDetails = value![0];
+    Fluttertoast.showToast(
+        msg: machine.machineNumber ?? '',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+
+    print("machineID:${machine.machineNumber}");
+    switch (machineDetails.category) {
+      case "Manual Crimping":
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomePageOp2(
+                    employee: employee,
+                    machine: machineDetails,
+                  )),
+        );
+        break;
+      case "Manual Cutting":
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Homepage(
+                    employee: employee,
+                    machine: machineDetails,
+                  )),
+        );
+        break;
+      case "Automatic Cut & Crimp":
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Homepage(
+                    employee: employee,
+                    machine: machineDetails,
+                  )),
+        );
+        break;
+      case "Semi Automatic Strip and Crimp machine":
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomePageOp2(
+                    employee: employee,
+                    machine: machineDetails,
+                  )),
+        );
+        break;
+      case "Automatic Cutting":
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Homepage(
+                    employee: employee,
+                    machine: machineDetails,
+                  )),
+        );
+        break;
+      default:
+        Fluttertoast.showToast(
+            msg: "Machine not Found",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+    }
+  });
 }

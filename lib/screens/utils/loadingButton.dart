@@ -35,8 +35,9 @@ class _LoadingButtonState extends State<LoadingButton> {
                 widget.loading = true;
               });
            bool a = widget.onPressed();
-           log("a : $a");
            if(a){
+                        log("a : $a");
+
                   setState(() {
                 widget.loading = false;
               });
