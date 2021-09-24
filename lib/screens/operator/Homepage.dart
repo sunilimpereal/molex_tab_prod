@@ -711,7 +711,8 @@ class _SchudleTableState extends State<SchudleTable> {
                       onchangedDateRange: (startDate1, endDate1) {
                         setState(() {
                           sharedPref.setStartandEndDate(
-                              startDate: startDate1, endDate: endDate1);
+                              startDate: startDate1, endDate: endDate1?? DateUtils.dateOnly(
+                                  DateTime.now().add(Duration(days: 7))));
                           startDate = DateUtils.dateOnly(startDate1);
                           endDate = endDate1 ??
                               DateUtils.dateOnly(

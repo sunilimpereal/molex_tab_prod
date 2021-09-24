@@ -70,11 +70,13 @@ class _ProcessPage2State extends State<ProcessPage2> {
       'Crimp From & To',
       'Double Crimp From'
       'Double Crimp To',
+      'Double Crimping'
     ];
 
     _chosenValue = items!.contains(widget.schedule.process)
         ? widget.schedule.process
         : null;
+
     getMethod(_chosenValue!);
     totalQuanity = widget.schedule.actualQuantity;
   }
@@ -111,145 +113,173 @@ class _ProcessPage2State extends State<ProcessPage2> {
         bundltype = "multiple";
         method = 'a-b';
       }
+       if (value == "Double Crimp From") {
+        bundltype = "multiple";
+        method = 'a';
+      }
+       if (value == "Double Crimp To") {
+        bundltype = "multiple";
+        method = 'b';
+      }
+      
     });
   }
 
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: startProcess(),
-
-        //  Text(
-        //   'Crimping',
-        //   style: TextStyle(
-        //     color: Colors.red,
-        //   ),
-        // ),
-        iconTheme: IconThemeData(
-          color: Colors.red,
-        ),
-        actions: [
-          //machineID
-          Container(
-            padding: EdgeInsets.all(1),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      height: 24,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.all(Radius.circular(100)),
-                      ),
-                      child: Center(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 4.0),
-                            child: Icon(
-                              Icons.person,
-                              size: 18,
-                              color: Colors.redAccent,
-                            ),
-                          ),
-                          Text(
-                            widget.employee.empId,
-                            style: TextStyle(fontSize: 13, color: Colors.black),
-                          ),
-                        ],
-                      )),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      height: 24,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.all(Radius.circular(100)),
-                      ),
-                      child: Center(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 4.0),
-                            child: Icon(
-                              Icons.settings,
-                              size: 18,
-                              color: Colors.redAccent,
-                            ),
-                          ),
-                          Text(
-                            widget.machine.machineNumber ?? "",
-                            style: TextStyle(fontSize: 13, color: Colors.black),
-                          ),
-                        ],
-                      )),
-                    ),
-                  ],
-                )
+    return WillPopScope(
+       onWillPop: () async {
+          showDialog<bool>(
+            context: context,
+            builder: (c) => AlertDialog(
+              title: Text('Warning'),
+              content: Text('Do not use back button to exit'),
+              actions: [
+                // ignore: deprecated_member_use
+                FlatButton(
+                  child: Text('Ok'),
+                  onPressed: () => Navigator.pop(c, false),
+                ),
               ],
             ),
-          ),
-
-          TimeDisplay(),
-        ],
-      ),
-      drawer: DrawerWidgetWIP(
-        employee: widget.employee,
-        machineDetails: widget.machine,
-        transfer: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Location(
-                      locationType: LocationType.partialTransfer,
-                      type: "process",
-                      employee: widget.employee,
-                      machine: widget.machine,
-                    )),
           );
+          return false;
         },
-        reloadmaterial: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MaterialPickOp2(
-                schedule: widget.schedule,
-                employee: widget.employee,
-                reload: reload,
-                machine: widget.machine,
-                materialPickType: MaterialPickType.reload,
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          title: startProcess(),
+
+          //  Text(
+          //   'Crimping',
+          //   style: TextStyle(
+          //     color: Colors.red,
+          //   ),
+          // ),
+          iconTheme: IconThemeData(
+            color: Colors.red,
+          ),
+          actions: [
+            //machineID
+            Container(
+              padding: EdgeInsets.all(1),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.all(Radius.circular(100)),
+                        ),
+                        child: Center(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Icon(
+                                Icons.person,
+                                size: 18,
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                            Text(
+                              widget.employee.empId,
+                              style: TextStyle(fontSize: 13, color: Colors.black),
+                            ),
+                          ],
+                        )),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.all(Radius.circular(100)),
+                        ),
+                        child: Center(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Icon(
+                                Icons.settings,
+                                size: 18,
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                            Text(
+                              widget.machine.machineNumber ?? "",
+                              style: TextStyle(fontSize: 13, color: Colors.black),
+                            ),
+                          ],
+                        )),
+                      ),
+                    ],
+                  )
+                ],
               ),
             ),
-          );
-        }, homeReload: (){}, returnmaterial: (){}, 
-      ),
-      body: Container(
-        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Column(children: [
-            P2ScheduleDetailWIP(
-              schedule: widget.schedule,
-            ),
-            // tableHeading(),
-            // buildDataRow(schedule: widget.schedule),
-            // fgDetails(),
+
+            TimeDisplay(),
+          ],
+        ),
+        drawer: DrawerWidgetWIP(
+          employee: widget.employee,
+          machineDetails: widget.machine,
+          transfer: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Location(
+                        locationType: LocationType.partialTransfer,
+                        type: "process",
+                        employee: widget.employee,
+                        machine: widget.machine,
+                      )),
+            );
+          },
+          reloadmaterial: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MaterialPickOp2(
+                  schedule: widget.schedule,
+                  employee: widget.employee,
+                  reload: reload,
+                  machine: widget.machine,
+                  materialPickType: MaterialPickType.reload,
+                ),
+              ),
+            );
+          }, homeReload: (){}, returnmaterial: (){}, 
+        ),
+        body: Container(
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Column(children: [
+              P2ScheduleDetailWIP(
+                schedule: widget.schedule,
+              ),
+              // tableHeading(),
+              // buildDataRow(schedule: widget.schedule),
+              // fgDetails(),
+            ]),
+            Column(children: [
+              terminal(),
+              mainBox(mainb!),
+            ]),
           ]),
-          Column(children: [
-            terminal(),
-            mainBox(mainb!),
-          ]),
-        ]),
+        ),
       ),
     );
   }

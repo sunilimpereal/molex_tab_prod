@@ -1458,6 +1458,8 @@ class _MaterialPickState extends State<MaterialPick> {
                 ),
                 child: Text('       Confirm      '),
                 onPressed: () async {
+                  apiService = ApiService();
+                  
                   log(postRawMaterialListToJson(selectdItems));
                   // if (setEquals(rawPartNo.toSet(), scannedPartNo.toSet())) {
                   // _showConfirmationDialog();
@@ -1471,6 +1473,7 @@ class _MaterialPickState extends State<MaterialPick> {
                   );
                   apiService!.postRawmaterial(selectdItems).then((value) {
                     if (value) {
+                     
                       Navigator.pop(context1);
                       widget.materialPickType == MaterialPickType.newload
                           ? Navigator.pushReplacement(

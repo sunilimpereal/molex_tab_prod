@@ -277,7 +277,7 @@ class ApiService {
     final response = await http.post(url,
         body: postRawMaterialListToJson(postRawmaterialList),
         headers: headerList);
-    print('post raw material ${response.statusCode}');
+    print('post raw material ${postRawMaterialListToJson(postRawmaterialList)}');
     log('post raw material body ${response.body}');
     if (response.statusCode == 200) {
       return true;

@@ -46,7 +46,7 @@ class ProcessPage extends StatefulWidget {
 }
 
 class _ProcessPageState extends State<ProcessPage> {
-  String? _chosenValue = "Crimp From, Cutlength, Crimp To";
+  String _chosenValue = "Crimp From, Cutlength, Crimp To";
   String? value;
   String output = '';
   String _output = '';
@@ -75,8 +75,9 @@ class _ProcessPageState extends State<ProcessPage> {
           ];
     _chosenValue = items!.contains(widget.schedule.process)
         ? widget.schedule.process
-        : null;
-    getMethod(_chosenValue!);
+        : "Crimp From, Cutlength, Crimp To";
+        
+    getMethod(_chosenValue);
     // _chosenValue = widget.machine.category.contains("Cutting")
     //     ? 'Cutlength & both side stripping'
     //     : 'Crimp-From,Cutlength,Crimp-To';
@@ -139,6 +140,7 @@ class _ProcessPageState extends State<ProcessPage> {
 
   @override
   Widget build(BuildContext context) {
+     log("null12");
     // SystemChannels.textInput.invokeMethod('TextInput.hide');
     return new WillPopScope(
         onWillPop: () async {
@@ -607,8 +609,7 @@ class _ProcessPageState extends State<ProcessPage> {
               child: FutureBuilder(
                   future: apiService!.getCableTerminalB(
                       fgpartNo: widget.schedule.finishedGoodsNumber,
-                      cablepartno: widget.schedule.cablePartNumber ??
-                          widget.schedule.finishedGoodsNumber,
+                      cablepartno: widget.schedule.cablePartNumber,
                       length: widget.schedule.length,
                       color: widget.schedule.color,
                       awg: widget.schedule.awg),
@@ -1060,7 +1061,7 @@ class _ProcessPageState extends State<ProcessPage> {
               ),
               onChanged: (String? value) {
                 setState(() {
-                  _chosenValue = value;
+                  _chosenValue = value??'';
                   if (value == "Crimp From, Cutlength, Crimp To") {
                     method = 'a-b-c';
                   }
