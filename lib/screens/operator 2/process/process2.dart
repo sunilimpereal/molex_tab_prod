@@ -75,7 +75,9 @@ class _ProcessPage2State extends State<ProcessPage2> {
 
     _chosenValue = items!.contains(widget.schedule.process)
         ? widget.schedule.process
-        : null;
+        : 'Crimp From & To';
+
+
 
     getMethod(_chosenValue!);
     totalQuanity = widget.schedule.actualQuantity;
@@ -334,10 +336,49 @@ class _ProcessPage2State extends State<ProcessPage2> {
               }, 
             )
           : MultipleBundleScan(
-              machineId: widget.machine.machineNumber??'',
+            machineId: widget.machine.machineNumber??'',
               userId: widget.employee.empId,
               schedule: widget.schedule,
               method: method,
+              totalQuantity: totalQuanity,
+              matTrkPostDetail: widget.matTrkPostDetail,
+              processName: _chosenValue??'',
+              processStarted: processStarted,
+               updateQty: (value) {
+                log("QTYY : $value");
+                setState(() {
+                  totalQuanity = value;
+                });
+              },
+              startProcess: () {
+                setState(() {
+                  processStarted = true;
+                });
+              },
+              fullyComplete: () {
+                setState(() {
+                  mainb = "100";
+                });
+              },
+              partiallyComplete: () {
+                setState(() {
+                  mainb = "partial";
+                });
+              }, 
+              process: _chosenValue??'Double Crimping',
+              reload: reload,
+              transfer: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Location(
+                            locationType: LocationType.partialTransfer,
+                            type: "process",
+                            employee: widget.employee,
+                            machine: widget.machine,
+                          )),
+                );
+              },
             );
     }
     if (main == "100") {

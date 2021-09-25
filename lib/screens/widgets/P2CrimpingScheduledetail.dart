@@ -127,6 +127,11 @@ class _P2ScheduleDetailWIPState extends State<P2ScheduleDetailWIP> {
                 heading: "cable#",
                 value: "${widget.schedule.cableNumber}",
                 width: 0.05),
+                 feild(
+                heading: "AWG",
+                value: "${widget.schedule.awg}",
+                width: 0.05),
+                
             feild(
                 heading: "Cut Length",
                 value: '${widget.schedule.length}',
@@ -201,6 +206,7 @@ class _P2ScheduleDetailWIPState extends State<P2ScheduleDetailWIP> {
                               heading: "Cable#",
                               value: fgDetail.cableSerialNo.toString() ,
                               width: 0.09),
+                              
                          feild(
                               heading: 'Shift No. ',
                               value: '  ${widget.schedule.shiftNumber}',

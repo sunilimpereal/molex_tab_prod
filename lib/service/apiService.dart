@@ -931,21 +931,10 @@ class ApiService {
               .where((element) => element.scheduledId.toString() == scheduleID)
               .toList();
         } else {}
-        // if (bundleList.length < 1) {
-        //   log(" mesd true");
-        //   Fluttertoast.showToast(
-        //     msg: "Unable to find bundle",
-        //     toastLength: Toast.LENGTH_SHORT,
-        //     gravity: ToastGravity.BOTTOM,
-        //     timeInSecForIosWeb: 1,
-        //     backgroundColor: Colors.red,
-        //     textColor: Colors.white,
-        //     fontSize: 16.0,
-        //   );
-        // }
+       
         return bundleList;
       } catch (e) {
-        return null;
+        return [];
       }
     } else {
       Fluttertoast.showToast(
@@ -957,7 +946,7 @@ class ApiService {
         textColor: Colors.white,
         fontSize: 16.0,
       );
-      return null;
+      return [];
     }
   }
 

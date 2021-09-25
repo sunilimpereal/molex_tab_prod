@@ -73,7 +73,7 @@ class BundlesRetrieved {
        required this.orderId,
        required this.updateFromProcess,
        required this.awg,
-       required   this.crimpFromSchId,
+       required this.crimpFromSchId,
        required this.crimpToSchId,
        required this.preparationCompleteFlag,
        required this.viCompleted,
