@@ -1061,6 +1061,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                   machineId: widget.machine.machineNumber??'',
                   fgNo: "${widget.schedule.finishedGoods}",
                   scheduleId: "${widget.schedule.scheduleId}",
+                  process: "${widget.schedule.process}",
                   type: "${widget.machine.category}", partNo: ''),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {

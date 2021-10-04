@@ -6,21 +6,23 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:molex/model_api/Transfer/postgetBundleMaster.dart';
 import 'package:molex/model_api/materialTrackingCableDetails_model.dart';
 import 'package:molex/model_api/process1/getBundleListGl.dart';
+import 'package:molex/screens/operator%202/process/double%20crimp/doubleCrimpInfo.dart';
 import 'package:molex/screens/operator/process/materialTableWIP.dart';
+import 'package:molex/screens/utils/loadingButton.dart';
 import 'package:molex/screens/widgets/alertDialog/alertDialogCrimping.dart';
 import 'package:molex/screens/widgets/showBundles.dart';
 import 'package:molex/screens/widgets/timer.dart';
-import '../../../main.dart';
-import '../../widgets/keypad.dart';
+import '../../../../main.dart';
+import '../../../widgets/keypad.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import '../../../model_api/Transfer/bundleToBin_model.dart';
-import '../../../model_api/cableTerminalA_model.dart';
-import '../../../model_api/cableTerminalB_model.dart';
-import '../../../model_api/crimping/bundleDetail.dart';
-import '../../../model_api/crimping/getCrimpingSchedule.dart';
-import '../../../model_api/crimping/postCrimprejectedDetail.dart';
+import '../../../../model_api/Transfer/bundleToBin_model.dart';
+import '../../../../model_api/cableTerminalA_model.dart';
+import '../../../../model_api/cableTerminalB_model.dart';
+import '../../../../model_api/crimping/bundleDetail.dart';
+import '../../../../model_api/crimping/getCrimpingSchedule.dart';
+import '../../../../model_api/crimping/postCrimprejectedDetail.dart';
 
-import '../../../service/apiService.dart';
+import '../../../../service/apiService.dart';
 
 enum Status {
   scan,
@@ -128,8 +130,22 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
   bool scanbundleLoading = false;
   getTerminal() {
     ApiService apiService = new ApiService();
-    apiService.getCableTerminalA(fgpartNo: "${widget.schedule.finishedGoods}", cablepartno: widget.schedule.cablePartNo.toString(), length: "${widget.schedule.length}", color: widget.schedule.wireColour, awg: int.parse(widget.schedule.awg ?? '0')).then((termiA) {
-      apiService.getCableTerminalB(fgpartNo: "${widget.schedule.finishedGoods}", cablepartno: widget.schedule.cablePartNo.toString(), length: "${widget.schedule.length}", color: widget.schedule.wireColour, awg: int.parse(widget.schedule.awg)).then((termiB) {
+    apiService
+        .getCableTerminalA(
+            fgpartNo: "${widget.schedule.finishedGoods}",
+            cablepartno: widget.schedule.cablePartNo.toString(),
+            length: "${widget.schedule.length}",
+            color: widget.schedule.wireColour,
+            awg: int.parse(widget.schedule.awg ?? '0'))
+        .then((termiA) {
+      apiService
+          .getCableTerminalB(
+              fgpartNo: "${widget.schedule.finishedGoods}",
+              cablepartno: widget.schedule.cablePartNo.toString(),
+              length: "${widget.schedule.length}",
+              color: widget.schedule.wireColour,
+              awg: int.parse(widget.schedule.awg))
+          .then((termiB) {
         setState(() {
           terminalA = termiA;
           terminalB = termiB;
@@ -163,7 +179,9 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
           elevation: 5,
           color: Colors.white,
           clipBehavior: Clip.hardEdge,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0), side: BorderSide(color: Colors.transparent)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              side: BorderSide(color: Colors.transparent)),
           child: Container(
             height: 245,
             child: Row(
@@ -250,7 +268,9 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
             child: Material(
               elevation: 2,
               shadowColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: BorderSide(color: Colors.transparent)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  side: BorderSide(color: Colors.transparent)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -259,7 +279,8 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
 
                   Padding(
                     padding: const EdgeInsets.all(4.0),
-                    child: ProcessTimer(startTime: DateTime.now(), endTime: widget.schedule.shiftEnd),
+                    child:
+                        ProcessTimer(startTime: DateTime.now(), endTime: widget.schedule.shiftEnd),
                   ),
 
                   //buttons and num pad
@@ -279,17 +300,24 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                     width: 160,
                                     child: ElevatedButton(
                                       style: ButtonStyle(
-                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent))),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(20.0),
+                                                side: BorderSide(color: Colors.transparent))),
                                         backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                           (Set<MaterialState> states) {
-                                            if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
-                                            return Colors.green.shade500; // Use the component's default.
+                                            if (states.contains(MaterialState.pressed))
+                                              return Colors.green.shade200;
+                                            return Colors
+                                                .green.shade500; // Use the component's default.
                                           },
                                         ),
                                         overlayColor: MaterialStateProperty.resolveWith<Color>(
                                           (Set<MaterialState> states) {
-                                            if (states.contains(MaterialState.pressed)) return Colors.green;
-                                            return Colors.green.shade500; // Use the component's default.
+                                            if (states.contains(MaterialState.pressed))
+                                              return Colors.green;
+                                            return Colors
+                                                .green.shade500; // Use the component's default.
                                           },
                                         ),
                                       ),
@@ -317,10 +345,14 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                     width: 160,
                                     child: ElevatedButton(
                                       style: ButtonStyle(
-                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.green))),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(20.0),
+                                                side: BorderSide(color: Colors.green))),
                                         backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                           (Set<MaterialState> states) {
-                                            if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                                            if (states.contains(MaterialState.pressed))
+                                              return Colors.green.shade200;
                                             return Colors.white; // Use the component's default.
                                           },
                                         ),
@@ -334,7 +366,10 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                       },
                                       child: Text(
                                         "Partially  complete",
-                                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal, color: Colors.green),
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.normal,
+                                            color: Colors.green),
                                       ),
                                     ),
                                   )
@@ -388,10 +423,14 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                             style: ButtonStyle(
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent))),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      side: BorderSide(color: Colors.transparent))),
                               backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                                  if (states.contains(MaterialState.pressed))
+                                    return Colors.green.shade200;
                                   return Colors.green.shade400; // Use the component's default.
                                 },
                               ),
@@ -452,7 +491,8 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                 child: CircularProgressIndicator(
                   strokeWidth: 5,
                   value: percent,
-                  valueColor: AlwaysStoppedAnimation<Color>(percent >= 0.9 ? Colors.greenAccent : Colors.redAccent),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      percent >= 0.9 ? Colors.greenAccent : Colors.redAccent),
                 ),
               ),
             ),
@@ -487,7 +527,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                     style: TextStyle(fontSize: 12),
                   ),
                 ),
-                  DataColumn(
+                DataColumn(
                   label: Text(
                     'Cut length',
                     style: TextStyle(fontSize: 12),
@@ -513,7 +553,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                           "${e.bundleIdentification}",
                           style: TextStyle(fontSize: 12),
                         )),
-                          DataCell(Text(
+                        DataCell(Text(
                           "${e.cutLengthSpecificationInmm}",
                           style: TextStyle(fontSize: 12),
                         )),
@@ -606,7 +646,8 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                             width: 130,
                             child: ElevatedButton(
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.redAccent),
+                                  backgroundColor: MaterialStateProperty.resolveWith(
+                                      (states) => Colors.redAccent),
                                 ),
                                 onPressed: () {
                                   getScannedBundle();
@@ -618,7 +659,8 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                           padding: const EdgeInsets.all(2.0),
                           child: ElevatedButton(
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.green),
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith((states) => Colors.green),
                               ),
                               onPressed: () {
                                 setState(() {
@@ -811,7 +853,8 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                       ),
                       Column(
                         children: [
-                          quantitycell(name: "Cable Damage", textEditingController: cableDamageController),
+                          quantitycell(
+                              name: "Cable Damage", textEditingController: cableDamageController),
                           quantitycell(
                             name: "Half Curling	",
                             textEditingController: halfCurlingController,
@@ -911,10 +954,14 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                           children: [
                             ElevatedButton(
                                 style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.green))),
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20.0),
+                                          side: BorderSide(color: Colors.green))),
                                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                     (Set<MaterialState> states) {
-                                      if (states.contains(MaterialState.pressed)) return Colors.white;
+                                      if (states.contains(MaterialState.pressed))
+                                        return Colors.white;
                                       return Colors.white; // Use the component's default.
                                     },
                                   ),
@@ -941,115 +988,212 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                   ],
                                 )),
                             SizedBox(width: 10),
-                            ElevatedButton(
-                                style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent))),
-                                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                                    (Set<MaterialState> states) {
-                                      if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
-                                      return Colors.green.shade500; // Use the component's default.
-                                    },
-                                  ),
+                            LoadingButton(
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20.0),
+                                        side: BorderSide(color: Colors.transparent))),
+                                backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                                  (Set<MaterialState> states) {
+                                    if (states.contains(MaterialState.pressed))
+                                      return Colors.green.shade200;
+                                    return Colors.green.shade500; // Use the component's default.
+                                  },
                                 ),
-                                child: Text("Save & Scan Next"),
-                                onPressed: () {
-                                  Future.delayed(
-                                    const Duration(milliseconds: 50),
-                                    () {
-                                      SystemChannels.textInput.invokeMethod('TextInput.hide');
-                                    },
+                              ),
+                              child: Text("Save & Scan Next"),
+                              onPressed: () {
+                                Future.delayed(
+                                  const Duration(milliseconds: 50),
+                                  () {
+                                    SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                  },
+                                );
+                                for (BundlesRetrieved e in scannedBundles) {
+                                  log("${scannedBundles.indexOf(e)}");
+                                  PostCrimpingRejectedDetail postCrimpingRejectedDetail =
+                                      PostCrimpingRejectedDetail(
+                                    bundleIdentification: e.bundleIdentification,
+                                    finishedGoods: widget.schedule.finishedGoods,
+                                    cutLength: widget.schedule.length,
+                                    color: widget.schedule.wireColour,
+                                    cablePartNumber: widget.schedule.cablePartNo,
+                                    processType: getProcessType(e.updateFromProcess ?? ''),
+                                    method: scannedBundles.indexOf(e) == (scannedBundles.length - 1)
+                                        ? getterminalmethod()
+                                        : '',
+                                    status: "",
+                                    machineIdentification: widget.machineId,
+                                    binId: "",
+                                    bundleQuantity: e.bundleQuantity,
+                                    passedQuantity: e.bundleQuantity! - total(),
+                                    rejectedQuantity: total(),
+                                    crimpFromSchId: widget.method.contains("a")
+                                        ? "${widget.schedule.scheduleId}"
+                                        : "",
+                                    crimpToSchId: widget.method.contains("b")
+                                        ? "${widget.schedule.scheduleId}"
+                                        : "",
+                                    endWire: int.parse(endwireController.text.length > 0
+                                        ? endwireController.text
+                                        : "0"),
+                                    rejectionsTerminalFrom: int.parse(
+                                        endTerminalControllerFrom.text.length > 0
+                                            ? endTerminalControllerTo.text
+                                            : "0"),
+                                    rejectionsTerminalTo: int.parse(
+                                        endTerminalControllerTo.text.length > 0
+                                            ? endTerminalControllerTo.text
+                                            : "0"),
+                                    setUpRejectionTerminalFrom: int.parse(
+                                        setUpRejectionControllerFrom.text.length > 0
+                                            ? setUpRejectionControllerFrom.text
+                                            : '0'),
+                                    setUpRejections: int.parse(
+                                        setUpRejectionControllerCable.text.length > 0
+                                            ? setUpRejectionControllerCable.text
+                                            : '0'),
+                                    setUpRejectionTerminalTo: int.parse(
+                                        setUpRejectionControllerTo.text.length > 0
+                                            ? setUpRejectionControllerTo.text
+                                            : '0'),
+                                    terminalBendOrClosedOrDamage: int.parse(
+                                            terminalBendController.text.length > 0
+                                                ? terminalBendController.text
+                                                : '0') +
+                                        int.parse(terminalDamageController.text.length > 0
+                                            ? terminalDamageController.text
+                                            : '0'),
+                                    terminalTwist: int.parse(terminalTwistController.text.length > 0
+                                        ? terminalTwistController.text
+                                        : '0'),
+                                    windowGap: int.parse(windowGapController.text.length > 0
+                                            ? windowGapController.text
+                                            : '0') +
+                                        int.parse(halfCurlingController.text.length > 0
+                                            ? halfCurlingController.text
+                                            : '0'),
+                                    crimpInslation: int.parse(
+                                        crimpOnInsulationController.text.length > 0
+                                            ? crimpOnInsulationController.text
+                                            : "0"),
+                                    bellMouthError: int.parse(
+                                            bellMouthErrorController.text.length > 0
+                                                ? bellMouthErrorController.text
+                                                : '0') +
+                                        int.parse(lockingTabOpenController.text.length > 0
+                                            ? lockingTabOpenController.text
+                                            : '0'),
+                                    burrOrCutOff: int.parse(cutoffBurrController.text.length > 0
+                                        ? cutoffBurrController.text
+                                        : '0'),
+                                    exposedStrands: int.parse(exposureStrands.text.length > 0
+                                        ? exposureStrands.text
+                                        : '0'),
+                                    nickMark: int.parse(nickMarkController.text.length > 0
+                                        ? nickMarkController.text
+                                        : '0'),
+                                    brushLengthLessMore: int.parse(
+                                        brushLengthLessMoreController.text.length > 0
+                                            ? brushLengthLessMoreController.text
+                                            : '0'),
+                                    nickMarkOrStrandsCut: int.parse(
+                                        strandsCutController.text.length > 0
+                                            ? strandsCutController.text
+                                            : '0'),
+                                    cableDamage: int.parse(cableDamageController.text.length > 0
+                                        ? cableDamageController.text
+                                        : '0'),
+                                    //half curling
+                                    //locking tab open close
+                                    wrongTerminal: int.parse(wrongTerminalController.text.length > 0
+                                        ? wrongTerminalController.text
+                                        : '0'),
+                                    seamOpen: int.parse(seamOpenController.text.length > 0
+                                        ? seamOpenController.text
+                                        : '0'),
+                                    missCrimp: int.parse(missCrimpController.text.length > 0
+                                        ? missCrimpController.text
+                                        : '0'),
+                                    extrusionOnBurr: int.parse(
+                                        extrusionBurrController.text.length > 0
+                                            ? extrusionBurrController.text
+                                            : '0'),
+
+                                    brushLength: int.parse(terminalTwistController.text.length > 0
+                                        ? terminalTwistController.text
+                                        : '0'),
+
+                                    frontBellMouth: int.parse(
+                                        terminalTwistController.text.length > 0
+                                            ? terminalTwistController.text
+                                            : '0'),
+                                    backBellMouth: int.parse(terminalTwistController.text.length > 0
+                                        ? terminalTwistController.text
+                                        : '0'),
+
+                                    orderId: widget.schedule.purchaseOrder,
+                                    fgPart: widget.schedule.finishedGoods,
+                                    scheduleId: widget.schedule.scheduleId,
+                                    awg: widget.schedule.awg != null
+                                        ? widget.schedule.awg.toString()
+                                        : "",
+                                    terminalFrom: int.parse('${terminalA!.terminalPart}'),
+                                    terminalTo: int.parse('${terminalB!.terminalPart}'),
                                   );
-                                  for (BundlesRetrieved e in scannedBundles) {
-                                    log("${scannedBundles.indexOf(e)}");
-                                    PostCrimpingRejectedDetail postCrimpingRejectedDetail = PostCrimpingRejectedDetail(
-                                      bundleIdentification: e.bundleIdentification,
-                                      finishedGoods: widget.schedule.finishedGoods,
-                                      cutLength: widget.schedule.length,
-                                      color: widget.schedule.wireColour,
-                                      cablePartNumber: widget.schedule.cablePartNo,
-                                      processType: getProcessType(e.updateFromProcess ?? ''),
-                                      method: scannedBundles.indexOf(e) == (scannedBundles.length - 1) ? getterminalmethod() : '',
-                                      status: "",
-                                      machineIdentification: widget.machineId,
-                                      binId: "",
-                                      bundleQuantity: e.bundleQuantity,
-                                      passedQuantity: e.bundleQuantity! - total(),
-                                      rejectedQuantity: total(),
-                                      crimpFromSchId: widget.method.contains("a") ? "${widget.schedule.scheduleId}" : "",
-                                      crimpToSchId: widget.method.contains("b") ? "${widget.schedule.scheduleId}" : "",
-                                      endWire: int.parse(endwireController.text.length > 0 ? endwireController.text : "0"),
-                                      rejectionsTerminalFrom: int.parse(endTerminalControllerFrom.text.length > 0 ? endTerminalControllerTo.text : "0"),
-                                      rejectionsTerminalTo: int.parse(endTerminalControllerTo.text.length > 0 ? endTerminalControllerTo.text : "0"),
-                                      setUpRejectionTerminalFrom: int.parse(setUpRejectionControllerFrom.text.length > 0 ? setUpRejectionControllerFrom.text : '0'),
-                                      setUpRejections: int.parse(setUpRejectionControllerCable.text.length > 0 ? setUpRejectionControllerCable.text : '0'),
-                                      setUpRejectionTerminalTo: int.parse(setUpRejectionControllerTo.text.length > 0 ? setUpRejectionControllerTo.text : '0'),
-                                      terminalBendOrClosedOrDamage: int.parse(terminalBendController.text.length > 0 ? terminalBendController.text : '0') + int.parse(terminalDamageController.text.length > 0 ? terminalDamageController.text : '0'),
-                                      terminalTwist: int.parse(terminalTwistController.text.length > 0 ? terminalTwistController.text : '0'),
-                                      windowGap: int.parse(windowGapController.text.length > 0 ? windowGapController.text : '0') + int.parse(halfCurlingController.text.length > 0 ? halfCurlingController.text : '0'),
-                                      crimpInslation: int.parse(crimpOnInsulationController.text.length > 0 ? crimpOnInsulationController.text : "0"),
-                                      bellMouthError: int.parse(bellMouthErrorController.text.length > 0 ? bellMouthErrorController.text : '0') + int.parse(lockingTabOpenController.text.length > 0 ? lockingTabOpenController.text : '0'),
-                                      burrOrCutOff: int.parse(cutoffBurrController.text.length > 0 ? cutoffBurrController.text : '0'),
-                                      exposedStrands: int.parse(exposureStrands.text.length > 0 ? exposureStrands.text : '0'),
-                                      nickMark: int.parse(nickMarkController.text.length > 0 ? nickMarkController.text : '0'),
-                                      brushLengthLessMore: int.parse(brushLengthLessMoreController.text.length > 0 ? brushLengthLessMoreController.text : '0'),
-                                      nickMarkOrStrandsCut: int.parse(strandsCutController.text.length > 0 ? strandsCutController.text : '0'),
-                                      cableDamage: int.parse(cableDamageController.text.length > 0 ? cableDamageController.text : '0'),
-                                      //half curling
-                                      //locking tab open close
-                                      wrongTerminal: int.parse(wrongTerminalController.text.length > 0 ? wrongTerminalController.text : '0'),
-                                      seamOpen: int.parse(seamOpenController.text.length > 0 ? seamOpenController.text : '0'),
-                                      missCrimp: int.parse(missCrimpController.text.length > 0 ? missCrimpController.text : '0'),
-                                      extrusionOnBurr: int.parse(extrusionBurrController.text.length > 0 ? extrusionBurrController.text : '0'),
-
-                                      brushLength: int.parse(terminalTwistController.text.length > 0 ? terminalTwistController.text : '0'),
-
-                                      frontBellMouth: int.parse(terminalTwistController.text.length > 0 ? terminalTwistController.text : '0'),
-                                      backBellMouth: int.parse(terminalTwistController.text.length > 0 ? terminalTwistController.text : '0'),
-
-                                      orderId: widget.schedule.purchaseOrder,
-                                      fgPart: widget.schedule.finishedGoods,
-                                      scheduleId: widget.schedule.scheduleId,
-                                      awg: widget.schedule.awg != null ? widget.schedule.awg.toString() : "",
-                                      terminalFrom: int.parse('${terminalA!.terminalPart}'),
-                                      terminalTo: int.parse('${terminalB!.terminalPart}'),
-                                    );
-                                    apiService.postCrimpRejectedQty(postCrimpingRejectedDetail).then((value) {
-                                      if (value != null) {
-                                        setState(() {
-                                          widget.updateQty(widget.totalQuantity + int.parse(bundleQty));
-                                          Future.delayed(const Duration(milliseconds: 10), () {
-                                            SystemChannels.textInput.invokeMethod('TextInput.hide');
-                                          });
-                                          status = Status.scanBin;
+                                  apiService
+                                      .postCrimpRejectedQty(postCrimpingRejectedDetail)
+                                      .then((value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        scannedBundles.indexOf(e) == (scannedBundles.length - 1)
+                                            ? widget
+                                                .updateQty(widget.totalQuantity + e.bundleQuantity)
+                                            : null;
+                                        Future.delayed(const Duration(milliseconds: 10), () {
+                                          SystemChannels.textInput.invokeMethod('TextInput.hide');
                                         });
+                                        status = Status.scanBin;
+                                      });
 
-                                        Fluttertoast.showToast(
-                                          msg: "Saved Crimping Detail ",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.red,
-                                          textColor: Colors.white,
-                                          fontSize: 16.0,
-                                        );
-                                      } else {
-                                        Future.delayed(Duration(seconds: 5)).then((value) => Fluttertoast.showToast(
-                                              msg: " Save Crimping Reject detail failed ",
-                                              toastLength: Toast.LENGTH_SHORT,
-                                              gravity: ToastGravity.BOTTOM,
-                                              timeInSecForIosWeb: 1,
-                                              backgroundColor: Colors.red,
-                                              textColor: Colors.white,
-                                              fontSize: 16.0,
-                                            ));
-                                      }
-                                    });
-                                  }
-                                  setState(() {
-                                    clear();
-                                    // scannedBundles.clear();
+                                      Fluttertoast.showToast(
+                                        msg: "Saved Crimping Detail ",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.red,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0,
+                                      );
+                                    } else {
+                                      Future.delayed(Duration(seconds: 5))
+                                          .then((value) => Fluttertoast.showToast(
+                                                msg: " Save Crimping Reject detail failed ",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Colors.red,
+                                                textColor: Colors.white,
+                                                fontSize: 16.0,
+                                              ));
+                                    }
                                   });
-                                })
+                                }
+                                setState(() {
+                                  clear();
+                                  // scannedBundles.clear();
+                                });
+                              },
+                              loadingChild: Container(
+                                width: 30,
+                                height: 30,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              loading: false,
+                            )
                           ],
                         ),
                       ),
@@ -1081,18 +1225,22 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
   }
 
   int total() {
-    int total = int.parse(terminalDamageController.text.length > 0 ? terminalDamageController.text : '0') +
+    int total = int.parse(
+            terminalDamageController.text.length > 0 ? terminalDamageController.text : '0') +
         int.parse(terminalBendController.text.length > 0 ? terminalBendController.text : '0') +
         int.parse(terminalTwistController.text.length > 0 ? terminalTwistController.text : '0') +
         int.parse(windowGapController.text.length > 0 ? windowGapController.text : '0') +
-        int.parse(crimpOnInsulationController.text.length > 0 ? crimpOnInsulationController.text : '0') +
+        int.parse(
+            crimpOnInsulationController.text.length > 0 ? crimpOnInsulationController.text : '0') +
         int.parse(bellMouthErrorController.text.length > 0 ? bellMouthErrorController.text : '0') +
         int.parse(cutoffBurrController.text.length > 0 ? cutoffBurrController.text : '0') +
         int.parse(exposureStrands.text.length > 0 ? exposureStrands.text : '0') +
         int.parse(nickMarkController.text.length > 0 ? nickMarkController.text : '0') +
         int.parse(strandsCutController.text.length > 0 ? strandsCutController.text : '0') +
         int.parse(wrongTerminalController.text.length > 0 ? wrongTerminalController.text : '0') +
-        int.parse(brushLengthLessMoreController.text.length > 0 ? brushLengthLessMoreController.text : '0') +
+        int.parse(brushLengthLessMoreController.text.length > 0
+            ? brushLengthLessMoreController.text
+            : '0') +
         int.parse(cableDamageController.text.length > 0 ? cableDamageController.text : '0') +
         int.parse(halfCurlingController.text.length > 0 ? halfCurlingController.text : '0') +
         int.parse(lockingTabOpenController.text.length > 0 ? lockingTabOpenController.text : '0') +
@@ -1126,7 +1274,9 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
             Container(
               width: 266,
               child: Row(
-                mainAxisAlignment: textEditingControllerCable != null ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
+                mainAxisAlignment: textEditingControllerCable != null
+                    ? MainAxisAlignment.spaceBetween
+                    : MainAxisAlignment.start,
                 children: [
                   Container(
                       height: 35,
@@ -1465,7 +1615,10 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                   children: [
                     ElevatedButton(
                       style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0), side: BorderSide(color: Colors.red))),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100.0),
+                                side: BorderSide(color: Colors.red))),
                         backgroundColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.pressed)) return Colors.red.shade200;
@@ -1490,7 +1643,10 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                     ),
                     ElevatedButton(
                       style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0), side: BorderSide(color: Colors.transparent))),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100.0),
+                                side: BorderSide(color: Colors.transparent))),
                         backgroundColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.pressed)) return Colors.red;
@@ -1514,14 +1670,28 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                         List<TransferBundleToBin> listTransfer = [];
                         log("${scannedBundles}");
                         for (BundlesRetrieved bundle in scannedBundles) {
-                          listTransfer.add(TransferBundleToBin(userId: widget.userId, binIdentification: binId, bundleId: bundle.bundleIdentification ?? '', locationId: ''));
+                          listTransfer.add(TransferBundleToBin(
+                              userId: widget.userId,
+                              binIdentification: binId,
+                              bundleId: bundle.bundleIdentification ?? '',
+                              locationId: ''));
                         }
 
-                        apiService.postTransferBundletoBin(transferBundleToBin: listTransfer).then((value) {
+                        apiService
+                            .postTransferBundletoBin(transferBundleToBin: listTransfer)
+                            .then((value) {
                           if (value != null) {
                             SystemChannels.textInput.invokeMethod('TextInput.hide');
                             BundleTransferToBin bundleTransferToBinTracking = value[0];
-                            Fluttertoast.showToast(msg: "Transfered Bundle-${bundleTransferToBinTracking.bundleIdentification} to Bin- ${_binController.text ?? ''}", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
+                            Fluttertoast.showToast(
+                                msg:
+                                    "Transfered Bundle-${bundleTransferToBinTracking.bundleIdentification} to Bin- ${_binController.text ?? ''}",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
                             scannedBundles.clear();
                             setState(() {
                               Future.delayed(
@@ -1564,33 +1734,78 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
   }
 
   Widget showBundleButton() {
-    return ElevatedButton(
-      style: ButtonStyle(
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100.0),
-            side: BorderSide(color: Colors.red),
+    return Column(
+      children: [
+        ElevatedButton(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100.0),
+                side: BorderSide(color: Colors.red),
+              ),
+            ),
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+                if (states.contains(MaterialState.pressed)) return Colors.red.shade200;
+                return Colors.red.shade500; // Use the component's default.
+              },
+            ),
           ),
-        ),
-        backgroundColor: MaterialStateProperty.resolveWith<Color>(
-          (Set<MaterialState> states) {
-            if (states.contains(MaterialState.pressed)) return Colors.red.shade200;
-            return Colors.red.shade500; // Use the component's default.
+          onPressed: () {
+            showBundles();
           },
-        ),
-      ),
-      onPressed: () {
-        showBundles();
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text("Bundles"),
-          SizedBox(
-            width: 5,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Bundles"),
+              SizedBox(
+                width: 5,
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        ElevatedButton(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100.0),
+                side: BorderSide(color: Colors.red),
+              ),
+            ),
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+                if (states.contains(MaterialState.pressed)) return Colors.red.shade200;
+                return Colors.white; // Use the component's default.
+              },
+            ),
+          ),
+          onPressed: () {
+            String type = "";
+            String selected = getterminalmethod();
+            if (selected.contains('a')) {
+              type = terminalA!.processType ?? '';
+            }
+            if (selected.contains('b')) {
+              type = terminalB!.processType ?? '';
+            }
+            // showDoubleCrimpInfo(context: context, fg: "367500175", processType: "SP1(12+12+10)"); //change it back
+            showDoubleCrimpInfo(
+                context: context, fg: widget.schedule.finishedGoods.toString(), processType: type);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "    Info  ",
+                style: TextStyle(color: Colors.red),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -1623,12 +1838,17 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                   Padding(
                     padding: const EdgeInsets.all(18.0),
                     child: FutureBuilder(
-                        future: apiService.getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: ""),
+                        future: apiService.getBundlesInSchedule(
+                            postgetBundleMaster: postgetBundleMaste, scheduleID: ""),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            List<BundlesRetrieved>? totalbundleList = snapshot.data as List<BundlesRetrieved>?;
+                            List<BundlesRetrieved>? totalbundleList =
+                                snapshot.data as List<BundlesRetrieved>?;
                             totalbundleList = totalbundleList!.where((element) {
-                              if ("${element.cutLengthSpecificationInmm}" == "${widget.schedule.length}" && "${element.color}" == "${widget.schedule.wireColour}" && "${element.orderId}" == "${widget.schedule.purchaseOrder}") {
+                              if ("${element.cutLengthSpecificationInmm}" ==
+                                      "${widget.schedule.length}" &&
+                                  "${element.color}" == "${widget.schedule.wireColour}" &&
+                                  "${element.orderId}" == "${widget.schedule.purchaseOrder}") {
                                 return true;
                               } else {
                                 return false;
@@ -1644,91 +1864,113 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                     width: 100,
                                     child: Text(
                                       'Bundle ID',
-                                      style: TextStyle(fontSize: 12, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: fonts.openSans,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   CustomCell(
                                     width: 100,
                                     child: Text(
                                       'Bin ID',
-                                      style: TextStyle(fontSize: 12, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: fonts.openSans,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   CustomCell(
                                     width: 100,
                                     child: Text(
                                       'Location ID',
-                                      style: TextStyle(fontSize: 12, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: fonts.openSans,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   CustomCell(
                                     width: 100,
                                     child: Text(
                                       'Qty',
-                                      style: TextStyle(fontSize: 12, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: fonts.openSans,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   CustomCell(
                                     width: 100,
                                     child: Text(
                                       'info',
-                                      style: TextStyle(fontSize: 12, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: fonts.openSans,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ],
                                 rows: totalbundleList
-                                    .map((e) => CustomRow(completed: checkcompleted(e.updateFromProcess.toLowerCase()), cells: [
-                                          CustomCell(
-                                            width: 100,
-                                            child: Text(
-                                              e.bundleIdentification,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                // color: !e
-                                                //         .updateFromProcess
-                                                //         .contains(widget
-                                                //             .processName,
-                                                //             )
-                                                //     ? Colors.red
-                                                //     : Colors.green
+                                    .map((e) => CustomRow(
+                                            completed:
+                                                checkcompleted(e.updateFromProcess.toLowerCase()),
+                                            cells: [
+                                              CustomCell(
+                                                width: 100,
+                                                child: Text(
+                                                  e.bundleIdentification,
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    // color: !e
+                                                    //         .updateFromProcess
+                                                    //         .contains(widget
+                                                    //             .processName,
+                                                    //             )
+                                                    //     ? Colors.red
+                                                    //     : Colors.green
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                          CustomCell(
-                                            width: 100,
-                                            color: e.binId == null ? Colors.red.shade100 : Colors.transparent,
-                                            child: Text(
-                                              "${e.binId}",
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                          CustomCell(
-                                            width: 100,
-                                            color: e.locationId == null ? Colors.red.shade100 : Colors.transparent,
-                                            child: Text(
-                                              "${e.locationId}",
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                          CustomCell(
-                                            width: 100,
-                                            child: Text(
-                                              "${e.bundleQuantity}",
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                          CustomCell(
-                                            width: 100,
-                                            child: GestureDetector(
-                                                onTap: () {
-                                                  showBundleDetail(e);
-                                                },
-                                                child: Icon(
-                                                  Icons.info_outline,
-                                                  color: Colors.blue,
-                                                )),
-                                          )
-                                        ]))
+                                              CustomCell(
+                                                width: 100,
+                                                color: e.binId == null
+                                                    ? Colors.red.shade100
+                                                    : Colors.transparent,
+                                                child: Text(
+                                                  "${e.binId}",
+                                                  style: TextStyle(fontSize: 12),
+                                                ),
+                                              ),
+                                              CustomCell(
+                                                width: 100,
+                                                color: e.locationId == null
+                                                    ? Colors.red.shade100
+                                                    : Colors.transparent,
+                                                child: Text(
+                                                  "${e.locationId}",
+                                                  style: TextStyle(fontSize: 12),
+                                                ),
+                                              ),
+                                              CustomCell(
+                                                width: 100,
+                                                child: Text(
+                                                  "${e.bundleQuantity}",
+                                                  style: TextStyle(fontSize: 12),
+                                                ),
+                                              ),
+                                              CustomCell(
+                                                width: 100,
+                                                child: GestureDetector(
+                                                    onTap: () {
+                                                      showBundleDetail(e);
+                                                    },
+                                                    child: Icon(
+                                                      Icons.info_outline,
+                                                      color: Colors.blue,
+                                                    )),
+                                              )
+                                            ]))
                                     .toList(),
                               ),
                             );
@@ -1816,26 +2058,40 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                             children: [
                               Column(
                                 children: [
-                                  field(title: "Bundle ID", data: "${bundlesRetrieved.bundleIdentification}"),
-                                  field(title: "Bundle Qty", data: "${bundlesRetrieved.bundleQuantity.toString()}"),
-                                  field(title: "Bundle Status", data: "${bundlesRetrieved.bundleStatus}"),
-                                  field(title: "Cut Length", data: "${bundlesRetrieved.cutLengthSpecificationInmm}"),
+                                  field(
+                                      title: "Bundle ID",
+                                      data: "${bundlesRetrieved.bundleIdentification}"),
+                                  field(
+                                      title: "Bundle Qty",
+                                      data: "${bundlesRetrieved.bundleQuantity.toString()}"),
+                                  field(
+                                      title: "Bundle Status",
+                                      data: "${bundlesRetrieved.bundleStatus}"),
+                                  field(
+                                      title: "Cut Length",
+                                      data: "${bundlesRetrieved.cutLengthSpecificationInmm}"),
                                   field(title: "Color", data: "${bundlesRetrieved.color}"),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  field(title: "Cable Part Number", data: bundlesRetrieved.cablePartNumber.toString()),
+                                  field(
+                                      title: "Cable Part Number",
+                                      data: bundlesRetrieved.cablePartNumber.toString()),
                                   field(
                                     title: "Cable part Description",
                                     data: "${bundlesRetrieved.cablePartDescription}",
                                   ),
-                                  field(title: "Finished Goods", data: "${bundlesRetrieved.finishedGoodsPart}"),
+                                  field(
+                                      title: "Finished Goods",
+                                      data: "${bundlesRetrieved.finishedGoodsPart}"),
                                   field(
                                     title: "Order Id",
                                     data: "${bundlesRetrieved.operatorIdentification}",
                                   ),
-                                  field(title: "Update From", data: "${bundlesRetrieved.updateFromProcess}"),
+                                  field(
+                                      title: "Update From",
+                                      data: "${bundlesRetrieved.updateFromProcess}"),
                                 ],
                               ),
                               Column(
@@ -1898,10 +2154,11 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
               Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: Container(
-                   width: MediaQuery.of(context).size.width * 0.18,
+                  width: MediaQuery.of(context).size.width * 0.18,
                   child: Text(
                     "$data",
-                    style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w400),
+                    style:
+                        TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w400),
                   ),
                 ),
               )
@@ -1925,17 +2182,30 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
     );
 
     if (_scanIdController.text.length > 0) {
-      apiService.getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: "").then((value) {
+      apiService
+          .getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: "")
+          .then((value) {
         if (value!.length != 0) {
           List<BundlesRetrieved> bundleList = value;
           BundlesRetrieved bundleDetail = bundleList[0];
-          if ((widget.totalQuantity + bundleDetail.bundleQuantity) > int.parse(widget.schedule.schdeuleQuantity)) {
+          if ((widget.totalQuantity + bundleDetail.bundleQuantity) >
+              int.parse(widget.schedule.schdeuleQuantity)) {
             setState(() {});
-            Fluttertoast.showToast(msg: "Total Quantity Exceeds Schedule Qty", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
+            Fluttertoast.showToast(
+                msg: "Total Quantity Exceeds Schedule Qty",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
             return true;
           } else {
             if (validateBundle(bundleDetail)) {
-              if (!scannedBundles.map((e) => e.bundleIdentification).toList().contains(bundleDetail.bundleIdentification)) {
+              if (!scannedBundles
+                  .map((e) => e.bundleIdentification)
+                  .toList()
+                  .contains(bundleDetail.bundleIdentification)) {
                 if (bundleDetail.bundleStatus.toLowerCase() == "dropped") {
                   setState(() {
                     scannedBundles.add(bundleDetail);
@@ -1968,7 +2238,14 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                 }
               } else {
                 _scanIdController.clear();
-                Fluttertoast.showToast(msg: "Bundle already Present", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
+                Fluttertoast.showToast(
+                    msg: "Bundle already Present",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
               }
             }
           }
@@ -1999,38 +2276,18 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
       msg = a;
     }
 
-    bool checkCrimping(
-      String crimpfrom,
-      String crimpto,
-    ) {
-      log("message1");
-      if (widget.processName == "Double Crimp From" && (crimpfrom == null || crimpfrom.length <= 1)) {
-        showtoast("Crimp from is completed ");
-        return true;
-      } else
-        showtoast("Crimp from is completed ");
-      if (widget.processName == "Double Crimp To" && (crimpto == null || crimpto.length <= 1)) {
-        log("message1");
-
-        return true;
-      } else
-        showtoast("Crimp to is completed ");
-
-      // ignore: null_aware_before_operator
-      if (widget.processName == "Double Crimping" && (crimpto == null || crimpto.length <= 1) && (crimpto == null || crimpto.length <= 1)) {
-        return true;
-      } else
-        showtoast("Crimp from & to is completed ");
-      if (msg.length > 1) Fluttertoast.showToast(msg: "$msg", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
-      return false;
+    if ("${bundleDetail.finishedGoodsPart}" == "${widget.schedule.finishedGoods}" &&
+        "${bundleDetail.orderId}" == "${widget.schedule.purchaseOrder}") {
+      return true;
     }
-
-    if ("${bundleDetail.finishedGoodsPart}" == "${widget.schedule.finishedGoods}" && "${bundleDetail.cablePartNumber}" == "${widget.schedule.cablePartNo}" && "${bundleDetail.cutLengthSpecificationInmm}" == "${widget.schedule.length}" && "${bundleDetail.color}" == "${widget.schedule.wireColour}" && "${bundleDetail.orderId}" == "${widget.schedule.purchaseOrder}") {
-      // ignore: null_aware_in_logical_operator
-      Fluttertoast.showToast(msg: "Bundle terminal does not match", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
-      return false;
-    }
-    Fluttertoast.showToast(msg: "Bundle does not match FG Detials", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
+    Fluttertoast.showToast(
+        msg: "Bundle does not match FG Detials",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
     return false;
   }
 }

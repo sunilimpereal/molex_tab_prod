@@ -10,10 +10,10 @@ String getViScheduleToJson(GetViSchedule data) => json.encode(data.toJson());
 
 class GetViSchedule {
     GetViSchedule({
-       required this.status,
-       required this.statusMsg,
+        required this.status,
+        required this.statusMsg,
        required this.errorCode,
-       required this.data,
+        required this.data,
     });
 
     String status;
@@ -38,17 +38,17 @@ class GetViSchedule {
 
 class Data {
     Data({
-        required this.visualInspectionScheduler,
+        required this.viScheduler,
     });
 
-    List<ViScheduler> visualInspectionScheduler;
+    List<ViScheduler> viScheduler;
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
-        visualInspectionScheduler: List<ViScheduler>.from(json[" Visual Inspection Scheduler "].map((x) => ViScheduler.fromJson(x))),
+        viScheduler: List<ViScheduler>.from(json[" Visual Inspection Scheduler "].map((x) => ViScheduler.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
-        " Visual Inspection Scheduler ": List<dynamic>.from(visualInspectionScheduler.map((x) => x.toJson())),
+        " Visual Inspection Scheduler ": List<dynamic>.from(viScheduler.map((x) => x.toJson())),
     };
 }
 
@@ -60,6 +60,7 @@ class ViScheduler {
        required this.scheduleType,
        required this.binId,
        required this.totalBundles,
+       required this.binLocationId,
     });
 
     String orderId;
@@ -68,14 +69,16 @@ class ViScheduler {
     String scheduleType;
     String binId;
     String totalBundles;
+    String binLocationId;
 
     factory ViScheduler.fromJson(Map<String, dynamic> json) => ViScheduler(
-        orderId: json["orderId"],
-        fgNo: json["fgNo"],
-        scheduleId: json["scheduleId"],
-        scheduleType: json["scheduleType"],
-        binId: json["binId"],
-        totalBundles: json["totalBundles"],
+        orderId: json["orderId"]??'',
+        fgNo: json["fgNo"]??'',
+        scheduleId: json["scheduleId"]??'',
+        scheduleType: json["scheduleType"]??'',
+        binId: json["binId"]??'',
+        totalBundles: json["totalBundles"]??'',
+        binLocationId: json["binLocationId"]??'',
     );
 
     Map<String, dynamic> toJson() => {
@@ -85,5 +88,7 @@ class ViScheduler {
         "scheduleType": scheduleType,
         "binId": binId,
         "totalBundles": totalBundles,
+        "binLocationId": binLocationId,
     };
 }
+

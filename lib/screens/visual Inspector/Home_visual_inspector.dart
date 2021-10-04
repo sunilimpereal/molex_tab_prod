@@ -121,6 +121,7 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
                                       "Order ID",
                                       "FG No.",
                                       "Schedule ID",
+                                      "Location ID",
                                     ], name: "Order ID"),
                                     SizedBox(width: 10),
                                     Container(
@@ -333,6 +334,10 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
             .where((element) => element.scheduleId.startsWith(widget.query))
             .toList();
         break;
+        case "Location ID":
+        return scheduleList
+            .where((element) => element.binLocationId.toLowerCase().startsWith(widget.query.toLowerCase()))
+            .toList();
       default:
         return scheduleList;
     }
@@ -422,6 +427,7 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
                   cell("Schedule ID", 0.08, false),
                   cell("Bin ID", 0.08, true),
                   cell("Total Bundles", 0.10, false),
+                  cell("Location ID", 0.10, false),
 
                   // cell("Action", 0.08, true),
                 ],
@@ -484,10 +490,11 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
                 // ToDo changed vin id and bundle id
 
                 //Cable Part
-                cell(viSchedule.totalBundles, 0.08),
+                cell(viSchedule.binId, 0.08),
                 //Process
-                cell(viSchedule.binId, 0.10),
+                cell(viSchedule.totalBundles, 0.10),
                 // Cut length
+                 cell(viSchedule.binLocationId, 0.10),
 
                 //Color
               ],

@@ -307,62 +307,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
     });
   }
 
-  Future<List<GeneratedBundle>?> getBundleList() async {
-    List<GeneratedBundle> bundleList = [];
-    ApiService apiService = new ApiService();
-    PostgetBundleMaster postgetBundleMaste = new PostgetBundleMaster(
-      scheduleId: int.parse("123"),
-      binId: 0,
-      bundleId: '',
-      location: '',
-      status: '',
-      finishedGoods: int.parse(widget.schedule.finishedGoodsNumber),
-      cablePartNumber: int.parse(widget.schedule.cablePartNumber),
-      orderId: widget.schedule.orderId.toString(),
-    );
-    apiService
-        .getBundlesInSchedule(
-            postgetBundleMaster: postgetBundleMaste,
-            scheduleID: widget.schedule.scheduledId)
-        .then((value) {
-      List<BundlesRetrieved> bundles = value!;
-      log("bun1 ${bundles}");
-      for (BundlesRetrieved bundle in bundles) {
-        bundleList.add(GeneratedBundle(
-            bundleDetail: bundle,
-            bundleQty: bundle.bundleQuantity.toString(),
-            transferBundleToBin: TransferBundleToBin(
-                binIdentification: bundle.binId.toString(),
-                locationId: bundle.locationId.toString(),
-                bundleId: '',
-                userId: ''),
-            label: GeneratedLabel(
-              finishedGoods: bundle.finishedGoodsPart,
-              cablePartNumber: bundle.cablePartNumber,
-              cutLength: bundle.cutLengthSpecificationInmm,
-              wireGauge: bundle.awg,
-              bundleId: bundle.bundleIdentification,
-              routeNo: "${widget.schedule.route}",
-              status: 0,
-              bundleQuantity: bundle.bundleQuantity,
-              terminalFrom: terminalA!.terminalPart,
-              terminalTo: terminalB!.terminalPart,
-              //  terminalFrom: bundle.t
-              //todo terminal from,terminal to
-              //todo route no
-              //
-            ),
-            rejectedQty: ''));
-      }
-      Future.delayed(
-        const Duration(milliseconds: 1000),
-        () {
-          return bundleList;
-        },
-      );
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
-    });
-  }
+
 
   GeneratedLabel? label;
   bool printerStatus = false;
@@ -859,7 +804,14 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                                     ),
                                                   ),
                                                   onPressed: () {
-                                                    widget.partialComplete();
+                                                     getBundles();
+                                                    checkMapping()
+                                                        .then((value) {
+                                                      if (value) {
+                                                        widget.partialComplete();
+                                                      }
+                                                    });
+                                                   
                                                     // setState(() {
                                                     //   rightside = "partial";
                                                     // });

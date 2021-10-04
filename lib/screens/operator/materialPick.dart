@@ -1025,6 +1025,7 @@ class _MaterialPickState extends State<MaterialPick> {
                       machineId: widget.schedule.machineNumber??'',
                       fgNo: widget.schedule.finishedGoodsNumber,
                       type: widget.machine.category??'',
+                      process: "${widget.schedule.process}",
                       scheduleId: widget.schedule.scheduledId, partNo: '')
                   : getRawmaterialFut(rawMaterial!),
               // 'EMU-M/C-038B', '367760913', '367870011', '1223445'),

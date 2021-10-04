@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:molex/model_api/crimping/double_crimping/doubleCrimpingEjobDetail.dart';
 import 'package:molex/model_api/error_model.dart';
+import 'package:molex/screens/operator%202/process/double%20crimp/doubleCrimpInfo.dart';
 import '../main.dart';
 import '../model_api/Preparation/getpreparationSchedule.dart';
 import '../model_api/Preparation/postPreparationDetail.dart';
@@ -61,8 +63,7 @@ class ApiService {
   //open null empty
 
   Future<Employee?> empIdlogin(String empId) async {
-    var url =
-        Uri.parse(baseUrl + "molex/employee/get-employee-list/empid=$empId");
+    var url = Uri.parse(baseUrl + "molex/employee/get-employee-list/empid=$empId");
     var response = await http.get(url);
     log('Login  status Code ${response.statusCode}');
     log('Login  status Code ${response.body}');
@@ -80,9 +81,7 @@ class ApiService {
   }
 
   Future<List<Schedule>?> getScheduelarData(
-      {required String machId,
-      required String type,
-      required String sameMachine}) async {
+      {required String machId, required String type, required String sameMachine}) async {
     print("called api");
     print("called $machId");
     print("called $type");
@@ -101,8 +100,49 @@ class ApiService {
         return scheduleList;
       } catch (e) {
         try {
-          ErrorModel errorGenerateLabel =
-              errorModelFromJson(response.body);
+          ErrorModel errorGenerateLabel = errorModelFromJson(response.body);
+          Fluttertoast.showToast(
+            msg: "${errorGenerateLabel.statusMsg}",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          return null;
+        } catch (e) {
+          return null;
+        }
+      }
+    } else {
+      return [];
+    }
+  }
+
+  //get individual schedule
+  //TODO : individul schedule
+  Future<List<Schedule>?> getSingleSchedule(
+      {required String machId, required String type, required String sameMachine}) async {
+    print("called api");
+    print("called $machId");
+    print("called $type");
+    // var url = Uri.parse(baseUrl +
+    //     "molex/scheduler/get-scheduler-same-machine-data?schdTyp=A&mchNo=$machId&sameMachine=true");
+    var url = Uri.parse(baseUrl +
+        "molex/scheduler/get-scheduler-same-machine-data?schdTyp=$type&mchNo=$machId&sameMachine=$sameMachine");
+    log("url : molex/scheduler/get-scheduler-same-machine-data?schdTyp=$type&mchNo=$machId&sameMachine=$sameMachine");
+    var response = await http.get(url);
+    print('schedular data status code ${response.statusCode}');
+    if (response.statusCode == 200) {
+      try {
+        Schedular schedualr = schedularFromJson(response.body);
+        log(" sch data ${response.body}");
+        List<Schedule> scheduleList = schedualr.data.employeeList;
+        return scheduleList;
+      } catch (e) {
+        try {
+          ErrorModel errorGenerateLabel = errorModelFromJson(response.body);
           Fluttertoast.showToast(
             msg: "${errorGenerateLabel.statusMsg}",
             toastLength: Toast.LENGTH_SHORT,
@@ -125,8 +165,7 @@ class ApiService {
 
   Future<List<MachineDetails>?> getmachinedetails(String machineid) async {
     print('sad');
-    var url = Uri.parse(
-        baseUrl + "molex/machine/get-by-machine-number?machNo=$machineid");
+    var url = Uri.parse(baseUrl + "molex/machine/get-by-machine-number?machNo=$machineid");
     var response = await http.get(url);
     print('Machine details status code ${response.body}');
     Fluttertoast.showToast(
@@ -139,10 +178,8 @@ class ApiService {
         fontSize: 16.0);
     if (response.statusCode == 200) {
       try {
-        GetMachineDetails getMachineDetails =
-            getMachineDetailsFromJson(response.body);
-        List<MachineDetails> machineDetails =
-            getMachineDetails.data.machineDetailsList;
+        GetMachineDetails getMachineDetails = getMachineDetailsFromJson(response.body);
+        List<MachineDetails> machineDetails = getMachineDetails.data.machineDetailsList;
         return machineDetails.length != 0 ? machineDetails : null;
       } catch (e) {
         return null;
@@ -157,15 +194,36 @@ class ApiService {
     List<RawMaterial> newList = [];
     for (RawMaterial rawmat in rawmaterial) {
       if (temp.partNunber == rawmat.partNunber) {
-        temp.requireQuantity = (double.parse(temp.requireQuantity ?? "") +
-                double.parse(rawmat.requireQuantity ?? ''))
-            .toString();
-        temp.toatalScheduleQuantity =
-            (double.parse(temp.toatalScheduleQuantity ?? '') +
-                    double.parse(rawmat.toatalScheduleQuantity ?? ''))
+        temp.requireQuantity =
+            (double.parse(temp.requireQuantity ?? "") + double.parse(rawmat.requireQuantity ?? ''))
                 .toString();
+        temp.toatalScheduleQuantity = (double.parse(temp.toatalScheduleQuantity ?? '') +
+                double.parse(rawmat.toatalScheduleQuantity ?? ''))
+            .toString();
         newList.removeLast();
-
+        newList.add(temp);
+      } else {
+        newList.add(rawmat);
+        temp = rawmat;
+        // s
+      }
+    }
+    return newList;
+  }
+  ///filter raw material baesd on process type
+  ///if schedule is only crip from and cutlength only crimp from raw material is displayed
+    List<RawMaterial> filterPrsType(List<RawMaterial> rawmaterial) {
+    RawMaterial temp = new RawMaterial();
+    List<RawMaterial> newList = [];
+    for (RawMaterial rawmat in rawmaterial) {
+      if (temp.partNunber == rawmat.partNunber) {
+        temp.requireQuantity =
+            (double.parse(temp.requireQuantity ?? "") + double.parse(rawmat.requireQuantity ?? ''))
+                .toString();
+        temp.toatalScheduleQuantity = (double.parse(temp.toatalScheduleQuantity ?? '') +
+                double.parse(rawmat.toatalScheduleQuantity ?? ''))
+            .toString();
+        newList.removeLast();
         newList.add(temp);
       } else {
         newList.add(rawmat);
@@ -181,6 +239,7 @@ class ApiService {
       required String partNo,
       required String fgNo,
       required String scheduleId,
+      required String process,
       required String type}) async {
     print('fgpart : ${fgNo}');
     print('schedule: ${scheduleId}');
@@ -201,43 +260,31 @@ class ApiService {
     if (responseto.statusCode == 200) {
       try {
         print(responseto.body);
-        GetRawMaterial getrawMaterialto =
-            getRawMaterialFromJson(responseto.body);
+        GetRawMaterial getrawMaterialto = getRawMaterialFromJson(responseto.body);
 
-        GetRawMaterial getrawMaterialfrom =
-            getRawMaterialFromJson(responsefrom.body);
+        GetRawMaterial getrawMaterialfrom = getRawMaterialFromJson(responsefrom.body);
         print(responsefrom.body);
-        GetRawMaterial getrawMaterialcable =
-            getRawMaterialFromJson(responsecable.body);
+        GetRawMaterial getrawMaterialcable = getRawMaterialFromJson(responsecable.body);
         print(responsecable.body);
-        List<RawMaterial> rawmaterialListcable =
-            getrawMaterialcable.data.rawMaterialDetails;
-        List<RawMaterial> rawmaterialListto =
-            getrawMaterialto.data.rawMaterialDetails;
-        List<RawMaterial> rawmaterialListfrom =
-            getrawMaterialfrom.data.rawMaterialDetails;
+        List<RawMaterial> rawmaterialListcable = getrawMaterialcable.data.rawMaterialDetails;
+        List<RawMaterial> rawmaterialListto = getrawMaterialto.data.rawMaterialDetails;
+        List<RawMaterial> rawmaterialListfrom = getrawMaterialfrom.data.rawMaterialDetails;
 
         List<RawMaterial> rawMateriallist = [];
         if (type == "Automatic Cut & Crimp") {
-          rawMateriallist =
-              rawmaterialListcable + rawmaterialListto + rawmaterialListfrom;
-          rawMateriallist = rawMateriallist
-              .where((element) => element.partNunber != "0")
-              .toList();
+          rawMateriallist = rawmaterialListcable + rawmaterialListto + rawmaterialListfrom;
+          rawMateriallist = rawMateriallist.where((element) => element.partNunber != "0").toList();
           rawMateriallist = sortRaw(rawMateriallist);
+
         }
         if (type.contains("Cutting")) {
           rawMateriallist = rawmaterialListcable;
-          rawMateriallist = rawMateriallist
-              .where((element) => element.partNunber != "0")
-              .toList();
+          rawMateriallist = rawMateriallist.where((element) => element.partNunber != "0").toList();
           rawMateriallist = sortRaw(rawMateriallist);
         }
         if (type.contains("Crimping")) {
           rawMateriallist = rawmaterialListto + rawmaterialListfrom;
-          rawMateriallist = rawMateriallist
-              .where((element) => element.partNunber != "0")
-              .toList();
+          rawMateriallist = rawMateriallist.where((element) => element.partNunber != "0").toList();
           rawMateriallist = sortRaw(rawMateriallist);
         }
 
@@ -255,15 +302,12 @@ class ApiService {
   // Get Raw material detail
   // check where this goes
   Future<RawMaterialDetail?> getRawmaterialDetail(String partNo) async {
-    var url = Uri.parse(baseUrl =
-        "molex/ejobticketmaster/get-raw=material-for-add?PartNo=$partNo");
+    var url = Uri.parse(baseUrl = "molex/ejobticketmaster/get-raw=material-for-add?PartNo=$partNo");
     var response = await http.get(url);
     print('Raw Material details status code ${response.statusCode}');
     if (response.statusCode == 200) {
-      GetRawMaterialDetail getRawMaterialDetail =
-          getRawMaterialDetailFromJson(response.body);
-      RawMaterialDetail rawMaterialDetail =
-          getRawMaterialDetail.data.addRawMaterialRequiredDetails;
+      GetRawMaterialDetail getRawMaterialDetail = getRawMaterialDetailFromJson(response.body);
+      RawMaterialDetail rawMaterialDetail = getRawMaterialDetail.data.addRawMaterialRequiredDetails;
       return rawMaterialDetail;
     } else {
       return null;
@@ -271,12 +315,10 @@ class ApiService {
   }
 
   // Reqired raw material detail save data POST Method
-  Future<bool> postRawmaterial(
-      List<PostRawMaterial> postRawmaterialList) async {
+  Future<bool> postRawmaterial(List<PostRawMaterial> postRawmaterialList) async {
     var url = Uri.parse(baseUrl + "molex/materialldg/post-req-material");
     final response = await http.post(url,
-        body: postRawMaterialListToJson(postRawmaterialList),
-        headers: headerList);
+        body: postRawMaterialListToJson(postRawmaterialList), headers: headerList);
     print('post raw material ${postRawMaterialListToJson(postRawmaterialList)}');
     log('post raw material body ${response.body}');
     if (response.statusCode == 200) {
@@ -287,8 +329,7 @@ class ApiService {
   }
 
   Future<FgDetails?> getFgDetails(String partNo) async {
-    var url = Uri.parse(
-        baseUrl + 'molex/ejobticketmaster/fgDetails-byfgNo?fgPartNo=$partNo');
+    var url = Uri.parse(baseUrl + 'molex/ejobticketmaster/fgDetails-byfgNo?fgPartNo=$partNo');
     var response = await http.get(url);
     log('Fg  details status code $partNo ${response.statusCode}');
     log('Fg  details status response  ${response.body}');
@@ -305,11 +346,10 @@ class ApiService {
   // Get material Tracking cable Detail
   Future<List<MaterialDetail>?> getMaterialTrackingCableDetail(
       MatTrkPostDetail matTrkPostDetail) async {
-    var url =
-        Uri.parse(baseUrl + "molex/materialldg/get-material-cable-detail");
+    var url = Uri.parse(baseUrl + "molex/materialldg/get-material-cable-detail");
     log('getMaterialTrackingCableDetail post body details ${matTrkPostDetailToJson(matTrkPostDetail)} ');
-    var response = await http.post(url,
-        body: matTrkPostDetailToJson(matTrkPostDetail), headers: headerList);
+    var response =
+        await http.post(url, body: matTrkPostDetailToJson(matTrkPostDetail), headers: headerList);
     log('getMaterialTrackingCableDetail details status code ${response.statusCode}');
     log('getMaterialTrackingCableDetail details status code ${response.body}');
     if (response.statusCode == 200) {
@@ -357,10 +397,8 @@ class ApiService {
     log('Cable termianl A status code ${response.statusCode}');
     log('Cable termianl A status code ${response.body}');
     if (response.statusCode == 200) {
-      GetCableTerminalA getCableTerminalA =
-          getCableTerminalAFromJson(response.body);
-      CableTerminalA cableTerminalA =
-          getCableTerminalA.data.findCableTerminalADto;
+      GetCableTerminalA getCableTerminalA = getCableTerminalAFromJson(response.body);
+      CableTerminalA cableTerminalA = getCableTerminalA.data.findCableTerminalADto;
       return cableTerminalA;
     } else {
       return null;
@@ -380,10 +418,8 @@ class ApiService {
     print('Cable termianl B status code ${response.statusCode}');
     print('Cable termianl B body: ${response.body}');
     if (response.statusCode == 200) {
-      GetCableTerminalB getCableTerminalB =
-          getCableTerminalBFromJson(response.body);
-      CableTerminalB cableTerminalB =
-          getCableTerminalB.data!.findCableTerminalBDto;
+      GetCableTerminalB getCableTerminalB = getCableTerminalBFromJson(response.body);
+      CableTerminalB cableTerminalB = getCableTerminalB.data!.findCableTerminalBDto;
       return cableTerminalB;
     } else {
       CableTerminalB cableTerminalB = new CableTerminalB();
@@ -393,10 +429,10 @@ class ApiService {
 
   //Start Process
   Future<bool> startProcess1(PostStartProcessP1 process) async {
-    var url = Uri.parse(baseUrl +
-        "molex/schedule-start-tracking/start-process-save-in-schedule-tracking");
-    var response = await http.post(url,
-        body: postStartProcessP1ToJson(process), headers: headerList);
+    var url = Uri.parse(
+        baseUrl + "molex/schedule-start-tracking/start-process-save-in-schedule-tracking");
+    var response =
+        await http.post(url, body: postStartProcessP1ToJson(process), headers: headerList);
     print("start proces response = ${response.statusCode}");
     print("start proces body = ${postStartProcessP1ToJson(process)}");
     print("start proces response = ${response.body}");
@@ -408,10 +444,9 @@ class ApiService {
   }
 
   //MaterialTrackingTerminalA
-  Future<List<MaterialTrackingTerminalA>?> getMaterialtrackingterminalA(
-      String partNo) async {
-    var url = Uri.parse(baseUrl +
-        'molex/material-tracking/tracking-cable-terminalA?partNo=$partNo');
+  Future<List<MaterialTrackingTerminalA>?> getMaterialtrackingterminalA(String partNo) async {
+    var url =
+        Uri.parse(baseUrl + 'molex/material-tracking/tracking-cable-terminalA?partNo=$partNo');
     var response = await http.get(url);
     print('Cable termianl A status code ${response.statusCode}');
     if (response.statusCode == 200) {
@@ -426,10 +461,9 @@ class ApiService {
   }
 
   //MaterialTrackingTerminalB
-  Future<List<MaterialTrackingTerminalB>?> getMaterialtrackingterminalB(
-      String partNo) async {
-    var url = Uri.parse(baseUrl +
-        'molex/material-tracking/tracking-cable-terminalB?partNo=$partNo');
+  Future<List<MaterialTrackingTerminalB>?> getMaterialtrackingterminalB(String partNo) async {
+    var url =
+        Uri.parse(baseUrl + 'molex/material-tracking/tracking-cable-terminalB?partNo=$partNo');
     var response = await http.get(url);
     print('Cable termianl A status code ${response.statusCode}');
     if (response.statusCode == 200) {
@@ -448,14 +482,11 @@ class ApiService {
   // Generate label request model POst method
   Future<GeneratedLabel?> postGeneratelabel(
       PostGenerateLabel postGenerateLabel, String bundleQuantiy) async {
-    var url =
-        Uri.parse(baseUrl + 'molex/wccr/generate-label/bdQty=$bundleQuantiy');
-    print(
-        'url generate label :${baseUrl + 'molex/wccr/generate-label/bdQty=$bundleQuantiy'}');
-    print(
-        'body generate label :${postGenerateLabelToJson(postGenerateLabel)} ');
-    var response = await http.post(url,
-        body: postGenerateLabelToJson(postGenerateLabel), headers: headerList);
+    var url = Uri.parse(baseUrl + 'molex/wccr/generate-label/bdQty=$bundleQuantiy');
+    print('url generate label :${baseUrl + 'molex/wccr/generate-label/bdQty=$bundleQuantiy'}');
+    print('body generate label :${postGenerateLabelToJson(postGenerateLabel)} ');
+    var response =
+        await http.post(url, body: postGenerateLabelToJson(postGenerateLabel), headers: headerList);
     print("response post generate label ${response.body}");
 
     if (response.statusCode == 200) {
@@ -465,8 +496,7 @@ class ApiService {
         return generatedLabel;
       } catch (e) {
         try {
-          ErrorGenerateLabel errorGenerateLabel =
-              errorGenerateLabelFromJson(response.body);
+          ErrorGenerateLabel errorGenerateLabel = errorGenerateLabelFromJson(response.body);
           Fluttertoast.showToast(
             msg: "${errorGenerateLabel.statusMsg}",
             toastLength: Toast.LENGTH_SHORT,
@@ -498,25 +528,20 @@ class ApiService {
   //Transfer Bundle to bin
   Future<List<BundleTransferToBin>?> postTransferBundletoBin(
       {required List<TransferBundleToBin> transferBundleToBin}) async {
-    var url = Uri.parse(
-        baseUrl + 'molex/bin-tracking/transfer-bundle-to-bin-tracking');
-    print(
-        'post Transfer Bundle to bin :${transferBundleToBinToJson(transferBundleToBin)} ');
+    var url = Uri.parse(baseUrl + 'molex/bin-tracking/transfer-bundle-to-bin-tracking');
+    print('post Transfer Bundle to bin :${transferBundleToBinToJson(transferBundleToBin)} ');
     var response = await http.post(url,
-        body: transferBundleToBinToJson(transferBundleToBin),
-        headers: headerList);
+        body: transferBundleToBinToJson(transferBundleToBin), headers: headerList);
     log("status post Transfer Bundle to bin ${response.statusCode}");
     log("response post Transfer Bundle to bin ${response.body}");
     if (response.statusCode == 200) {
       try {
         List<BundleTransferToBin> b =
-            responseTransferBundletoBinFromJson(response.body)
-                .data
-                .bundleTransferToBinTracking;
+            responseTransferBundletoBinFromJson(response.body).data.bundleTransferToBinTracking;
         return b;
       } catch (e) {
         Fluttertoast.showToast(
-          msg: "status : parse error",
+          msg: "status : parse error $e",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
@@ -543,20 +568,16 @@ class ApiService {
   //Post transfer bin to location
   Future<List<BinTransferToLocationTracking>?> postTransferBinToLocation(
       List<TransferBinToLocation> transferBinToLocationList) async {
-    var url =
-        Uri.parse(baseUrl + 'molex/bin-tracking/update-bin-location-in-bin');
+    var url = Uri.parse(baseUrl + 'molex/bin-tracking/update-bin-location-in-bin');
     log('post Transfer BIn to Location :${transferBinToLocationToJson(transferBinToLocationList)} ');
     var response = await http.post(url,
-        body: transferBinToLocationToJson(transferBinToLocationList),
-        headers: headerList);
+        body: transferBinToLocationToJson(transferBinToLocationList), headers: headerList);
     print("status post Transfer Bin To Location ${response.statusCode}");
     print("response post Transfer Bin to Location ${response.body}");
     if (response.statusCode == 200) {
       try {
         List<BinTransferToLocationTracking> b =
-            responseTransferBinToLocationFromJson(response.body)
-                .data
-                .bundleTransferToBinTracking;
+            responseTransferBinToLocationFromJson(response.body).data.bundleTransferToBinTracking;
         return b;
       } catch (e) {
         print("error");
@@ -592,8 +613,7 @@ class ApiService {
   // Click on 9999 return value bndle id List api Json missing
   // 100% complete  post method
   Future<bool> post100Complete(FullyCompleteModel postFullyComplete) async {
-    var url =
-        Uri.parse(baseUrl + 'molex/production-report/save-production-report');
+    var url = Uri.parse(baseUrl + 'molex/production-report/save-production-report');
     var response = await http.post(url,
         body: fullyCompleteModelToJson(postFullyComplete), headers: headerList);
     log("Production Report Post status ${response.statusCode}");
@@ -623,21 +643,18 @@ class ApiService {
   }
 
   // partially complete post method
-  Future<bool> postpartialComplete(
-      PostpartiallyComplete postpartiallyComplete, int awg) async {
-    var url = Uri.parse(baseUrl +
-        'molex/partial-completion-reason/save-in-partial-completion-reason/$awg');
+  Future<bool> postpartialComplete(PostpartiallyComplete postpartiallyComplete, int awg) async {
+    var url = Uri.parse(
+        baseUrl + 'molex/partial-completion-reason/save-in-partial-completion-reason/$awg');
     var response = await http.post(url,
-        body: postpartiallyCompleteToJson(postpartiallyComplete),
-        headers: headerList);
+        body: postpartiallyCompleteToJson(postpartiallyComplete), headers: headerList);
     log("post partial report  ${postpartiallyCompleteToJson(postpartiallyComplete)}");
     log("partial report  ${response.body}");
     if (response.statusCode == 200) {
       return true;
     } else {
       Fluttertoast.showToast(
-          msg:
-              "Post Partial Completion data failed status ${response.statusCode}",
+          msg: "Post Partial Completion data failed status ${response.statusCode}",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
@@ -656,15 +673,13 @@ class ApiService {
 //get Visual inspection Data
 //TODO VISUAL INSPECTION
   Future<List<ViScheduler>> getviSchedule() async {
-    var url = Uri.parse(
-        baseUrl + 'molex/visual-inspection/get-visual-inspection-data');
+    var url = Uri.parse(baseUrl + 'molex/visual-inspection/get-visual-inspection-data');
     var response = await http.get(url);
     print('ViScheduler status Code: ${response.statusCode}');
     print(response.body);
     if (response.statusCode == 200) {
       GetViSchedule getViSchedule = getViScheduleFromJson(response.body);
-      List<ViScheduler> viScheduleList =
-          getViSchedule.data.visualInspectionScheduler;
+      List<ViScheduler> viScheduleList = getViSchedule.data.viScheduler;
       return viScheduleList;
     } else {
       return [];
@@ -672,13 +687,11 @@ class ApiService {
   }
 
 // Post ViSchedule data
-  Future<bool> postVIinspectedBundle(
-      {required ViInspectedbundle viInspectedbudle}) async {
+  Future<bool> postVIinspectedBundle({required ViInspectedbundle viInspectedbudle}) async {
     log("postVIinspectedBundle :${viInspectedbundleToJson(viInspectedbudle)}");
-    var url = Uri.parse(baseUrl +
-        'molex/visual-inspection/save-visual-inspected-bundle-quantity');
-    var response = await http.post(url,
-        body: viInspectedbundleToJson(viInspectedbudle), headers: headerList);
+    var url = Uri.parse(baseUrl + 'molex/visual-inspection/save-visual-inspected-bundle-quantity');
+    var response =
+        await http.post(url, body: viInspectedbundleToJson(viInspectedbudle), headers: headerList);
     log("postVIinspectedBundle :${viInspectedbundleToJson(viInspectedbudle)}");
     log('postVIinspectedBundle status Code: ${response.statusCode}');
     log('postVIinspectedBundle response status body: ${response.body}');
@@ -687,8 +700,7 @@ class ApiService {
       return true;
     } else {
       Fluttertoast.showToast(
-        msg:
-            "Post Visual Inspected  Deatil Failed Status ${response.statusCode}",
+        msg: "Post Visual Inspected  Deatil Failed Status ${response.statusCode}",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
@@ -708,10 +720,8 @@ class ApiService {
     print('Get Preparation Schedule status Code: ${response.statusCode}');
     print(response.body);
     if (response.statusCode == 200) {
-      GetpreparationShedule getpreparationShedule =
-          getpreparationSheduleFromJson(response.body);
-      List<PreparationSchedule> preparationList =
-          getpreparationShedule.data.preparationProcessData;
+      GetpreparationShedule getpreparationShedule = getpreparationSheduleFromJson(response.body);
+      List<PreparationSchedule> preparationList = getpreparationShedule.data.preparationProcessData;
       return preparationList;
     } else {
       return [];
@@ -719,14 +729,11 @@ class ApiService {
   }
 
   //post Visual Inspected Data
-  Future<bool> postPreparationDetail(
-      {required PostPreparationDetail postPreparationDetail}) async {
-    var url = Uri.parse(
-        baseUrl + 'molex/preparation/save-preparation-rejected-detail');
+  Future<bool> postPreparationDetail({required PostPreparationDetail postPreparationDetail}) async {
+    var url = Uri.parse(baseUrl + 'molex/preparation/save-preparation-rejected-detail');
 
     var response = await http.post(url,
-        body: postPreparationDetailToJson(postPreparationDetail),
-        headers: headerList);
+        body: postPreparationDetailToJson(postPreparationDetail), headers: headerList);
     log("postPreparationDetail :${postPreparationDetailToJson(postPreparationDetail)}");
     print('postPreparationDetail status Code: ${response.statusCode}');
     log('postPreparationDetail status body: ${response.body}');
@@ -761,10 +768,8 @@ class ApiService {
     print('Get Crimping Schedule status Code: ${response.statusCode}');
     log('crimping schedule response :${response.body}');
     if (response.statusCode == 200) {
-      GetCrimpingSchedule getCrimpingSchedule =
-          getCrimpingScheduleFromJson(response.body);
-      List<CrimpingSchedule> crimpingScheduleList =
-          getCrimpingSchedule.data.crimpingBundleList;
+      GetCrimpingSchedule getCrimpingSchedule = getCrimpingScheduleFromJson(response.body);
+      List<CrimpingSchedule> crimpingScheduleList = getCrimpingSchedule.data.crimpingBundleList;
       log(" aa ${crimpingScheduleList}");
       return crimpingScheduleList;
     } else {
@@ -774,18 +779,42 @@ class ApiService {
 
   // Scan bundle Get Quantity
   Future<String?> scaBundleGetQty({required String bundleID}) async {
-    var url = Uri.parse(
-        baseUrl + 'molex/crimping/get-bundle-quantity?bundleId=$bundleID');
+    var url = Uri.parse(baseUrl + 'molex/crimping/get-bundle-quantity?bundleId=$bundleID');
     var response = await http.get(url);
     print('Get BundleQty from Id status Code: ${response.statusCode}');
     print('bundle Scan schedule response :${response.body}');
     if (response.statusCode == 200) {
       try {
-        GetBundleQtyCrimp getScanBundleId =
-            getBundleQtyCrimpFromJson(response.body);
-        String qty =
-            getScanBundleId.data.crimpingProcess[0].bundleQuantity.toString();
+        GetBundleQtyCrimp getScanBundleId = getBundleQtyCrimpFromJson(response.body);
+        String qty = getScanBundleId.data.crimpingProcess[0].bundleQuantity.toString();
         return qty;
+      } catch (e) {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  //double crimp
+  Future<List<EJobTicketMasterDetails>?> getDoubleCrimpDetail(
+      {required String fgNo, required String crimpType}) async {
+    var url = Uri.parse(baseUrl +
+        'molex/ejobticketmaster/get-ejob-detail/fg/$fgNo/crimp/$crimpType'); //change it bacl
+    log("double crimp url :${baseUrl + 'molex/ejobticketmaster/get-ejob-detail/fg/$fgNo/crimp/$crimpType'} ");
+    //  var url = Uri.parse('http://justerp.in:8080/wipts/molex/ejobticketmaster/get-ejob-detail/fg/367500175/crimp/SP1(12+12+10)');
+    var response = await http.get(url);
+    print('Double crimp Ejob Detail Status: ${response.statusCode}');
+    print('Double crimp Ejob Detail body:${response.body}');
+    if (response.statusCode == 200) {
+      try {
+        DcEjobDetail ejobDetail = dcEjobDetailFromJson(response.body);
+        List<EJobTicketMasterDetails> listEjob = ejobDetail.data.eJobTicketMasterDetails;
+        if (listEjob.length > 0) {
+          return listEjob;
+        } else {
+          return [];
+        }
       } catch (e) {
         return null;
       }
@@ -798,23 +827,19 @@ class ApiService {
   Future<CrimpingResponse?> postCrimpRejectedQty(
       PostCrimpingRejectedDetail postCrimpingRejectedDetail) async {
     log('Post Rejected  body :${postCrimpingRejectedDetailToJson(postCrimpingRejectedDetail)}');
-    var url =
-        Uri.parse(baseUrl + 'molex/crimping/save-crimping-rejected-detal');
+    var url = Uri.parse(baseUrl + 'molex/crimping/save-crimping-rejected-detal');
     var response = await http.post(url,
-        body: postCrimpingRejectedDetailToJson(postCrimpingRejectedDetail),
-        headers: headerList);
+        body: postCrimpingRejectedDetailToJson(postCrimpingRejectedDetail), headers: headerList);
     print('Post Rejected status Code: ${response.statusCode}');
     log('Post Rejected response body :${response.body}');
     if (response.statusCode == 200) {
       try {
         ResponsePostCrimpingDetail resPostCrimpingRejectedDetail =
             responsePostCrimpingDetailFromJson(response.body);
-        CrimpingResponse crimpingRejectDetail =
-            resPostCrimpingRejectedDetail.data.crimpingProcess;
+        CrimpingResponse crimpingRejectDetail = resPostCrimpingRejectedDetail.data.crimpingProcess;
         return crimpingRejectDetail;
       } catch (e) {
-        CrimpRejectionError crimpRejectionError =
-            crimpRejectionErrorFromJson(response.body);
+        CrimpRejectionError crimpRejectionError = crimpRejectionErrorFromJson(response.body);
         Fluttertoast.showToast(
           msg: "${crimpRejectionError.statusMsg}",
           toastLength: Toast.LENGTH_SHORT,
@@ -856,15 +881,13 @@ class ApiService {
 
   //Get bundle Detail
   Future<BundleData?> getBundleDetail(String bundleId) async {
-    var url = Uri.parse(
-        baseUrl + 'molex/material-codinator/getbundle?bundleId=$bundleId');
+    var url = Uri.parse(baseUrl + 'molex/material-codinator/getbundle?bundleId=$bundleId');
     var response = await http.get(url);
     print('Get Bundle Data status Code: ${response.statusCode}');
     print('Get Bundle Data  response body :${response.body}');
     if (response.statusCode == 200) {
       try {
-        GetBundleDetail getBundleDetail =
-            getBundleDetailFromJson(response.body);
+        GetBundleDetail getBundleDetail = getBundleDetailFromJson(response.body);
         BundleData bundleDetail = getBundleDetail.data!.bundleData!;
         return bundleDetail;
       } catch (e) {
@@ -885,15 +908,14 @@ class ApiService {
   }
 
   Future<List<BundleDetail>?> getBundlesinBin(String binId) async {
-    var url = Uri.parse(baseUrl +
-        'molex/material-codinator/material-codinator-ytbp-data?binId=$binId');
+    var url =
+        Uri.parse(baseUrl + 'molex/material-codinator/material-codinator-ytbp-data?binId=$binId');
     var response = await http.get(url);
     log('Get Bundles From Bin status Code: ${response.statusCode}');
     log('Get Bundles From Bin  response body :${response.body}');
     if (response.statusCode == 200) {
       GetBinDetail getBinDetail = getBinDetailFromJson(response.body);
-      List<BundleDetail> bundleList =
-          getBinDetail.data.materialCodinatorSchedulerData;
+      List<BundleDetail> bundleList = getBinDetail.data.materialCodinatorSchedulerData;
       return bundleList;
     } else {
       Fluttertoast.showToast(
@@ -911,27 +933,22 @@ class ApiService {
 
   // get bundle in schedule
   Future<List<BundlesRetrieved>?> getBundlesInSchedule(
-      {required PostgetBundleMaster postgetBundleMaster,
-      required String scheduleID}) async {
+      {required PostgetBundleMaster postgetBundleMaster, required String scheduleID}) async {
     var url = Uri.parse(baseUrl + 'molex/bundlemaster/');
     var response = await http.post(url,
-        body: postgetBundleMasterToJson(postgetBundleMaster),
-        headers: headerList);
+        body: postgetBundleMasterToJson(postgetBundleMaster), headers: headerList);
     log('Get Bundles  post: ${postgetBundleMasterToJson(postgetBundleMaster)}');
     log('Get Bundles From BundleID status Code: ${response.statusCode}');
     log('Get Bundleslist From BundleID  response body :${response.body}');
     if (response.statusCode == 200) {
       try {
-        GetBundleListGl getBundleListGl =
-            getBundleListGlFromJson(response.body);
-        List<BundlesRetrieved> bundleList =
-            getBundleListGl.data.bundlesRetrieved;
+        GetBundleListGl getBundleListGl = getBundleListGlFromJson(response.body);
+        List<BundlesRetrieved> bundleList = getBundleListGl.data.bundlesRetrieved;
         if (scheduleID != '') {
-          bundleList = bundleList
-              .where((element) => element.scheduledId.toString() == scheduleID)
-              .toList();
+          bundleList =
+              bundleList.where((element) => element.scheduledId.toString() == scheduleID).toList();
         } else {}
-       
+
         return bundleList;
       } catch (e) {
         return [];
@@ -951,17 +968,15 @@ class ApiService {
   }
 
   //Kitting
-  Future<List<KittingEJobDtoList>?> getkittingDetail(
-      PostKittingData postKittingData) async {
+  Future<List<KittingEJobDtoList>?> getkittingDetail(PostKittingData postKittingData) async {
     var url = Uri.parse(baseUrl + 'molex/kitting/get-kitting-data');
-    var response = await http.post(url,
-        body: postKittingDataToJson(postKittingData), headers: headerList);
+    var response =
+        await http.post(url, body: postKittingDataToJson(postKittingData), headers: headerList);
     log('getkittingDetail status Code: ${response.statusCode}');
     log('getkittingDetail Bin  response body :${response.body}');
     if (response.statusCode == 200) {
       GetKittingData kittingData = getKittingDataFromJson(response.body);
-      List<KittingEJobDtoList> kitList =
-          kittingData.data.kittingDetail.kittingEJobDtoList;
+      List<KittingEJobDtoList> kitList = kittingData.data.kittingDetail.kittingEJobDtoList;
       return kitList;
     } else {
       Fluttertoast.showToast(
@@ -981,14 +996,13 @@ class ApiService {
   Future<bool> postKittingData(List<SaveKitting> saveKitting) async {
     log('Save Kitting data body :${saveKittingToJson(saveKitting)}');
     var url = Uri.parse(baseUrl + 'molex/kitting');
-    var response = await http.post(url,
-        body: saveKittingToJson(saveKitting), headers: headerList);
+    var response = await http.post(url, body: saveKittingToJson(saveKitting), headers: headerList);
     print('Post Rejected status Code: ${response.statusCode}');
     print('Post Rejected response body :${response.body}');
     if (response.statusCode == 200) {
       try {
         Fluttertoast.showToast(
-          msg: "Post Kitting  saved status code ${response.statusCode}",
+          msg: "Kitting Data Saved",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
@@ -998,8 +1012,7 @@ class ApiService {
         );
         return true;
       } catch (e) {
-        CrimpRejectionError crimpRejectionError =
-            crimpRejectionErrorFromJson(response.body);
+        CrimpRejectionError crimpRejectionError = crimpRejectionErrorFromJson(response.body);
         Fluttertoast.showToast(
           msg: "${crimpRejectionError.statusMsg}",
           toastLength: Toast.LENGTH_SHORT,
@@ -1028,13 +1041,11 @@ class ApiService {
   //return raw material
 
   //post kitting data
-  Future<bool> postreturnRawMaterial(
-      PostReturnMaterial postReturnMaterial) async {
+  Future<bool> postreturnRawMaterial(PostReturnMaterial postReturnMaterial) async {
     log('post return raw material data body :${postReturnMaterialToJson(postReturnMaterial)}');
     var url = Uri.parse(baseUrl + 'molex/materialldg//update-used-quantity');
     var response = await http.put(url,
-        body: postReturnMaterialToJson(postReturnMaterial),
-        headers: headerList);
+        body: postReturnMaterialToJson(postReturnMaterial), headers: headerList);
     print('post return raw material status Code: ${response.statusCode}');
     print('post return raw material  response body :${response.body}');
     if (response.statusCode == 200) {
@@ -1050,8 +1061,7 @@ class ApiService {
         );
         return true;
       } catch (e) {
-        CrimpRejectionError crimpRejectionError =
-            crimpRejectionErrorFromJson(response.body);
+        CrimpRejectionError crimpRejectionError = crimpRejectionErrorFromJson(response.body);
         Fluttertoast.showToast(
           msg: "${crimpRejectionError.statusMsg}",
           toastLength: Toast.LENGTH_SHORT,

@@ -476,7 +476,7 @@ class _SchudleTableState extends State<SchudleTable> {
                           if (snapshot.hasData) {
                             // return  buildDataRow(schedule:widget.schedule,c:2);
                             List<Schedule>? schedulelist =
-                                searchfilter(snapshot.data);
+                                searchfilter(snapshot.data??[]);
                             schedulelist = schedulelist!
                                 .where((element) =>
                                     element.scheduledStatus.toLowerCase() !=

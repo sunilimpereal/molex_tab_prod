@@ -13,7 +13,7 @@ import '../../../model_api/materialTrackingCableDetails_model.dart';
 import '../../../models/bundle_scan.dart';
 import '../../operator%202/materialPick2.dart';
 import '../../operator%202/process/FullyCompleteP2.dart';
-import '../../operator%202/process/multipleBundleScan.dart';
+import 'double crimp/multipleBundleScan.dart';
 import '../../operator%202/process/partialCompletion.dart';
 import 'crimping.dart';
 import '../../operator/location.dart';

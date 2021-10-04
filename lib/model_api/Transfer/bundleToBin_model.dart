@@ -131,7 +131,7 @@ class BundleTransferToBin {
         id: json["id"],
         bundleIdentification: json["bundleIdentification"],
         scheduledId: json["scheduledId"],
-        bundleCreationTime: DateTime.parse(json["bundleCreationTime"]),
+        bundleCreationTime: DateTime.tryParse(json["bundleCreationTime"])??DateTime.now(),
         bundleQuantity: json["bundleQuantity"],
         machineIdentification: json["machineIdentification"],
         operatorIdentification: json["operatorIdentification"],
