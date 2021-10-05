@@ -51,7 +51,27 @@ class ScanBundle extends StatefulWidget {
   bool processStarted;
   String processName;
   Function startProcess;
-  ScanBundle({required this.machineId, required this.method, required this.userId, required this.schedule, required this.totalQuantity, required this.fullyComplete, required this.updateQty, required this.processStarted, required this.processName, required this.startProcess, required this.reload, required this.transfer, required this.partiallyComplete, required this.matTrkPostDetail});
+  //variables for schedule type
+  String type;
+  String sameMachine;
+  ScanBundle({
+    required this.machineId,
+    required this.method,
+    required this.userId,
+    required this.schedule,
+    required this.totalQuantity,
+    required this.fullyComplete,
+    required this.updateQty,
+    required this.processStarted,
+    required this.processName,
+    required this.startProcess,
+    required this.reload,
+    required this.transfer,
+    required this.partiallyComplete,
+    required this.matTrkPostDetail,
+    required this.sameMachine,
+    required this.type,
+  });
   @override
   _ScanBundleState createState() => _ScanBundleState();
 }
@@ -114,8 +134,22 @@ class _ScanBundleState extends State<ScanBundle> {
   late CableTerminalB? terminalB;
   getTerminal() {
     ApiService apiService = new ApiService();
-    apiService.getCableTerminalA(fgpartNo: "${widget.schedule.finishedGoods}", cablepartno: widget.schedule.cablePartNo.toString(), length: "${widget.schedule.length}", color: widget.schedule.wireColour, awg: int.parse(widget.schedule.awg)).then((termiA) {
-      apiService.getCableTerminalB(fgpartNo: "${widget.schedule.finishedGoods}", cablepartno: widget.schedule.cablePartNo.toString(), length: "${widget.schedule.length}", color: widget.schedule.wireColour, awg: int.parse(widget.schedule.awg)).then((termiB) {
+    apiService
+        .getCableTerminalA(
+            fgpartNo: "${widget.schedule.finishedGoods}",
+            cablepartno: widget.schedule.cablePartNo.toString(),
+            length: "${widget.schedule.length}",
+            color: widget.schedule.wireColour,
+            awg: int.parse(widget.schedule.awg))
+        .then((termiA) {
+      apiService
+          .getCableTerminalB(
+              fgpartNo: "${widget.schedule.finishedGoods}",
+              cablepartno: widget.schedule.cablePartNo.toString(),
+              length: "${widget.schedule.length}",
+              color: widget.schedule.wireColour,
+              awg: int.parse(widget.schedule.awg))
+          .then((termiB) {
         setState(() {
           terminalA = termiA;
           terminalB = termiB;
@@ -123,7 +157,22 @@ class _ScanBundleState extends State<ScanBundle> {
       });
     });
   }
+  getActualQty(){
+    ApiService apiService = new ApiService();
+    apiService.getCrimpingSchedule(machineNo: widget.machineId , scheduleType: widget.type, sameMachine: widget.sameMachine).then((value) {
+      List<CrimpingSchedule> scheduleList = value!;
+      CrimpingSchedule schedule = scheduleList.firstWhere((element) {
+        return (
+          element.scheduleId ==widget.schedule.scheduleId 
+        );
+      });
+      setState(() {
+        log("total Qty : ${schedule.actualQuantity}");
+        widget.totalQuantity = schedule.actualQuantity;
+      });
+    });
 
+  }
   @override
   void initState() {
     status = Status.scan;
@@ -154,7 +203,9 @@ class _ScanBundleState extends State<ScanBundle> {
             elevation: 5,
             color: Colors.white,
             clipBehavior: Clip.hardEdge,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0), side: BorderSide(color: Colors.transparent)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                side: BorderSide(color: Colors.transparent)),
             child: Container(
               height: 241,
               child: Row(
@@ -231,7 +282,9 @@ class _ScanBundleState extends State<ScanBundle> {
             child: Material(
               elevation: 2,
               shadowColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: BorderSide(color: Colors.transparent)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  side: BorderSide(color: Colors.transparent)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -240,7 +293,8 @@ class _ScanBundleState extends State<ScanBundle> {
 
                   Padding(
                     padding: const EdgeInsets.all(4.0),
-                    child: ProcessTimer(startTime: DateTime.now(), endTime: widget.schedule.shiftEnd),
+                    child:
+                        ProcessTimer(startTime: DateTime.now(), endTime: widget.schedule.shiftEnd),
                   ),
 
                   //buttons and num pad
@@ -260,17 +314,24 @@ class _ScanBundleState extends State<ScanBundle> {
                                     width: 160,
                                     child: ElevatedButton(
                                       style: ButtonStyle(
-                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent))),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(20.0),
+                                                side: BorderSide(color: Colors.transparent))),
                                         backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                           (Set<MaterialState> states) {
-                                            if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
-                                            return Colors.green.shade500; // Use the component's default.
+                                            if (states.contains(MaterialState.pressed))
+                                              return Colors.green.shade200;
+                                            return Colors
+                                                .green.shade500; // Use the component's default.
                                           },
                                         ),
                                         overlayColor: MaterialStateProperty.resolveWith<Color>(
                                           (Set<MaterialState> states) {
-                                            if (states.contains(MaterialState.pressed)) return Colors.green;
-                                            return Colors.green.shade500; // Use the component's default.
+                                            if (states.contains(MaterialState.pressed))
+                                              return Colors.green;
+                                            return Colors
+                                                .green.shade500; // Use the component's default.
                                           },
                                         ),
                                       ),
@@ -298,10 +359,14 @@ class _ScanBundleState extends State<ScanBundle> {
                                     width: 160,
                                     child: ElevatedButton(
                                       style: ButtonStyle(
-                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.green))),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(20.0),
+                                                side: BorderSide(color: Colors.green))),
                                         backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                           (Set<MaterialState> states) {
-                                            if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                                            if (states.contains(MaterialState.pressed))
+                                              return Colors.green.shade200;
                                             return Colors.white; // Use the component's default.
                                           },
                                         ),
@@ -315,7 +380,10 @@ class _ScanBundleState extends State<ScanBundle> {
                                       },
                                       child: Text(
                                         "Partially  complete",
-                                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal, color: Colors.green),
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.normal,
+                                            color: Colors.green),
                                       ),
                                     ),
                                   )
@@ -378,11 +446,17 @@ class _ScanBundleState extends State<ScanBundle> {
       orderId: widget.schedule.purchaseOrder.toString(),
     );
 
-    apiService.getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: widget.schedule.scheduleId.toString()).then((value) {
+    apiService
+        .getBundlesInSchedule(
+            postgetBundleMaster: postgetBundleMaste,
+            scheduleID: widget.schedule.scheduleId.toString())
+        .then((value) {
       List<BundlesRetrieved> totalbundleList = value!;
       if (totalbundleList.length > 0) {
         totalbundleList = totalbundleList.where((element) {
-          if ("${element.cutLengthSpecificationInmm}" == "${widget.schedule.length}" && "${element.color}" == "${widget.schedule.wireColour}" && "${element.orderId}" == "${widget.schedule.purchaseOrder}") {
+          if ("${element.cutLengthSpecificationInmm}" == "${widget.schedule.length}" &&
+              "${element.color}" == "${widget.schedule.wireColour}" &&
+              "${element.orderId}" == "${widget.schedule.purchaseOrder}") {
             return true;
           } else {
             return false;
@@ -425,12 +499,17 @@ class _ScanBundleState extends State<ScanBundle> {
                   Padding(
                     padding: const EdgeInsets.all(18.0),
                     child: FutureBuilder(
-                        future: apiService.getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: ""),
+                        future: apiService.getBundlesInSchedule(
+                            postgetBundleMaster: postgetBundleMaste, scheduleID: ""),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            List<BundlesRetrieved>? totalbundleList = snapshot.data as List<BundlesRetrieved>?;
+                            List<BundlesRetrieved>? totalbundleList =
+                                snapshot.data as List<BundlesRetrieved>?;
                             totalbundleList = totalbundleList!.where((element) {
-                              if ("${element.cutLengthSpecificationInmm}" == "${widget.schedule.length}" && "${element.color}" == "${widget.schedule.wireColour}" && "${element.orderId}" == "${widget.schedule.purchaseOrder}") {
+                              if ("${element.cutLengthSpecificationInmm}" ==
+                                      "${widget.schedule.length}" &&
+                                  "${element.color}" == "${widget.schedule.wireColour}" &&
+                                  "${element.orderId}" == "${widget.schedule.purchaseOrder}") {
                                 return true;
                               } else {
                                 return false;
@@ -446,91 +525,114 @@ class _ScanBundleState extends State<ScanBundle> {
                                     width: 100,
                                     child: Text(
                                       'Bundle ID',
-                                      style: TextStyle(fontSize: 12, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: fonts.openSans,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   CustomCell(
                                     width: 100,
                                     child: Text(
                                       'Bin ID',
-                                      style: TextStyle(fontSize: 12, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: fonts.openSans,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   CustomCell(
                                     width: 100,
                                     child: Text(
                                       'Location ID',
-                                      style: TextStyle(fontSize: 12, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: fonts.openSans,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   CustomCell(
                                     width: 100,
                                     child: Text(
                                       'Qty',
-                                      style: TextStyle(fontSize: 12, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: fonts.openSans,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   CustomCell(
                                     width: 100,
                                     child: Text(
                                       'info',
-                                      style: TextStyle(fontSize: 12, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: fonts.openSans,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ],
                                 rows: totalbundleList
-                                    .map((e) => CustomRow(completed: e.updateFromProcess.toLowerCase().contains(widget.processName.toLowerCase()), cells: [
-                                          CustomCell(
-                                            width: 100,
-                                            child: Text(
-                                              e.bundleIdentification,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                // color: !e
-                                                //         .updateFromProcess
-                                                //         .contains(widget
-                                                //             .processName,
-                                                //             )
-                                                //     ? Colors.red
-                                                //     : Colors.green
+                                    .map((e) => CustomRow(
+                                            completed: e.updateFromProcess
+                                                .toLowerCase()
+                                                .contains(widget.processName.toLowerCase()),
+                                            cells: [
+                                              CustomCell(
+                                                width: 100,
+                                                child: Text(
+                                                  e.bundleIdentification,
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    // color: !e
+                                                    //         .updateFromProcess
+                                                    //         .contains(widget
+                                                    //             .processName,
+                                                    //             )
+                                                    //     ? Colors.red
+                                                    //     : Colors.green
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                          CustomCell(
-                                            width: 100,
-                                            color: e.binId == null ? Colors.red.shade100 : Colors.transparent,
-                                            child: Text(
-                                              "${e.binId}",
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                          CustomCell(
-                                            width: 100,
-                                            color: e.locationId == null ? Colors.red.shade100 : Colors.transparent,
-                                            child: Text(
-                                              "${e.locationId}",
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                          CustomCell(
-                                            width: 100,
-                                            child: Text(
-                                              "${e.bundleQuantity}",
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                          CustomCell(
-                                            width: 100,
-                                            child: GestureDetector(
-                                                onTap: () {
-                                                  showBundleDetail(e);
-                                                },
-                                                child: Icon(
-                                                  Icons.info_outline,
-                                                  color: Colors.blue,
-                                                )),
-                                          )
-                                        ]))
+                                              CustomCell(
+                                                width: 100,
+                                                color: e.binId == null
+                                                    ? Colors.red.shade100
+                                                    : Colors.transparent,
+                                                child: Text(
+                                                  "${e.binId}",
+                                                  style: TextStyle(fontSize: 12),
+                                                ),
+                                              ),
+                                              CustomCell(
+                                                width: 100,
+                                                color: e.locationId == null
+                                                    ? Colors.red.shade100
+                                                    : Colors.transparent,
+                                                child: Text(
+                                                  "${e.locationId}",
+                                                  style: TextStyle(fontSize: 12),
+                                                ),
+                                              ),
+                                              CustomCell(
+                                                width: 100,
+                                                child: Text(
+                                                  "${e.bundleQuantity}",
+                                                  style: TextStyle(fontSize: 12),
+                                                ),
+                                              ),
+                                              CustomCell(
+                                                width: 100,
+                                                child: GestureDetector(
+                                                    onTap: () {
+                                                      showBundleDetail(e);
+                                                    },
+                                                    child: Icon(
+                                                      Icons.info_outline,
+                                                      color: Colors.blue,
+                                                    )),
+                                              )
+                                            ]))
                                     .toList(),
                               ),
                             );
@@ -603,10 +705,14 @@ class _ScanBundleState extends State<ScanBundle> {
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                             style: ButtonStyle(
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent))),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      side: BorderSide(color: Colors.transparent))),
                               backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                                  if (states.contains(MaterialState.pressed))
+                                    return Colors.green.shade200;
                                   return Colors.green.shade400; // Use the component's default.
                                 },
                               ),
@@ -709,26 +815,40 @@ class _ScanBundleState extends State<ScanBundle> {
                             children: [
                               Column(
                                 children: [
-                                  field(title: "Bundle ID", data: bundlesRetrieved.bundleIdentification),
-                                  field(title: "Bundle Qty", data: bundlesRetrieved.bundleQuantity.toString()),
-                                  field(title: "Bundle Status", data: "${bundlesRetrieved.bundleStatus}"),
-                                  field(title: "Cut Length", data: "${bundlesRetrieved.cutLengthSpecificationInmm}"),
+                                  field(
+                                      title: "Bundle ID",
+                                      data: bundlesRetrieved.bundleIdentification),
+                                  field(
+                                      title: "Bundle Qty",
+                                      data: bundlesRetrieved.bundleQuantity.toString()),
+                                  field(
+                                      title: "Bundle Status",
+                                      data: "${bundlesRetrieved.bundleStatus}"),
+                                  field(
+                                      title: "Cut Length",
+                                      data: "${bundlesRetrieved.cutLengthSpecificationInmm}"),
                                   field(title: "Color", data: "${bundlesRetrieved.color}"),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  field(title: "Cable Part Number", data: bundlesRetrieved.cablePartNumber.toString()),
+                                  field(
+                                      title: "Cable Part Number",
+                                      data: bundlesRetrieved.cablePartNumber.toString()),
                                   field(
                                     title: "Cable part Description",
                                     data: "${bundlesRetrieved.cablePartDescription}",
                                   ),
-                                  field(title: "Finished Goods", data: "${bundlesRetrieved.finishedGoodsPart}"),
+                                  field(
+                                      title: "Finished Goods",
+                                      data: "${bundlesRetrieved.finishedGoodsPart}"),
                                   field(
                                     title: "Order Id",
                                     data: "${bundlesRetrieved.operatorIdentification}",
                                   ),
-                                  field(title: "Update From", data: "${bundlesRetrieved.updateFromProcess}"),
+                                  field(
+                                      title: "Update From",
+                                      data: "${bundlesRetrieved.updateFromProcess}"),
                                 ],
                               ),
                               Column(
@@ -849,17 +969,24 @@ class _ScanBundleState extends State<ScanBundle> {
                             width: 200,
                             child: LoadingButton(
                                 style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.red))),
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20.0),
+                                          side: BorderSide(color: Colors.red))),
                                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                     (Set<MaterialState> states) {
-                                      if (states.contains(MaterialState.pressed)) return Colors.red.shade900;
+                                      if (states.contains(MaterialState.pressed))
+                                        return Colors.red.shade900;
                                       return Colors.red; // Use the component's default.
                                     },
                                   ),
                                 ),
                                 child: Text('Scan Bundle  '),
                                 loading: false,
-                                loadingChild: Container(height: 30, width: 30, child: CircularProgressIndicator(color: Colors.white)),
+                                loadingChild: Container(
+                                    height: 30,
+                                    width: 30,
+                                    child: CircularProgressIndicator(color: Colors.white)),
                                 onPressed: () {
                                   getScannedBundle();
                                 }))
@@ -886,14 +1013,24 @@ class _ScanBundleState extends State<ScanBundle> {
     );
 
     if (_scanIdController.text.length > 0) {
-      apiService.getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: "").then((value) {
+      apiService
+          .getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: "")
+          .then((value) {
         List<BundlesRetrieved> bundleList = value!;
         BundlesRetrieved bundleDetail = bundleList[0];
 
         if (value != null) {
-          if ((widget.totalQuantity + bundleDetail.bundleQuantity) > int.parse(widget.schedule.schdeuleQuantity)) {
+          if ((widget.totalQuantity + bundleDetail.bundleQuantity) >
+              int.parse(widget.schedule.schdeuleQuantity)) {
             setState(() {});
-            Fluttertoast.showToast(msg: "Total Quantity Exceeds Schedule Qty", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
+            Fluttertoast.showToast(
+                msg: "Total Quantity Exceeds Schedule Qty",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
             return true;
           } else {
             if (validateBundle(bundleDetail)) {
@@ -965,21 +1102,44 @@ class _ScanBundleState extends State<ScanBundle> {
         return true;
       }
       // ignore: null_aware_before_operator
-      if (widget.processName == "Crimp From & To" && (crimpto == null || crimpto.length <= 1) && (crimpto == null || crimpto.length <= 1)) {
+      if (widget.processName == "Crimp From & To" &&
+          (crimpto == null || crimpto.length <= 1) &&
+          (crimpto == null || crimpto.length <= 1)) {
         return true;
       }
       return false;
     }
 
-    if ("${bundleDetail.finishedGoodsPart}" == "${widget.schedule.finishedGoods}" && "${bundleDetail.cablePartNumber}" == "${widget.schedule.cablePartNo}" && "${bundleDetail.cutLengthSpecificationInmm}" == "${widget.schedule.length}" && "${bundleDetail.color}" == "${widget.schedule.wireColour}" && "${bundleDetail.orderId}" == "${widget.schedule.purchaseOrder}") {
+    if ("${bundleDetail.finishedGoodsPart}" == "${widget.schedule.finishedGoods}" &&
+        "${bundleDetail.cablePartNumber}" == "${widget.schedule.cablePartNo}" &&
+        "${bundleDetail.cutLengthSpecificationInmm}" == "${widget.schedule.length}" &&
+        "${bundleDetail.color}" == "${widget.schedule.wireColour}" &&
+        "${bundleDetail.orderId}" == "${widget.schedule.purchaseOrder}") {
       // ignore: null_aware_in_logical_operator
-      if (!bundleDetail.updateFromProcess.toLowerCase().contains(widget.processName.toLowerCase()) && checkCrimping(bundleDetail.crimpFromSchId, bundleDetail.crimpToSchId)) {
+      if (!bundleDetail.updateFromProcess
+              .toLowerCase()
+              .contains(widget.processName.toLowerCase()) &&
+          checkCrimping(bundleDetail.crimpFromSchId, bundleDetail.crimpToSchId)) {
         return true;
       }
-      Fluttertoast.showToast(msg: "Bundle terminal does not match", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
+      Fluttertoast.showToast(
+          msg: "Bundle terminal does not match",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
       return false;
     }
-    Fluttertoast.showToast(msg: "Bundle does not match FG Detials", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
+    Fluttertoast.showToast(
+        msg: "Bundle does not match FG Detials",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
     return false;
   }
 
@@ -1115,7 +1275,8 @@ class _ScanBundleState extends State<ScanBundle> {
                       ),
                       Column(
                         children: [
-                          quantitycell(name: "Cable Damage", textEditingController: cableDamageController),
+                          quantitycell(
+                              name: "Cable Damage", textEditingController: cableDamageController),
                           quantitycell(
                             name: "Half Curling	",
                             textEditingController: halfCurlingController,
@@ -1196,10 +1357,14 @@ class _ScanBundleState extends State<ScanBundle> {
                           children: [
                             ElevatedButton(
                                 style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.green))),
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20.0),
+                                          side: BorderSide(color: Colors.green))),
                                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                     (Set<MaterialState> states) {
-                                      if (states.contains(MaterialState.pressed)) return Colors.white;
+                                      if (states.contains(MaterialState.pressed))
+                                        return Colors.white;
                                       return Colors.white; // Use the component's default.
                                     },
                                   ),
@@ -1228,10 +1393,14 @@ class _ScanBundleState extends State<ScanBundle> {
                             SizedBox(width: 10),
                             ElevatedButton(
                               style: ButtonStyle(
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent))),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20.0),
+                                        side: BorderSide(color: Colors.transparent))),
                                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                                    if (states.contains(MaterialState.pressed))
+                                      return Colors.green.shade200;
                                     return Colors.green.shade500; // Use the component's default.
                                   },
                                 ),
@@ -1257,8 +1426,11 @@ class _ScanBundleState extends State<ScanBundle> {
                                   },
                                 );
 
-                                apiService.postCrimpRejectedQty(getPostCrimpingRejectDetail()).then((value) {
+                                apiService
+                                    .postCrimpRejectedQty(getPostCrimpingRejectDetail())
+                                    .then((value) {
                                   if (value != null) {
+                                    getActualQty();
                                     setState(() {
                                       loading = false;
                                     });
@@ -1336,7 +1508,8 @@ class _ScanBundleState extends State<ScanBundle> {
                 child: CircularProgressIndicator(
                   strokeWidth: 5,
                   value: percent,
-                  valueColor: AlwaysStoppedAnimation<Color>(percent >= 0.9 ? Colors.greenAccent : Colors.redAccent),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      percent >= 0.9 ? Colors.greenAccent : Colors.redAccent),
                 ),
               ),
             ),
@@ -1367,38 +1540,56 @@ class _ScanBundleState extends State<ScanBundle> {
 
       status: "",
 
-      machineIdentification     : widget.machineId,
-      binId                     : "",
-      bundleQuantity            : int.parse(bundleQty ?? '0'),
-      passedQuantity            : int.parse(bundleQty ?? '0') - total(),
-      rejectedQuantity          : total(),
-      endWire                   : int.parse(endwireController.text.length > 0 ? endwireController.text : "0"),
-      rejectionsTerminalFrom    : int.parse(endTerminalControllerFrom.text.length > 0 ? endTerminalControllerTo.text : "0"),
-      rejectionsTerminalTo      : int.parse(endTerminalControllerTo.text.length > 0 ? endTerminalControllerTo.text : "0"),
-      setUpRejectionTerminalFrom: int.parse(setUpRejectionControllerFrom.text.length > 0 ? setUpRejectionControllerFrom.text : '0'),
-      setUpRejections           : int.parse(setUpRejectionControllerCable.text.length > 0 ? setUpRejectionControllerCable.text : '0'),
-      setUpRejectionTerminalTo  : int.parse(setUpRejectionControllerTo.text.length > 0 ? setUpRejectionControllerTo.text : '0'),
+      machineIdentification: widget.machineId,
+      binId: "",
+      bundleQuantity: int.parse(bundleQty ?? '0'),
+      passedQuantity: int.parse(bundleQty ?? '0') - total(),
+      rejectedQuantity: total(),
+      endWire: int.parse(endwireController.text.length > 0 ? endwireController.text : "0"),
+      rejectionsTerminalFrom:
+          int.parse(endTerminalControllerFrom.text.length > 0 ? endTerminalControllerTo.text : "0"),
+      rejectionsTerminalTo:
+          int.parse(endTerminalControllerTo.text.length > 0 ? endTerminalControllerTo.text : "0"),
+      setUpRejectionTerminalFrom: int.parse(
+          setUpRejectionControllerFrom.text.length > 0 ? setUpRejectionControllerFrom.text : '0'),
+      setUpRejections: int.parse(
+          setUpRejectionControllerCable.text.length > 0 ? setUpRejectionControllerCable.text : '0'),
+      setUpRejectionTerminalTo: int.parse(
+          setUpRejectionControllerTo.text.length > 0 ? setUpRejectionControllerTo.text : '0'),
       //terminaldamage
-      terminalBendOrClosedOrDamage: int.parse(terminalBendController.text.length > 0 ? terminalBendController.text : '0') + int.parse(terminalDamageController.text.length > 0 ? terminalDamageController.text : '0'),
-      terminalTwist               : int.parse(terminalTwistController.text.length > 0 ? terminalTwistController.text : '0'),
-      windowGap                   : int.parse(windowGapController.text.length > 0 ? windowGapController.text : '0') + int.parse(halfCurlingController.text.length > 0 ? halfCurlingController.text : '0'),
+      terminalBendOrClosedOrDamage: int.parse(
+              terminalBendController.text.length > 0 ? terminalBendController.text : '0') +
+          int.parse(terminalDamageController.text.length > 0 ? terminalDamageController.text : '0'),
+      terminalTwist:
+          int.parse(terminalTwistController.text.length > 0 ? terminalTwistController.text : '0'),
+      windowGap: int.parse(windowGapController.text.length > 0 ? windowGapController.text : '0') +
+          int.parse(halfCurlingController.text.length > 0 ? halfCurlingController.text : '0'),
 
-      crimpInslation: int.parse(crimpOnInsulationController.text.length > 0 ? crimpOnInsulationController.text : "0"),
-      bellMouthError: int.parse(bellMouthErrorController.text.length > 0 ? bellMouthErrorController.text : '0') + int.parse(lockingTabOpenController.text.length > 0 ? lockingTabOpenController.text : '0'),
+      crimpInslation: int.parse(
+          crimpOnInsulationController.text.length > 0 ? crimpOnInsulationController.text : "0"),
+      bellMouthError: int.parse(
+              bellMouthErrorController.text.length > 0 ? bellMouthErrorController.text : '0') +
+          int.parse(lockingTabOpenController.text.length > 0 ? lockingTabOpenController.text : '0'),
 
-      burrOrCutOff  : int.parse(cutoffBurrController.text.length > 0 ? cutoffBurrController.text : '0'),
+      burrOrCutOff:
+          int.parse(cutoffBurrController.text.length > 0 ? cutoffBurrController.text : '0'),
       exposedStrands: int.parse(exposureStrands.text.length > 0 ? exposureStrands.text : '0'),
-      nickMark      : int.parse(nickMarkController.text.length > 0 ? nickMarkController.text : '0'),
+      nickMark: int.parse(nickMarkController.text.length > 0 ? nickMarkController.text : '0'),
       //strandscut
-      brushLengthLessMore : int.parse(brushLengthLessMoreController.text.length > 0 ? brushLengthLessMoreController.text : '0'),
-      nickMarkOrStrandsCut: int.parse(strandsCutController.text.length > 0 ? strandsCutController.text : '0'),
-      cableDamage         : int.parse(cableDamageController.text.length > 0 ? cableDamageController.text : '0'),
+      brushLengthLessMore: int.parse(
+          brushLengthLessMoreController.text.length > 0 ? brushLengthLessMoreController.text : '0'),
+      nickMarkOrStrandsCut:
+          int.parse(strandsCutController.text.length > 0 ? strandsCutController.text : '0'),
+      cableDamage:
+          int.parse(cableDamageController.text.length > 0 ? cableDamageController.text : '0'),
       //half curling
       //locking tab open close
-      wrongTerminal  : int.parse(wrongTerminalController.text.length > 0 ? wrongTerminalController.text : '0'),
-      seamOpen       : int.parse(seamOpenController.text.length > 0 ? seamOpenController.text : '0'),
-      missCrimp      : int.parse(missCrimpController.text.length > 0 ? missCrimpController.text : '0'),
-      extrusionOnBurr: int.parse(extrusionBurrController.text.length > 0 ? extrusionBurrController.text : '0'),
+      wrongTerminal:
+          int.parse(wrongTerminalController.text.length > 0 ? wrongTerminalController.text : '0'),
+      seamOpen: int.parse(seamOpenController.text.length > 0 ? seamOpenController.text : '0'),
+      missCrimp: int.parse(missCrimpController.text.length > 0 ? missCrimpController.text : '0'),
+      extrusionOnBurr:
+          int.parse(extrusionBurrController.text.length > 0 ? extrusionBurrController.text : '0'),
 
       orderId: widget.schedule.purchaseOrder,
       fgPart: widget.schedule.finishedGoods,
@@ -1411,18 +1602,22 @@ class _ScanBundleState extends State<ScanBundle> {
   }
 
   int total() {
-    int total = int.parse(terminalDamageController.text.length > 0 ? terminalDamageController.text : '0') +
+    int total = int.parse(
+            terminalDamageController.text.length > 0 ? terminalDamageController.text : '0') +
         int.parse(terminalBendController.text.length > 0 ? terminalBendController.text : '0') +
         int.parse(terminalTwistController.text.length > 0 ? terminalTwistController.text : '0') +
         int.parse(windowGapController.text.length > 0 ? windowGapController.text : '0') +
-        int.parse(crimpOnInsulationController.text.length > 0 ? crimpOnInsulationController.text : '0') +
+        int.parse(
+            crimpOnInsulationController.text.length > 0 ? crimpOnInsulationController.text : '0') +
         int.parse(bellMouthErrorController.text.length > 0 ? bellMouthErrorController.text : '0') +
         int.parse(cutoffBurrController.text.length > 0 ? cutoffBurrController.text : '0') +
         int.parse(exposureStrands.text.length > 0 ? exposureStrands.text : '0') +
         int.parse(nickMarkController.text.length > 0 ? nickMarkController.text : '0') +
         int.parse(strandsCutController.text.length > 0 ? strandsCutController.text : '0') +
         int.parse(wrongTerminalController.text.length > 0 ? wrongTerminalController.text : '0') +
-        int.parse(brushLengthLessMoreController.text.length > 0 ? brushLengthLessMoreController.text : '0') +
+        int.parse(brushLengthLessMoreController.text.length > 0
+            ? brushLengthLessMoreController.text
+            : '0') +
         int.parse(cableDamageController.text.length > 0 ? cableDamageController.text : '0') +
         int.parse(halfCurlingController.text.length > 0 ? halfCurlingController.text : '0') +
         int.parse(lockingTabOpenController.text.length > 0 ? lockingTabOpenController.text : '0') +
@@ -1456,7 +1651,9 @@ class _ScanBundleState extends State<ScanBundle> {
             Container(
               width: 266,
               child: Row(
-                mainAxisAlignment: textEditingControllerCable != null ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
+                mainAxisAlignment: textEditingControllerCable != null
+                    ? MainAxisAlignment.spaceBetween
+                    : MainAxisAlignment.start,
                 children: [
                   Container(
                       height: 35,
@@ -1803,7 +2000,10 @@ class _ScanBundleState extends State<ScanBundle> {
                   children: [
                     ElevatedButton(
                       style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0), side: BorderSide(color: Colors.red))),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100.0),
+                                side: BorderSide(color: Colors.red))),
                         backgroundColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.pressed)) return Colors.red.shade200;
@@ -1831,7 +2031,10 @@ class _ScanBundleState extends State<ScanBundle> {
                     ),
                     ElevatedButton(
                       style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0), side: BorderSide(color: Colors.transparent))),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100.0),
+                                side: BorderSide(color: Colors.transparent))),
                         backgroundColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.pressed)) return Colors.red;
@@ -1859,11 +2062,23 @@ class _ScanBundleState extends State<ScanBundle> {
 
   postScanBin() {
     if (_binController.text.length > 0) {
-      TransferBundleToBin bundleToBin = TransferBundleToBin(userId: widget.userId, binIdentification: binId ?? '', locationId: "", bundleId: _scanIdController.text);
+      TransferBundleToBin bundleToBin = TransferBundleToBin(
+          userId: widget.userId,
+          binIdentification: binId ?? '',
+          locationId: "",
+          bundleId: _scanIdController.text);
       apiService.postTransferBundletoBin(transferBundleToBin: [bundleToBin]).then((value) {
         if (value != null) {
           BundleTransferToBin bundleTransferToBinTracking = value[0];
-          Fluttertoast.showToast(msg: "Transfered Bundle-${bundleTransferToBinTracking.bundleIdentification} to Bin- ${_binController.text ?? ''}", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
+          Fluttertoast.showToast(
+              msg:
+                  "Transfered Bundle-${bundleTransferToBinTracking.bundleIdentification} to Bin- ${_binController.text ?? ''}",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
           setState(() {
             scannedBundle!.binId = int.parse(binId!);
             scannedBundle!.locationId = "";
@@ -1926,12 +2141,20 @@ class _ScanBundleState extends State<ScanBundle> {
     );
     List<TransferBinToLocation> transferList = [];
     ApiService apiService = new ApiService();
-    apiService.getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: '').then((value) {
+    apiService
+        .getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: '')
+        .then((value) {
       if (value != null) {
         List<BundlesRetrieved> bundleList1 = value;
         log("message1 $bundleList1");
         if (bundleList1.length > 0) {
-          apiService.postTransferBinToLocation(bundleList1.map((e) => TransferBinToLocation(bundleId: e.bundleIdentification, locationId: "", binIdentification: binID, userId: widget.userId)).toList());
+          apiService.postTransferBinToLocation(bundleList1
+              .map((e) => TransferBinToLocation(
+                  bundleId: e.bundleIdentification,
+                  locationId: "",
+                  binIdentification: binID,
+                  userId: widget.userId))
+              .toList());
         } else {}
       } else {
         Fluttertoast.showToast(

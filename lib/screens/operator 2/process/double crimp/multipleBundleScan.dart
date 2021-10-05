@@ -48,6 +48,9 @@ class MultipleBundleScan extends StatefulWidget {
   bool processStarted;
   String processName;
   Function startProcess;
+  //variables for schedule type
+  String type;
+  String sameMachine;
   MultipleBundleScan(
       {required this.machineId,
       required this.fullyComplete,
@@ -63,7 +66,7 @@ class MultipleBundleScan extends StatefulWidget {
       required this.totalQuantity,
       required this.transfer,
       required this.userId,
-      required this.updateQty});
+      required this.updateQty,required this.sameMachine,required this.type});
 
   @override
   _MultipleBundleScanState createState() => _MultipleBundleScanState();
@@ -166,6 +169,22 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
       },
     );
     super.initState();
+  }
+    getActualQty(){
+    ApiService apiService = new ApiService();
+    apiService.getCrimpingSchedule(machineNo: widget.machineId , scheduleType: widget.type, sameMachine: widget.sameMachine).then((value) {
+      List<CrimpingSchedule> scheduleList = value!;
+      CrimpingSchedule schedule = scheduleList.firstWhere((element) {
+        return (
+          element.scheduleId ==widget.schedule.scheduleId 
+        );
+      });
+      setState(() {
+        log("total Qty : ${schedule.actualQuantity}");
+        widget.totalQuantity = schedule.actualQuantity;
+      });
+    });
+
   }
 
   @override
@@ -1146,6 +1165,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                       .postCrimpRejectedQty(postCrimpingRejectedDetail)
                                       .then((value) {
                                     if (value != null) {
+                                      
                                       setState(() {
                                         scannedBundles.indexOf(e) == (scannedBundles.length - 1)
                                             ? widget
@@ -1156,6 +1176,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                         });
                                         status = Status.scanBin;
                                       });
+                                      getActualQty();
 
                                       Fluttertoast.showToast(
                                         msg: "Saved Crimping Detail ",

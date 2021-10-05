@@ -17,12 +17,17 @@ class ScheduleDataRow extends StatefulWidget {
   MachineDetails machine;
   Employee employee;
   Function onrefresh;
-  ScheduleDataRow(
-      {required this.schedule,
-      required this.machine,
-      required this.employee,
-      required this.onrefresh})
-      : super();
+  //variables for data to get schedule
+  String type;
+  String sameMachine;
+  ScheduleDataRow({
+    required this.schedule,
+    required this.machine,
+    required this.employee,
+    required this.onrefresh,
+    required this.type,
+    required this.sameMachine,
+  }) : super();
 
   @override
   _ScheduleDataRowState createState() => _ScheduleDataRowState();
@@ -45,8 +50,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
       child: Material(
         elevation: 1,
         shadowColor: Colors.white,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 55,
@@ -55,11 +59,9 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
             decoration: BoxDecoration(
               border: Border(
                   left: BorderSide(
-                color: widget.schedule.scheduledStatus.toLowerCase() ==
-                        "Complete".toLowerCase()
+                color: widget.schedule.scheduledStatus.toLowerCase() == "Complete".toLowerCase()
                     ? Colors.green
-                    : widget.schedule.scheduledStatus.toLowerCase() ==
-                            "Partially".toLowerCase()
+                    : widget.schedule.scheduledStatus.toLowerCase() == "Partially".toLowerCase()
                         ? Colors.orange.shade100
                         : Colors.blue.shade100,
                 width: 5,
@@ -87,13 +89,11 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                           children: [
                             Text(
                               widget.schedule.scheduledId,
-                              style: TextStyle(
-                                  fontSize: 11, fontWeight: FontWeight.w500),
+                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
                             ),
-                             Text(
+                            Text(
                               widget.schedule.machineNumber,
-                              style: TextStyle(
-                                  fontSize: 9, fontWeight: FontWeight.w500),
+                              style: TextStyle(fontSize: 9, fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
@@ -123,24 +123,20 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                             Text(
                               "No:",
                               style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w500),
+                                  color: Colors.grey, fontSize: 11, fontWeight: FontWeight.w500),
                             ),
                             SizedBox(
                               width: 5,
                             ),
                             Text(
                               "${widget.schedule.shiftNumber}",
-                              style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.w500),
+                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
                         Text(
                           "${widget.schedule.shiftType}",
-                          style: TextStyle(
-                              fontSize: 11, fontWeight: FontWeight.w500),
+                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -158,8 +154,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                           Text(
                             widget.schedule.currentDate == null
                                 ? ""
-                                : DateFormat("dd-MM-yyyy")
-                                    .format(widget.schedule.currentDate),
+                                : DateFormat("dd-MM-yyyy").format(widget.schedule.currentDate),
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.black,
@@ -204,34 +199,28 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            color:
-                                widget.schedule.scheduledStatus.toLowerCase() ==
-                                        'Complete'.toLowerCase()
-                                    ? Colors.green.shade100
-                                    : widget.schedule.scheduledStatus
-                                                .toLowerCase() ==
-                                            "Partially Completed".toLowerCase()
-                                        ? Colors.red.shade50
-                                        : Colors.blue.shade50,
+                            color: widget.schedule.scheduledStatus.toLowerCase() ==
+                                    'Complete'.toLowerCase()
+                                ? Colors.green.shade100
+                                : widget.schedule.scheduledStatus.toLowerCase() ==
+                                        "Partially Completed".toLowerCase()
+                                    ? Colors.red.shade50
+                                    : Colors.blue.shade50,
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
                           child: Center(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 2.0, horizontal: 4),
+                              padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4),
                               child: Text(
                                 widget.schedule.scheduledStatus,
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w500,
-                                  color: widget.schedule.scheduledStatus
-                                              .toLowerCase() ==
+                                  color: widget.schedule.scheduledStatus.toLowerCase() ==
                                           'Complete'.toLowerCase()
                                       ? Colors.green
-                                      : widget.schedule.scheduledStatus
-                                                  .toLowerCase() ==
-                                              "Partially Completed"
-                                                  .toLowerCase()
+                                      : widget.schedule.scheduledStatus.toLowerCase() ==
+                                              "Partially Completed".toLowerCase()
                                           ? Colors.red.shade400
                                           : Colors.blue[900],
                                 ),
@@ -247,22 +236,18 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                 height: 5,
                                 decoration: BoxDecoration(
                                   color: Colors.grey.shade200,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(100)),
+                                  borderRadius: BorderRadius.all(Radius.circular(100)),
                                 ),
                               ),
                               Container(
                                 width: MediaQuery.of(context).size.width *
                                     0.07 *
                                     ((widget.schedule.actualQuantity /
-                                        int.parse(
-                                            widget.schedule.scheduledQuantity ??
-                                                '1'))),
+                                        int.parse(widget.schedule.scheduledQuantity ?? '1'))),
                                 height: 5,
                                 decoration: BoxDecoration(
                                   color: Colors.green.shade300,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(100)),
+                                  borderRadius: BorderRadius.all(Radius.circular(100)),
                                 ),
                               ),
                             ],
@@ -276,8 +261,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.08,
                   height: 45,
-                  child: widget.schedule.scheduledStatus.toLowerCase() ==
-                          "Complete".toLowerCase()
+                  child: widget.schedule.scheduledStatus.toLowerCase() == "Complete".toLowerCase()
                       ? Center(child: Text("-"))
                       : Padding(
                           padding: const EdgeInsets.all(0.0),
@@ -288,15 +272,11 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                               child: LoadingButton(
                                   loading: loading,
                                   style: ButtonStyle(
-                                    padding: MaterialStateProperty.all<
-                                        EdgeInsetsGeometry>(EdgeInsets.all(0)),
-                                    backgroundColor:
-                                        MaterialStateProperty.resolveWith(
-                                      (states) => widget
-                                                  .schedule.scheduledStatus
-                                                  .toLowerCase() ==
-                                              "Partially Completed"
-                                                  .toLowerCase()
+                                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                        EdgeInsets.all(0)),
+                                    backgroundColor: MaterialStateProperty.resolveWith(
+                                      (states) => widget.schedule.scheduledStatus.toLowerCase() ==
+                                              "Partially Completed".toLowerCase()
                                           ? Colors.green.shade500
                                           : Colors.green.shade500,
                                     ),
@@ -305,85 +285,60 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                     height: 25,
                                     width: 25,
                                     child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.white),
+                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                     ),
                                   ),
                                   child: Center(
                                     child: Container(
-                                        child: widget.schedule.scheduledStatus
-                                                        .toLowerCase() ==
+                                        child: widget.schedule.scheduledStatus.toLowerCase() ==
                                                     "Allocated".toLowerCase() ||
-                                                widget.schedule.scheduledStatus
-                                                        .toLowerCase() ==
+                                                widget.schedule.scheduledStatus.toLowerCase() ==
                                                     "Open".toLowerCase() ||
-                                                widget.schedule.scheduledStatus
-                                                        .toLowerCase() ==
+                                                widget.schedule.scheduledStatus.toLowerCase() ==
                                                     "".toLowerCase() ||
-                                                widget.schedule.scheduledStatus ==
-                                                    null
+                                                widget.schedule.scheduledStatus == null
                                             ? Text(
                                                 "Accept",
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w500),
+                                                    fontWeight: FontWeight.w500),
                                               )
-                                            : widget
-                                                            .schedule.scheduledStatus
-                                                            .toLowerCase() ==
-                                                        "Pending"
-                                                            .toLowerCase() ||
-                                                    widget.schedule
-                                                            .scheduledStatus
-                                                            .toLowerCase() ==
-                                                        "Partially Completed"
-                                                            .toLowerCase() ||
-                                                    widget.schedule
-                                                            .scheduledStatus
-                                                            .toLowerCase() ==
+                                            : widget.schedule.scheduledStatus.toLowerCase() ==
+                                                        "Pending".toLowerCase() ||
+                                                    widget.schedule.scheduledStatus.toLowerCase() ==
+                                                        "Partially Completed".toLowerCase() ||
+                                                    widget.schedule.scheduledStatus.toLowerCase() ==
                                                         "started".toLowerCase()
                                                 ? Text(
                                                     'Continue',
                                                     style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w500),
+                                                        fontWeight: FontWeight.w500),
                                                   )
                                                 : Text('')),
                                   ),
                                   onPressed: loading
                                       ? () {}
                                       : () async {
-                                          if (widget.schedule.shiftType ==
-                                              "Allocated") {
+                                          if (widget.schedule.shiftType == "Allocated") {
                                             // After [onPressed], it will trigger animation running backwards, from end to beginning
-                                            PostStartProcessP1
-                                                postStartprocess =
+                                            PostStartProcessP1 postStartprocess =
                                                 new PostStartProcessP1(
-                                              cablePartNumber: widget.schedule
-                                                      .cablePartNumber ??
-                                                  "0",
+                                              cablePartNumber:
+                                                  widget.schedule.cablePartNumber ?? "0",
                                               color: widget.schedule.color,
-                                              finishedGoodsNumber: widget
-                                                      .schedule
-                                                      .finishedGoodsNumber ??
-                                                  "0",
+                                              finishedGoodsNumber:
+                                                  widget.schedule.finishedGoodsNumber ?? "0",
                                               lengthSpecificationInmm:
                                                   widget.schedule.length ?? "0",
-                                              machineIdentification:
-                                                  widget.machine.machineNumber,
-                                              orderIdentification:
-                                                  widget.schedule.orderId ??
-                                                      "0",
+                                              machineIdentification: widget.machine.machineNumber,
+                                              orderIdentification: widget.schedule.orderId ?? "0",
                                               scheduledIdentification:
-                                                  widget.schedule.scheduledId ??
-                                                      "0",
-                                              scheduledQuantity: widget.schedule
-                                                      .scheduledQuantity ??
-                                                  "0",
+                                                  widget.schedule.scheduledId ?? "0",
+                                              scheduledQuantity:
+                                                  widget.schedule.scheduledQuantity ?? "0",
                                               scheduleStatus: "started",
                                             );
                                             Fluttertoast.showToast(
@@ -401,19 +356,16 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          MaterialPick(
-                                                            schedule:
-                                                                widget.schedule,
-                                                            employee:
-                                                                widget.employee,
-                                                            machine:
-                                                                widget.machine,
+                                                      builder: (context) => MaterialPick(
+                                                            schedule: widget.schedule,
+                                                            employee: widget.employee,
+                                                            machine: widget.machine,
                                                             materialPickType:
-                                                                MaterialPickType
-                                                                    .newload,
+                                                                MaterialPickType.newload,
                                                             homeReload: () {},
                                                             reload: () {},
+                                                            type: widget.type,
+                                                            sameMachine: widget.sameMachine,
                                                           )),
                                                 ).then((value) {
                                                   widget.onrefresh();
@@ -423,12 +375,9 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                                 });
                                               } else {
                                                 Fluttertoast.showToast(
-                                                    msg:
-                                                        "Unable to Start Process",
-                                                    toastLength:
-                                                        Toast.LENGTH_SHORT,
-                                                    gravity:
-                                                        ToastGravity.BOTTOM,
+                                                    msg: "Unable to Start Process",
+                                                    toastLength: Toast.LENGTH_SHORT,
+                                                    gravity: ToastGravity.BOTTOM,
                                                     timeInSecForIosWeb: 1,
                                                     backgroundColor: Colors.red,
                                                     textColor: Colors.white,
@@ -440,8 +389,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                               return true;
                                             });
                                           } else {
-                                            showScheduleDetail(
-                                                    schedule: widget.schedule)
+                                            showScheduleDetail(schedule: widget.schedule)
                                                 .then((value) {
                                               setState(() {});
                                             });
@@ -473,10 +421,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
   }
 
   Future<void> showScheduleDetail({required Schedule schedule}) {
-    Widget feild(
-        {required String heading,
-        required String value,
-        required double width}) {
+    Widget feild({required String heading, required String value, required double width}) {
       width = MediaQuery.of(context).size.width * width;
       return Padding(
         padding: const EdgeInsets.all(0.0),
@@ -501,8 +446,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                   children: [
                     Text(
                       value ?? '',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                      style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
                     ),
                   ],
                 ),
@@ -536,13 +480,10 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               feild(
-                                  heading: "Order Id",
-                                  value: widget.schedule.orderId,
-                                  width: 0.14),
+                                  heading: "Order Id", value: widget.schedule.orderId, width: 0.14),
                               feild(
                                   heading: "FG Part",
-                                  value:
-                                      "${widget.schedule.finishedGoodsNumber}",
+                                  value: "${widget.schedule.finishedGoodsNumber}",
                                   width: 0.14),
                               feild(
                                   heading: "Schedule ID",
@@ -575,9 +516,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                   value: "${widget.schedule.length}",
                                   width: 0.14),
                               feild(
-                                  heading: "Color",
-                                  value: "${widget.schedule.color}",
-                                  width: 0.14),
+                                  heading: "Color", value: "${widget.schedule.color}", width: 0.14),
                               feild(
                                   heading: "Scheduled Qty",
                                   value: "${widget.schedule.scheduledQuantity}",
@@ -611,79 +550,54 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                           padding: const EdgeInsets.all(8.0),
                           child: ElevatedButton(
                               style: ButtonStyle(
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
+                                        borderRadius: BorderRadius.circular(20.0),
                                         side: BorderSide(color: Colors.green))),
-                                backgroundColor:
-                                    MaterialStateProperty.resolveWith<Color>(
+                                backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.pressed))
                                       return Colors.green.shade200;
-                                    return Colors.green
-                                        .shade500; // Use the component's default.
+                                    return Colors.green.shade500; // Use the component's default.
                                   },
                                 ),
-                                overlayColor:
-                                    MaterialStateProperty.resolveWith<Color>(
+                                overlayColor: MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.pressed))
                                       return Colors.green.shade200;
-                                    return Colors.green
-                                        .shade500; // Use the component's default.
+                                    return Colors.green.shade500; // Use the component's default.
                                   },
                                 ),
                               ),
                               onPressed: () {
-                                PostStartProcessP1 postStartprocess =
-                                    new PostStartProcessP1(
-                                  cablePartNumber:
-                                      widget.schedule.cablePartNumber ?? "0",
+                                PostStartProcessP1 postStartprocess = new PostStartProcessP1(
+                                  cablePartNumber: widget.schedule.cablePartNumber ?? "0",
                                   color: widget.schedule.color,
-                                  finishedGoodsNumber:
-                                      widget.schedule.finishedGoodsNumber ??
-                                          "0",
-                                  lengthSpecificationInmm:
-                                      widget.schedule.length ?? "0",
-                                  machineIdentification:
-                                      widget.machine.machineNumber,
-                                  orderIdentification:
-                                      widget.schedule.orderId ?? "0",
-                                  scheduledIdentification:
-                                      widget.schedule.scheduledId ?? "0",
-                                  scheduledQuantity:
-                                      widget.schedule.scheduledQuantity ?? "0",
+                                  finishedGoodsNumber: widget.schedule.finishedGoodsNumber ?? "0",
+                                  lengthSpecificationInmm: widget.schedule.length ?? "0",
+                                  machineIdentification: widget.machine.machineNumber,
+                                  orderIdentification: widget.schedule.orderId ?? "0",
+                                  scheduledIdentification: widget.schedule.scheduledId ?? "0",
+                                  scheduledQuantity: widget.schedule.scheduledQuantity ?? "0",
                                   scheduleStatus: "complete",
                                 );
-                                FullyCompleteModel fullyComplete =
-                                    FullyCompleteModel(
-                                        finishedGoodsNumber: int.parse(widget
-                                            .schedule.finishedGoodsNumber),
-                                        purchaseOrder:
-                                            int.parse(widget.schedule.orderId),
-                                        orderId:
-                                            int.parse(widget.schedule.orderId),
-                                        cablePartNumber: int.parse(
-                                            widget.schedule.cablePartNumber),
-                                        length:
-                                            int.parse(widget.schedule.length),
-                                        color: widget.schedule.color,
-                                        scheduledStatus: "Complete",
-                                        scheduledId: int.parse(
-                                            widget.schedule.scheduledId),
-                                        scheduledQuantity: int.parse(
-                                            widget.schedule.scheduledQuantity),
-                                        machineIdentification:
-                                            widget.machine.machineNumber ?? "",
-                                        //TODO bundle ID
-                                        firstPieceAndPatrol: 0,
-                                        applicatorChangeover: 0,
-                                        bundleIdentification: '');
-                                apiService
-                                    .post100Complete(fullyComplete)
-                                    .then((value) {
+                                FullyCompleteModel fullyComplete = FullyCompleteModel(
+                                    finishedGoodsNumber:
+                                        int.parse(widget.schedule.finishedGoodsNumber),
+                                    purchaseOrder: int.parse(widget.schedule.orderId),
+                                    orderId: int.parse(widget.schedule.orderId),
+                                    cablePartNumber: int.parse(widget.schedule.cablePartNumber),
+                                    length: int.parse(widget.schedule.length),
+                                    color: widget.schedule.color,
+                                    scheduledStatus: "Complete",
+                                    scheduledId: int.parse(widget.schedule.scheduledId),
+                                    scheduledQuantity: int.parse(widget.schedule.scheduledQuantity),
+                                    machineIdentification: widget.machine.machineNumber ?? "",
+                                    //TODO bundle ID
+                                    firstPieceAndPatrol: 0,
+                                    applicatorChangeover: 0,
+                                    bundleIdentification: '');
+                                apiService.post100Complete(fullyComplete).then((value) {
                                   if (value) {
                                     Navigator.pop(context1);
 
@@ -715,51 +629,36 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                           padding: const EdgeInsets.all(8.0),
                           child: ElevatedButton(
                               style: ButtonStyle(
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
+                                        borderRadius: BorderRadius.circular(20.0),
                                         side: BorderSide(color: Colors.green))),
-                                backgroundColor:
-                                    MaterialStateProperty.resolveWith<Color>(
+                                backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.pressed))
                                       return Colors.green.shade200;
-                                    return Colors.green
-                                        .shade500; // Use the component's default.
+                                    return Colors.green.shade500; // Use the component's default.
                                   },
                                 ),
-                                overlayColor:
-                                    MaterialStateProperty.resolveWith<Color>(
+                                overlayColor: MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.pressed))
                                       return Colors.green.shade200;
-                                    return Colors.green
-                                        .shade500; // Use the component's default.
+                                    return Colors.green.shade500; // Use the component's default.
                                   },
                                 ),
                               ),
                               onPressed: () {
                                 Navigator.pop(context1);
-                                PostStartProcessP1 postStartprocess =
-                                    new PostStartProcessP1(
-                                  cablePartNumber:
-                                      widget.schedule.cablePartNumber ?? "0",
+                                PostStartProcessP1 postStartprocess = new PostStartProcessP1(
+                                  cablePartNumber: widget.schedule.cablePartNumber ?? "0",
                                   color: widget.schedule.color,
-                                  finishedGoodsNumber:
-                                      widget.schedule.finishedGoodsNumber ??
-                                          "0",
-                                  lengthSpecificationInmm:
-                                      widget.schedule.length ?? "0",
-                                  machineIdentification:
-                                      widget.machine.machineNumber,
-                                  orderIdentification:
-                                      widget.schedule.orderId ?? "0",
-                                  scheduledIdentification:
-                                      widget.schedule.scheduledId ?? "0",
-                                  scheduledQuantity:
-                                      widget.schedule.scheduledQuantity ?? "0",
+                                  finishedGoodsNumber: widget.schedule.finishedGoodsNumber ?? "0",
+                                  lengthSpecificationInmm: widget.schedule.length ?? "0",
+                                  machineIdentification: widget.machine.machineNumber,
+                                  orderIdentification: widget.schedule.orderId ?? "0",
+                                  scheduledIdentification: widget.schedule.scheduledId ?? "0",
+                                  scheduledQuantity: widget.schedule.scheduledQuantity ?? "0",
                                   scheduleStatus: "started",
                                 );
                                 Fluttertoast.showToast(
@@ -781,9 +680,10 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                                                   employee: widget.employee,
                                                   machine: widget.machine,
                                                   homeReload: widget.onrefresh,
-                                                  materialPickType:
-                                                      MaterialPickType.newload,
+                                                  materialPickType: MaterialPickType.newload,
                                                   reload: () {},
+                                                  type: widget.type,
+                                                  sameMachine: widget.sameMachine,
                                                 )),
                                       );
                                     } else {

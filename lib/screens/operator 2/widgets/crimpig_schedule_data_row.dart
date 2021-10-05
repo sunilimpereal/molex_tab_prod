@@ -14,8 +14,11 @@ class CrimpingScheduleDataRow extends StatefulWidget {
   CrimpingSchedule schedule;
   Employee employee;
   MachineDetails machine;
+    //variables for schedule type
+  String type;
+  String sameMachine;
 
-  CrimpingScheduleDataRow({ required this.schedule,required this.machine,required this.employee}) : super();
+  CrimpingScheduleDataRow({ required this.schedule,required this.machine,required this.employee,required this.sameMachine,required this.type}) : super();
 
   @override
   _CrimpingScheduleDataRowState createState() =>
@@ -255,6 +258,8 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
                                                         materialPickType:
                                                             MaterialPickType
                                                                 .newload, reload: (){},
+                                                                type: widget.type,
+                                                                sameMachine: widget.sameMachine,
                                                       )),
                                             );
                                             setState(() {

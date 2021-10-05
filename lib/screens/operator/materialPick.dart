@@ -33,13 +33,17 @@ class MaterialPick extends StatefulWidget {
   final MaterialPickType materialPickType;
   Function homeReload;
   Function reload;
+
+  // variables to get schedule
+  String type;
+  String sameMachine;
   MaterialPick(
       {required this.employee,
       required this.machine,
       required this.schedule,
       required this.materialPickType,
       required this.homeReload,
-      required this.reload});
+      required this.reload,required this.sameMachine,required this.type});
   @override
   _MaterialPickState createState() => _MaterialPickState();
 }
@@ -585,6 +589,8 @@ class _MaterialPickState extends State<MaterialPick> {
                                           homeReload: widget.homeReload,
                                           machine: widget.machine,
                                           matTrkPostDetail: matTrkPostDetail,
+                                          type: widget.type,
+                                          sameMachine: widget.sameMachine,
                                         )),
                               )
                             : Navigator.pop(context);
@@ -1485,6 +1491,8 @@ class _MaterialPickState extends State<MaterialPick> {
                                         employee: widget.employee,
                                         machine: widget.machine,
                                         matTrkPostDetail: matTrkPostDetail, homeReload: (){}, 
+                                        type: widget.type,
+                                        sameMachine: widget.sameMachine,
                                       )),
                             )
                           : Future.delayed(

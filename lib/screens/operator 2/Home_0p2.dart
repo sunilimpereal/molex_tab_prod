@@ -154,8 +154,7 @@ class _HomePageOp2State extends State<HomePageOp2> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Icon(
                               Icons.person,
                               size: 18,
@@ -182,8 +181,7 @@ class _HomePageOp2State extends State<HomePageOp2> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Icon(
                               Icons.settings,
                               size: 18,
@@ -208,9 +206,7 @@ class _HomePageOp2State extends State<HomePageOp2> {
       ),
       drawer: Drawer(
         child: DrawerWidget(
-            employee: widget.employee,
-            machineDetails: widget.machine,
-            type: "process"),
+            employee: widget.employee, machineDetails: widget.machine, type: "process"),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -242,9 +238,7 @@ class _HomePageOp2State extends State<HomePageOp2> {
         child: Row(
           children: [
             SizedBox(width: 10),
-            dropdown(
-                options: ["Order Id", "FG Part No.", "Cable Part No"],
-                name: "Order Id"),
+            dropdown(options: ["Order Id", "FG Part No.", "Cable Part No"], name: "Order Id"),
             SizedBox(width: 10),
             Container(
               height: 38,
@@ -277,14 +271,12 @@ class _HomePageOp2State extends State<HomePageOp2> {
                         onTap: () {},
                         decoration: new InputDecoration(
                           hintText: _chosenValue,
-                          hintStyle: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w500),
+                          hintStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                           focusedBorder: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           errorBorder: InputBorder.none,
                           disabledBorder: InputBorder.none,
-                          contentPadding: EdgeInsets.only(
-                              left: 15, bottom: 13, top: 11, right: 0),
+                          contentPadding: EdgeInsets.only(left: 15, bottom: 13, top: 11, right: 0),
                           fillColor: Colors.white,
                         ),
                         //fillColor: Colors.green
@@ -325,8 +317,7 @@ class _HomePageOp2State extends State<HomePageOp2> {
         children: [
           Text(
             name,
-            style: TextStyle(
-                color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
+            style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -369,8 +360,7 @@ class _SchudleTableState extends State<SchudleTable> {
   //Filter
   late DateTime startDate =
       sharedPref.startDate ?? DateTime.now().subtract(const Duration(days: 5));
-  late DateTime endDate =
-      sharedPref.endDate ?? DateTime.now().add(const Duration(days: 5));
+  late DateTime endDate = sharedPref.endDate ?? DateTime.now().add(const Duration(days: 5));
   bool floatingActionLoading = false;
   List<String> selectedMachine = [];
   @override
@@ -385,20 +375,17 @@ class _SchudleTableState extends State<SchudleTable> {
     switch (widget.searchType) {
       case "Order Id":
         return scheduleList!
-            .where((element) =>
-                element.purchaseOrder.toString().startsWith(widget.query))
+            .where((element) => element.purchaseOrder.toString().startsWith(widget.query))
             .toList();
         break;
       case "FG Part No.":
         return scheduleList!
-            .where((element) =>
-                element.finishedGoods.toString().startsWith(widget.query))
+            .where((element) => element.finishedGoods.toString().startsWith(widget.query))
             .toList();
         break;
       case "Cable Part No":
         return scheduleList!
-            .where((element) =>
-                element.cablePartNo.toString().startsWith(widget.query))
+            .where((element) => element.cablePartNo.toString().startsWith(widget.query))
             .toList();
         break;
       default:
@@ -435,15 +422,12 @@ class _SchudleTableState extends State<SchudleTable> {
                           scheduleType: "${widget.type}",
                           machineNo: widget.machine.machineNumber ?? '',
                           sameMachine: "${widget.scheduleType}"),
-                      builder: (context,
-                          AsyncSnapshot<List<CrimpingSchedule>> snapshot) {
+                      builder: (context, AsyncSnapshot<List<CrimpingSchedule>> snapshot) {
                         if (snapshot.hasData) {
-                          List<CrimpingSchedule>? schedulelist =
-                              searchfilter(snapshot.data);
+                          List<CrimpingSchedule>? schedulelist = searchfilter(snapshot.data);
                           schedulelist = schedulelist!
                               .where((element) =>
-                                  element.schedulestatus.toLowerCase() !=
-                                  "Complete".toLowerCase())
+                                  element.schedulestatus.toLowerCase() != "Complete".toLowerCase())
                               .toList();
                           schedulelist = schedulelist
                               .where((element) =>
@@ -452,22 +436,23 @@ class _SchudleTableState extends State<SchudleTable> {
                                   element.scheduleDate == startDate ||
                                   element.scheduleDate == endDate)
                               .toList();
-                          schedulelist.sort(
-                              (a, b) => a.scheduleId.compareTo(b.scheduleId));
+                          schedulelist.sort((a, b) => a.scheduleId.compareTo(b.scheduleId));
 
                           if (schedulelist.length > 0) {
                             return RefreshIndicator(
                               onRefresh: _onRefresh,
                               child: ListView.builder(
-                                  physics:
-                                      const AlwaysScrollableScrollPhysics(),
+                                  physics: const AlwaysScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   itemCount: schedulelist.length,
                                   itemBuilder: (context, index) {
                                     return CrimpingScheduleDataRow(
-                                        schedule: schedulelist![index],
-                                        machine: widget.machine,
-                                        employee: widget.employee);
+                                      schedule: schedulelist![index],
+                                      machine: widget.machine,
+                                      employee: widget.employee,
+                                      type: widget.type,
+                                      sameMachine: widget.scheduleType,
+                                    );
                                   }),
                             );
                           } else {
@@ -488,34 +473,25 @@ class _SchudleTableState extends State<SchudleTable> {
                                       width: 150,
                                       child: ElevatedButton(
                                         style: ButtonStyle(
-                                          shape: MaterialStateProperty.all<
-                                                  RoundedRectangleBorder>(
+                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                               RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          100.0),
-                                                  side: BorderSide(
-                                                      color:
-                                                          Colors.transparent))),
-                                          backgroundColor: MaterialStateProperty
-                                              .resolveWith<Color>(
+                                                  borderRadius: BorderRadius.circular(100.0),
+                                                  side: BorderSide(color: Colors.transparent))),
+                                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                             (Set<MaterialState> states) {
-                                              if (states.contains(
-                                                  MaterialState.pressed))
+                                              if (states.contains(MaterialState.pressed))
                                                 return Colors.green.shade200;
-                                              return Colors.red
-                                                  .shade400; // Use the component's default.
+                                              return Colors
+                                                  .red.shade400; // Use the component's default.
                                             },
                                           ),
                                         ),
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Text(
                                               "Refresh  ",
-                                              style: TextStyle(
-                                                  color: Colors.white),
+                                              style: TextStyle(color: Colors.white),
                                             ),
                                             Icon(
                                               Icons.replay_outlined,
@@ -537,8 +513,7 @@ class _SchudleTableState extends State<SchudleTable> {
                             );
                           }
                         } else {
-                          if (snapshot.connectionState ==
-                              ConnectionState.active) {
+                          if (snapshot.connectionState == ConnectionState.active) {
                             return CircularProgressIndicator();
                           }
 
@@ -585,11 +560,10 @@ class _SchudleTableState extends State<SchudleTable> {
                           sharedPref.setStartandEndDate(
                               startDate: startDate1,
                               endDate: endDate1 ??
-                                  DateUtils.dateOnly(
-                                      DateTime.now().add(Duration(days: 7))));
+                                  DateUtils.dateOnly(DateTime.now().add(Duration(days: 7))));
                           startDate = DateUtils.dateOnly(startDate1);
-                          endDate = DateUtils.dateOnly(endDate1 ??
-                              DateTime.now().add(Duration(days: 7)));
+                          endDate =
+                              DateUtils.dateOnly(endDate1 ?? DateTime.now().add(Duration(days: 7)));
                           log("dater ${startDate.toString()}");
                         });
                       });
@@ -631,8 +605,7 @@ class _SchudleTableState extends State<SchudleTable> {
       child: Material(
         elevation: 4,
         shadowColor: Colors.white,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 40,
@@ -665,258 +638,13 @@ class _SchudleTableState extends State<SchudleTable> {
       ),
     );
   }
-
-  Widget buildDataRow({required CrimpingSchedule schedule, required int c}) {
-    Widget cell(String name, double width) {
-      return Container(
-        width: MediaQuery.of(context).size.width * width,
-        height: 34,
-        child: Center(
-          child: Text(
-            name,
-            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
-          ),
-        ),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: Material(
-        elevation: 1,
-        shadowColor: Colors.white,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: 50,
-          color: c % 2 == 0 ? Colors.grey.shade50 : Colors.white,
-          child: Container(
-            decoration: BoxDecoration(),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // orderId
-                cell('${schedule.purchaseOrder}', 0.065),
-                //Fg Part
-                cell('${schedule.finishedGoods}', 0.065),
-                //Schudule ID
-                cell('${schedule.scheduleId}', 0.065),
-                //Cable Part
-                cell('${schedule.cablePartNo}', 0.065),
-                //Process
-                cell('${schedule.process}', 0.10),
-
-                // Cut length
-                cell('${schedule.length}', 0.06),
-                //Color2
-                cell('${schedule.wireColour}', 0.05),
-                //Bin Id
-                cell('${schedule.awg}', 0.03),
-                // Total bundles
-                cell("${schedule.bundleIdentificationCount}", 0.05),
-                //Total Bundle Qty
-                cell("${schedule.bundleQuantityTotal}", 0.07),
-                cell("${schedule.actualQuantity}/${schedule.schdeuleQuantity}",
-                    0.085),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.07,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "${schedule.shiftType}",
-                        style: TextStyle(
-                            fontSize: 11, fontWeight: FontWeight.w500),
-                      ),
-                      Text(
-                        "No : ${schedule.shiftNumber}",
-                        style: TextStyle(
-                            fontSize: 11, fontWeight: FontWeight.w500),
-                      )
-                    ],
-                  ),
-                ),
-                // cell("${schedule.actualQuantity}", 0.07),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.085,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            schedule.scheduleDate == null
-                                ? ""
-                                : DateFormat("dd-MM-yyyy")
-                                    .format(schedule.scheduleDate),
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black,
-                            ),
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "${schedule.shiftStart.length > 2 ? schedule.shiftStart.substring(0, 5) : schedule.shiftStart}",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.green,
-                            ),
-                          ),
-                          Text(
-                            " - ${schedule.shiftEnd.length > 2 ? schedule.shiftEnd.substring(0, 5) : schedule.shiftEnd}",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.red,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                //Status
-                // cell("${schedule.scheduledStatus}", 0.09),
-                //Action
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.1,
-                  height: 45,
-                  child: schedule.schedulestatus.toLowerCase() ==
-                          "Complete".toLowerCase()
-                      ? Center(child: Text("-"))
-                      : Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.08,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: CrimpingStartButton(
-                                style: ElevatedButton.styleFrom(
-                                  primary: schedule.schedulestatus
-                                              .toLowerCase() ==
-                                          "Partially Completed".toLowerCase()
-                                      ? Colors.green.shade500
-                                      : Colors.green.shade500,
-                                ),
-                                child: Container(
-                                    child: schedule.schedulestatus
-                                                    .toLowerCase() ==
-                                                "Allocated".toLowerCase() ||
-                                            schedule.schedulestatus
-                                                    .toLowerCase() ==
-                                                "Open".toLowerCase() ||
-                                            schedule.schedulestatus == null
-                                        ? Text(
-                                            "Accept",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500),
-                                          )
-                                        : schedule.schedulestatus
-                                                        .toLowerCase() ==
-                                                    "Pending".toLowerCase() ||
-                                                schedule.schedulestatus
-                                                        .toLowerCase() ==
-                                                    "Partially Completed"
-                                                        .toLowerCase() ||
-                                                schedule.schedulestatus
-                                                        .toLowerCase() ==
-                                                    "Started".toLowerCase()
-                                            ? Text(
-                                                'Continue',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              )
-                                            : Text('')),
-                                onPressed: () async {
-                                  // After [onPressed], it will trigger animation running backwards, from end to beginning
-                                  postStartprocess = new PostStartProcessP1(
-                                    cablePartNumber:
-                                        "${schedule.cablePartNo ?? "0"}",
-                                    color: schedule.wireColour,
-                                    finishedGoodsNumber:
-                                        "${schedule.finishedGoods ?? "0"}",
-                                    lengthSpecificationInmm:
-                                        "${schedule.length ?? "0"}",
-                                    machineIdentification:
-                                        widget.machine.machineNumber,
-                                    orderIdentification:
-                                        "${schedule.purchaseOrder ?? "0"}",
-                                    scheduledIdentification:
-                                        "${schedule.scheduleId ?? "0"}",
-                                    scheduledQuantity:
-                                        schedule.schdeuleQuantity ?? "0",
-                                    scheduleStatus: "started",
-                                  );
-                                  Fluttertoast.showToast(
-                                      msg: "Loading",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0);
-                                  apiService
-                                      .startProcess1(postStartprocess)
-                                      .then((value) {
-                                    if (value) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                MaterialPickOp2(
-                                                  schedule: schedule,
-                                                  employee: widget.employee,
-                                                  machine: widget.machine,
-                                                  materialPickType:
-                                                      MaterialPickType.newload,
-                                                  reload: () {},
-                                                )),
-                                      );
-                                      return true;
-                                    } else {
-                                      Fluttertoast.showToast(
-                                          msg: "Unable to Start Process",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.red,
-                                          textColor: Colors.white,
-                                          fontSize: 16.0);
-                                      return true;
-                                    }
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 class CrimpingStartButton extends StatefulWidget {
   Function onPressed;
   Widget child;
   ButtonStyle style;
-  CrimpingStartButton(
-      {required this.onPressed, required this.child, required this.style})
+  CrimpingStartButton({required this.onPressed, required this.child, required this.style})
       : super();
 
   @override

@@ -523,6 +523,8 @@ class _SchudleTableState extends State<SchudleTable> {
                                         machine: widget.machine,
                                         employee: widget.employee,
                                         onrefresh: _onRefresh,
+                                        type: widget.type,
+                                        sameMachine: widget.scheduleType,
                                       );
                                     }),
                               );

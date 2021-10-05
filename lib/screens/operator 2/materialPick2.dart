@@ -26,12 +26,15 @@ class MaterialPickOp2 extends StatefulWidget {
   final Function reload;
   @required
   final MaterialPickType materialPickType;
+  //variables for schedule type
+  String type;
+  String sameMachine;
   MaterialPickOp2(
       {required this.employee,
       required this.machine,
       required this.schedule,
       required this.reload,
-      required this.materialPickType});
+      required this.materialPickType,required this.sameMachine,required this.type});
   @override
   _MaterialPickOp2State createState() => _MaterialPickOp2State();
 }
@@ -980,6 +983,8 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                           employee: widget.employee,
                                           machine: widget.machine,
                                           matTrkPostDetail: matTrkPostDetail,
+                                          type: widget.type,
+                                          sameMachine: widget.sameMachine,
                                         )),
                               )
                             : Navigator.pop(
@@ -1635,6 +1640,8 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                             employee: widget.employee,
                             machine: widget.machine,
                             matTrkPostDetail: matTrkPostDetail,
+                            type: widget.type,
+                            sameMachine: widget.sameMachine,
                           ),
                         ),
                       );

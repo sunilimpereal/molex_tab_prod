@@ -63,6 +63,9 @@ class GenerateLabel extends StatefulWidget {
   Function updateQty;
   Function transfer;
   String processType;
+  //variables for schedule data
+  String type;
+  String sameMachine;
   GenerateLabel(
       {required this.machine,
       required this.schedule,
@@ -78,7 +81,7 @@ class GenerateLabel extends StatefulWidget {
       required this.updateQty,
       required this.processType,
       required this.transfer,
-      required this.reload});
+      required this.reload,required this.sameMachine,required this.type});
   @override
   _GenerateLabelState createState() => _GenerateLabelState();
 }
@@ -307,7 +310,22 @@ class _GenerateLabelState extends State<GenerateLabel> {
     });
   }
 
+  getActualQty(){
+    ApiService apiService = new ApiService();
+    apiService.getScheduelarData(machId: widget.machine.machineNumber??'', type: widget.type, sameMachine: widget.sameMachine).then((value) {
+      List<Schedule> scheduleList = value!;
+      Schedule schedule = scheduleList.firstWhere((element) {
+        return (
+          element.scheduledId ==widget.schedule.scheduledId 
+        );
+      });
+      setState(() {
+        log("total Qty : ${schedule.actualQuantity}");
+        widget.toalQuantity = schedule.actualQuantity;
+      });
+    });
 
+  }
 
   GeneratedLabel? label;
   bool printerStatus = false;
@@ -1362,6 +1380,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                         ),
                                       ),
                                       onPressed: () {
+                                          
                                         if (bundleQty.text.length > 0 &&
                                             int.parse(bundleQty.text) != 0) {
                                           if (widget.toalQuantity +
@@ -1383,6 +1402,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                               if (value != null) {
                                                 DateTime now = DateTime.now();
                                                 GeneratedLabel label1 = value;
+                                                 getActualQty();
                                                 setState(() {
                                                   printerStatus = true;
                                                 });
@@ -1421,6 +1441,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                                   machine:
                                                       "${widget.machine.machineNumber}",
                                                 ).then((value) {
+                                                  
                                                   Future.delayed(
                                                     const Duration(
                                                         milliseconds: 1000),
@@ -1485,6 +1506,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                             fontSize: 16.0,
                                           );
                                         }
+                                       
                                       }),
                             ],
                           ),

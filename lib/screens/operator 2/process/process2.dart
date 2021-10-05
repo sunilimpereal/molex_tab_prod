@@ -33,8 +33,11 @@ class ProcessPage2 extends StatefulWidget {
   MachineDetails machine;
   CrimpingSchedule schedule;
   MatTrkPostDetail matTrkPostDetail;
+  //variables for schedule type
+  String type;
+  String sameMachine;
   ProcessPage2(
-      {required this.schedule, required this.machine, required this.employee, required this.matTrkPostDetail});
+      {required this.schedule, required this.machine, required this.employee, required this.matTrkPostDetail,required this.sameMachine,required this.type,});
   @override
   _ProcessPage2State createState() => _ProcessPage2State();
 }
@@ -65,14 +68,15 @@ class _ProcessPage2State extends State<ProcessPage2> {
 
     super.initState();
     items = <String>[
-      'Crimp From',
-      'Crimp To',
-      'Crimp From & To',
-      'Double Crimp From'
-      'Double Crimp To',
-      'Double Crimping'
+      "Crimp From",
+      "Crimp To",
+      "Crimp From & To",
+      "Double Crimp From",
+      "Double Crimp To",
+      "Double Crimping"
     ];
-
+    log("schedule process: ${widget.schedule.process}");
+    log("schedule process contains: ${items!.contains(widget.schedule.process)}");
     _chosenValue = items!.contains(widget.schedule.process)
         ? widget.schedule.process
         : 'Crimp From & To';
@@ -116,6 +120,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
         method = 'a-b';
       }
        if (value == "Double Crimp From") {
+         log("message");
         bundltype = "multiple";
         method = 'a';
       }
@@ -261,6 +266,9 @@ class _ProcessPage2State extends State<ProcessPage2> {
                   reload: reload,
                   machine: widget.machine,
                   materialPickType: MaterialPickType.reload,
+                  type: widget.type,
+                  sameMachine: widget.sameMachine,
+
                 ),
               ),
             );
@@ -299,7 +307,8 @@ class _ProcessPage2State extends State<ProcessPage2> {
               matTrkPostDetail: widget.matTrkPostDetail,
               processName: _chosenValue??'',
               processStarted: processStarted,
-
+              type: widget.type,
+              sameMachine: widget.sameMachine,
               reload: reload,
               transfer: () {
                 Navigator.push(
@@ -344,6 +353,8 @@ class _ProcessPage2State extends State<ProcessPage2> {
               matTrkPostDetail: widget.matTrkPostDetail,
               processName: _chosenValue??'',
               processStarted: processStarted,
+              type: widget.type,
+              sameMachine: widget.sameMachine,
                updateQty: (value) {
                 log("QTYY : $value");
                 setState(() {
