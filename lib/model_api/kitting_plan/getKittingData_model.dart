@@ -4,8 +4,7 @@
 
 import 'dart:convert';
 
-GetKittingData getKittingDataFromJson(String str) =>
-    GetKittingData.fromJson(json.decode(str));
+GetKittingData getKittingDataFromJson(String str) => GetKittingData.fromJson(json.decode(str));
 
 String getKittingDataToJson(GetKittingData data) => json.encode(data.toJson());
 
@@ -39,7 +38,7 @@ class GetKittingData {
 
 class Data {
   Data({
-   required this.kittingDetail,
+    required this.kittingDetail,
   });
 
   KittingDetail kittingDetail;
@@ -55,8 +54,8 @@ class Data {
 
 class KittingDetail {
   KittingDetail({
-   required this.kittingEJobDtoList,
-   required this.kittingIssuanceList,
+    required this.kittingEJobDtoList,
+    required this.kittingIssuanceList,
   });
 
   List<KittingEJobDtoList> kittingEJobDtoList;
@@ -64,28 +63,24 @@ class KittingDetail {
 
   factory KittingDetail.fromJson(Map<String, dynamic> json) => KittingDetail(
         kittingEJobDtoList: List<KittingEJobDtoList>.from(
-            json["kittingEJobDTOList"]
-                .map((x) => KittingEJobDtoList.fromJson(x))),
-        kittingIssuanceList:
-            List<dynamic>.from(json["kittingIssuanceList"].map((x) => x)),
+            json["kittingEJobDTOList"].map((x) => KittingEJobDtoList.fromJson(x))),
+        kittingIssuanceList: List<dynamic>.from(json["kittingIssuanceList"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
-        "kittingEJobDTOList":
-            List<dynamic>.from(kittingEJobDtoList.map((x) => x.toJson())),
-        "kittingIssuanceList":
-            List<dynamic>.from(kittingIssuanceList.map((x) => x)),
+        "kittingEJobDTOList": List<dynamic>.from(kittingEJobDtoList.map((x) => x.toJson())),
+        "kittingIssuanceList": List<dynamic>.from(kittingIssuanceList.map((x) => x)),
       };
 }
 
 class KittingEJobDtoList {
   KittingEJobDtoList({
-   required this.fgNumber,
-   required this.cableColor,
-   required this.cableNumber,
-   required this.wireGuage,
-   required this.cutLength,
-   required this.bundleMaster,
+    required this.fgNumber,
+    required this.cableColor,
+    required this.cableNumber,
+    required this.wireGuage,
+    required this.cutLength,
+    required this.bundleMaster,
   });
 
   int fgNumber;
@@ -95,15 +90,14 @@ class KittingEJobDtoList {
   int cutLength;
   List<BundleMaster> bundleMaster;
 
-  factory KittingEJobDtoList.fromJson(Map<String, dynamic> json) =>
-      KittingEJobDtoList(
+  factory KittingEJobDtoList.fromJson(Map<String, dynamic> json) => KittingEJobDtoList(
         fgNumber: json["fgNumber"],
         cableColor: json["cableColor"],
         cableNumber: json["cableNumber"],
         wireGuage: json["wireGuage"],
         cutLength: json["cutLength"],
-        bundleMaster: List<BundleMaster>.from(
-            json["bundleMaster"].map((x) => BundleMaster.fromJson(x))),
+        bundleMaster:
+            List<BundleMaster>.from(json["bundleMaster"].map((x) => BundleMaster.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -161,15 +155,13 @@ class BundleMaster {
 
   factory BundleMaster.fromJson(Map<String, dynamic> json) => BundleMaster(
         id: json["id"],
-        bundleIdentification: json["bundleIdentification"],
+        bundleIdentification: json["bundleIdentification"].toString(),
         scheduledId: json["scheduledId"],
         bundleCreationTime: DateTime.parse(json["bundleCreationTime"]),
         bundleUpdateTime: json["bundleUpdateTime"],
         bundleQuantity: json["bundleQuantity"],
         machineIdentification: json["machineIdentification"],
-        operatorIdentification: json["operatorIdentification"] == null
-            ? null
-            : json["operatorIdentification"],
+        operatorIdentification: json["operatorIdentification"].toString(),
         finishedGoodsPart: json["finishedGoodsPart"],
         cablePartNumber: json["cablePartNumber"],
         cablePartDescription: json["cablePartDescription"],
@@ -192,8 +184,7 @@ class BundleMaster {
         "bundleUpdateTime": bundleUpdateTime,
         "bundleQuantity": bundleQuantity,
         "machineIdentification": machineIdentification,
-        "operatorIdentification":
-            operatorIdentification == null ? null : operatorIdentification,
+        "operatorIdentification": operatorIdentification == null ? null : operatorIdentification,
         "finishedGoodsPart": finishedGoodsPart,
         "cablePartNumber": cablePartNumber,
         "cablePartDescription": cablePartDescription,
@@ -212,25 +203,22 @@ class BundleMaster {
 //
 //     final postKittingData = postKittingDataFromJson(jsonString);
 
-PostKittingData postKittingDataFromJson(String str) =>
-    PostKittingData.fromJson(json.decode(str));
+PostKittingData postKittingDataFromJson(String str) => PostKittingData.fromJson(json.decode(str));
 
-String postKittingDataToJson(PostKittingData data) =>
-    json.encode(data.toJson());
+String postKittingDataToJson(PostKittingData data) => json.encode(data.toJson());
 
 class PostKittingData {
   PostKittingData({
-   required this.orderNo,
-   required this.fgNumber,
-   required this.quantity,
+    required this.orderNo,
+    required this.fgNumber,
+    required this.quantity,
   });
 
   String orderNo;
   int fgNumber;
   int quantity;
 
-  factory PostKittingData.fromJson(Map<String, dynamic> json) =>
-      PostKittingData(
+  factory PostKittingData.fromJson(Map<String, dynamic> json) => PostKittingData(
         orderNo: json["orderNo"],
         fgNumber: json["fgNumber"],
         quantity: json["quantity"],

@@ -71,15 +71,13 @@ class _ProcessPageState extends State<ProcessPage> {
   void initState() {
     apiService = new ApiService();
     SystemChrome.setEnabledSystemUIOverlays([]);
-    items = widget.machine.category!.contains("Cutting")
-        ? <String>['Cutlength & both Side Stripping']
-        : <String>[
-            'Crimp From, Cutlength, Crimp To',
-            'Crimp From, Cutlength',
-            'Cutlength, Crimp To',
-            'Cutlength & both Side Stripping',
-          ];
-    _chosenValue = items!.contains(widget.schedule.process)
+    items = <String>[
+      'Crimp From, Cutlength, Crimp To',
+      'Crimp From, Cutlength',
+      'Cutlength, Crimp To',
+      'Cutlength & both Side Stripping',
+    ];
+    _chosenValue = items!.contains("${widget.schedule.process}")
         ? widget.schedule.process
         : "Crimp From, Cutlength, Crimp To";
 
@@ -344,7 +342,13 @@ class _ProcessPageState extends State<ProcessPage> {
                                                       employee: widget.employee,
                                                       machine: widget.machine,
                                                     )),
-                                          );
+                                          ).then((value) {
+                                            setState(() {
+                                              setState(() {
+                                                widget.matTrkPostDetail = widget.matTrkPostDetail;
+                                              });
+                                            });
+                                          });
                                         },
                                         method: method,
                                         startprocess: () {
@@ -524,11 +528,14 @@ class _ProcessPageState extends State<ProcessPage> {
                 padding: const EdgeInsets.all(0.0),
                 child: FutureBuilder(
                     future: apiService!.getCableTerminalA(
+                        isCrimping: false,
                         fgpartNo: widget.schedule.finishedGoodsNumber,
                         cablepartno:
                             widget.schedule.cablePartNumber ?? widget.schedule.finishedGoodsNumber,
                         length: widget.schedule.length,
                         color: widget.schedule.color,
+                        terminalPartNumberFrom: widget.schedule.terminalPartNumberFrom,
+                        terminalPartNumberTo: widget.schedule.terminalPartNumberTo,
                         awg: widget.schedule.awg),
                     builder: (context, snapshot) {
                       CableTerminalA? terminalA = snapshot.data as CableTerminalA?;
@@ -564,7 +571,10 @@ class _ProcessPageState extends State<ProcessPage> {
                       cablepartno: widget.schedule.cablePartNumber ?? "0",
                       length: widget.schedule.length,
                       color: widget.schedule.color,
-                      awg: widget.schedule.awg),
+                      awg: widget.schedule.awg,
+                      terminalPartNumberFrom: widget.schedule.terminalPartNumberFrom,
+                      terminalPartNumberTo: widget.schedule.terminalPartNumberTo,
+                      isCrimping: false),
                   builder: (context, snapshot) {
                     CableDetails? cableDetail = snapshot.data as CableDetails?;
                     if (snapshot.hasData) {
@@ -590,9 +600,12 @@ class _ProcessPageState extends State<ProcessPage> {
               padding: const EdgeInsets.all(0.0),
               child: FutureBuilder(
                   future: apiService!.getCableTerminalB(
+                      isCrimping: false,
                       fgpartNo: widget.schedule.finishedGoodsNumber,
                       cablepartno: widget.schedule.cablePartNumber,
                       length: widget.schedule.length,
+                      terminalPartNumberFrom: widget.schedule.terminalPartNumberFrom,
+                      terminalPartNumberTo: widget.schedule.terminalPartNumberTo,
                       color: widget.schedule.color,
                       awg: widget.schedule.awg),
                   builder: (context, snapshot) {

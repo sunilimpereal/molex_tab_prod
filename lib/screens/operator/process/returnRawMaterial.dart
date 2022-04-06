@@ -11,8 +11,8 @@ import '../../../service/apiService.dart';
 
 import 'materialTableWIP.dart';
 
-Future<void> showReturnMaterial(BuildContext context,
-    MatTrkPostDetail matTrkPostDetail, MachineDetails machineDetails) async {
+Future<void> showReturnMaterial(
+    BuildContext context, MatTrkPostDetail matTrkPostDetail, MachineDetails machineDetails) async {
   Future.delayed(
     const Duration(milliseconds: 50),
     () {
@@ -65,6 +65,7 @@ class _ReturnRawmaterialState extends State<ReturnRawmaterial> {
                 children: [
                   MaterialtableWIP(
                     matTrkPostDetail: widget.matTrkPostDetail,
+                    getUom: (uom) {},
                   ),
                   returnMaterialButtons(),
                 ],
@@ -90,8 +91,7 @@ class _ReturnRawmaterialState extends State<ReturnRawmaterial> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: FutureBuilder(
-          future: apiService!
-              .getMaterialTrackingCableDetail(widget.matTrkPostDetail),
+          future: apiService!.getMaterialTrackingCableDetail(widget.matTrkPostDetail),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               List<MaterialDetail>? matList = snapshot.data as List<MaterialDetail>?;
@@ -116,21 +116,19 @@ class _ReturnRawmaterialState extends State<ReturnRawmaterial> {
                         LoadingButton(
                           loading: loading,
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.resolveWith(
-                                (states) => Colors.green),
+                            backgroundColor:
+                                MaterialStateProperty.resolveWith((states) => Colors.green),
                           ),
                           loadingChild: Container(
                             height: 25,
                             width: 25,
                             child: CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           ),
                           child: Text("Return Material"),
                           onPressed: () {
-                            apiService!
-                                .postreturnRawMaterial(postReturnMaterial);
+                            apiService!.postreturnRawMaterial(postReturnMaterial);
                             Navigator.pop(context);
                           },
                         )
@@ -149,8 +147,7 @@ class _ReturnRawmaterialState extends State<ReturnRawmaterial> {
   }
 
   String getTraceabilityNumber(String partNumber) {
-    for (PostRawMaterial material
-        in widget.matTrkPostDetail.selectedRawMaterial!) {
+    for (PostRawMaterial material in widget.matTrkPostDetail.selectedRawMaterial!) {
       if (material.cablePartNumber.toString() == partNumber) {
         return material.traceabilityNumber!;
       }

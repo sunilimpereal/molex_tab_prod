@@ -21,7 +21,7 @@ class LoginScan extends StatefulWidget {
 class _LoginScanState extends State<LoginScan> {
   TextEditingController _textController = new TextEditingController();
   FocusNode _textNode = new FocusNode();
-  late String userId ="";
+  late String userId = "";
   late ApiService apiService;
 
   late bool loading;
@@ -30,7 +30,6 @@ class _LoginScanState extends State<LoginScan> {
   void initState() {
     loading = false;
     apiService = new ApiService();
-  
     _textNode.requestFocus();
     SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChannels.textInput.invokeMethod('TextInput.hide');
@@ -79,8 +78,7 @@ class _LoginScanState extends State<LoginScan> {
                 Material(
                   elevation: 10,
                   shadowColor: Colors.redAccent,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                   child: Container(
                     width: 350,
                     decoration: BoxDecoration(
@@ -96,10 +94,9 @@ class _LoginScanState extends State<LoginScan> {
                             child: Text(
                               "Login",
                               style: TextStyle(
-                                  fontSize: 30,
-                                  color: Colors.red.shade600,
-                                  fontWeight: FontWeight.bold,
-
+                                fontSize: 30,
+                                color: Colors.red.shade600,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -109,8 +106,7 @@ class _LoginScanState extends State<LoginScan> {
                                   width: 280,
                                   child: LinearProgressIndicator(
                                     backgroundColor: Colors.grey.shade50,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.red),
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                                   ),
                                 )
                               : Container(
@@ -121,19 +117,17 @@ class _LoginScanState extends State<LoginScan> {
                           Text(
                             'Scan Id Card to Login',
                             style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                              ),
-
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
                           ),
                           userId != ''
                               ? Text(
                                   userId,
-                                  style:  TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                    ),
-
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                  ),
                                 )
                               : Container(
                                   width: 10,
@@ -144,85 +138,31 @@ class _LoginScanState extends State<LoginScan> {
                             width: 200,
                             child: ElevatedButton(
                                 style: ButtonStyle(
-                                  shadowColor:
-                                      MaterialStateProperty.resolveWith<Color>(
+                                  shadowColor: MaterialStateProperty.resolveWith<Color>(
                                     (Set<MaterialState> states) {
-                                      if (states
-                                          .contains(MaterialState.pressed))
+                                      if (states.contains(MaterialState.pressed))
                                         return Colors.white;
-                                      return Colors
-                                          .white; // Use the component's default.
+                                      return Colors.white; // Use the component's default.
                                     },
                                   ),
-                                  elevation:
-                                      MaterialStateProperty.resolveWith<double>(
-                                          (Set<MaterialState> states) {
+                                  elevation: MaterialStateProperty.resolveWith<double>(
+                                      (Set<MaterialState> states) {
                                     return 10;
                                   }),
-                                  backgroundColor:
-                                      MaterialStateProperty.resolveWith<Color>(
+                                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                     (Set<MaterialState> states) {
-                                      if (states
-                                          .contains(MaterialState.pressed))
+                                      if (states.contains(MaterialState.pressed))
                                         return Colors.green;
-                                      return Colors
-                                          .red; // Use the component's default.
+                                      return Colors.red; // Use the component's default.
                                     },
                                   ),
                                 ),
                                 onPressed: () {
                                   loginScan(context);
-                                  // setState(() {
-                                  //   loading = true;
-                                  // });
-                                  // print('pressed');
-                                  // apiService.empIdlogin(userId).then((value) {
-                                  //   if (value != null) {
-                                  //     MotionToast.success(
-                                  //       title: "Logged In",
-                                  //       titleStyle: TextStyle(
-                                  //           fontWeight: FontWeight.bold),
-                                  //       description: "$userId",
-                                  //        descriptionStyle:
-                                  //           TextStyle(fontSize: 12),
-                                  //       width: 300,
-                                  //     ).show(context);
-
-                                  //     print("userId:$userId");
-                                  //     Navigator.pushReplacement(
-                                  //       context,
-                                  //       MaterialPageRoute(
-                                  //           builder: (context) => MachineId(
-                                  //                 employee: value,
-                                  //               )),
-                                  //     );
-                                  //   } else {
-                                  //     setState(() {
-                                  //       loading = false;
-                                  //     });
-                                  //     Fluttertoast.showToast(
-                                  //       msg: "login Failed",
-                                  //       toastLength: Toast.LENGTH_SHORT,
-                                  //       gravity: ToastGravity.BOTTOM,
-                                  //       timeInSecForIosWeb: 1,
-                                  //       backgroundColor: Colors.red,
-                                  //       textColor: Colors.white,
-                                  //       fontSize: 16.0,
-                                  //     );
-                                  //     setState(() {
-                                  //       userId = null;
-                                  //       _textController.clear();
-                                  //       scanController.clear();
-                                  //     });
-                                  //   }
-                                  // });
                                 },
                                 child: Text(
                                   'Login',
-                                  style:  TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600),
-                                  
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                                 )),
                           ),
                           SizedBox(height: 10),
@@ -251,8 +191,7 @@ class _LoginScanState extends State<LoginScan> {
                                 focusNode: FocusNode(),
                                 onKey: (event) async {
                                   print(userId);
-                                  if (event
-                                      .isKeyPressed(LogicalKeyboardKey.tab)) {
+                                  if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
                                     Fluttertoast.showToast(
                                         msg: "Got tab at the end",
                                         toastLength: Toast.LENGTH_SHORT,
@@ -273,8 +212,7 @@ class _LoginScanState extends State<LoginScan> {
                                     loginScan(context);
                                   },
                                   onTap: () {
-                                    SystemChannels.textInput
-                                        .invokeMethod('TextInput.hide');
+                                    SystemChannels.textInput.invokeMethod('TextInput.hide');
                                   },
                                   controller: _textController,
                                   autofocus: true,
@@ -325,14 +263,12 @@ class _LoginScanState extends State<LoginScan> {
                         elevation: 10,
                         shadowColor: Colors.white,
                         clipBehavior: Clip.hardEdge,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                         child: IconButton(
                           onPressed: () {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChangeIp()),
+                              MaterialPageRoute(builder: (context) => ChangeIp()),
                             );
                           },
                           splashRadius: 60,
@@ -353,15 +289,13 @@ class _LoginScanState extends State<LoginScan> {
                         child: Material(
                           elevation: 10,
                           clipBehavior: Clip.hardEdge,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                           shadowColor: Colors.white,
                           child: IconButton(
                             onPressed: () {
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) => UpdateApp()),
+                                MaterialPageRoute(builder: (context) => UpdateApp()),
                               );
                             },
                             splashRadius: 60,
@@ -409,7 +343,7 @@ class _LoginScanState extends State<LoginScan> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text("v 1.0.0+32"),
+                          child: Text("v 1.0.0+68"),
                         )
                       ],
                     ),
@@ -424,48 +358,50 @@ class _LoginScanState extends State<LoginScan> {
   }
 
   void loginScan(BuildContext context) {
-    setState(() {
-      loading = true;
-    });
-    print('pressed');
-    apiService.empIdlogin(userId).then((value) {
-      if (value != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MachineId(
-                    employee: value,
-                  )),
-        );
-      } else {
-        setState(() {
-          _textNode.requestFocus();
-          loading = false;
-        });
-        Fluttertoast.showToast(
-          msg: "login Failed",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-        setState(() {
-          userId = "";
-          _textController.clear();
-          scanController.clear();
-        });
-      }
-    });
+    if (userId.length != 0) {
+      setState(() {
+        loading = true;
+      });
+      print('pressed');
+      apiService.empIdlogin(userId).then((value) {
+        if (value != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MachineId(
+                      employee: value,
+                    )),
+          );
+        } else {
+          setState(() {
+            _textNode.requestFocus();
+            loading = false;
+          });
+          Fluttertoast.showToast(
+            msg: "login Failed",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          setState(() {
+            userId = "";
+            _textController.clear();
+            scanController.clear();
+          });
+        }
+      });
+    }
   }
 
   Future<String> scanBarcodeNormal() async {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          "#ff6666", "Cancel", true, ScanMode.BARCODE);
+      barcodeScanRes =
+          await FlutterBarcodeScanner.scanBarcode("#ff6666", "Cancel", true, ScanMode.BARCODE);
       print(barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';

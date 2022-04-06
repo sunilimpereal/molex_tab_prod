@@ -3,13 +3,16 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:molex/model_api/Transfer/binToLocation_model.dart';
 import 'package:molex/model_api/Transfer/postgetBundleMaster.dart';
+import 'package:molex/model_api/crimping/double_crimping/doubleCrimpingEjobDetail.dart';
 import 'package:molex/model_api/materialTrackingCableDetails_model.dart';
 import 'package:molex/model_api/process1/getBundleListGl.dart';
 import 'package:molex/screens/operator%202/process/double%20crimp/doubleCrimpInfo.dart';
 import 'package:molex/screens/operator/process/materialTableWIP.dart';
 import 'package:molex/screens/utils/loadingButton.dart';
 import 'package:molex/screens/widgets/alertDialog/alertDialogCrimping.dart';
+import 'package:molex/screens/widgets/alertDialog/customAlertDialong.dart';
 import 'package:molex/screens/widgets/showBundles.dart';
 import 'package:molex/screens/widgets/timer.dart';
 import '../../../../main.dart';
@@ -23,6 +26,7 @@ import '../../../../model_api/crimping/getCrimpingSchedule.dart';
 import '../../../../model_api/crimping/postCrimprejectedDetail.dart';
 
 import '../../../../service/apiService.dart';
+import '../crimping.dart';
 
 enum Status {
   scan,
@@ -66,7 +70,9 @@ class MultipleBundleScan extends StatefulWidget {
       required this.totalQuantity,
       required this.transfer,
       required this.userId,
-      required this.updateQty,required this.sameMachine,required this.type});
+      required this.updateQty,
+      required this.sameMachine,
+      required this.type});
 
   @override
   _MultipleBundleScanState createState() => _MultipleBundleScanState();
@@ -108,6 +114,8 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
   bool next = false;
   bool showTable = true;
   List<BundlesRetrieved> scannedBundles = [];
+  int scannedBundlesMinumQuantity =
+      0; // qty of bundle with least quantity sine all bundles should be of same quantity
   Status status = Status.scan;
 
   String _output = '';
@@ -131,6 +139,8 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
   bool donotrepeatalert = false;
 
   bool scanbundleLoading = false;
+
+  bool hundPercentloading = false;
   getTerminal() {
     ApiService apiService = new ApiService();
     apiService
@@ -139,10 +149,18 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
             cablepartno: widget.schedule.cablePartNo.toString(),
             length: "${widget.schedule.length}",
             color: widget.schedule.wireColour,
+            isCrimping: true,
+            crimpFrom: widget.schedule.crimpFrom,
+            crimpTo: widget.schedule.crimpTo,
+            wireCuttingSortNum: widget.schedule.wireCuttingSortingNumber.toString(),
             awg: int.parse(widget.schedule.awg ?? '0'))
         .then((termiA) {
       apiService
           .getCableTerminalB(
+              isCrimping: true,
+              crimpFrom: widget.schedule.crimpFrom,
+              crimpTo: widget.schedule.crimpTo,
+              wireCuttingSortNum: widget.schedule.wireCuttingSortingNumber.toString(),
               fgpartNo: "${widget.schedule.finishedGoods}",
               cablepartno: widget.schedule.cablePartNo.toString(),
               length: "${widget.schedule.length}",
@@ -153,6 +171,24 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
           terminalA = termiA;
           terminalB = termiB;
         });
+      });
+    });
+  }
+
+  getActualQty() {
+    ApiService apiService = new ApiService();
+    apiService
+        .getCrimpingSchedule(
+            machineNo: widget.machineId, scheduleType: widget.type, sameMachine: widget.sameMachine)
+        .then((value) {
+      List<CrimpingSchedule> scheduleList = value!;
+      CrimpingSchedule schedule = scheduleList.firstWhere((element) {
+        return (element.scheduleId == widget.schedule.scheduleId);
+      });
+      setState(() {
+        widget.totalQuantity = schedule.actualQuantity;
+        widget.updateQty(schedule.actualQuantity);
+        log("total Qty : ${widget.totalQuantity}");
       });
     });
   }
@@ -170,25 +206,10 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
     );
     super.initState();
   }
-    getActualQty(){
-    ApiService apiService = new ApiService();
-    apiService.getCrimpingSchedule(machineNo: widget.machineId , scheduleType: widget.type, sameMachine: widget.sameMachine).then((value) {
-      List<CrimpingSchedule> scheduleList = value!;
-      CrimpingSchedule schedule = scheduleList.firstWhere((element) {
-        return (
-          element.scheduleId ==widget.schedule.scheduleId 
-        );
-      });
-      setState(() {
-        log("total Qty : ${schedule.actualQuantity}");
-        widget.totalQuantity = schedule.actualQuantity;
-      });
-    });
-
-  }
 
   @override
   Widget build(BuildContext context) {
+    log("total Qty : ${widget.totalQuantity}");
     SystemChrome.setEnabledSystemUIOverlays([]);
 
     return Column(
@@ -281,6 +302,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
         children: [
           MaterialtableWIP(
             matTrkPostDetail: widget.matTrkPostDetail,
+            getUom: (um) {},
           ),
           Container(
             width: MediaQuery.of(context).size.width * 0.64,
@@ -341,19 +363,34 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                         ),
                                       ),
                                       onPressed: () {
-                                        checkMapping().then((value) {
-                                          if (value) {
-                                            widget.fullyComplete();
-                                          }
+                                        setState(() {
+                                          hundPercentloading = true;
                                         });
+                                        hundPercentloading
+                                            ? checkMapping().then((value) {
+                                                setState(() {
+                                                  hundPercentloading = false;
+                                                });
+                                                if (value) {
+                                                  widget.fullyComplete();
+                                                }
+                                              })
+                                            : null;
                                       },
-                                      child: Text(
-                                        "100% complete",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
+                                      child: !hundPercentloading
+                                          ? Text(
+                                              "100% complete",
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            )
+                                          : Container(
+                                              height: 32,
+                                              width: 32,
+                                              child: CircularProgressIndicator(
+                                                color: Colors.white,
+                                              )),
                                     ),
                                   )
                                 : Container(),
@@ -408,15 +445,65 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
   }
 
   Future<bool> checkMapping() async {
-    if (!checkmappingdone) {
-      showMappingAlert();
-      setState(() {
-        checkmappingdone = true;
-      });
-      return false;
+    ApiService apiService = new ApiService();
+    PostgetBundleMaster postgetBundleMaster = new PostgetBundleMaster(
+      binId: 0,
+      scheduleId: 0,
+      bundleId: '',
+      location: '',
+      status: '',
+      finishedGoods: widget.schedule.finishedGoods,
+      cablePartNumber: widget.schedule.cablePartNo,
+      orderId: widget.schedule.purchaseOrder.toString(),
+    );
+    String type = "";
+    String selected = getterminalmethod();
+    if (selected.contains('a')) {
+      type = terminalA!.processType ?? '';
     }
-
+    if (selected.contains('b')) {
+      type = terminalB!.processType ?? '';
+    }
+    List<BundlesRetrieved> bundlesList = await apiService.getBundlesInSchedule(
+            postgetBundleMaster: postgetBundleMaster, scheduleID: "") ??
+        [];
+    List<EJobTicketMasterDetails> details = await apiService.getDoubleCrimpDetail(
+          fgNo: widget.schedule.finishedGoods.toString(),
+          crimpType: type,
+          cablepart: "",
+        ) ??
+        [];
+    bundlesList = bundlesList
+        .where((element) {
+          if ("${element.orderId}" == "${widget.schedule.purchaseOrder}" &&
+              "${element.finishedGoodsPart}" == "${widget.schedule.finishedGoods}" &&
+              details.map((e) => e.crimpColor).toList().contains(element.color) &&
+              details.map((e) => e.length).toList().contains(element.cutLengthSpecificationInmm)) {
+            return true;
+          } else {
+            return false;
+          }
+        })
+        .toList()
+        // .where((element) => checkcompleted(element.updateFromProcess.toLowerCase()))
+        .toList();
+    for (BundlesRetrieved bundle in bundlesList) {
+      if (bundle.locationId.length > 1 && bundle.locationId != "null") {
+      } else {
+        showMappingAlert();
+        return false;
+      }
+    }
     return true;
+    // if (!checkmappingdone) {
+    //   showMappingAlert();
+    //   setState(() {
+    //     checkmappingdone = true;
+    //   });
+    //   return false;
+    // }
+
+    // return true;
   }
 
   Future<void> showMappingAlert() {
@@ -624,6 +711,9 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                         controller: _scanIdController,
                         onChanged: (value) {
                           setState(() {});
+                        },
+                        onSubmitted: (abc) {
+                          getScannedBundle();
                         },
                         autofocus: true,
                         textAlign: TextAlign.center,
@@ -1030,23 +1120,25 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                   },
                                 );
                                 for (BundlesRetrieved e in scannedBundles) {
+                                  // //temproary
+                                  // BundlesRetrieved e = scannedBundles.last;
+                                  //temproapry end
                                   log("${scannedBundles.indexOf(e)}");
                                   PostCrimpingRejectedDetail postCrimpingRejectedDetail =
                                       PostCrimpingRejectedDetail(
                                     bundleIdentification: e.bundleIdentification,
                                     finishedGoods: widget.schedule.finishedGoods,
-                                    cutLength: widget.schedule.length,
-                                    color: widget.schedule.wireColour,
-                                    cablePartNumber: widget.schedule.cablePartNo,
-                                    processType: getProcessType(e.updateFromProcess ?? ''),
-                                    method: scannedBundles.indexOf(e) == (scannedBundles.length - 1)
-                                        ? getterminalmethod()
-                                        : '',
+                                    cutLength: e.cutLengthSpecificationInmm,
+                                    color: e.color,
+                                    cablePartNumber: e.cablePartNumber,
+                                    processType: getProcessType(widget.schedule.process ?? ''),
+                                    method: getterminalmethod(),
                                     status: "",
                                     machineIdentification: widget.machineId,
                                     binId: "",
-                                    bundleQuantity: e.bundleQuantity,
-                                    passedQuantity: e.bundleQuantity! - total(),
+                                    // bundleQuantity: e.bundleQuantity, // old // the bundle with minimum quantity will be taken as bundle quantity
+                                    bundleQuantity: scannedBundlesMinumQuantity,
+                                    passedQuantity: scannedBundlesMinumQuantity - total(),
                                     rejectedQuantity: total(),
                                     crimpFromSchId: widget.method.contains("a")
                                         ? "${widget.schedule.scheduleId}"
@@ -1059,7 +1151,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                         : "0"),
                                     rejectionsTerminalFrom: int.parse(
                                         endTerminalControllerFrom.text.length > 0
-                                            ? endTerminalControllerTo.text
+                                            ? endTerminalControllerFrom.text
                                             : "0"),
                                     rejectionsTerminalTo: int.parse(
                                         endTerminalControllerTo.text.length > 0
@@ -1158,19 +1250,20 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                     awg: widget.schedule.awg != null
                                         ? widget.schedule.awg.toString()
                                         : "",
-                                    terminalFrom: int.parse('${terminalA!.terminalPart}'),
-                                    terminalTo: int.parse('${terminalB!.terminalPart}'),
+                                    terminalFrom: int.parse(
+                                        '${terminalA!.terminalPart == null ? '0' : terminalA!.terminalPart}'),
+                                    terminalTo: int.parse(
+                                        '${terminalB!.terminalPart == null ? '0' : terminalB!.terminalPart}'),
                                   );
                                   apiService
                                       .postCrimpRejectedQty(postCrimpingRejectedDetail)
                                       .then((value) {
                                     if (value != null) {
-                                      
                                       setState(() {
-                                        scannedBundles.indexOf(e) == (scannedBundles.length - 1)
-                                            ? widget
-                                                .updateQty(widget.totalQuantity + e.bundleQuantity)
-                                            : null;
+                                        // scannedBundles.indexOf(e) == (scannedBundles.length - 1)
+                                        //     ? widget
+                                        //         .updateQty(widget.totalQuantity + e.bundleQuantity)
+                                        //     : null;
                                         Future.delayed(const Duration(milliseconds: 10), () {
                                           SystemChannels.textInput.invokeMethod('TextInput.hide');
                                         });
@@ -1203,7 +1296,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                 }
                                 setState(() {
                                   clear();
-                                  // scannedBundles.clear();
+                                  //   scannedBundles.clear();
                                 });
                               },
                               loadingChild: Container(
@@ -1254,6 +1347,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
         int.parse(
             crimpOnInsulationController.text.length > 0 ? crimpOnInsulationController.text : '0') +
         int.parse(bellMouthErrorController.text.length > 0 ? bellMouthErrorController.text : '0') +
+        int.parse(endwireController.text.length > 0 ? endwireController.text : '0') +
         int.parse(cutoffBurrController.text.length > 0 ? cutoffBurrController.text : '0') +
         int.parse(exposureStrands.text.length > 0 ? exposureStrands.text : '0') +
         int.parse(nickMarkController.text.length > 0 ? nickMarkController.text : '0') +
@@ -1546,14 +1640,18 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
 
   void clear() {
     terminalDamageController.clear();
+    endwireController.clear();
     terminalBendController.clear();
     terminalTwistController.clear();
     windowGapController.clear();
+    bellMouthErrorController.clear();
+
     crimpOnInsulationController.clear();
     cutoffBurrController.clear();
     exposureStrands.clear();
     nickMarkController.clear();
     strandsCutController.clear();
+    brushLengthLessMoreController.clear();
     cableDamageController.clear();
     halfCurlingController.clear();
     lockingTabOpenController.clear();
@@ -1634,34 +1732,46 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(100.0),
-                                side: BorderSide(color: Colors.red))),
-                        backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                            if (states.contains(MaterialState.pressed)) return Colors.red.shade200;
-                            return Colors.white; // Use the component's default.
-                          },
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          '  Back   ',
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                        ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          status = Status.rejection;
-                        });
-                      },
-                    ),
+                    // ElevatedButton(
+                    //   style: ButtonStyle(
+                    //     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    //         RoundedRectangleBorder(
+                    //             borderRadius: BorderRadius.circular(100.0),
+                    //             side: BorderSide(color: Colors.red))),
+                    //     backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                    //       (Set<MaterialState> states) {
+                    //         if (states.contains(MaterialState.pressed)) return Colors.red.shade200;
+                    //         return Colors.white; // Use the component's default.
+                    //       },
+                    //     ),
+                    //   ),
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.all(8.0),
+                    //     child: Text(
+                    //       '  Skip   ',
+                    //       style: TextStyle(
+                    //         color: Colors.red,
+                    //       ),
+                    //     ),
+                    //   ),
+                    //   onPressed: () {
+                    //     setState(() {
+                    //       scannedBundles.clear();
+                    //       Future.delayed(
+                    //         const Duration(milliseconds: 10),
+                    //         () {
+                    //           SystemChannels.textInput.invokeMethod('TextInput.hide');
+                    //         },
+                    //       );
+                    //       clear();
+                    //       _scanIdController.clear();
+                    //       binId = '';
+                    //       _binController.clear();
+                    //       bundlQtyController.clear();
+                    //       status = Status.scan;
+                    //     });
+                    //   },
+                    // ),
                     ElevatedButton(
                       style: ButtonStyle(
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -1713,18 +1823,27 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                 backgroundColor: Colors.red,
                                 textColor: Colors.white,
                                 fontSize: 16.0);
-                            scannedBundles.clear();
+
                             setState(() {
+                              scannedBundles.clear();
                               Future.delayed(
                                 const Duration(milliseconds: 10),
                                 () {
                                   SystemChannels.textInput.invokeMethod('TextInput.hide');
                                 },
                               );
+                              Future.delayed(
+                                const Duration(milliseconds: 50),
+                                () {
+                                  updateLocationtoempty(
+                                      binID: _binController.text, userId: widget.userId);
+                                  _binController.clear();
+                                },
+                              );
                               clear();
                               _scanIdController.clear();
                               binId = '';
-                              _binController.clear();
+                              // _binController.clear();
                               bundlQtyController.clear();
                               status = Status.scan;
                             });
@@ -1752,6 +1871,49 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
         ],
       ),
     );
+  }
+
+  updateLocationtoempty({required String binID, required String userId}) {
+    log("updateloc : $binID");
+    PostgetBundleMaster postgetBundleMaste = new PostgetBundleMaster(
+      scheduleId: 0,
+      binId: int.parse(binID),
+      bundleId: '',
+      location: '',
+      status: '',
+      finishedGoods: 0,
+      cablePartNumber: 0,
+      orderId: "",
+    );
+    List<TransferBinToLocation> transferList = [];
+    ApiService apiService = new ApiService();
+    apiService
+        .getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: '')
+        .then((value) {
+      if (value != null) {
+        List<BundlesRetrieved> bundleList1 = value;
+        log("message1 $bundleList1");
+        if (bundleList1.length > 0) {
+          apiService.postTransferBinToLocation(bundleList1
+              .map((e) => TransferBinToLocation(
+                  bundleId: e.bundleIdentification,
+                  locationId: "",
+                  binIdentification: binID,
+                  userId: userId))
+              .toList());
+        } else {}
+      } else {
+        Fluttertoast.showToast(
+          msg: "Location clear failed",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    });
   }
 
   Widget showBundleButton() {
@@ -1811,7 +1973,10 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
             }
             // showDoubleCrimpInfo(context: context, fg: "367500175", processType: "SP1(12+12+10)"); //change it back
             showDoubleCrimpInfo(
-                context: context, fg: widget.schedule.finishedGoods.toString(), processType: type);
+                cablepart: "",
+                context: context,
+                fg: widget.schedule.finishedGoods.toString(),
+                processType: type);
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1839,9 +2004,17 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
       location: '',
       status: '',
       finishedGoods: widget.schedule.finishedGoods,
-      cablePartNumber: widget.schedule.cablePartNo,
+      cablePartNumber: 0,
       orderId: widget.schedule.purchaseOrder.toString(),
     );
+    String type = "";
+    String selected = getterminalmethod();
+    if (selected.contains('a')) {
+      type = terminalA!.processType ?? '';
+    }
+    if (selected.contains('b')) {
+      type = terminalB!.processType ?? '';
+    }
 
     return showDialog<void>(
         context: context,
@@ -1858,146 +2031,175 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(18.0),
-                    child: FutureBuilder(
-                        future: apiService.getBundlesInSchedule(
-                            postgetBundleMaster: postgetBundleMaste, scheduleID: ""),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            List<BundlesRetrieved>? totalbundleList =
-                                snapshot.data as List<BundlesRetrieved>?;
-                            totalbundleList = totalbundleList!.where((element) {
-                              if ("${element.cutLengthSpecificationInmm}" ==
-                                      "${widget.schedule.length}" &&
-                                  "${element.color}" == "${widget.schedule.wireColour}" &&
-                                  "${element.orderId}" == "${widget.schedule.purchaseOrder}") {
-                                return true;
-                              } else {
-                                return false;
-                              }
-                            }).toList();
-                            log("message $totalbundleList");
-                            return Container(
-                              child: CustomTable(
-                                height: 500,
-                                width: 650,
-                                colums: [
-                                  CustomCell(
-                                    width: 100,
-                                    child: Text(
-                                      'Bundle ID',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: fonts.openSans,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  CustomCell(
-                                    width: 100,
-                                    child: Text(
-                                      'Bin ID',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: fonts.openSans,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  CustomCell(
-                                    width: 100,
-                                    child: Text(
-                                      'Location ID',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: fonts.openSans,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  CustomCell(
-                                    width: 100,
-                                    child: Text(
-                                      'Qty',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: fonts.openSans,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  CustomCell(
-                                    width: 100,
-                                    child: Text(
-                                      'info',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: fonts.openSans,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                                rows: totalbundleList
-                                    .map((e) => CustomRow(
-                                            completed:
-                                                checkcompleted(e.updateFromProcess.toLowerCase()),
-                                            cells: [
-                                              CustomCell(
-                                                width: 100,
-                                                child: Text(
-                                                  e.bundleIdentification,
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    // color: !e
-                                                    //         .updateFromProcess
-                                                    //         .contains(widget
-                                                    //             .processName,
-                                                    //             )
-                                                    //     ? Colors.red
-                                                    //     : Colors.green
-                                                  ),
-                                                ),
-                                              ),
-                                              CustomCell(
-                                                width: 100,
-                                                color: e.binId == null
-                                                    ? Colors.red.shade100
-                                                    : Colors.transparent,
-                                                child: Text(
-                                                  "${e.binId}",
-                                                  style: TextStyle(fontSize: 12),
-                                                ),
-                                              ),
-                                              CustomCell(
-                                                width: 100,
-                                                color: e.locationId == null
-                                                    ? Colors.red.shade100
-                                                    : Colors.transparent,
-                                                child: Text(
-                                                  "${e.locationId}",
-                                                  style: TextStyle(fontSize: 12),
-                                                ),
-                                              ),
-                                              CustomCell(
-                                                width: 100,
-                                                child: Text(
-                                                  "${e.bundleQuantity}",
-                                                  style: TextStyle(fontSize: 12),
-                                                ),
-                                              ),
-                                              CustomCell(
-                                                width: 100,
-                                                child: GestureDetector(
-                                                    onTap: () {
-                                                      showBundleDetail(e);
-                                                    },
-                                                    child: Icon(
-                                                      Icons.info_outline,
-                                                      color: Colors.blue,
-                                                    )),
-                                              )
-                                            ]))
-                                    .toList(),
+                    child: FutureBuilder<List<EJobTicketMasterDetails>?>(
+                        future: apiService.getDoubleCrimpDetail(
+                            fgNo: widget.schedule.finishedGoods.toString(),
+                            crimpType: type,
+                            cablepart: ""),
+                        builder: (context, snapshotCrimpDetail) {
+                          log("seedata:" + snapshotCrimpDetail.toString());
+                          if (snapshotCrimpDetail.connectionState == ConnectionState.waiting)
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.red,
                               ),
                             );
-                          } else {
-                            return Center(child: CircularProgressIndicator());
-                          }
+
+                          if (snapshotCrimpDetail.data?.length == 0 || !snapshotCrimpDetail.hasData)
+                            return Center(
+                              child: Text('No data found for Crimping Details'),
+                            );
+                          List<EJobTicketMasterDetails> details = snapshotCrimpDetail.data ?? [];
+                          return FutureBuilder(
+                              future: apiService.getBundlesInSchedule(
+                                  postgetBundleMaster: postgetBundleMaste, scheduleID: ""),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  List<BundlesRetrieved>? totalbundleList =
+                                      snapshot.data as List<BundlesRetrieved>?;
+                                  totalbundleList = totalbundleList!.where((element) {
+                                    if ("${element.orderId}" ==
+                                            "${widget.schedule.purchaseOrder}" &&
+                                        "${element.finishedGoodsPart}" ==
+                                            "${widget.schedule.finishedGoods}" &&
+                                        details
+                                            .map((e) => e.crimpColor)
+                                            .toList()
+                                            .contains(element.color) &&
+                                        details
+                                            .map((e) => e.length)
+                                            .toList()
+                                            .contains(element.cutLengthSpecificationInmm)) {
+                                      return true;
+                                    } else {
+                                      return false;
+                                    }
+                                  }).toList();
+                                  log("message $totalbundleList");
+                                  return Container(
+                                    child: CustomTable(
+                                      height: 500,
+                                      width: 650,
+                                      colums: [
+                                        CustomCell(
+                                          width: 100,
+                                          child: Text(
+                                            'Bundle ID',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontFamily: fonts.openSans,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        CustomCell(
+                                          width: 100,
+                                          child: Text(
+                                            'Bin ID',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontFamily: fonts.openSans,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        CustomCell(
+                                          width: 100,
+                                          child: Text(
+                                            'Location ID',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontFamily: fonts.openSans,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        CustomCell(
+                                          width: 100,
+                                          child: Text(
+                                            'Qty',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontFamily: fonts.openSans,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        CustomCell(
+                                          width: 100,
+                                          child: Text(
+                                            'info',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontFamily: fonts.openSans,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ],
+                                      rows: totalbundleList
+                                          .map((e) => CustomRow(
+                                                  completed: checkcompleted(
+                                                      e.updateFromProcess.toLowerCase()),
+                                                  cells: [
+                                                    CustomCell(
+                                                      width: 100,
+                                                      child: Text(
+                                                        e.bundleIdentification,
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          // color: !e
+                                                          //         .updateFromProcess
+                                                          //         .contains(widget
+                                                          //             .processName,
+                                                          //             )
+                                                          //     ? Colors.red
+                                                          //     : Colors.green
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    CustomCell(
+                                                      width: 100,
+                                                      color: e.binId == null
+                                                          ? Colors.red.shade100
+                                                          : Colors.transparent,
+                                                      child: Text(
+                                                        "${e.binId}",
+                                                        style: TextStyle(fontSize: 12),
+                                                      ),
+                                                    ),
+                                                    CustomCell(
+                                                      width: 100,
+                                                      color: e.locationId == null ||
+                                                              e.locationId.length <= 1
+                                                          ? Colors.red.shade100
+                                                          : Colors.transparent,
+                                                      child: Text(
+                                                        "${e.locationId}",
+                                                        style: TextStyle(fontSize: 12),
+                                                      ),
+                                                    ),
+                                                    CustomCell(
+                                                      width: 100,
+                                                      child: Text(
+                                                        "${e.bundleQuantity}",
+                                                        style: TextStyle(fontSize: 12),
+                                                      ),
+                                                    ),
+                                                    CustomCell(
+                                                      width: 100,
+                                                      child: GestureDetector(
+                                                          onTap: () {
+                                                            showBundleDetail(e);
+                                                          },
+                                                          child: Icon(
+                                                            Icons.info_outline,
+                                                            color: Colors.blue,
+                                                          )),
+                                                    )
+                                                  ]))
+                                          .toList(),
+                                    ),
+                                  );
+                                } else {
+                                  return Center(child: CircularProgressIndicator());
+                                }
+                              });
                         }),
                   ),
                   Positioned(
@@ -2106,10 +2308,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                   field(
                                       title: "Finished Goods",
                                       data: "${bundlesRetrieved.finishedGoodsPart}"),
-                                  field(
-                                    title: "Order Id",
-                                    data: "${bundlesRetrieved.operatorIdentification}",
-                                  ),
+                                  field(title: "Order Id", data: "${bundlesRetrieved.orderId}"),
                                   field(
                                       title: "Update From",
                                       data: "${bundlesRetrieved.updateFromProcess}"),
@@ -2202,10 +2401,55 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
       orderId: "",
     );
 
+    updateMinimumQuantity() {
+      if (scannedBundles.length == 1) {
+        setState(() {
+          scannedBundlesMinumQuantity = scannedBundles[0].bundleQuantity;
+          log("message qty ${scannedBundlesMinumQuantity}");
+        });
+      } else {
+        int min = 0;
+        for (BundlesRetrieved bundle in scannedBundles) {
+          if (min == 0) {
+            min = bundle.bundleQuantity;
+          }
+          if (bundle.bundleQuantity <= min) {
+            min = bundle.bundleQuantity;
+          }
+        }
+        setState(() {
+          scannedBundlesMinumQuantity = min;
+          log("message qty ${scannedBundlesMinumQuantity}");
+        });
+      }
+    }
+
+    checkSameScheduleCrimping(BundlesRetrieved bundle) async {
+      bool flag = false;
+      if (widget.schedule.process.toLowerCase().contains("from")) {
+        if (bundle.crimpFromSchId == widget.schedule.scheduleId.toString()) {
+          flag = true;
+        }
+      }
+      if (widget.schedule.process.toLowerCase().contains("to")) {
+        if (bundle.crimpToSchId == widget.schedule.scheduleId.toString()) {
+          flag = true;
+        }
+      }
+      if (flag) {
+        await showCustomBundleAlertCrimping(
+            context: context,
+            onDoNotRemindAgain: () {},
+            heading: "Bundle Crimping Completed",
+            heading2: "Bundle Crimping is already completed in this schedule",
+            onSubmitted: () {});
+      }
+    }
+
     if (_scanIdController.text.length > 0) {
       apiService
           .getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: "")
-          .then((value) {
+          .then((value) async {
         if (value!.length != 0) {
           List<BundlesRetrieved> bundleList = value;
           BundlesRetrieved bundleDetail = bundleList[0];
@@ -2223,14 +2467,17 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
             return true;
           } else {
             if (validateBundle(bundleDetail)) {
-              if (!scannedBundles
-                  .map((e) => e.bundleIdentification)
-                  .toList()
-                  .contains(bundleDetail.bundleIdentification)) {
+              // if (!scannedBundles
+              //     .map((e) => e.bundleIdentification)
+              //     .toList()
+              //     .contains(bundleDetail.bundleIdentification)) {
+              await checkSameScheduleCrimping(bundleDetail);
+              if (true) {
                 if (bundleDetail.bundleStatus.toLowerCase() == "dropped") {
                   setState(() {
                     scannedBundles.add(bundleDetail);
                     _scanIdController.clear();
+                    updateMinimumQuantity();
                   });
                 } else {
                   if (!donotrepeatalert) {
@@ -2247,6 +2494,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                           setState(() {
                             scannedBundles.add(bundleDetail);
                             _scanIdController.clear();
+                            updateMinimumQuantity();
                           });
                         });
                   } else {

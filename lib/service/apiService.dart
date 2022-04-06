@@ -66,7 +66,7 @@ class ApiService {
     var url = Uri.parse(baseUrl + "molex/employee/get-employee-list/empid=$empId");
     var response = await http.get(url);
     log('Login  status Code ${response.statusCode}');
-    log('Login  status Code ${response.body}');
+    log('Login  status Code ${url} ${response.body}');
     if (response.statusCode == 200) {
       try {
         Login login = loginFromJson(response.body);
@@ -95,7 +95,7 @@ class ApiService {
     if (response.statusCode == 200) {
       try {
         Schedular schedualr = schedularFromJson(response.body);
-        log(" sch data ${response.body}");
+        // log(" sch data ${response.body}");
         List<Schedule> scheduleList = schedualr.data.employeeList;
         return scheduleList;
       } catch (e) {
@@ -137,7 +137,7 @@ class ApiService {
     if (response.statusCode == 200) {
       try {
         Schedular schedualr = schedularFromJson(response.body);
-        log(" sch data ${response.body}");
+        // log(" sch data ${response.body}");
         List<Schedule> scheduleList = schedualr.data.employeeList;
         return scheduleList;
       } catch (e) {
@@ -190,29 +190,30 @@ class ApiService {
   }
 
   List<RawMaterial> sortRaw(List<RawMaterial> rawmaterial) {
-    RawMaterial temp = new RawMaterial();
-    List<RawMaterial> newList = [];
-    for (RawMaterial rawmat in rawmaterial) {
-      if (temp.partNunber == rawmat.partNunber) {
-        temp.requireQuantity =
-            (double.parse(temp.requireQuantity ?? "") + double.parse(rawmat.requireQuantity ?? ''))
-                .toString();
-        temp.toatalScheduleQuantity = (double.parse(temp.toatalScheduleQuantity ?? '') +
-                double.parse(rawmat.toatalScheduleQuantity ?? ''))
-            .toString();
-        newList.removeLast();
-        newList.add(temp);
-      } else {
-        newList.add(rawmat);
-        temp = rawmat;
-        // s
-      }
-    }
-    return newList;
+    // RawMaterial temp = new RawMaterial();
+    // List<RawMaterial> newList = [];
+    // for (RawMaterial rawmat in rawmaterial) {
+    //   if (temp.partNunber == rawmat.partNunber) {
+    //     temp.requireQuantity =
+    //         (double.parse(temp.requireQuantity ?? "") + double.parse(rawmat.requireQuantity ?? ''))
+    //             .toString();
+    //     temp.toatalScheduleQuantity = (double.parse(temp.toatalScheduleQuantity ?? '') +
+    //             double.parse(rawmat.toatalScheduleQuantity ?? ''))
+    //         .toString();
+    //     newList.removeLast();
+    //     newList.add(temp);
+    //   } else {
+    //     newList.add(rawmat);
+    //     temp = rawmat;
+    //     // s
+    //   }
+    // }
+    return rawmaterial;
   }
+
   ///filter raw material baesd on process type
   ///if schedule is only crip from and cutlength only crimp from raw material is displayed
-    List<RawMaterial> filterPrsType(List<RawMaterial> rawmaterial) {
+  List<RawMaterial> filterPrsType(List<RawMaterial> rawmaterial) {
     RawMaterial temp = new RawMaterial();
     List<RawMaterial> newList = [];
     for (RawMaterial rawmat in rawmaterial) {
@@ -254,6 +255,9 @@ class ApiService {
     var responsecable = await http.get(urlcable);
     var responsefrom = await http.get(urlfrom);
     var responseto = await http.get(urlto);
+    log('Raw Material cable  url ${urlcable.toString()}');
+    log('Raw Material from url ${urlfrom.toString()}');
+    log('Raw Material to url ${urlto.toString()}');
     log('Raw Material cable status code ${responsecable.body}');
     log('Raw Material from status code ${responsefrom.body}');
     log('Raw Material to status code ${responseto.body}');
@@ -275,7 +279,6 @@ class ApiService {
           rawMateriallist = rawmaterialListcable + rawmaterialListto + rawmaterialListfrom;
           rawMateriallist = rawMateriallist.where((element) => element.partNunber != "0").toList();
           rawMateriallist = sortRaw(rawMateriallist);
-
         }
         if (type.contains("Cutting")) {
           rawMateriallist = rawmaterialListcable;
@@ -319,7 +322,7 @@ class ApiService {
     var url = Uri.parse(baseUrl + "molex/materialldg/post-req-material");
     final response = await http.post(url,
         body: postRawMaterialListToJson(postRawmaterialList), headers: headerList);
-    print('post raw material ${postRawMaterialListToJson(postRawmaterialList)}');
+    log('post raw material ${postRawMaterialListToJson(postRawmaterialList)}');
     log('post raw material body ${response.body}');
     if (response.statusCode == 200) {
       return true;
@@ -367,15 +370,41 @@ class ApiService {
       required String cablepartno,
       required String length,
       required String color,
-      required int awg}) async {
-    var url = Uri.parse(baseUrl +
-        "molex/ejobticketmaster/get-cable-Details-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg");
+      required int awg,
+      required bool isCrimping,
+      int? terminalPartNumberFrom,
+      int? terminalPartNumberTo,
+      String? crimpFrom,
+      String? crimpTo,
+      String? wireCuttingSortNum}) async {
+    var url = isCrimping
+        ? Uri.parse(baseUrl +
+            "molex/ejobticketmaster/get-cable-Details-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg${crimpFrom != "0" && crimpFrom != null ? "&crimpFrom=${crimpFrom.replaceAll("&", "%26")}" : ""}${crimpFrom != "0" && crimpFrom != null ? "&crimpTo=${crimpTo!.replaceAll("&", "%26")}" : ""}${wireCuttingSortNum != "0" && wireCuttingSortNum != null ? "&wireCuttingSortingNumber=$wireCuttingSortNum" : ""}"
+                .replaceAll("+", "%2b"))
+        : Uri.parse(baseUrl +
+            "molex/ejobticketmaster/get-cable-Details-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg &terminalPartNumberFrom=$terminalPartNumberFrom&terminalPartNumberTo=$terminalPartNumberTo"
+                .replaceAll("+", "%2b"));
     var response = await http.get(url);
-    print('Cable details status code ${response.statusCode}');
+    log('see Cable details url ${url.toString()}');
+    log('see Cable details result ${response.body}');
+
     if (response.statusCode == 200) {
-      GetCableDetail getCableDetails = getCableDetailFromJson(response.body);
-      CableDetails cableDetails = getCableDetails.data.findCableDetails;
-      return cableDetails;
+      try {
+        GetCableDetail getCableDetails = getCableDetailFromJson(response.body);
+        CableDetails cableDetails = getCableDetails.data.findCableDetails[0];
+        return cableDetails;
+      } catch (e) {
+        ErrorModel errorModel = errorModelFromJson(response.body);
+        Fluttertoast.showToast(
+          msg: "Error in fetching Cable Detail",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
     } else {
       return null;
     }
@@ -387,43 +416,127 @@ class ApiService {
       required String fgpartNo,
       required String length,
       required String color,
+      required bool isCrimping,
+      int? terminalPartNumberFrom,
+      int? terminalPartNumberTo,
+      String? crimpFrom,
+      String? crimpTo,
+      String? wireCuttingSortNum,
       required int awg}) async {
     //TODO variable in url
-    print("cable No TA : $cablepartno");
-    var url = Uri.parse(baseUrl +
-        "molex/ejobticketmaster/get-cable-terminalA-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg");
-    var response = await http.get(url);
-    log('Cable termianl A url molex/ejobticketmaster/get-cable-terminalA-bycableNo?cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg');
-    log('Cable termianl A status code ${response.statusCode}');
-    log('Cable termianl A status code ${response.body}');
-    if (response.statusCode == 200) {
-      GetCableTerminalA getCableTerminalA = getCableTerminalAFromJson(response.body);
-      CableTerminalA cableTerminalA = getCableTerminalA.data.findCableTerminalADto;
-      return cableTerminalA;
-    } else {
+    try {
+      var url = isCrimping
+          ? Uri.parse(baseUrl +
+              "molex/ejobticketmaster/get-cable-terminalA-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg${crimpFrom != "0" && crimpFrom != null ? "&crimpFrom=${crimpFrom.replaceAll("&", "%26")}" : ""}${crimpFrom != "0" && crimpFrom != null ? "&crimpTo=${crimpTo!.replaceAll("&", "%26")}" : ""}${terminalPartNumberFrom != null && terminalPartNumberFrom != 0 ? "&terminalPartNumberFrom=$terminalPartNumberFrom&terminalPartNumberTo=$terminalPartNumberTo" : ""}"
+                  .replaceAll("+", "%2b"))
+          : Uri.parse(baseUrl +
+              "molex/ejobticketmaster/get-cable-terminalA-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg${terminalPartNumberFrom != null && terminalPartNumberFrom != 0 ? "&terminalPartNumberFrom=$terminalPartNumberFrom&terminalPartNumberTo=$terminalPartNumberTo" : ""}"
+                  .replaceAll("+", "%2b"));
+      var response = await http.get(url);
+      print("cable No TA : $cablepartno");
+      log(' see Cable termianl A url ${url.toString()}');
+      log(' see Cable termianl A status code ${response.statusCode}');
+      log('see Cable termianl A status code ${response.body}');
+      if (response.statusCode == 200) {
+        GetCableTerminalA getCableTerminalA = getCableTerminalAFromJson(response.body);
+        List<CableTerminalA> cableAList = getCableTerminalA.data.findCableTerminalADto;
+        if (isCrimping) {
+          try {
+            CableTerminalA cableTerminalA = cableAList
+                .where((element) => element.terminalPart == terminalPartNumberFrom)
+                .toList()[0];
+            return cableTerminalA;
+          } catch (e) {
+            log("ebr" + e.toString());
+          }
+        }
+
+        if (wireCuttingSortNum != '0' && wireCuttingSortNum != null) {
+          try {
+            CableTerminalA cableTerminalA = cableAList
+                .where(
+                    (element) => element.wireCuttingSortingNumber == int.parse(wireCuttingSortNum))
+                .toList()[0];
+
+            return cableTerminalA;
+          } catch (e) {
+            //CableTerminalA cableTerminalA = getCableTerminalA.data.findCableTerminalADto[0];
+            CableTerminalA cableTerminalA = getCableTerminalA.data.findCableTerminalADto[0];
+            return cableTerminalA;
+          }
+        } else {
+          CableTerminalA cableTerminalA = getCableTerminalA.data.findCableTerminalADto[0];
+          return cableTerminalA;
+        }
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log(e.toString());
       return null;
     }
   }
 
   //CableTerminalB
-  Future<CableTerminalB> getCableTerminalB(
+  Future<CableTerminalB?> getCableTerminalB(
       {required String fgpartNo,
       required String cablepartno,
       required String length,
       required String color,
+      required bool isCrimping,
+      int? terminalPartNumberFrom,
+      int? terminalPartNumberTo,
+      String? crimpFrom,
+      String? crimpTo,
+      String? wireCuttingSortNum,
       required int awg}) async {
-    var url = Uri.parse(baseUrl +
-        'molex/ejobticketmaster/get-cable-terminalB-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg');
-    var response = await http.get(url, headers: headerList);
-    print('Cable termianl B status code ${response.statusCode}');
-    print('Cable termianl B body: ${response.body}');
-    if (response.statusCode == 200) {
-      GetCableTerminalB getCableTerminalB = getCableTerminalBFromJson(response.body);
-      CableTerminalB cableTerminalB = getCableTerminalB.data!.findCableTerminalBDto;
-      return cableTerminalB;
-    } else {
-      CableTerminalB cableTerminalB = new CableTerminalB();
-      return cableTerminalB;
+    try {
+      var url = isCrimping
+          ? Uri.parse(baseUrl +
+              'molex/ejobticketmaster/get-cable-terminalB-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg${crimpFrom != "0" && crimpFrom != null ? "&crimpFrom=${crimpFrom.replaceAll("&", "%26")}" : ""}${crimpFrom != "0" && crimpFrom != null ? "&crimpTo=${crimpTo!.replaceAll("&", "%26")}" : ""}${terminalPartNumberFrom != null && terminalPartNumberFrom != 0 ? "&terminalPartNumberFrom=$terminalPartNumberFrom&terminalPartNumberTo=$terminalPartNumberTo" : ""}'
+                  .replaceAll("+", "%2b"))
+          : Uri.parse(baseUrl +
+              'molex/ejobticketmaster/get-cable-terminalB-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg${terminalPartNumberFrom != null && terminalPartNumberFrom != 0 ? "&terminalPartNumberFrom=$terminalPartNumberFrom&terminalPartNumberTo=$terminalPartNumberTo" : ""}'
+                  .replaceAll("+", "%2b"));
+
+      var response = await http.get(url, headers: headerList);
+      print('Cable termianl B status code ${response.statusCode}');
+      print('Cable termianl B url ${url.toString()}');
+      print('Cable termianl B body: ${response.body}');
+      if (response.statusCode == 200) {
+        GetCableTerminalB getCableTerminalB = getCableTerminalBFromJson(response.body);
+        List<CableTerminalB> cableBList = getCableTerminalB.data.findCableTerminalBDto;
+        if (isCrimping) {
+          try {
+            CableTerminalB cableTerminalB = cableBList
+                .where((element) => element.terminalPart == terminalPartNumberTo)
+                .toList()[0];
+            return cableTerminalB;
+          } catch (e) {
+            log("ebr" + e.toString());
+          }
+        }
+        if (wireCuttingSortNum != '0' && wireCuttingSortNum != null) {
+          try {
+            CableTerminalB cableTerminalB = cableBList
+                .where(
+                    (element) => element.wireCuttingSortingNumber == int.parse(wireCuttingSortNum))
+                .toList()[0];
+            return cableTerminalB;
+          } catch (e) {
+            CableTerminalB cableTerminalB = getCableTerminalB.data.findCableTerminalBDto[0];
+            return cableTerminalB;
+          }
+        } else {
+          CableTerminalB cableTerminalB = getCableTerminalB.data.findCableTerminalBDto[0];
+          return cableTerminalB;
+        }
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log("ebr" + e.toString());
+      return null;
     }
   }
 
@@ -481,9 +594,10 @@ class ApiService {
   //TODO
   // Generate label request model POst method
   Future<GeneratedLabel?> postGeneratelabel(
-      PostGenerateLabel postGenerateLabel, String bundleQuantiy) async {
-    var url = Uri.parse(baseUrl + 'molex/wccr/generate-label/bdQty=$bundleQuantiy');
-    print('url generate label :${baseUrl + 'molex/wccr/generate-label/bdQty=$bundleQuantiy'}');
+      PostGenerateLabel postGenerateLabel, String bundleQuantiy, String uom) async {
+    var url = Uri.parse(baseUrl + 'molex/wccr/generate-label/bdQty=$bundleQuantiy/uom=$uom');
+    print(
+        'url generate label :${baseUrl + 'molex/wccr/generate-label/bdQty=$bundleQuantiy/uom=$uom'}');
     print('body generate label :${postGenerateLabelToJson(postGenerateLabel)} ');
     var response =
         await http.post(url, body: postGenerateLabelToJson(postGenerateLabel), headers: headerList);
@@ -572,15 +686,15 @@ class ApiService {
     log('post Transfer BIn to Location :${transferBinToLocationToJson(transferBinToLocationList)} ');
     var response = await http.post(url,
         body: transferBinToLocationToJson(transferBinToLocationList), headers: headerList);
-    print("status post Transfer Bin To Location ${response.statusCode}");
-    print("response post Transfer Bin to Location ${response.body}");
+    log("status post Transfer Bin To Location ${response.statusCode}");
+    log("response post Transfer Bin to Location ${response.body}");
     if (response.statusCode == 200) {
       try {
         List<BinTransferToLocationTracking> b =
             responseTransferBinToLocationFromJson(response.body).data.bundleTransferToBinTracking;
         return b;
       } catch (e) {
-        print("error");
+        print("error ${e}");
         ErrorTransferBinToLocation errorTransferBinToLocation =
             errorTransferBinToLocationFromJson(response.body);
         Fluttertoast.showToast(
@@ -616,7 +730,11 @@ class ApiService {
     var url = Uri.parse(baseUrl + 'molex/production-report/save-production-report');
     var response = await http.post(url,
         body: fullyCompleteModelToJson(postFullyComplete), headers: headerList);
-    log("Production Report Post status ${response.statusCode}");
+    log("Production Report Post status ${fullyCompleteModelToJson(postFullyComplete)}");
+    log("Production Report Post body ${response.body}");
+
+    log("Production Report Post status ${response.body}");
+
     log(fullyCompleteModelToJson(postFullyComplete));
     Fluttertoast.showToast(
       msg: "Production Report Post status ${response.statusCode}",
@@ -770,7 +888,7 @@ class ApiService {
     if (response.statusCode == 200) {
       GetCrimpingSchedule getCrimpingSchedule = getCrimpingScheduleFromJson(response.body);
       List<CrimpingSchedule> crimpingScheduleList = getCrimpingSchedule.data.crimpingBundleList;
-      log(" aa ${crimpingScheduleList}");
+      // log(" aa ${crimpingScheduleList}");
       return crimpingScheduleList;
     } else {
       return [];
@@ -798,26 +916,38 @@ class ApiService {
 
   //double crimp
   Future<List<EJobTicketMasterDetails>?> getDoubleCrimpDetail(
-      {required String fgNo, required String crimpType}) async {
-    var url = Uri.parse(baseUrl +
-        'molex/ejobticketmaster/get-ejob-detail/fg/$fgNo/crimp/$crimpType'); //change it bacl
+      {required String fgNo, required String crimpType, required String cablepart}) async {
+    var url = cablepart.length > 1
+        ? Uri.parse(
+            baseUrl + 'molex/ejobticketmaster/get-ejob-detail/fg/$fgNo/cablepart/$cablepart')
+        : Uri.parse(baseUrl +
+            'molex/ejobticketmaster/get-ejob-detail/fg/$fgNo/crimp/$crimpType'); //change it bacl
     log("double crimp url :${baseUrl + 'molex/ejobticketmaster/get-ejob-detail/fg/$fgNo/crimp/$crimpType'} ");
     //  var url = Uri.parse('http://justerp.in:8080/wipts/molex/ejobticketmaster/get-ejob-detail/fg/367500175/crimp/SP1(12+12+10)');
-    var response = await http.get(url);
-    print('Double crimp Ejob Detail Status: ${response.statusCode}');
-    print('Double crimp Ejob Detail body:${response.body}');
+    var response = await http.get(url, headers: {
+      "Content-Type": "application/json",
+      "Accept-Encoding": "gzip, deflate, br,*",
+      "Connection": "keep-alive",
+      "Keep-Alive": "timeout=0",
+      "transfer-encoding": "chunked",
+      "Accept": "*/*",
+    });
+    log('Double crimp Ejob URL : ${url.toString()}');
+    log('Double crimp Ejob Detail Status: ${response.statusCode}');
+    log('Double crimp Ejob Detail body:${response.body}');
     if (response.statusCode == 200) {
-      try {
-        DcEjobDetail ejobDetail = dcEjobDetailFromJson(response.body);
-        List<EJobTicketMasterDetails> listEjob = ejobDetail.data.eJobTicketMasterDetails;
-        if (listEjob.length > 0) {
-          return listEjob;
-        } else {
-          return [];
-        }
-      } catch (e) {
-        return null;
+      // try {
+      DcEjobDetail ejobDetail = dcEjobDetailFromJson(response.body);
+      List<EJobTicketMasterDetails> listEjob = ejobDetail.data.eJobTicketMasterDetails;
+      print(listEjob);
+      if (listEjob.length > 0) {
+        return listEjob;
+      } else {
+        return [];
       }
+      // } catch (e) {
+      //   return null;
+      // }
     } else {
       return null;
     }
@@ -880,17 +1010,33 @@ class ApiService {
   }
 
   //Get bundle Detail
-  Future<BundleData?> getBundleDetail(String bundleId) async {
-    var url = Uri.parse(baseUrl + 'molex/material-codinator/getbundle?bundleId=$bundleId');
-    var response = await http.get(url);
+  Future<BundlesRetrieved?> getBundleDetail(String bundleId) async {
+    PostgetBundleMaster postgetBundleMaster = PostgetBundleMaster(
+      binId: 0,
+      status: "",
+      bundleId: bundleId,
+      location: "",
+      finishedGoods: 0,
+      cablePartNumber: 0,
+      orderId: "",
+      scheduleId: 0,
+    );
+    // var url = Uri.parse(baseUrl + 'molex/material-codinator/getbundle?bundleId=$bundleId');
+
+    var url = Uri.parse(baseUrl + 'molex/bundlemaster/');
+    // var response = await http.post(url);
+    var response = await http.post(url,
+        body: postgetBundleMasterToJson(postgetBundleMaster), headers: headerList);
+    log("body:" + postgetBundleMasterToJson(postgetBundleMaster));
     print('Get Bundle Data status Code: ${response.statusCode}');
     print('Get Bundle Data  response body :${response.body}');
     if (response.statusCode == 200) {
       try {
-        GetBundleDetail getBundleDetail = getBundleDetailFromJson(response.body);
-        BundleData bundleDetail = getBundleDetail.data!.bundleData!;
-        return bundleDetail;
+        GetBundleListGl getBundleListGl = getBundleListGlFromJson(response.body);
+        BundlesRetrieved bundleList = getBundleListGl.data.bundlesRetrieved[0];
+        return bundleList;
       } catch (e) {
+        log(e.toString());
         return null;
       }
     } else {
@@ -907,16 +1053,34 @@ class ApiService {
     }
   }
 
-  Future<List<BundleDetail>?> getBundlesinBin(String binId) async {
-    var url =
-        Uri.parse(baseUrl + 'molex/material-codinator/material-codinator-ytbp-data?binId=$binId');
-    var response = await http.get(url);
-    log('Get Bundles From Bin status Code: ${response.statusCode}');
+  Future<List<BundlesRetrieved>?> getBundlesinBin(String binId) async {
+    PostgetBundleMaster postgetBundleMaster = PostgetBundleMaster(
+      binId: int.parse(binId),
+      status: "",
+      bundleId: '',
+      location: "",
+      finishedGoods: 0,
+      cablePartNumber: 0,
+      orderId: "",
+      scheduleId: 0,
+    );
+    var url = Uri.parse(baseUrl + 'molex/bundlemaster/');
+    var response = await http.post(url,
+        body: postgetBundleMasterToJson(postgetBundleMaster), headers: headerList);
+    log('Get Bundles From Bin status Code: ${postgetBundleMasterToJson(postgetBundleMaster)}');
     log('Get Bundles From Bin  response body :${response.body}');
     if (response.statusCode == 200) {
-      GetBinDetail getBinDetail = getBinDetailFromJson(response.body);
-      List<BundleDetail> bundleList = getBinDetail.data.materialCodinatorSchedulerData;
-      return bundleList;
+      try {
+        GetBundleListGl getBundleListGl = getBundleListGlFromJson(response.body);
+        List<BundlesRetrieved> bundleList = getBundleListGl.data.bundlesRetrieved;
+        return bundleList
+            .where(
+                (element) => element.bundleStatus.toLowerCase() == "Yet To Be Picked".toLowerCase())
+            .toList();
+      } catch (e) {
+        log(e.toString());
+        return null;
+      }
     } else {
       Fluttertoast.showToast(
         msg: "Get Bundles From Bin status Code: ${response.statusCode}",
@@ -951,6 +1115,7 @@ class ApiService {
 
         return bundleList;
       } catch (e) {
+        log("error1 " + e.toString());
         return [];
       }
     } else {
@@ -972,6 +1137,7 @@ class ApiService {
     var url = Uri.parse(baseUrl + 'molex/kitting/get-kitting-data');
     var response =
         await http.post(url, body: postKittingDataToJson(postKittingData), headers: headerList);
+    log('getkittingDetail bosy: ${postKittingDataToJson(postKittingData)}');
     log('getkittingDetail status Code: ${response.statusCode}');
     log('getkittingDetail Bin  response body :${response.body}');
     if (response.statusCode == 200) {
@@ -1084,6 +1250,49 @@ class ApiService {
         fontSize: 16.0,
       );
       return false;
+    }
+  }
+
+//preparation cable details
+//Get Cable Details
+  Future<List<CableDetails>?> getPreparationCableDetails(
+      {required String fgpartNo,
+      required String cablepartno,
+      required String length,
+      required String color,
+      required int awg,
+      required bool isCrimping,
+      int? terminalPartNumberFrom,
+      int? terminalPartNumberTo,
+      String? crimpFrom,
+      String? crimpTo,
+      String? wireCuttingSortNum}) async {
+    var url = Uri.parse(baseUrl +
+        "molex/ejobticketmaster/get-cable-Details-bycableNo?fgPartNo=$fgpartNo&cblPartNo=$cablepartno&length=$length&color=$color&awg=$awg&terminalPartNumberFrom=$terminalPartNumberFrom&terminalPartNumberTo=$terminalPartNumberTo"
+            .replaceAll("+", "%2b"));
+    var response = await http.get(url);
+    log('see Preparation Cable details url ${url.toString()}');
+    log('see Preparation  Cable details result ${response.body}');
+
+    if (response.statusCode == 200) {
+      try {
+        GetCableDetail getCableDetails = getCableDetailFromJson(response.body);
+        List<CableDetails> cableDetails = getCableDetails.data.findCableDetails;
+        return cableDetails;
+      } catch (e) {
+        ErrorModel errorModel = errorModelFromJson(response.body);
+        Fluttertoast.showToast(
+          msg: "Error in fetching Cable Detail",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    } else {
+      return null;
     }
   }
 }

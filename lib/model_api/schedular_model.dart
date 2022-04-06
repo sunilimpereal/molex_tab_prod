@@ -9,101 +9,104 @@ Schedular schedularFromJson(String str) => Schedular.fromJson(json.decode(str));
 String schedularToJson(Schedular data) => json.encode(data.toJson());
 
 class Schedular {
-    Schedular({
-       required this.status,
-       required this.statusMsg,
-       required this.errorCode,
-       required this.data,
-    });
+  Schedular({
+    required this.status,
+    required this.statusMsg,
+    required this.errorCode,
+    required this.data,
+  });
 
-    String status;
-    String statusMsg;
-    dynamic errorCode;
-    Data data;
+  String status;
+  String statusMsg;
+  dynamic errorCode;
+  Data data;
 
-    factory Schedular.fromJson(Map<String, dynamic> json) => Schedular(
+  factory Schedular.fromJson(Map<String, dynamic> json) => Schedular(
         status: json["status"],
         statusMsg: json["statusMsg"],
         errorCode: json["errorCode"],
         data: Data.fromJson(json["data"]),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "status": status,
         "statusMsg": statusMsg,
         "errorCode": errorCode,
         "data": data.toJson(),
-    };
+      };
 }
 
 class Data {
-    Data({
-        required this.employeeList,
-    });
+  Data({
+    required this.employeeList,
+  });
 
-    List<Schedule> employeeList;
+  List<Schedule> employeeList;
 
-    factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
         employeeList: List<Schedule>.from(json["Employee List "].map((x) => Schedule.fromJson(x))),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "Employee List ": List<dynamic>.from(employeeList.map((x) => x.toJson())),
-    };
+      };
 }
 
 class Schedule {
-    Schedule({
-      required  this.machineNumber,
-      required  this.currentTime,
-      required  this.shiftType,
-      required  this.currentDate,
-      required  this.machineName,
-      required  this.orderId,
-      required  this.finishedGoodsNumber,
-      required  this.scheduledId,
-      required  this.cablePartNumber,
-      required  this.length,
-      required  this.color,
-      required  this.scheduledQuantity,
-      required  this.scheduledStatus,
-      required  this.process,
-      required  this.awg,
-      required  this.shiftStart,
-      required  this.shiftEnd,
-      required  this.cableNumber,
-      required  this.actualQuantity,
-      required  this.shiftNumber,
-      required  this.startDate,
-      required  this.lengthTolerance,
-      required  this.route,
-    });
+  Schedule(
+      {required this.machineNumber,
+      required this.currentTime,
+      required this.shiftType,
+      required this.currentDate,
+      required this.machineName,
+      required this.orderId,
+      required this.finishedGoodsNumber,
+      required this.scheduledId,
+      required this.cablePartNumber,
+      required this.length,
+      required this.color,
+      required this.scheduledQuantity,
+      required this.scheduledStatus,
+      required this.process,
+      required this.awg,
+      required this.shiftStart,
+      required this.shiftEnd,
+      required this.cableNumber,
+      required this.actualQuantity,
+      required this.shiftNumber,
+      required this.startDate,
+      required this.lengthTolerance,
+      required this.route,
+      required this.terminalPartNumberFrom,
+      required this.terminalPartNumberTo});
 
-    dynamic machineNumber;
-    dynamic currentTime;
-    String shiftType;
-    DateTime currentDate;
-    dynamic machineName;
-    String orderId;
-    String finishedGoodsNumber;
-    String scheduledId;
-    String cablePartNumber;
-    String length;
-    String color;
-    String scheduledQuantity;
-    String scheduledStatus;
-    String process;
-    int awg;
-    String shiftStart;
-    String shiftEnd;
-    String cableNumber;
-    int actualQuantity;
-    int shiftNumber;
-    dynamic startDate;
-    String lengthTolerance;
-    String route;
+  dynamic machineNumber;
+  dynamic currentTime;
+  String shiftType;
+  DateTime currentDate;
+  dynamic machineName;
+  String orderId;
+  String finishedGoodsNumber;
+  String scheduledId;
+  String cablePartNumber;
+  String length;
+  String color;
+  String scheduledQuantity;
+  String scheduledStatus;
+  String process;
+  int awg;
+  String shiftStart;
+  String shiftEnd;
+  String cableNumber;
+  int actualQuantity;
+  int shiftNumber;
+  dynamic startDate;
+  String lengthTolerance;
+  String route;
+  int terminalPartNumberFrom;
+  int terminalPartNumberTo;
 
-    factory Schedule.fromJson(Map<String, dynamic> json) => Schedule(
+  factory Schedule.fromJson(Map<String, dynamic> json) => Schedule(
         machineNumber: json["machineNumber"],
         currentTime: json["currentTime"],
         shiftType: json["shiftType"],
@@ -127,13 +130,16 @@ class Schedule {
         startDate: json["startDate"],
         lengthTolerance: json["lengthTolerance"].toString().replaceAll("Â±", "±"),
         route: json["route"],
-    );
+        terminalPartNumberFrom: json["terminalPartNumberFrom"],
+        terminalPartNumberTo: json["terminalPartNumberTo"],
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "machineNumber": machineNumber,
         "currentTime": currentTime,
         "shiftType": shiftType,
-        "currentDate": "${currentDate!.year.toString().padLeft(4, '0')}-${currentDate!.month.toString().padLeft(2, '0')}-${currentDate!.day.toString().padLeft(2, '0')}",
+        "currentDate":
+            "${currentDate!.year.toString().padLeft(4, '0')}-${currentDate!.month.toString().padLeft(2, '0')}-${currentDate!.day.toString().padLeft(2, '0')}",
         "machineName": machineName,
         "orderId": orderId,
         "finishedGoodsNumber": finishedGoodsNumber,
@@ -153,7 +159,9 @@ class Schedule {
         "startDate": startDate,
         "lengthTolerance": lengthTolerance,
         "route": route,
-    };
+        "terminalPartNumberFrom": terminalPartNumberFrom,
+        "terminalPartNumberTo": terminalPartNumberTo,
+      };
 }
 
 

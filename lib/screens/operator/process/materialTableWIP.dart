@@ -4,7 +4,8 @@ import '../../../service/apiService.dart';
 
 class MaterialtableWIP extends StatefulWidget {
   MatTrkPostDetail matTrkPostDetail;
-  MaterialtableWIP({Key? key, required this.matTrkPostDetail})
+  Function(String) getUom;
+  MaterialtableWIP({Key? key, required this.matTrkPostDetail, required this.getUom})
       : super(key: key);
 
   @override
@@ -29,8 +30,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
       elevation: 2,
       shadowColor: Colors.white,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-          side: BorderSide(color: Colors.transparent)),
+          borderRadius: BorderRadius.circular(8.0), side: BorderSide(color: Colors.transparent)),
       child: Container(
         padding: EdgeInsets.all(4),
         decoration: BoxDecoration(
@@ -60,8 +60,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
           child: Center(
               child: Text(
             "$title",
-            style: TextStyle(
-                fontSize: 11, color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 11, color: Colors.white, fontWeight: FontWeight.bold),
           )),
         ),
       );
@@ -72,13 +71,11 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
       child: Material(
         elevation: 1,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
-            side: BorderSide(color: Colors.transparent)),
+            borderRadius: BorderRadius.circular(4.0), side: BorderSide(color: Colors.transparent)),
         child: Container(
           width: 320,
           decoration: BoxDecoration(
-              color: Colors.red.shade500,
-              borderRadius: BorderRadius.all(Radius.circular(4))),
+              color: Colors.red.shade500, borderRadius: BorderRadius.all(Radius.circular(4))),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -107,8 +104,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
           child: Container(
             width: MediaQuery.of(context).size.width * width,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(6)),
-                color: Colors.white),
+                borderRadius: BorderRadius.all(Radius.circular(6)), color: Colors.white),
             padding: EdgeInsets.all(5),
             child: Center(
                 child: Text(
@@ -136,13 +132,13 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
 
     ApiService apiService = new ApiService();
     return FutureBuilder(
-        future:
-            apiService.getMaterialTrackingCableDetail(widget.matTrkPostDetail),
+        future: apiService.getMaterialTrackingCableDetail(widget.matTrkPostDetail),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<MaterialDetail>? matList =
-                snapshot.data as List<MaterialDetail>?;
-
+            List<MaterialDetail>? matList = snapshot.data as List<MaterialDetail>?;
+            Future.delayed(Duration(seconds: 2)).then((value) {
+              widget.getUom(matList![0]?.uom ?? "");
+            });
             if (matList!.length > 0) {
               return Container(
                 width: 320,

@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:molex/model_api/rawMaterial_modal.dart';
+import 'package:molex/screens/operator%202/widgets/show_extra_crimpingSchedules.dart';
 import '../../../main.dart';
 import '../../../model_api/cableDetails_model.dart';
 import '../../../model_api/cableTerminalA_model.dart';
@@ -27,31 +29,40 @@ import '../../widgets/time.dart';
 import '../../widgets/timer.dart';
 import '../../../service/apiService.dart';
 
-
 class ProcessPage2 extends StatefulWidget {
   Employee employee;
   MachineDetails machine;
   CrimpingSchedule schedule;
   MatTrkPostDetail matTrkPostDetail;
+  List<RawMaterial> rawMaterial;
   //variables for schedule type
   String type;
   String sameMachine;
-  ProcessPage2(
-      {required this.schedule, required this.machine, required this.employee, required this.matTrkPostDetail,required this.sameMachine,required this.type,});
+  List<CrimpingSchedule> extraCrimpingSchedules;
+  ProcessPage2({
+    required this.schedule,
+    required this.machine,
+    required this.employee,
+    required this.matTrkPostDetail,
+    required this.sameMachine,
+    required this.type,
+    required this.extraCrimpingSchedules,
+    required this.rawMaterial,
+  });
   @override
   _ProcessPage2State createState() => _ProcessPage2State();
 }
 
 class _ProcessPage2State extends State<ProcessPage2> {
-  String ?_chosenValue;
-  String ?value;
+  String? _chosenValue;
+  String? value;
   bool scanTap = false;
   FocusNode scanBundleFocus = new FocusNode();
   List<BundleScan> bundleScan = [];
-  String ?scanId;
+  String? scanId;
   TextEditingController _scanIdController = new TextEditingController();
   bool orderDetailExpanded = true;
-  String ?rightside;
+  String? rightside;
   String output = '';
   String _output = '';
   String? mainb;
@@ -77,11 +88,8 @@ class _ProcessPage2State extends State<ProcessPage2> {
     ];
     log("schedule process: ${widget.schedule.process}");
     log("schedule process contains: ${items!.contains(widget.schedule.process)}");
-    _chosenValue = items!.contains(widget.schedule.process)
-        ? widget.schedule.process
-        : 'Crimp From & To';
-
-
+    _chosenValue =
+        items!.contains(widget.schedule.process) ? widget.schedule.process : 'Crimp From & To';
 
     getMethod(_chosenValue!);
     totalQuanity = widget.schedule.actualQuantity;
@@ -119,40 +127,38 @@ class _ProcessPage2State extends State<ProcessPage2> {
         bundltype = "multiple";
         method = 'a-b';
       }
-       if (value == "Double Crimp From") {
-         log("message");
+      if (value == "Double Crimp From") {
+        log("message");
         bundltype = "multiple";
         method = 'a';
       }
-       if (value == "Double Crimp To") {
+      if (value == "Double Crimp To") {
         bundltype = "multiple";
         method = 'b';
       }
-      
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
-       onWillPop: () async {
-          showDialog<bool>(
-            context: context,
-            builder: (c) => AlertDialog(
-              title: Text('Warning'),
-              content: Text('Do not use back button to exit'),
-              actions: [
-                // ignore: deprecated_member_use
-                FlatButton(
-                  child: Text('Ok'),
-                  onPressed: () => Navigator.pop(c, false),
-                ),
-              ],
-            ),
-          );
-          return false;
-        },
+      onWillPop: () async {
+        showDialog<bool>(
+          context: context,
+          builder: (c) => AlertDialog(
+            title: Text('Warning'),
+            content: Text('Do not use back button to exit'),
+            actions: [
+              // ignore: deprecated_member_use
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () => Navigator.pop(c, false),
+              ),
+            ],
+          ),
+        );
+        return false;
+      },
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -169,7 +175,31 @@ class _ProcessPage2State extends State<ProcessPage2> {
             color: Colors.red,
           ),
           actions: [
-            //machineID
+            widget.extraCrimpingSchedules
+                    .where((element) => element.scheduleId == widget.schedule.scheduleId)
+                    .toList()
+                    .isEmpty
+                ? Container()
+                : IconButton(
+                    icon: Container(
+                      child: Row(
+                        children: [
+                          Icon(Icons.align_horizontal_left),
+                          // Text(.al
+                          //   "Schedules",
+                          //   style: TextStyle(color: Colors.red),
+                          // ),
+                        ],
+                      ),
+                    ),
+                    onPressed: () {
+                      showExtraCrimpingSchedule(
+                        context: context,
+                        crimpingSchedules: widget.extraCrimpingSchedules,
+                        selectedSchedule: widget.schedule,
+                      );
+                    },
+                  ),
             Container(
               padding: EdgeInsets.all(1),
               child: Row(
@@ -190,8 +220,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
                               child: Icon(
                                 Icons.person,
                                 size: 18,
@@ -217,8 +246,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
                               child: Icon(
                                 Icons.settings,
                                 size: 18,
@@ -237,7 +265,6 @@ class _ProcessPage2State extends State<ProcessPage2> {
                 ],
               ),
             ),
-
             TimeDisplay(),
           ],
         ),
@@ -254,7 +281,12 @@ class _ProcessPage2State extends State<ProcessPage2> {
                         employee: widget.employee,
                         machine: widget.machine,
                       )),
-            );
+            ).then((value) {
+              log("received1");
+              setState(() {
+                widget.matTrkPostDetail = widget.matTrkPostDetail;
+              });
+            });
           },
           reloadmaterial: () {
             Navigator.push(
@@ -268,11 +300,13 @@ class _ProcessPage2State extends State<ProcessPage2> {
                   materialPickType: MaterialPickType.reload,
                   type: widget.type,
                   sameMachine: widget.sameMachine,
-
+                  extraCrimpingSchedules: widget.extraCrimpingSchedules,
                 ),
               ),
             );
-          }, homeReload: (){}, returnmaterial: (){}, 
+          },
+          homeReload: () {},
+          returnmaterial: () {},
         ),
         body: Container(
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -295,20 +329,20 @@ class _ProcessPage2State extends State<ProcessPage2> {
   }
 
   Widget mainBox(String main) {
-  
     if (main == "scanBundle") {
       return bundltype == "single"
           ? ScanBundle(
-              machineId: widget.machine.machineNumber??'',
+              machineId: widget.machine.machineNumber ?? '',
               userId: widget.employee.empId,
               schedule: widget.schedule,
               method: method,
               totalQuantity: totalQuanity,
               matTrkPostDetail: widget.matTrkPostDetail,
-              processName: _chosenValue??'',
+              processName: _chosenValue ?? '',
               processStarted: processStarted,
               type: widget.type,
               sameMachine: widget.sameMachine,
+              rawMaterial: widget.rawMaterial,
               reload: reload,
               transfer: () {
                 Navigator.push(
@@ -342,20 +376,20 @@ class _ProcessPage2State extends State<ProcessPage2> {
                 setState(() {
                   mainb = "partial";
                 });
-              }, 
+              },
             )
           : MultipleBundleScan(
-            machineId: widget.machine.machineNumber??'',
+              machineId: widget.machine.machineNumber ?? '',
               userId: widget.employee.empId,
               schedule: widget.schedule,
               method: method,
               totalQuantity: totalQuanity,
               matTrkPostDetail: widget.matTrkPostDetail,
-              processName: _chosenValue??'',
+              processName: _chosenValue ?? '',
               processStarted: processStarted,
               type: widget.type,
               sameMachine: widget.sameMachine,
-               updateQty: (value) {
+              updateQty: (value) {
                 log("QTYY : $value");
                 setState(() {
                   totalQuanity = value;
@@ -375,8 +409,8 @@ class _ProcessPage2State extends State<ProcessPage2> {
                 setState(() {
                   mainb = "partial";
                 });
-              }, 
-              process: _chosenValue??'Double Crimping',
+              },
+              process: _chosenValue ?? 'Double Crimping',
               reload: reload,
               transfer: () {
                 Navigator.push(
@@ -419,12 +453,11 @@ class _ProcessPage2State extends State<ProcessPage2> {
   }
 
   Widget terminal() {
-
     return Padding(
       padding: const EdgeInsets.only(bottom: 0.0),
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.18,
+        height: MediaQuery.of(context).size.height * 0.18166,
         // color: Colors.white,
         child: Row(
           mainAxisAlignment: widget.machine.category == "Automatic Cutting"
@@ -438,10 +471,15 @@ class _ProcessPage2State extends State<ProcessPage2> {
                 child: FutureBuilder(
                     future: apiService!.getCableTerminalA(
                         fgpartNo: "${widget.schedule.finishedGoods}",
-                        cablepartno:
-                            "${widget.schedule.cablePartNo.toString()}",
+                        cablepartno: "${widget.schedule.cablePartNo.toString()}",
                         length: "${widget.schedule.length}",
                         color: widget.schedule.wireColour,
+                        isCrimping: true,
+                        terminalPartNumberFrom: widget.schedule.terminalFrom,
+                        terminalPartNumberTo: widget.schedule.terminalTo,
+                        crimpFrom: widget.schedule.crimpFrom,
+                        crimpTo: widget.schedule.crimpTo,
+                        wireCuttingSortNum: widget.schedule.wireCuttingSortingNumber.toString(),
                         awg: int.parse(widget.schedule.awg ?? '0')),
                     builder: (context, snapshot) {
                       CableTerminalA? terminalA = snapshot.data as CableTerminalA?;
@@ -472,11 +510,17 @@ class _ProcessPage2State extends State<ProcessPage2> {
               padding: const EdgeInsets.all(0.0),
               child: FutureBuilder(
                   future: apiService!.getCableDetails(
+                      isCrimping: true,
                       fgpartNo: "${widget.schedule.finishedGoods}",
                       cablepartno: "${widget.schedule.cablePartNo}",
                       length: "${widget.schedule.length}",
                       color: widget.schedule.wireColour,
-                      awg: int.parse(widget.schedule.awg ?? '0')),
+                      awg: int.parse(
+                        widget.schedule.awg ?? '0',
+                      ),
+                      crimpFrom: widget.schedule.crimpFrom,
+                      crimpTo: widget.schedule.crimpTo,
+                      wireCuttingSortNum: widget.schedule.wireCuttingSortingNumber.toString()),
                   builder: (context, snapshot) {
                     CableDetails? cableDetail = snapshot.data as CableDetails?;
                     if (snapshot.hasData) {
@@ -504,10 +548,16 @@ class _ProcessPage2State extends State<ProcessPage2> {
               child: Container(
                 child: FutureBuilder(
                     future: apiService!.getCableTerminalB(
+                        isCrimping: true,
+                        crimpFrom: widget.schedule.crimpFrom,
+                        crimpTo: widget.schedule.crimpTo,
+                        wireCuttingSortNum: widget.schedule.wireCuttingSortingNumber.toString(),
                         fgpartNo: "${widget.schedule.finishedGoods}",
-                        cablepartno: "${widget.schedule.cablePartNo}" ??
-                            "${widget.schedule.finishedGoods}",
+                        cablepartno:
+                            "${widget.schedule.cablePartNo}" ?? "${widget.schedule.finishedGoods}",
                         length: "${widget.schedule.length}",
+                        terminalPartNumberFrom: widget.schedule.terminalFrom,
+                        terminalPartNumberTo: widget.schedule.terminalTo,
                         color: widget.schedule.wireColour,
                         awg: int.parse(widget.schedule.awg ?? '0')),
                     builder: (context, snapshot) {
@@ -540,13 +590,11 @@ class _ProcessPage2State extends State<ProcessPage2> {
     );
   }
 
-  Widget process(String p1, String p2, String p3, String p4, String p5,
-      double width, bool color) {
+  Widget process(String p1, String p2, String p3, String p4, String p5, double width, bool color) {
     return Material(
       elevation: 1,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-          side: BorderSide(color: Colors.transparent)),
+          borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent)),
       shadowColor: Colors.grey.shade100,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 2.0),
@@ -555,8 +603,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
           color: color ? Colors.red.shade50 : Colors.white,
-          border: Border.all(
-              width: 1.5, color: color ? Colors.red.shade500 : Colors.white),
+          border: Border.all(width: 1.5, color: color ? Colors.red.shade500 : Colors.white),
         ),
         child: Row(
           children: [
@@ -570,10 +617,8 @@ class _ProcessPage2State extends State<ProcessPage2> {
                       children: [
                         Text(
                           p1,
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: ''),
+                          style:
+                              TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: ''),
                         ),
                         SizedBox(width: 20),
                         Text(
@@ -592,11 +637,10 @@ class _ProcessPage2State extends State<ProcessPage2> {
                       child: Text(p4,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.red,
-                              fontFamily: fonts.openSans,
-                              fontWeight: FontWeight.bold,
-                            
+                            fontSize: 12,
+                            color: Colors.red,
+                            fontFamily: fonts.openSans,
+                            fontWeight: FontWeight.bold,
                           )),
                     ),
                     SizedBox(height: 4),
@@ -618,8 +662,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
     return Material(
       elevation: 1,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-          side: BorderSide(color: Colors.transparent)),
+          borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent)),
       shadowColor: Colors.grey.shade100,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 2.0),
@@ -627,9 +670,9 @@ class _ProcessPage2State extends State<ProcessPage2> {
         // width: MediaQuery.of(context).size.width * width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: color??false ? Colors.red.shade50 : Colors.white,
-          border: Border.all(
-              width: 1.5, color: color??false ? Colors.red.shade500 : Colors.white),
+          color: color ?? false ? Colors.red.shade50 : Colors.white,
+          border:
+              Border.all(width: 1.5, color: color ?? false ? Colors.red.shade500 : Colors.white),
         ),
         child: Row(
           children: [
@@ -643,10 +686,8 @@ class _ProcessPage2State extends State<ProcessPage2> {
                       children: [
                         Text(
                           "Cable",
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: ''),
+                          style:
+                              TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: ''),
                         ),
                         SizedBox(width: 20),
                         Text(
@@ -655,22 +696,25 @@ class _ProcessPage2State extends State<ProcessPage2> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 4),
-                    Text(
-                      "Cable Part Number(Description)",
-                      style: TextStyle(fontSize: 10),
+                    SizedBox(height: 1),
+                    Container(
+                      width: MediaQuery.of(context).size.width * width!,
+                      child: Text(
+                        "Cable Part Number(Description)(Crimp From)(Crimp To)(WireCutting Sorting Number)",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 10),
+                      ),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width * width!,
                       child: Text(
-                          "${cableDetails.cablePartNumber}(${cableDetails.description})",
+                          "${cableDetails.cablePartNumber}(${cableDetails.description})(${widget.schedule.crimpFrom})(${widget.schedule.crimpTo})(${widget.schedule.wireCuttingSortingNumber})",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.red,
-                              fontFamily: fonts.openSans,
-                              fontWeight: FontWeight.bold,
-                            
+                            fontSize: 11,
+                            color: Colors.red,
+                            fontFamily: fonts.openSans,
+                            fontWeight: FontWeight.bold,
                           )),
                     ),
                     SizedBox(height: 1),
@@ -683,8 +727,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
                             children: [
                               Text(
                                 "From Strip Length Spec(mm) :",
-                                style: TextStyle(
-                                    fontSize: 12, fontFamily: fonts.openSans),
+                                style: TextStyle(fontSize: 12, fontFamily: fonts.openSans),
                               ),
                               Text(
                                 "${cableDetails.stripLengthFrom} ",
@@ -701,8 +744,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
                             children: [
                               Text(
                                 "To Strip Length Spec(mm) :  ",
-                                style: TextStyle(
-                                    fontSize: 12, fontFamily: fonts.openSans),
+                                style: TextStyle(fontSize: 12, fontFamily: fonts.openSans),
                               ),
                               Text(
                                 "${cableDetails.stripLengthTo}",
@@ -728,8 +770,6 @@ class _ProcessPage2State extends State<ProcessPage2> {
   }
 
   Widget startProcess() {
-
-
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: Container(
@@ -770,8 +810,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
                                   width: 130,
                                   decoration: BoxDecoration(
                                       image: DecorationImage(
-                                          image: AssetImage(
-                                              "assets/image/$value.png"))),
+                                          image: AssetImage("assets/image/$value.png"))),
                                 ),
                               ),
                             ],
@@ -781,10 +820,8 @@ class _ProcessPage2State extends State<ProcessPage2> {
                     }).toList(),
                     hint: Text(
                       'Select Process',
-                      style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
+                      style:
+                          TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.w500),
                     ),
                     onChanged: (String? value) {
                       _chosenValue = value;
@@ -823,9 +860,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
                         Text(
                           _chosenValue!,
                           style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16),
+                              color: Colors.red, fontWeight: FontWeight.w600, fontSize: 16),
                         ),
                         SizedBox(
                           width: 6,
@@ -837,8 +872,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
                             width: 130,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: AssetImage(
-                                        "assets/image/$_chosenValue.png"))),
+                                    image: AssetImage("assets/image/$_chosenValue.png"))),
                           ),
                         ),
                       ],
@@ -884,8 +918,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
   Widget table() {
     ApiService apiService = new ApiService();
     return FutureBuilder(
-        future:
-            apiService.getMaterialTrackingCableDetail(widget.matTrkPostDetail),
+        future: apiService.getMaterialTrackingCableDetail(widget.matTrkPostDetail),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<MaterialDetail>? matList = snapshot.data as List<MaterialDetail>?;
@@ -895,8 +928,8 @@ class _ProcessPage2State extends State<ProcessPage2> {
                   Container(
                       width: MediaQuery.of(context).size.width * 0.48,
                       child: Column(children: [
-                        row('Part No.', 'UOM', 'REQUIRED', 'LOADED',
-                            'AVAILABLE', Colors.blue.shade100),
+                        row('Part No.', 'UOM', 'REQUIRED', 'LOADED', 'AVAILABLE',
+                            Colors.blue.shade100),
                         Container(
                           height: 63,
                           child: ListView.builder(
@@ -922,29 +955,21 @@ class _ProcessPage2State extends State<ProcessPage2> {
                           padding: const EdgeInsets.all(6.0),
                           child: ElevatedButton(
                               style: ButtonStyle(
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        side: BorderSide(
-                                            color: Colors.transparent))),
-                                backgroundColor:
-                                    MaterialStateProperty.resolveWith<Color>(
+                                        borderRadius: BorderRadius.circular(20.0),
+                                        side: BorderSide(color: Colors.transparent))),
+                                backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.pressed))
                                       return Colors.blue.shade200;
-                                    return Colors.blue.shade500
-                                        ; // Use the component's default.
+                                    return Colors.blue.shade500; // Use the component's default.
                                   },
                                 ),
-                                overlayColor:
-                                    MaterialStateProperty.resolveWith<Color>(
+                                overlayColor: MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.pressed))
-                                      return Colors.blue;
-                                    return Colors.blue
-                                        ; // Use the component's default.
+                                    if (states.contains(MaterialState.pressed)) return Colors.blue;
+                                    return Colors.blue; // Use the component's default.
                                   },
                                 ),
                               ),
@@ -975,8 +1000,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
                 width: MediaQuery.of(context).size.width * 0.48,
                 child: Column(
                   children: [
-                    row('Part No.', 'UOM', 'REQUIRED', 'LOADED', 'AVAILABLE',
-                        Colors.blue.shade100),
+                    row('Part No.', 'UOM', 'REQUIRED', 'LOADED', 'AVAILABLE', Colors.blue.shade100),
                     Text(
                       "no stock found",
                       style: TextStyle(color: Colors.black),
@@ -987,8 +1011,8 @@ class _ProcessPage2State extends State<ProcessPage2> {
         });
   }
 
-  Widget row(String partno, String uom, String require, String loaded,
-      String available, Color color) {
+  Widget row(
+      String partno, String uom, String require, String loaded, String available, Color color) {
     return Container(
       color: color,
       child: Row(children: [
@@ -996,15 +1020,14 @@ class _ProcessPage2State extends State<ProcessPage2> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-                decoration: BoxDecoration(
-                    border: Border.all(width: 0.5, color: Colors.grey.shade100)),
+                decoration:
+                    BoxDecoration(border: Border.all(width: 0.5, color: Colors.grey.shade100)),
                 height: 20,
                 width: MediaQuery.of(context).size.width * 0.1,
-                child: Center(
-                    child: Text(partno, style: TextStyle(fontSize: 12)))),
+                child: Center(child: Text(partno, style: TextStyle(fontSize: 12)))),
             Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.grey.shade100)),
+              decoration:
+                  BoxDecoration(border: Border.all(width: 0.5, color: Colors.grey.shade100)),
               height: 20,
               width: MediaQuery.of(context).size.width * 0.1,
               child: Center(
@@ -1015,8 +1038,8 @@ class _ProcessPage2State extends State<ProcessPage2> {
               ),
             ),
             Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.grey.shade100)),
+              decoration:
+                  BoxDecoration(border: Border.all(width: 0.5, color: Colors.grey.shade100)),
               height: 20,
               width: MediaQuery.of(context).size.width * 0.1,
               child: Center(
@@ -1027,8 +1050,8 @@ class _ProcessPage2State extends State<ProcessPage2> {
               ),
             ),
             Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.grey.shade100)),
+              decoration:
+                  BoxDecoration(border: Border.all(width: 0.5, color: Colors.grey.shade100)),
               height: 20,
               width: MediaQuery.of(context).size.width * 0.08,
               child: Center(
@@ -1039,8 +1062,8 @@ class _ProcessPage2State extends State<ProcessPage2> {
               ),
             ),
             Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.grey.shade100)),
+              decoration:
+                  BoxDecoration(border: Border.all(width: 0.5, color: Colors.grey.shade100)),
               height: 20,
               width: MediaQuery.of(context).size.width * 0.1,
               child: Center(

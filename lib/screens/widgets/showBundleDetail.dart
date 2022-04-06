@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:molex/model_api/process1/getBundleListGl.dart';
 
 import '../../model_api/crimping/bundleDetail.dart';
 import '../../service/apiService.dart';
@@ -115,22 +116,19 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                           Future.delayed(
                             const Duration(milliseconds: 50),
                             () {
-                              SystemChannels.textInput
-                                  .invokeMethod('TextInput.hide');
+                              SystemChannels.textInput.invokeMethod('TextInput.hide');
                             },
                           );
                         },
                         onTap: () {
                           _bundleController.clear();
                           setState(() {
-                            SystemChannels.textInput
-                                .invokeMethod('TextInput.hide');
+                            SystemChannels.textInput.invokeMethod('TextInput.hide');
                           });
                         },
                         onChanged: (value) {
                           setState(() {
-                            SystemChannels.textInput
-                                .invokeMethod('TextInput.hide');
+                            SystemChannels.textInput.invokeMethod('TextInput.hide');
                             bundleId = value;
                           });
                         },
@@ -139,25 +137,20 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                                 ? GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        SystemChannels.textInput
-                                            .invokeMethod('TextInput.hide');
+                                        SystemChannels.textInput.invokeMethod('TextInput.hide');
                                         _bundleController.clear();
                                       });
                                     },
-                                    child: Icon(Icons.clear,
-                                        size: 18, color: Colors.red))
+                                    child: Icon(Icons.clear, size: 18, color: Colors.red))
                                 : Container(),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.redAccent, width: 2.0),
+                              borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.grey.shade400, width: 2.0),
+                              borderSide: BorderSide(color: Colors.grey.shade400, width: 2.0),
                             ),
                             labelText: 'Scan Bundle',
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 5.0))),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 5.0))),
                   ),
                 ),
               ),
@@ -171,19 +164,15 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                       children: [
                         ElevatedButton(
                           style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(100.0),
-                                    side:
-                                        BorderSide(color: Colors.transparent))),
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
+                                    side: BorderSide(color: Colors.transparent))),
+                            backgroundColor: MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.pressed))
                                   return Colors.green.shade200;
-                                return Colors
-                                    .red.shade400; // Use the component's default.
+                                return Colors.red.shade400; // Use the component's default.
                               },
                             ),
                           ),
@@ -197,8 +186,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                             Future.delayed(
                               const Duration(milliseconds: 50),
                               () {
-                                SystemChannels.textInput
-                                    .invokeMethod('TextInput.hide');
+                                SystemChannels.textInput.invokeMethod('TextInput.hide');
                               },
                             );
                             if (_bundleController.text.length > 0) {
@@ -249,11 +237,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                   padding: const EdgeInsets.all(0.0),
                   child: Text(
                     "$title",
-                    style:  TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w400),
-                    
+                    style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w400),
                   ),
                 ),
               ],
@@ -265,13 +249,10 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                   padding: const EdgeInsets.all(0.0),
                   child: Text(
                     "$data",
-                    style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400),
-                    ),
+                    style:
+                        TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w400),
                   ),
-                
+                ),
               ],
             )
           ],
@@ -286,7 +267,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
           future: apiService.getBundleDetail(bundleId),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              BundleData? bundleData = snapshot.data as BundleData?;
+              BundlesRetrieved? bundleData = snapshot.data as BundlesRetrieved?;
               return Column(
                 children: [
                   Container(
@@ -304,20 +285,13 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                     children: [
                       Column(
                         children: [
-                          field(
-                              title: "Bundle ID",
-                              data: bundleData!.bundleIdentification??''),
-                          field(
-                              title: "Bundle Qty",
-                              data: bundleData.bundleQuantity.toString()),
-                          field(
-                              title: "Bundle Status",
-                              data: bundleData.bundleStatus??''),
+                          field(title: "Bundle ID", data: bundleData!.bundleIdentification ?? ''),
+                          field(title: "Bundle Qty", data: bundleData.bundleQuantity.toString()),
+                          field(title: "Bundle Status", data: bundleData.bundleStatus ?? ''),
                           field(
                               title: "Cut Length",
-                              data: bundleData.cutLengthSpecificationInmm
-                                  .toString()),
-                          field(title: "Color", data: bundleData.color??""),
+                              data: bundleData.cutLengthSpecificationInmm.toString()),
+                          field(title: "Color", data: bundleData.color ?? ""),
                         ],
                       ),
                       Column(
@@ -327,7 +301,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                               data: bundleData.cablePartNumber.toString()),
                           field(
                             title: "Cable part Description",
-                            data: bundleData.cablePartDescription??'',
+                            data: bundleData.cablePartDescription ?? '',
                           ),
                           field(
                             title: "Finished Goods",
@@ -335,11 +309,11 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                           ),
                           field(
                             title: "Order Id",
-                            data: bundleData.orderId??"",
+                            data: bundleData.orderId ?? "",
                           ),
                           field(
                             title: "Update From",
-                            data: bundleData.updateFromProcess??"",
+                            data: bundleData.updateFromProcess ?? "",
                           ),
                         ],
                       ),
@@ -347,7 +321,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                         children: [
                           field(
                             title: "Machine Id",
-                            data: bundleData.machineIdentification??'',
+                            data: bundleData.machineIdentification ?? '',
                           ),
                           field(
                             title: "Schedule ID",
@@ -363,7 +337,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                           ),
                           field(
                             title: "Location Id",
-                            data: bundleData.locationId??'',
+                            data: bundleData.locationId ?? '',
                           ),
                         ],
                       ),
@@ -396,18 +370,13 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                                 width: 150,
                                 child: ElevatedButton(
                                   style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
+                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(100.0),
-                                            side: BorderSide(
-                                                color: Colors.transparent))),
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color>(
+                                            borderRadius: BorderRadius.circular(100.0),
+                                            side: BorderSide(color: Colors.transparent))),
+                                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                       (Set<MaterialState> states) {
-                                        if (states
-                                            .contains(MaterialState.pressed))
+                                        if (states.contains(MaterialState.pressed))
                                           return Colors.green.shade200;
                                         return Colors.red.shade400; // Use the component's default.
                                       },

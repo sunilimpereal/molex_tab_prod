@@ -48,7 +48,7 @@ dependencies:
   motion_toast: ^1.1.0
   clay_containers: ^0.3.2
   input_with_keyboard_control: ^1.0.8
-  visibility_detector: ^0.2.0
+  visibility_detector: ^0.2.2
   syncfusion_flutter_datepicker: ^19.2.59
   jiffy: ^4.1.0
   

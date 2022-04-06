@@ -9,110 +9,112 @@ GetBundleListGl getBundleListGlFromJson(String str) => GetBundleListGl.fromJson(
 String getBundleListGlToJson(GetBundleListGl data) => json.encode(data.toJson());
 
 class GetBundleListGl {
-    GetBundleListGl({
-        required this.status,
-        required this.statusMsg,
-        this.errorCode,
-        required this.data,
-    });
+  GetBundleListGl({
+    required this.status,
+    required this.statusMsg,
+    this.errorCode,
+    required this.data,
+  });
 
-    String status;
-    String statusMsg;
-    dynamic errorCode;
-    Data data;
+  String status;
+  String statusMsg;
+  dynamic errorCode;
+  Data data;
 
-    factory GetBundleListGl.fromJson(Map<String, dynamic> json) => GetBundleListGl(
+  factory GetBundleListGl.fromJson(Map<String, dynamic> json) => GetBundleListGl(
         status: json["status"],
         statusMsg: json["statusMsg"],
         errorCode: json["errorCode"],
         data: Data.fromJson(json["data"]),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "status": status,
         "statusMsg": statusMsg,
         "errorCode": errorCode,
         "data": data.toJson(),
-    };
+      };
 }
 
 class Data {
-    Data({
-        required this.bundlesRetrieved,
-    });
+  Data({
+    required this.bundlesRetrieved,
+  });
 
-    List<BundlesRetrieved> bundlesRetrieved;
+  List<BundlesRetrieved> bundlesRetrieved;
 
-    factory Data.fromJson(Map<String, dynamic> json) => Data(
-        bundlesRetrieved: List<BundlesRetrieved>.from(json[" Bundles Retrieved "].map((x) => BundlesRetrieved.fromJson(x))),
-    );
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
+        bundlesRetrieved: List<BundlesRetrieved>.from(
+            json[" Bundles Retrieved "].map((x) => BundlesRetrieved.fromJson(x))),
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         " Bundles Retrieved ": List<dynamic>.from(bundlesRetrieved.map((x) => x.toJson())),
-    };
+      };
 }
 
 class BundlesRetrieved {
-    BundlesRetrieved({
-       required this.id,
-       required this.bundleIdentification,
-       required this.scheduledId,
-       required this.bundleCreationTime,
-       required this.bundleUpdateTime,
-       required this.bundleQuantity,
-       required this.machineIdentification,
-       required this.operatorIdentification,
-       required this.finishedGoodsPart,
-       required this.cablePartNumber,
-       required this.cablePartDescription,
-       required this.cutLengthSpecificationInmm,
-       required this.color,
-       required this.bundleStatus,
-       required this.binId,
-       required this.locationId,
-       required this.orderId,
-       required this.updateFromProcess,
-       required this.awg,
-       required this.crimpFromSchId,
-       required this.crimpToSchId,
-       required this.preparationCompleteFlag,
-       required this.viCompleted,
-    });
+  BundlesRetrieved({
+    required this.id,
+    required this.bundleIdentification,
+    required this.scheduledId,
+    required this.bundleCreationTime,
+    required this.bundleUpdateTime,
+    required this.bundleQuantity,
+    required this.machineIdentification,
+    required this.operatorIdentification,
+    required this.finishedGoodsPart,
+    required this.cablePartNumber,
+    required this.cablePartDescription,
+    required this.cutLengthSpecificationInmm,
+    required this.color,
+    required this.bundleStatus,
+    required this.binId,
+    required this.locationId,
+    required this.orderId,
+    required this.updateFromProcess,
+    required this.awg,
+    required this.crimpFromSchId,
+    required this.crimpToSchId,
+    required this.preparationCompleteFlag,
+    required this.viCompleted,
+  });
 
-    int id;
-    String bundleIdentification;
-    int scheduledId;
-    DateTime bundleCreationTime;
-    dynamic bundleUpdateTime;
-    int bundleQuantity;
-    String machineIdentification;
-    String operatorIdentification;
-    int finishedGoodsPart;
-    int cablePartNumber;
-    dynamic cablePartDescription;
-    int cutLengthSpecificationInmm;
-    String color;
-    String bundleStatus;
-    int binId;
-    String locationId;
-    String orderId;
-    String updateFromProcess;
-    String awg;
-     String crimpFromSchId;
-    String crimpToSchId;
-    String preparationCompleteFlag;
-    String viCompleted;
+  int id;
+  String bundleIdentification;
+  int scheduledId;
+  dynamic bundleCreationTime;
+  dynamic bundleUpdateTime;
+  int bundleQuantity;
+  String machineIdentification;
+  String operatorIdentification;
+  int finishedGoodsPart;
+  int cablePartNumber;
+  dynamic cablePartDescription;
+  int cutLengthSpecificationInmm;
+  String color;
+  String bundleStatus;
+  int binId;
+  String locationId;
+  String orderId;
+  String updateFromProcess;
+  String awg;
+  String crimpFromSchId;
+  String crimpToSchId;
+  String preparationCompleteFlag;
+  String viCompleted;
 
-
-    factory BundlesRetrieved.fromJson(Map<String, dynamic> json) => BundlesRetrieved(
+  factory BundlesRetrieved.fromJson(Map<String, dynamic> json) => BundlesRetrieved(
         id: json["id"],
-        bundleIdentification: json["bundleIdentification"],
+        bundleIdentification: json["bundleIdentification"]
+            .toString(), //TODO: bundel id changed from string to interger // Not notified
         scheduledId: json["scheduledId"],
-        bundleCreationTime: DateTime.parse(json["bundleCreationTime"]),
+        bundleCreationTime: json["bundleCreationTime"],
         bundleUpdateTime: json["bundleUpdateTime"],
         bundleQuantity: json["bundleQuantity"],
         machineIdentification: json["machineIdentification"],
-        operatorIdentification: json["operatorIdentification"] == null ? null : json["operatorIdentification"],
+        operatorIdentification:
+            json["operatorIdentification"] == null ? null : json["operatorIdentification"],
         finishedGoodsPart: json["finishedGoodsPart"],
         cablePartNumber: json["cablePartNumber"],
         cablePartDescription: json["cablePartDescription"],
@@ -124,17 +126,18 @@ class BundlesRetrieved {
         orderId: json["orderId"],
         updateFromProcess: json["updateFromProcess"],
         awg: json["awg"],
-         crimpFromSchId: json["crimpFromSchId"],
+        crimpFromSchId: json["crimpFromSchId"],
         crimpToSchId: json["crimpToSchId"],
         preparationCompleteFlag: json["preparationCompleteFlag"],
         viCompleted: json["viCompleted"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "bundleIdentification": bundleIdentification,
         "scheduledId": scheduledId,
-        "bundleCreationTime": "${bundleCreationTime!.year.toString().padLeft(4, '0')}-${bundleCreationTime!.month.toString().padLeft(2, '0')}-${bundleCreationTime!.day.toString().padLeft(2, '0')}",
+        "bundleCreationTime":
+            "${bundleCreationTime!.year.toString().padLeft(4, '0')}-${bundleCreationTime!.month.toString().padLeft(2, '0')}-${bundleCreationTime!.day.toString().padLeft(2, '0')}",
         "bundleUpdateTime": bundleUpdateTime,
         "bundleQuantity": bundleQuantity,
         "machineIdentification": machineIdentification,
@@ -154,7 +157,5 @@ class BundlesRetrieved {
         "crimpToSchId": crimpToSchId,
         "preparationCompleteFlag": preparationCompleteFlag,
         "viCompleted": viCompleted,
-    };
+      };
 }
-
-

@@ -26,8 +26,7 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
       padding: const EdgeInsets.all(3.0),
       child: Material(
         elevation: 10,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(22.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22.0)),
         clipBehavior: Clip.antiAlias, // Add This
         shadowColor: Colors.white70,
         child: Container(
@@ -66,29 +65,29 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
           children: [
             Row(
               children: [
-                Text(
-                  heading,
-                  style:  TextStyle(
-                    fontSize: 11,
-                    color: Colors.grey.shade500,
-                    fontWeight: FontWeight.normal,
-                  )),
-                
+                Text(heading,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey.shade500,
+                      fontWeight: FontWeight.normal,
+                    )),
               ],
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 1.0),
               child: Row(
-                children: [
-                  Text(
-                    "${value }",
-                    style:
-                          TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
+                  children: [
+                    Container(
+                      width: width,
+                      child: Text(
+                        "${value}",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
+                      ),
                     ),
-
-                ],
-              ),
-            )
+                  ],
+                ),
+              )
           ],
         ),
       ),
@@ -98,43 +97,27 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
   Widget scheduleDetail() {
     return Container(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-          
-            feild(
-                heading: "Order Id",
-                value: widget.schedule.orderId.toString(),
-                width: 0.1),
-            feild(
-                heading: "FG Part",
-                value: widget.schedule.finishedGoodsNumber.toString(),
-                width: 0.1),
-            feild(
-                heading: "Schedule ID",
-                value: widget.schedule.scheduledId.toString(),
-                width: 0.1),
-            feild(
-                heading: "Cable Part No.",
-                value: widget.schedule.cablePartNumber.toString(),
-                width: 0.10),
-            feild(
-                heading: "Process",
-                value: widget.schedule.process.toString(),
-                width: 0.18),
-            feild(
-                heading: "Cut Length",
-                value: "${widget.schedule.length}".toString(),
-                width: 0.07),
-            feild(heading: "Color", value: "${widget.schedule.color.toString()}", width: 0.06),
-            // feild(
-            //     heading: "Scheduled Qty",
-            //     value: "${widget.schedule.scheduledQuantity.toString()??''}",
-            //     width: 0.1),
-            // feild(heading: "Schedule", value: "null", width: 0.1)
-          ],
-        ));
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        feild(heading: "Order Id", value: widget.schedule.orderId.toString(), width: 0.1),
+        feild(
+            heading: "FG Part", value: widget.schedule.finishedGoodsNumber.toString(), width: 0.1),
+        feild(heading: "Schedule ID", value: widget.schedule.scheduledId.toString(), width: 0.1),
+        feild(
+            heading: "Cable Part No.",
+            value: widget.schedule.cablePartNumber.toString(),
+            width: 0.10),
+        feild(heading: "Process", value: widget.schedule.process.toString(), width: 0.18),
+        feild(heading: "Cut Length", value: "${widget.schedule.length}".toString(), width: 0.07),
+        feild(heading: "Color", value: "${widget.schedule.color.toString()}", width: 0.06),
+        // feild(
+        //     heading: "Scheduled Qty",
+        //     value: "${widget.schedule.scheduledQuantity.toString()??''}",
+        //     width: 0.1),
+        // feild(heading: "Schedule", value: "null", width: 0.1)
+      ],
+    ));
   }
-
 
   Widget fGTable() {
     Widget boxes(
@@ -154,10 +137,7 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
               style: TextStyle(fontSize: 10),
             ),
             Text(str2,
-                style: TextStyle(
-                    fontWeight: FontWeight.w300,
-                    fontSize: 12,
-                    color: Colors.black)),
+                style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12, color: Colors.black)),
           ]),
         ),
       );
@@ -166,8 +146,7 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
     return Padding(
         padding: const EdgeInsets.all(0.0),
         child: FutureBuilder(
-            future:
-                apiService.getFgDetails(widget.schedule.finishedGoodsNumber??''),
+            future: apiService.getFgDetails(widget.schedule.finishedGoodsNumber ?? ''),
             builder: (context, snapshot) {
               print('fg number ${widget.schedule.finishedGoodsNumber}');
               FgDetails? fgDetail = snapshot.data as FgDetails?;
@@ -176,31 +155,23 @@ class _P3ScheduleDetailWIPState extends State<P3ScheduleDetailWIP> {
                     width: MediaQuery.of(context).size.width,
                     height: 50,
                     // color: Colors.grey.shade200,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          feild(
-                              heading: "FG Description",
-                              value: "${fgDetail!.fgDescription}",
-                              width: 0.33),
-                          feild(
-                              heading: "FG Scheduled Date",
-                              value: "${fgDetail.fgScheduleDate??''}",
-                              width: 0.12),
-                          feild(
-                              heading: "Customer",
-                              value: "${fgDetail.customer}",
-                              width: 0.15),
-                          feild(heading: "Drg Rev", value:"${fgDetail.drgRev}", width: 0.05),
-                          feild(
-                              heading: "Cable Serial No",
-                              value: "${fgDetail.cableSerialNo.toString()}" ,
-                              width: 0.09),
-                          feild(
-                              heading: 'Tolerance ',
-                              value: '${fgDetail.tolrance}',
-                              width: 0.1),
-                        ]));
+                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                      feild(
+                          heading: "FG Description",
+                          value: "${fgDetail!.fgDescription}",
+                          width: 0.33),
+                      feild(
+                          heading: "FG Scheduled Date",
+                          value: "${fgDetail.fgScheduleDate ?? ''}",
+                          width: 0.12),
+                      feild(heading: "Customer", value: "${fgDetail.customer}", width: 0.15),
+                      feild(heading: "Drg Rev", value: "${fgDetail.drgRev}", width: 0.05),
+                      feild(
+                          heading: "Cable Serial No",
+                          value: "${fgDetail.cableSerialNo.toString()}",
+                          width: 0.09),
+                      feild(heading: 'Tolerance ', value: '${fgDetail.tolrance}', width: 0.1),
+                    ]));
               } else {
                 return Container();
               }

@@ -16,7 +16,9 @@ class ProcessTimer extends StatefulWidget {
 class Process_TimerState extends State<ProcessTimer> {
   late DateTime startTime;
   late DateTime endTime;
+  bool timer = true;
   Duration timeRemaining = Duration(seconds: 30);
+  bool properFormat = true;
   updateTime() {
     Timer.periodic(Duration(seconds: 30), (timer) {
       setState(() {
@@ -29,21 +31,32 @@ class Process_TimerState extends State<ProcessTimer> {
 
   @override
   void initState() {
-    log("rad" + widget.endTime);
-    startTime = DateTime.now();
-    log("rad" + widget.endTime.substring(3, 5));
-    endTime = DateTime(
-        DateTime.now().year,
-        DateTime.now().month,
-        DateTime.now().day,
-        int.parse(widget.endTime.substring(0, 2)),
-        int.parse(widget.endTime.substring(3, 5)));
-    widget.startTime = DateTime.now();
-    timeRemaining = endTime.difference(DateTime.now());
+    try {
+      log("rad" + widget.endTime);
+      startTime = DateTime.now();
+      log("rad" + widget.endTime.substring(3, 5));
+      endTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day,
+          int.parse(widget.endTime.substring(0, 2)), int.parse(widget.endTime.substring(3, 5)));
+      widget.startTime = DateTime.now();
+      timeRemaining = endTime.difference(DateTime.now());
+      timer ? updateTime() : null;
+    } catch (e) {
+      setState(() {
+        properFormat = false;
+      });
+    }
+
     super.initState();
-    updateTime();
   }
+
   // "14:45:00"
+  @override
+  void dispose() {
+    setState(() {
+      timer = false;
+    });
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +66,11 @@ class Process_TimerState extends State<ProcessTimer> {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(
-            color: timeRemaining.toString().contains("-")
+            color: !properFormat
                 ? Colors.red
-                : Colors.green,
+                : timeRemaining.toString().contains("-")
+                    ? Colors.red
+                    : Colors.green,
           )),
       child: Container(
         padding: EdgeInsets.all(4),
@@ -64,13 +79,19 @@ class Process_TimerState extends State<ProcessTimer> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                startTimeWidget(),
-                timeLeft(),
-              ],
-            ),
+            !properFormat
+                ? Container(
+                    child: Center(
+                      child: Text("Invalid Time Format"),
+                    ),
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      startTimeWidget(),
+                      timeLeft(),
+                    ],
+                  ),
           ],
         ),
       ),
@@ -134,21 +155,16 @@ class Process_TimerState extends State<ProcessTimer> {
               Icon(
                 Icons.timer_rounded,
                 size: 14,
-                color: timeRemaining.toString().contains("-")
-                    ? Colors.red
-                    : Colors.green,
+                color: timeRemaining.toString().contains("-") ? Colors.red : Colors.green,
               ),
               SizedBox(
                 width: 4,
               ),
               Text(
-                "${timeRemaining.toString().contains("-")?timeRemaining.toString().substring(0,5):timeRemaining.toString().substring(0,4)}",
-
+                "${timeRemaining.toString().contains("-") ? timeRemaining.toString().substring(0, 5) : timeRemaining.toString().substring(0, 4)}",
                 // "${timeRemaining.inHours}:${(timeRemaining.inMinutes % 60)}",
                 style: TextStyle(
-                  color: timeRemaining.toString().contains("-")
-                      ? Colors.red
-                      : Colors.green,
+                  color: timeRemaining.toString().contains("-") ? Colors.red : Colors.green,
                   fontSize: 18,
                 ),
               )

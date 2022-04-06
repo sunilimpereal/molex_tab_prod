@@ -14,15 +14,21 @@ class CrimpingScheduleDataRow extends StatefulWidget {
   CrimpingSchedule schedule;
   Employee employee;
   MachineDetails machine;
-    //variables for schedule type
+  //variables for schedule type
   String type;
   String sameMachine;
-
-  CrimpingScheduleDataRow({ required this.schedule,required this.machine,required this.employee,required this.sameMachine,required this.type}) : super();
+  List<CrimpingSchedule> extraCrimpingSchedules;
+  CrimpingScheduleDataRow({
+    required this.schedule,
+    required this.machine,
+    required this.employee,
+    required this.sameMachine,
+    required this.type,
+    required this.extraCrimpingSchedules,
+  }) : super();
 
   @override
-  _CrimpingScheduleDataRowState createState() =>
-      _CrimpingScheduleDataRowState();
+  _CrimpingScheduleDataRowState createState() => _CrimpingScheduleDataRowState();
 }
 
 class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
@@ -42,8 +48,7 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
       child: Material(
         elevation: 1,
         shadowColor: Colors.white,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 50,
@@ -56,9 +61,31 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
                 // orderId
                 cell('${widget.schedule.purchaseOrder}', 0.065),
                 //Fg Part
-                cell('${widget.schedule.finishedGoods}', 0.065),
+                cell('${widget.schedule.finishedGoods}', 0.068),
                 //Schudule ID
-                cell('${widget.schedule.scheduleId}', 0.065),
+                Tooltip(
+                    showDuration: const Duration(seconds: 2),
+                    waitDuration: const Duration(seconds: 1),
+                    message: "${widget.machine.machineNumber}",
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.07,
+                      height: 34,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              widget.schedule.scheduleId.toString(),
+                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                            ),
+                            // Text(
+                            //   widget.schedule ?? '',
+                            //   style: TextStyle(fontSize: 9, fontWeight: FontWeight.w500),
+                            // ),
+                          ],
+                        ),
+                      ),
+                    )),
                 //Cable Part
                 cell('${widget.schedule.cablePartNo}', 0.065),
                 //Process
@@ -67,7 +94,22 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
                 // Cut length
                 cell('${widget.schedule.length}', 0.06),
                 //Color2
-                cell('${widget.schedule.wireColour}', 0.05),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.07,
+                  height: 34,
+                  child: Column(
+                    children: [
+                      Text(
+                        'WC : ${widget.schedule.wireColour}',
+                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+                      ),
+                      Text(
+                        'CC : ${widget.schedule.crimpColor}',
+                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
                 //Bin Id
                 cell('${widget.schedule.awg}', 0.03),
                 // Total bundles
@@ -75,8 +117,7 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
                 //Total Bundle Qty
                 cell("${widget.schedule.bundleQuantityTotal}", 0.07),
                 cell(
-                    "${widget.schedule.actualQuantity}/${widget.schedule.schdeuleQuantity}",
-                    0.085),
+                    "${widget.schedule.actualQuantity}/${widget.schedule.schdeuleQuantity}", 0.085),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.07,
                   child: Column(
@@ -84,13 +125,11 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
                     children: [
                       Text(
                         "${widget.schedule.shiftType}",
-                        style: TextStyle(
-                            fontSize: 11, fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
                       ),
                       Text(
                         "No : ${widget.schedule.shiftNumber}",
-                        style: TextStyle(
-                            fontSize: 11, fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
                       )
                     ],
                   ),
@@ -107,8 +146,7 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
                           Text(
                             widget.schedule.scheduleDate == null
                                 ? ""
-                                : DateFormat("dd-MM-yyyy")
-                                    .format(widget.schedule.scheduleDate),
+                                : DateFormat("dd-MM-yyyy").format(widget.schedule.scheduleDate),
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.black,
@@ -145,8 +183,7 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.1,
                   height: 45,
-                  child: widget.schedule.schedulestatus.toLowerCase() ==
-                          "Complete".toLowerCase()
+                  child: widget.schedule.schedulestatus.toLowerCase() == "Complete".toLowerCase()
                       ? Center(child: Text("-"))
                       : Padding(
                           padding: const EdgeInsets.all(0.0),
@@ -156,81 +193,68 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
                               padding: const EdgeInsets.all(4.0),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  primary: widget.schedule.schedulestatus
-                                              .toLowerCase() ==
+                                  primary: widget.schedule.schedulestatus.toLowerCase() ==
                                           "Partially Completed".toLowerCase()
                                       ? Colors.green.shade500
                                       : Colors.green.shade500,
                                 ),
-                                child:loading?Container(
-                                    width: 30,
-                                    height: 30,
-                                    child: CircularProgressIndicator(
-                                       valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                Colors.white),
-
-                                    ),
-                                ) :Container(
-                                    child: widget.schedule.schedulestatus
-                                                    .toLowerCase() ==
-                                                "Allocated".toLowerCase() ||
-                                            widget.schedule.schedulestatus
-                                                    .toLowerCase() ==
-                                                "Open".toLowerCase() ||
-                                            widget.schedule.schedulestatus ==
-                                                null
-                                        ? Text(
-                                            "Accept",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500),
-                                          )
-                                        : widget.schedule.schedulestatus
-                                                        .toLowerCase() ==
-                                                    "Pending".toLowerCase() ||
-                                                widget.schedule.schedulestatus
-                                                        .toLowerCase() ==
-                                                    "Partially Completed"
-                                                        .toLowerCase() ||
-                                                widget.schedule.schedulestatus
-                                                        .toLowerCase() ==
-                                                    "Started".toLowerCase()
+                                child: loading
+                                    ? Container(
+                                        width: 30,
+                                        height: 30,
+                                        child: CircularProgressIndicator(
+                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                        ),
+                                      )
+                                    : Container(
+                                        child: widget.schedule.schedulestatus.toLowerCase() ==
+                                                    "Allocated".toLowerCase() ||
+                                                widget.schedule.schedulestatus.toLowerCase() ==
+                                                    "Open".toLowerCase() ||
+                                                widget.schedule.schedulestatus == null
                                             ? Text(
-                                                'Continue',
+                                                "Accept",
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w500),
+                                                    fontWeight: FontWeight.w500),
                                               )
-                                            : Text('')),
+                                            : widget.schedule.schedulestatus.toLowerCase() ==
+                                                        "Pending".toLowerCase() ||
+                                                    widget.schedule.schedulestatus.toLowerCase() ==
+                                                        "Partially Completed".toLowerCase() ||
+                                                    widget.schedule.schedulestatus.toLowerCase() ==
+                                                        "Started".toLowerCase()
+                                                ? Text(
+                                                    'Continue',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 12,
+                                                        fontWeight: FontWeight.w500),
+                                                  )
+                                                : Text('')),
                                 onPressed: loading
                                     ? () {}
                                     : () async {
-                                      setState(() {
-                                                                              loading = true;
-                                                                            });
+                                        setState(() {
+                                          loading = true;
+                                        });
                                         // After [onPressed], it will trigger animation running backwards, from end to beginning
                                         PostStartProcessP1 postStartprocess =
                                             new PostStartProcessP1(
-                                          cablePartNumber:
-                                              "${widget.schedule.cablePartNo ?? "0"}",
+                                          cablePartNumber: "${widget.schedule.cablePartNo ?? "0"}",
                                           color: widget.schedule.wireColour,
                                           finishedGoodsNumber:
                                               "${widget.schedule.finishedGoods ?? "0"}",
                                           lengthSpecificationInmm:
                                               "${widget.schedule.length ?? "0"}",
-                                          machineIdentification:
-                                              widget.machine.machineNumber,
+                                          machineIdentification: widget.machine.machineNumber,
                                           orderIdentification:
                                               "${widget.schedule.purchaseOrder ?? "0"}",
                                           scheduledIdentification:
                                               "${widget.schedule.scheduleId ?? "0"}",
-                                          scheduledQuantity: widget
-                                                  .schedule.schdeuleQuantity ??
-                                              "0",
+                                          scheduledQuantity:
+                                              widget.schedule.schdeuleQuantity ?? "0",
                                           scheduleStatus: "started",
                                         );
                                         Fluttertoast.showToast(
@@ -241,26 +265,21 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
                                             backgroundColor: Colors.red,
                                             textColor: Colors.white,
                                             fontSize: 16.0);
-                                        apiService
-                                            .startProcess1(postStartprocess)
-                                            .then((value) {
+                                        apiService.startProcess1(postStartprocess).then((value) {
                                           if (value) {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      MaterialPickOp2(
-                                                        schedule:
-                                                            widget.schedule,
-                                                        employee:
-                                                            widget.employee,
-                                                        machine: widget.machine,
-                                                        materialPickType:
-                                                            MaterialPickType
-                                                                .newload, reload: (){},
-                                                                type: widget.type,
-                                                                sameMachine: widget.sameMachine,
-                                                      )),
+                                                  builder: (context) => MaterialPickOp2(
+                                                      schedule: widget.schedule,
+                                                      employee: widget.employee,
+                                                      machine: widget.machine,
+                                                      materialPickType: MaterialPickType.newload,
+                                                      reload: () {},
+                                                      type: widget.type,
+                                                      sameMachine: widget.sameMachine,
+                                                      extraCrimpingSchedules:
+                                                          widget.extraCrimpingSchedules)),
                                             );
                                             setState(() {
                                               loading = false;

@@ -22,7 +22,7 @@ import '../process/generateLabel.dart';
 class ShowBundleListWIP extends StatefulWidget {
   Schedule schedule;
   PostgetBundleMaster postgetBundleMaste;
-  CableTerminalA?terminalA;
+  CableTerminalA? terminalA;
   CableTerminalB? terminalB;
   MachineDetails machine;
   Employee employee;
@@ -31,7 +31,7 @@ class ShowBundleListWIP extends StatefulWidget {
       {required this.schedule,
       required this.employee,
       this.terminalA,
-       this.terminalB,
+      this.terminalB,
       required this.machine,
       required this.postgetBundleMaste})
       : super();
@@ -49,7 +49,7 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
   @override
   void initState() {
     apiService = new ApiService();
-
+    getTerminal();
     super.initState();
   }
 
@@ -133,6 +133,41 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
     }
   }
 
+  CableTerminalA? terminalA;
+  CableTerminalB? terminalB;
+  getTerminal() {
+    ApiService apiService = new ApiService();
+    apiService
+        .getCableTerminalA(
+            isCrimping: false,
+            fgpartNo: widget.schedule.finishedGoodsNumber,
+            cablepartno: widget.schedule.cablePartNumber,
+            length: widget.schedule.length,
+            color: widget.schedule.color,
+            terminalPartNumberFrom: widget.schedule.terminalPartNumberFrom,
+            terminalPartNumberTo: widget.schedule.terminalPartNumberTo,
+            awg: widget.schedule.awg)
+        .then((termiA) {
+      apiService
+          .getCableTerminalB(
+              isCrimping: false,
+              fgpartNo: widget.schedule.finishedGoodsNumber,
+              cablepartno: widget.schedule.cablePartNumber,
+              length: widget.schedule.length,
+              color: widget.schedule.color,
+              terminalPartNumberFrom: widget.schedule.terminalPartNumberFrom,
+              terminalPartNumberTo: widget.schedule.terminalPartNumberTo,
+              awg: widget.schedule.awg)
+          .then((termiB) {
+        setState(() {
+          terminalA = termiA;
+          terminalB = termiB;
+          log("init");
+        });
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -158,8 +193,9 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
                 future: apiService!.getBundlesInSchedule(
                     postgetBundleMaster: widget.postgetBundleMaste,
                     scheduleID: widget.schedule.scheduledId),
-                builder: (context,AsyncSnapshot<List<BundlesRetrieved>?> snapshot) {
+                builder: (context, AsyncSnapshot<List<BundlesRetrieved>?> snapshot) {
                   if (snapshot.hasData) {
+                    log(snapshot.data.toString());
                     List<BundlesRetrieved>? bundles = snapshot.data;
                     List<GeneratedBundle> genbundles = bundles!.map((bundle) {
                       return GeneratedBundle(
@@ -167,7 +203,9 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
                           bundleQty: bundle.bundleQuantity.toString(),
                           transferBundleToBin: TransferBundleToBin(
                               binIdentification: bundle.binId.toString(),
-                              locationId: bundle.locationId.toString(), bundleId: '', userId: widget.employee.empId),
+                              locationId: bundle.locationId.toString(),
+                              bundleId: '',
+                              userId: widget.employee.empId),
                           label: GeneratedLabel(
                             finishedGoods: bundle.finishedGoodsPart,
                             cablePartNumber: bundle.cablePartNumber,
@@ -176,14 +214,16 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
                             bundleId: bundle.bundleIdentification,
                             routeNo: "${widget.schedule.route}",
                             status: 0,
+                            bStatus: bundle.bundleStatus,
                             bundleQuantity: bundle.bundleQuantity,
-                            terminalFrom: widget.terminalA!.terminalPart,
-                            terminalTo: widget.terminalB!.terminalPart,
+                            terminalFrom: terminalA?.terminalPart ?? 0,
+                            terminalTo: terminalB?.terminalPart ?? 0,
                             //  terminalFrom: bundle.t
                             //todo terminal from,terminal to
                             //todo route no
                             //
-                          ), rejectedQty: '');
+                          ),
+                          rejectedQty: '');
                     }).toList();
 
                     return Padding(
@@ -297,8 +337,7 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
                                           DateTime now = DateTime.now();
                                           //TODO
                                           bool a = await _print(
-                                            ipaddress:
-                                                "${widget.machine.printerIp}",
+                                            ipaddress: "${widget.machine.printerIp}",
                                             // ipaddress: "172.26.59.14",
                                             bq: e.bundleQty,
                                             qr: "${e.label.bundleId}",
@@ -308,24 +347,17 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
                                                 now.month.toString() +
                                                 "-" +
                                                 now.year.toString(),
-                                            orderId:
-                                                "${widget.schedule.orderId}",
-                                            fgPartNumber:
-                                                "${widget.schedule.finishedGoodsNumber}",
-                                            cutlength:
-                                                "${widget.schedule.length}",
-                                            cablepart:
-                                                "${widget.schedule.cablePartNumber}",
+                                            orderId: "${widget.schedule.orderId}",
+                                            fgPartNumber: "${widget.schedule.finishedGoodsNumber}",
+                                            cutlength: "${widget.schedule.length}",
+                                            cablepart: "${widget.schedule.cablePartNumber}",
                                             wireGauge: "${e.label.wireGauge}",
-                                            terminalfrom:
-                                                "${e.label.terminalFrom}",
+                                            terminalfrom: "${e.label.terminalFrom}",
                                             terminalto: "${e.label.terminalTo}",
 
                                             userid: "${widget.employee.empId}",
-                                            shift:
-                                                "${getShift()}",
-                                            machine:
-                                                "${widget.machine.machineNumber}",
+                                            shift: "${getShift()}",
+                                            machine: "${widget.machine.machineNumber}",
                                           );
                                           return a;
                                           // return false;
@@ -366,6 +398,7 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
       ),
     );
   }
+
   String getShift() {
     DateTime time = DateTime.now();
     log(DateTime.now().toString());
@@ -420,43 +453,34 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
                             children: [
                               Column(
                                 children: [
-                                  field(
-                                      title: "Bundle ID",
-                                      data: generatedBundle.label.bundleId!),
+                                  field(title: "Bundle ID", data: generatedBundle.label.bundleId!),
                                   field(
                                       title: "Bundle Qty",
-                                      data:
-                                          generatedBundle.bundleQty.toString()),
+                                      data: generatedBundle.bundleQty.toString()),
                                   field(
                                       title: "Bundle Status",
-                                      data: "${generatedBundle.label.status}"),
+                                      data: "${generatedBundle.label.bStatus}"),
                                   field(
                                       title: "Cut Length",
-                                      data:
-                                          "${generatedBundle.label.cutLength}"),
+                                      data: "${generatedBundle.label.cutLength}"),
                                   field(
                                       title: "Color",
-                                      data:
-                                          "${generatedBundle.bundleDetail.color}"),
+                                      data: "${generatedBundle.bundleDetail.color}"),
                                 ],
                               ),
                               Column(
                                 children: [
                                   field(
                                       title: "Cable Part Number",
-                                      data: generatedBundle
-                                          .bundleDetail.cablePartNumber
-                                          .toString()),
+                                      data:
+                                          generatedBundle.bundleDetail.cablePartNumber.toString()),
                                   field(
                                     title: "Cable part Description",
-                                    data: generatedBundle
-                                        .bundleDetail.cablePartDescription,
+                                    data: generatedBundle.bundleDetail.cablePartDescription,
                                   ),
                                   field(
                                     title: "Finished Goods",
-                                    data: generatedBundle
-                                        .bundleDetail.finishedGoodsPart
-                                        .toString(),
+                                    data: generatedBundle.bundleDetail.finishedGoodsPart.toString(),
                                   ),
                                   field(
                                     title: "Order Id",
@@ -464,8 +488,7 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
                                   ),
                                   field(
                                     title: "Update From",
-                                    data: generatedBundle
-                                        .bundleDetail.updateFromProcess,
+                                    data: generatedBundle.bundleDetail.updateFromProcess,
                                   ),
                                 ],
                               ),
@@ -473,30 +496,23 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
                                 children: [
                                   field(
                                     title: "Machine Id",
-                                    data: generatedBundle
-                                        .bundleDetail.machineIdentification,
+                                    data: generatedBundle.bundleDetail.machineIdentification,
                                   ),
                                   field(
                                     title: "Schedule ID",
-                                    data: generatedBundle
-                                        .bundleDetail.scheduledId
-                                        .toString(),
+                                    data: generatedBundle.bundleDetail.scheduledId.toString(),
                                   ),
                                   field(
                                     title: "Finished Goods",
-                                    data: generatedBundle
-                                        .bundleDetail.finishedGoodsPart
-                                        .toString(),
+                                    data: generatedBundle.bundleDetail.finishedGoodsPart.toString(),
                                   ),
                                   field(
                                     title: "Bin Id",
-                                    data: generatedBundle.bundleDetail.binId
-                                        .toString(),
+                                    data: generatedBundle.bundleDetail.binId.toString(),
                                   ),
                                   field(
                                     title: "Location Id",
-                                    data:
-                                        generatedBundle.bundleDetail.locationId,
+                                    data: generatedBundle.bundleDetail.locationId,
                                   ),
                                 ],
                               ),
@@ -525,10 +541,7 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
                 padding: const EdgeInsets.all(0.0),
                 child: Text(
                   "$title",
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w400),
+                  style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w400),
                 ),
               ),
             ],
@@ -540,10 +553,7 @@ class _ShowBundleListWIPState extends State<ShowBundleListWIP> {
                 padding: const EdgeInsets.all(0.0),
                 child: Text(
                   "$data",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400),
+                  style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w400),
                 ),
               )
             ],
@@ -574,8 +584,7 @@ class _ReprintButtonState extends State<ReprintButton> {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-        backgroundColor:
-            MaterialStateProperty.resolveWith((states) => Colors.green),
+        backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.green),
       ),
       onPressed: loading
           ? () {}

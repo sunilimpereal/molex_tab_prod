@@ -19,10 +19,8 @@ class DrawerWidgetWIP extends StatefulWidget {
 
   DrawerWidgetWIP(
       {required this.employee,
-     
       required this.machineDetails,
       required this.homeReload,
-   
       required this.reloadmaterial,
       required this.transfer,
       required this.returnmaterial});
@@ -38,28 +36,26 @@ class _DrawerWidgetWIPState extends State<DrawerWidgetWIP> {
       color: Colors.transparent,
       width: MediaQuery.of(context).size.width * 0.30,
       child: Container(
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(10))),
+        decoration:
+            BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(10))),
         child: Stack(
           children: [
             Column(
               children: [profileView()],
             ),
             Positioned(
-                bottom: 0,
-                right: 0,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "v 1.0.0+32",
+              bottom: 0,
+              right: 0,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("v 1.0.0+68",
                     style: TextStyle(
                       color: Colors.red,
                       letterSpacing: 2,
                       fontWeight: FontWeight.w500,
                     )),
-                  ),
-                )
+              ),
+            )
           ],
         ),
       ),
@@ -83,12 +79,9 @@ class _DrawerWidgetWIPState extends State<DrawerWidgetWIP> {
                       borderRadius: BorderRadius.all(Radius.circular(500))),
                   child: Center(
                     child: Text(
-                      "${widget.employee.employeeName.substring(0, 2).toUpperCase()}", // TODO
-                      style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500)
-                    ),
+                        "${widget.employee.employeeName.substring(0, 2).toUpperCase()}", // TODO
+                        style: TextStyle(
+                            color: Colors.black, fontSize: 15, fontWeight: FontWeight.w500)),
                   ),
                 ),
               ),
@@ -100,13 +93,9 @@ class _DrawerWidgetWIPState extends State<DrawerWidgetWIP> {
                       children: [
                         Container(
                           width: 170,
-                          child: Text(
-                            "${widget.employee.employeeName}",
-                            style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500)
-                          ),
+                          child: Text("${widget.employee.employeeName}",
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 15, fontWeight: FontWeight.w500)),
                         )
                       ],
                     ),
@@ -117,14 +106,10 @@ class _DrawerWidgetWIPState extends State<DrawerWidgetWIP> {
                       children: [
                         Container(
                           width: 170,
-                          child: Text(
-                            "${widget.employee.empId}",
-                            style:  TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500)),
-                          ),
-                        
+                          child: Text("${widget.employee.empId}",
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500)),
+                        ),
                       ],
                     ),
                   )

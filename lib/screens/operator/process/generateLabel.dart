@@ -81,7 +81,9 @@ class GenerateLabel extends StatefulWidget {
       required this.updateQty,
       required this.processType,
       required this.transfer,
-      required this.reload,required this.sameMachine,required this.type});
+      required this.reload,
+      required this.sameMachine,
+      required this.type});
   @override
   _GenerateLabelState createState() => _GenerateLabelState();
 }
@@ -97,41 +99,31 @@ class _GenerateLabelState extends State<GenerateLabel> {
   TextEditingController endWireController = new TextEditingController();
   TextEditingController endTerminalControllerFrom = new TextEditingController();
   TextEditingController endTerminalControllerTo = new TextEditingController();
-  TextEditingController setupRejectionsControllerCable =
-      new TextEditingController();
-  TextEditingController setupRejectionsControllerFrom =
-      new TextEditingController();
-  TextEditingController setupRejectionsControllerTo =
-      new TextEditingController();
-  TextEditingController cvmRejectionsControllerCable =
-      new TextEditingController();
+  TextEditingController setupRejectionsControllerCable = new TextEditingController();
+  TextEditingController setupRejectionsControllerFrom = new TextEditingController();
+  TextEditingController setupRejectionsControllerTo = new TextEditingController();
+  TextEditingController cvmRejectionsControllerCable = new TextEditingController();
   TextEditingController cvmRejectionsControllerTo = new TextEditingController();
-  TextEditingController cvmRejectionsControllerFrom =
-      new TextEditingController();
-  TextEditingController cfmRejectionsControllerCable =
-      new TextEditingController();
+  TextEditingController cvmRejectionsControllerFrom = new TextEditingController();
+  TextEditingController cfmRejectionsControllerCable = new TextEditingController();
   TextEditingController cfmRejectionsControllerTo = new TextEditingController();
-  TextEditingController cfmRejectionsControllerFrom =
-      new TextEditingController();
+  TextEditingController cfmRejectionsControllerFrom = new TextEditingController();
   TextEditingController cableDamageController = new TextEditingController();
   TextEditingController lengthvariationController = new TextEditingController();
   TextEditingController rollerMarkController = new TextEditingController();
-  TextEditingController stripLengthVariationController =
-      new TextEditingController();
+  TextEditingController stripLengthVariationController = new TextEditingController();
   TextEditingController nickMarkController = new TextEditingController();
 
   TextEditingController terminalDamageController = new TextEditingController();
   TextEditingController terminalBendController = new TextEditingController();
   TextEditingController terminalTwistController = new TextEditingController();
   TextEditingController windowGapController = new TextEditingController();
-  TextEditingController crimpOnInsulationController =
-      new TextEditingController();
+  TextEditingController crimpOnInsulationController = new TextEditingController();
   TextEditingController bellMoutherrorController = new TextEditingController();
   TextEditingController cutoffBarController = new TextEditingController();
   TextEditingController exposureStrandsController = new TextEditingController();
   TextEditingController strandsCutController = new TextEditingController();
-  TextEditingController brushLengthLessorMoreController =
-      new TextEditingController();
+  TextEditingController brushLengthLessorMoreController = new TextEditingController();
   TextEditingController halfCurlingController = new TextEditingController();
   TextEditingController wrongTerminalController = new TextEditingController();
   TextEditingController wrongcableController = new TextEditingController();
@@ -228,21 +220,28 @@ class _GenerateLabelState extends State<GenerateLabel> {
   ApiService? apiService;
   CableTerminalA? terminalA;
   CableTerminalB? terminalB;
+  String uom = "";
   getTerminal() {
     ApiService apiService = new ApiService();
     apiService
         .getCableTerminalA(
             fgpartNo: widget.schedule.finishedGoodsNumber,
             cablepartno: widget.schedule.cablePartNumber,
+            isCrimping: false,
             length: widget.schedule.length,
             color: widget.schedule.color,
+            terminalPartNumberFrom: widget.schedule.terminalPartNumberFrom,
+            terminalPartNumberTo: widget.schedule.terminalPartNumberTo,
             awg: widget.schedule.awg)
         .then((termiA) {
       apiService
           .getCableTerminalB(
+              isCrimping: false,
               fgpartNo: widget.schedule.finishedGoodsNumber,
               cablepartno: widget.schedule.cablePartNumber,
               length: widget.schedule.length,
+              terminalPartNumberFrom: widget.schedule.terminalPartNumberFrom,
+              terminalPartNumberTo: widget.schedule.terminalPartNumberTo,
               color: widget.schedule.color,
               awg: widget.schedule.awg)
           .then((termiB) {
@@ -256,7 +255,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
     });
   }
 
-  getBundles() {
+  Future<List<GeneratedBundle>> getBundles() async {
     List<GeneratedBundle> bundleList = [];
     ApiService apiService = new ApiService();
     PostgetBundleMaster postgetBundleMaste = new PostgetBundleMaster(
@@ -271,8 +270,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
     );
     apiService
         .getBundlesInSchedule(
-            postgetBundleMaster: postgetBundleMaste,
-            scheduleID: widget.schedule.scheduledId)
+            postgetBundleMaster: postgetBundleMaste, scheduleID: widget.schedule.scheduledId)
         .then((value) {
       List<BundlesRetrieved> bundles = value!;
       log("bun1 ${bundles}");
@@ -294,8 +292,8 @@ class _GenerateLabelState extends State<GenerateLabel> {
               routeNo: "${widget.schedule.route}",
               status: 0,
               bundleQuantity: bundle.bundleQuantity,
-              terminalFrom: terminalA!.terminalPart,
-              terminalTo: terminalB!.terminalPart,
+              terminalFrom: terminalA?.terminalPart ?? 0,
+              terminalTo: terminalB?.terminalPart ?? 0,
               //  terminalFrom: bundle.t
               //todo terminal from,terminal to
               //todo route no
@@ -308,23 +306,26 @@ class _GenerateLabelState extends State<GenerateLabel> {
         widget.sendData(generatedBundleList.length);
       });
     });
+    return generatedBundleList;
   }
 
-  getActualQty(){
+  getActualQty() {
     ApiService apiService = new ApiService();
-    apiService.getScheduelarData(machId: widget.machine.machineNumber??'', type: widget.type, sameMachine: widget.sameMachine).then((value) {
+    apiService
+        .getScheduelarData(
+            machId: widget.machine.machineNumber ?? '',
+            type: widget.type,
+            sameMachine: widget.sameMachine)
+        .then((value) {
       List<Schedule> scheduleList = value!;
       Schedule schedule = scheduleList.firstWhere((element) {
-        return (
-          element.scheduledId ==widget.schedule.scheduledId 
-        );
+        return (element.scheduledId == widget.schedule.scheduledId);
       });
       setState(() {
         log("total Qty : ${schedule.actualQuantity}");
         widget.toalQuantity = schedule.actualQuantity;
       });
     });
-
   }
 
   GeneratedLabel? label;
@@ -334,17 +335,16 @@ class _GenerateLabelState extends State<GenerateLabel> {
   void initState() {
     apiService = new ApiService();
     getTerminal();
+    checkMapping();
 
     transferBundle = new TransferBundle();
     label = new GeneratedLabel();
     transferBundle.cablePartDescription = widget.schedule.cablePartNumber;
-    transferBundle.scheduledQuantity =
-        int.parse(widget.schedule.scheduledQuantity);
+    transferBundle.scheduledQuantity = int.parse(widget.schedule.scheduledQuantity);
     transferBundle.orderIdentification = int.parse(widget.schedule.orderId);
     transferBundle.machineIdentification = widget.machine.machineNumber;
-    transferBundle.scheduledId = widget.schedule.scheduledId == ''
-        ? 0
-        : int.parse(widget.schedule.scheduledId);
+    transferBundle.scheduledId =
+        widget.schedule.scheduledId == '' ? 0 : int.parse(widget.schedule.scheduledId);
     binState = "Scan Bin";
     super.initState();
   }
@@ -402,12 +402,10 @@ class _GenerateLabelState extends State<GenerateLabel> {
             children: [
               quantity(),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4),
+                padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4),
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                      color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Material(
                     elevation: 2,
                     shadowColor: Colors.white,
@@ -473,14 +471,12 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                 width: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  valueColor:
-                                      AlwaysStoppedAnimation<Color>(Colors.red),
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                                 ),
                               ),
                             ),
                             Text("Printing",
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w600))
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600))
                           ],
                         ),
                       ),
@@ -532,6 +528,13 @@ class _GenerateLabelState extends State<GenerateLabel> {
         children: [
           MaterialtableWIP(
             matTrkPostDetail: widget.matTrkPostDetail,
+            getUom: (um) {
+              if (uom.isEmpty) {
+                setState(() {
+                  uom = um;
+                });
+              }
+            },
           ),
           Padding(
             padding: const EdgeInsets.all(2.0),
@@ -554,13 +557,11 @@ class _GenerateLabelState extends State<GenerateLabel> {
                             ),
                             Container(
                               child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   //Quantity Feild
                                   Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       SizedBox(
                                         height: 4,
@@ -575,8 +576,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                           onEditingComplete: () {
                                             setState(() {
                                               SystemChannels.textInput
-                                                  .invokeMethod(
-                                                      'TextInput.hide');
+                                                  .invokeMethod('TextInput.hide');
 
                                               labelGenerated = !labelGenerated;
                                               status = Status.generateLabel;
@@ -587,25 +587,19 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                               _output = '';
                                               maincontroller = bundleQty;
                                               SystemChannels.textInput
-                                                  .invokeMethod(
-                                                      'TextInput.hide');
+                                                  .invokeMethod('TextInput.hide');
                                             });
                                           },
                                           showCursor: false,
                                           keyboardType: TextInputType.number,
-                                          textAlignVertical:
-                                              TextAlignVertical.center,
+                                          textAlignVertical: TextAlignVertical.center,
                                           style: TextStyle(fontSize: 15),
                                           decoration: new InputDecoration(
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                    horizontal: 3),
+                                            contentPadding: EdgeInsets.symmetric(horizontal: 3),
                                             labelText: "  Bundle Qty (SPQ)",
                                             fillColor: Colors.white,
                                             border: new OutlineInputBorder(
-                                              borderRadius:
-                                                  new BorderRadius.circular(
-                                                      5.0),
+                                              borderRadius: new BorderRadius.circular(5.0),
                                               borderSide: new BorderSide(),
                                             ),
                                             //fillColor: Colors.green
@@ -622,25 +616,18 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                             // width: MediaQuery.of(context).size.width * 0.13,
                                             child: ElevatedButton(
                                               style: ButtonStyle(
-                                                shape:
-                                                    MaterialStateProperty.all<
-                                                        RoundedRectangleBorder>(
+                                                shape: MaterialStateProperty.all<
+                                                    RoundedRectangleBorder>(
                                                   RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            100.0),
-                                                    side: BorderSide(
-                                                        color: Colors.red),
+                                                    borderRadius: BorderRadius.circular(100.0),
+                                                    side: BorderSide(color: Colors.red),
                                                   ),
                                                 ),
                                                 backgroundColor:
-                                                    MaterialStateProperty
-                                                        .resolveWith<Color>(
+                                                    MaterialStateProperty.resolveWith<Color>(
                                                   (Set<MaterialState> states) {
-                                                    if (states.contains(
-                                                        MaterialState.pressed))
-                                                      return Colors
-                                                          .red.shade200;
+                                                    if (states.contains(MaterialState.pressed))
+                                                      return Colors.red.shade200;
                                                     return Colors.red
                                                         .shade500; // Use the component's default.
                                                   },
@@ -654,9 +641,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                                 });
                                               },
                                               child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
                                                   Text("Bundles"),
                                                   SizedBox(
@@ -669,22 +654,16 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                                     decoration: BoxDecoration(
                                                         color: Colors.red[800],
                                                         borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    100))),
+                                                            BorderRadius.all(Radius.circular(100))),
                                                     child: Center(
                                                       child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(4.0),
+                                                        padding: const EdgeInsets.all(4.0),
                                                         child: Text(
                                                           '${generatedBundleList.length > 0 ? generatedBundleList.length : "0"}',
                                                           // bundlePrint.length.toString(),
                                                           style: TextStyle(
                                                               fontSize: 11,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
+                                                              fontWeight: FontWeight.bold),
                                                         ),
                                                       ),
                                                     ),
@@ -700,8 +679,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                             ),
                             quantityDisp(),
                             ProcessTimer(
-                                startTime: DateTime.now(),
-                                endTime: widget.schedule.shiftEnd),
+                                startTime: DateTime.now(), endTime: widget.schedule.shiftEnd),
                             Padding(
                               padding: const EdgeInsets.all(1.0),
                               child: Container(
@@ -710,12 +688,10 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
                                         widget.toalQuantity ==
-                                                int.parse(widget
-                                                    .schedule.scheduledQuantity)
+                                                int.parse(widget.schedule.scheduledQuantity)
                                             ? Container(
                                                 height: 34,
                                                 width: 160,
@@ -725,34 +701,22 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                                             RoundedRectangleBorder>(
                                                         RoundedRectangleBorder(
                                                             borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20.0),
+                                                                BorderRadius.circular(20.0),
                                                             side: BorderSide(
-                                                                color: Colors
-                                                                    .transparent))),
+                                                                color: Colors.transparent))),
                                                     backgroundColor:
-                                                        MaterialStateProperty
-                                                            .resolveWith<Color>(
-                                                      (Set<MaterialState>
-                                                          states) {
-                                                        if (states.contains(
-                                                            MaterialState
-                                                                .pressed))
-                                                          return Colors
-                                                              .green.shade200;
+                                                        MaterialStateProperty.resolveWith<Color>(
+                                                      (Set<MaterialState> states) {
+                                                        if (states.contains(MaterialState.pressed))
+                                                          return Colors.green.shade200;
                                                         return Colors.green
                                                             .shade500; // Use the component's default.
                                                       },
                                                     ),
                                                     overlayColor:
-                                                        MaterialStateProperty
-                                                            .resolveWith<Color>(
-                                                      (Set<MaterialState>
-                                                          states) {
-                                                        if (states.contains(
-                                                            MaterialState
-                                                                .pressed))
+                                                        MaterialStateProperty.resolveWith<Color>(
+                                                      (Set<MaterialState> states) {
+                                                        if (states.contains(MaterialState.pressed))
                                                           return Colors.green;
                                                         return Colors.green
                                                             .shade500; // Use the component's default.
@@ -761,16 +725,13 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                                   ),
                                                   onPressed: () async {
                                                     getBundles();
-                                                    checkMapping()
-                                                        .then((value) {
+                                                    checkMapping().then((value) {
                                                       if (value) {
                                                         widget.toalQuantity >
-                                                                (int.parse(widget
-                                                                        .schedule
+                                                                (int.parse(widget.schedule
                                                                         .scheduledQuantity) *
                                                                     (0.98))
-                                                            ? widget
-                                                                .fullcomplete()
+                                                            ? widget.fullcomplete()
                                                             : fullycompleteDialog();
                                                       }
                                                     });
@@ -779,10 +740,8 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                                     "100% Complete",
                                                     style: TextStyle(
                                                       fontSize: 14,
-                                                      fontFamily:
-                                                          fonts.openSans,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontFamily: fonts.openSans,
+                                                      fontWeight: FontWeight.bold,
                                                     ),
                                                   ),
                                                 ))
@@ -790,8 +749,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                         //partially complete
                                         generatedBundleList.length > 0 &&
                                                 widget.toalQuantity !=
-                                                    int.parse(widget.schedule
-                                                        .scheduledQuantity)
+                                                    int.parse(widget.schedule.scheduledQuantity)
                                             ? Container(
                                                 height: 34,
                                                 width: 160,
@@ -801,20 +759,12 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                                             RoundedRectangleBorder>(
                                                         RoundedRectangleBorder(
                                                             borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20.0),
-                                                            side: BorderSide(
-                                                                color: Colors
-                                                                    .green))),
+                                                                BorderRadius.circular(20.0),
+                                                            side: BorderSide(color: Colors.green))),
                                                     backgroundColor:
-                                                        MaterialStateProperty
-                                                            .resolveWith<Color>(
-                                                      (Set<MaterialState>
-                                                          states) {
-                                                        if (states.contains(
-                                                            MaterialState
-                                                                .pressed))
+                                                        MaterialStateProperty.resolveWith<Color>(
+                                                      (Set<MaterialState> states) {
+                                                        if (states.contains(MaterialState.pressed))
                                                           return Colors.white;
                                                         return Colors
                                                             .white; // Use the component's default.
@@ -822,14 +772,13 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                                     ),
                                                   ),
                                                   onPressed: () {
-                                                     getBundles();
-                                                    checkMapping()
-                                                        .then((value) {
+                                                    getBundles();
+                                                    checkMapping().then((value) {
                                                       if (value) {
                                                         widget.partialComplete();
                                                       }
                                                     });
-                                                   
+
                                                     // setState(() {
                                                     //   rightside = "partial";
                                                     // });
@@ -839,10 +788,8 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                                     style: TextStyle(
                                                       color: Colors.green,
                                                       fontSize: 14,
-                                                      fontFamily:
-                                                          fonts.openSans,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontFamily: fonts.openSans,
+                                                      fontWeight: FontWeight.bold,
                                                     ),
                                                   ),
                                                 ),
@@ -863,31 +810,24 @@ class _GenerateLabelState extends State<GenerateLabel> {
                           child: Center(
                               child: ElevatedButton(
                                   style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
+                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: BorderSide(
-                                                color: Colors.transparent))),
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color>(
+                                            borderRadius: BorderRadius.circular(20.0),
+                                            side: BorderSide(color: Colors.transparent))),
+                                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                       (Set<MaterialState> states) {
-                                        if (states
-                                            .contains(MaterialState.pressed))
+                                        if (states.contains(MaterialState.pressed))
                                           return Colors.green.shade200;
-                                        return Colors.green
-                                            .shade500; // Use the component's default.
+                                        return Colors
+                                            .green.shade500; // Use the component's default.
                                       },
                                     ),
-                                    overlayColor: MaterialStateProperty
-                                        .resolveWith<Color>(
+                                    overlayColor: MaterialStateProperty.resolveWith<Color>(
                                       (Set<MaterialState> states) {
-                                        if (states
-                                            .contains(MaterialState.pressed))
+                                        if (states.contains(MaterialState.pressed))
                                           return Colors.green;
-                                        return Colors.green
-                                            .shade500; // Use the component's default.
+                                        return Colors
+                                            .green.shade500; // Use the component's default.
                                       },
                                     ),
                                   ),
@@ -943,8 +883,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                      "Map all bundles to Bin and Location to Complete Schedule"),
+                  Text("Map all bundles to Bin and Location to Complete Schedule"),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -952,28 +891,21 @@ class _GenerateLabelState extends State<GenerateLabel> {
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                             style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20.0),
-                                      side: BorderSide(
-                                          color: Colors.transparent))),
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith<Color>(
+                                      side: BorderSide(color: Colors.transparent))),
+                              backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.pressed))
                                     return Colors.green.shade200;
-                                  return Colors.green
-                                      .shade500; // Use the component's default.
+                                  return Colors.green.shade500; // Use the component's default.
                                 },
                               ),
-                              overlayColor:
-                                  MaterialStateProperty.resolveWith<Color>(
+                              overlayColor: MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.pressed))
-                                    return Colors.green;
-                                  return Colors.green
-                                      .shade500; // Use the component's default.
+                                  if (states.contains(MaterialState.pressed)) return Colors.green;
+                                  return Colors.green.shade500; // Use the component's default.
                                 },
                               ),
                             ),
@@ -984,8 +916,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => Location(
-                                            locationType:
-                                                LocationType.partialTransfer,
+                                            locationType: LocationType.partialTransfer,
                                             type: "process",
                                             employee: widget.employee,
                                             machine: widget.machine,
@@ -1021,13 +952,10 @@ class _GenerateLabelState extends State<GenerateLabel> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 4.0),
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                   Text('     WireCutting & Crimping Rejection Cases',
                       style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 12,
-                          fontFamily: fonts.openSans)),
+                          fontWeight: FontWeight.w700, fontSize: 12, fontFamily: fonts.openSans)),
                   // Text(' Rejecttion Quantity: ${total()}',
                   //     style: TextStyle(
                   //       fontWeight: FontWeight.w500,
@@ -1048,36 +976,26 @@ class _GenerateLabelState extends State<GenerateLabel> {
                           children: [
                             doubleQuantityCell(
                               name: "End Terminal ",
-                              textEditingControllerFrom:
-                                  endTerminalControllerFrom,
+                              textEditingControllerFrom: endTerminalControllerFrom,
                               textEditingControllerTo: endTerminalControllerTo,
                             ),
                             tripleQuantityCell(
                               name: "CFM  Rejections ",
-                              textEditingControllerFrom:
-                                  cfmRejectionsControllerFrom,
-                              textEditingControllerCable:
-                                  cfmRejectionsControllerCable,
-                              textEditingControllerTo:
-                                  cfmRejectionsControllerTo,
+                              textEditingControllerFrom: cfmRejectionsControllerFrom,
+                              textEditingControllerCable: cfmRejectionsControllerCable,
+                              textEditingControllerTo: cfmRejectionsControllerTo,
                             ),
                             tripleQuantityCell(
                               name: "CVM  Rejections ",
-                              textEditingControllerFrom:
-                                  cvmRejectionsControllerFrom,
-                              textEditingControllerCable:
-                                  cvmRejectionsControllerCable,
-                              textEditingControllerTo:
-                                  cvmRejectionsControllerTo,
+                              textEditingControllerFrom: cvmRejectionsControllerFrom,
+                              textEditingControllerCable: cvmRejectionsControllerCable,
+                              textEditingControllerTo: cvmRejectionsControllerTo,
                             ),
                             tripleQuantityCell(
                               name: "Setup  Rejection ",
-                              textEditingControllerFrom:
-                                  setupRejectionsControllerFrom,
-                              textEditingControllerCable:
-                                  setupRejectionsControllerCable,
-                              textEditingControllerTo:
-                                  setupRejectionsControllerTo,
+                              textEditingControllerFrom: setupRejectionsControllerFrom,
+                              textEditingControllerCable: setupRejectionsControllerCable,
+                              textEditingControllerTo: setupRejectionsControllerTo,
                             ),
 
                             // quantitycell(
@@ -1126,8 +1044,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                             quantitycell(
                               name: "Strip Length Variation",
                               quantity: 10,
-                              textEditingController:
-                                  stripLengthVariationController,
+                              textEditingController: stripLengthVariationController,
                             ),
                             quantitycell(
                               name: "Nick Mark",
@@ -1160,14 +1077,12 @@ class _GenerateLabelState extends State<GenerateLabel> {
                             quantitycell(
                               name: "Crimp On Insulation",
                               quantity: 10,
-                              textEditingController:
-                                  crimpOnInsulationController,
+                              textEditingController: crimpOnInsulationController,
                             ),
                             quantitycell(
                                 name: "Bellmouth Error",
                                 quantity: 10,
-                                textEditingController:
-                                    bellMoutherrorController),
+                                textEditingController: bellMoutherrorController),
                           ],
                         ),
                         Column(
@@ -1190,8 +1105,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                             quantitycell(
                               name: "Brush Length Less/More",
                               quantity: 10,
-                              textEditingController:
-                                  brushLengthLessorMoreController,
+                              textEditingController: brushLengthLessorMoreController,
                             ),
                           ],
                         ),
@@ -1263,8 +1177,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                     Text(
                                       "${bundleQty.text}",
                                       style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
+                                          color: Colors.black, fontWeight: FontWeight.bold),
                                     )
                                   ],
                                 ),
@@ -1274,8 +1187,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                     Text(
                                       "${total()}",
                                       style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
+                                          color: Colors.black, fontWeight: FontWeight.bold),
                                     )
                                   ],
                                 ),
@@ -1285,8 +1197,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                     Text(
                                       "${otherTotal()}",
                                       style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
+                                          color: Colors.black, fontWeight: FontWeight.bold),
                                     )
                                   ],
                                 ),
@@ -1300,32 +1211,24 @@ class _GenerateLabelState extends State<GenerateLabel> {
                               loading
                                   ? ElevatedButton(
                                       style: ButtonStyle(
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                             RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(20.0),
-                                                side: BorderSide(
-                                                    color:
-                                                        Colors.transparent))),
-                                        backgroundColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                                borderRadius: BorderRadius.circular(20.0),
+                                                side: BorderSide(color: Colors.transparent))),
+                                        backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                           (Set<MaterialState> states) {
-                                            if (states.contains(
-                                                MaterialState.pressed))
+                                            if (states.contains(MaterialState.pressed))
                                               return Colors.green.shade200;
-                                            return Colors.green
-                                                .shade500; // Use the component's default.
+                                            return Colors
+                                                .green.shade500; // Use the component's default.
                                           },
                                         ),
-                                        overlayColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                        overlayColor: MaterialStateProperty.resolveWith<Color>(
                                           (Set<MaterialState> states) {
-                                            if (states.contains(
-                                                MaterialState.pressed))
+                                            if (states.contains(MaterialState.pressed))
                                               return Colors.green.shade200;
-                                            return Colors.green
-                                                .shade500; // Use the component's default.
+                                            return Colors
+                                                .green.shade500; // Use the component's default.
                                           },
                                         ),
                                       ),
@@ -1334,39 +1237,29 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                         padding: const EdgeInsets.all(4.0),
                                         child: CircularProgressIndicator(
                                           // color: Colors.white
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  Colors.white),
+                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                         ),
                                       ))
                                   : ElevatedButton(
                                       style: ButtonStyle(
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                             RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(20.0),
-                                                side: BorderSide(
-                                                    color:
-                                                        Colors.transparent))),
-                                        backgroundColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                                borderRadius: BorderRadius.circular(20.0),
+                                                side: BorderSide(color: Colors.transparent))),
+                                        backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                           (Set<MaterialState> states) {
-                                            if (states.contains(
-                                                MaterialState.pressed))
+                                            if (states.contains(MaterialState.pressed))
                                               return Colors.green.shade200;
-                                            return Colors.green
-                                                .shade500; // Use the component's default.
+                                            return Colors
+                                                .green.shade500; // Use the component's default.
                                           },
                                         ),
-                                        overlayColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                        overlayColor: MaterialStateProperty.resolveWith<Color>(
                                           (Set<MaterialState> states) {
-                                            if (states.contains(
-                                                MaterialState.pressed))
+                                            if (states.contains(MaterialState.pressed))
                                               return Colors.green.shade200;
-                                            return Colors.green
-                                                .shade500; // Use the component's default.
+                                            return Colors
+                                                .green.shade500; // Use the component's default.
                                           },
                                         ),
                                       ),
@@ -1380,71 +1273,54 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                         ),
                                       ),
                                       onPressed: () {
-                                          
                                         if (bundleQty.text.length > 0 &&
                                             int.parse(bundleQty.text) != 0) {
-                                          if (widget.toalQuantity +
-                                                  int.parse(bundleQty.text) <=
-                                              int.parse(widget.schedule
-                                                  .scheduledQuantity)) {
+                                          if (widget.toalQuantity + int.parse(bundleQty.text) <=
+                                              int.parse(widget.schedule.scheduledQuantity)) {
                                             setState(() {
                                               loading = true;
                                             });
                                             // if (int.parse(total()) <
                                             //     int.parse(bundleQty.text)) {
-                                            log(postGenerateLabelToJson(
-                                                getPostGeneratelabel()));
+                                            log(postGenerateLabelToJson(getPostGeneratelabel()));
                                             apiService!
                                                 .postGeneratelabel(
-                                                    getPostGeneratelabel(),
-                                                    bundleQty.text)
+                                                    getPostGeneratelabel(), bundleQty.text, uom)
                                                 .then((value) {
                                               if (value != null) {
                                                 DateTime now = DateTime.now();
                                                 GeneratedLabel label1 = value;
-                                                 getActualQty();
+                                                getActualQty();
                                                 setState(() {
                                                   printerStatus = true;
                                                 });
                                                 _print(
-                                                  ipaddress:
-                                                      "${widget.machine.printerIp}",
+                                                  ipaddress: "${widget.machine.printerIp}",
                                                   // ipaddress: "172.25.16.53",
-                                                  bq: bundleQty.text,
+                                                  bq: "${label1.bundleQuantity}",
                                                   qr: "${label1.bundleId}",
-                                                  routenumber1:
-                                                      "${label1.routeNo}",
+                                                  routenumber1: "${label1.routeNo}",
                                                   date: now.day.toString() +
                                                       "-" +
                                                       now.month.toString() +
                                                       "-" +
                                                       now.year.toString(),
-                                                  orderId:
-                                                      "${widget.schedule.orderId}",
+                                                  orderId: "${widget.schedule.orderId}",
                                                   fgPartNumber:
                                                       "${widget.schedule.finishedGoodsNumber}",
-                                                  cutlength:
-                                                      "${widget.schedule.length}",
-                                                  cablepart:
-                                                      "${widget.schedule.cablePartNumber}",
-                                                  wireGauge:
-                                                      "${label1.wireGauge}",
-                                                  terminalfrom:
-                                                      "${label1.terminalFrom}",
-                                                  terminalto:
-                                                      "${label1.terminalTo}",
-                                                  userid:
-                                                      "${widget.employee.empId}",
+                                                  cutlength: "${widget.schedule.length}",
+                                                  cablepart: "${widget.schedule.cablePartNumber}",
+                                                  wireGauge: "${label1.wireGauge}",
+                                                  terminalfrom: '${terminalA?.terminalPart ?? '0'}',
+                                                  terminalto: "${terminalB?.terminalPart ?? '0'}",
+                                                  userid: "${widget.employee.empId}",
                                                   shift: "${getShift()}",
                                                   // shift:
                                                   //     "${widget.schedule.shiftNumber}",
-                                                  machine:
-                                                      "${widget.machine.machineNumber}",
+                                                  machine: "${widget.machine.machineNumber}",
                                                 ).then((value) {
-                                                  
                                                   Future.delayed(
-                                                    const Duration(
-                                                        milliseconds: 1000),
+                                                    const Duration(milliseconds: 1000),
                                                     () {
                                                       setState(() {
                                                         printerStatus = false;
@@ -1458,18 +1334,12 @@ class _GenerateLabelState extends State<GenerateLabel> {
 
                                                 setState(() {
                                                   widget.reload();
-                                                  widget.sendData(
-                                                      generatedBundleList
-                                                          .length);
+                                                  widget.sendData(generatedBundleList.length);
                                                   SystemChannels.textInput
-                                                      .invokeMethod(
-                                                          'TextInput.hide');
-                                                  widget.updateQty(
-                                                      widget.toalQuantity +
-                                                          int.parse(
-                                                              bundleQty.text));
-                                                  labelGenerated =
-                                                      !labelGenerated;
+                                                      .invokeMethod('TextInput.hide');
+                                                  widget.updateQty(widget.toalQuantity +
+                                                      int.parse(bundleQty.text));
+                                                  labelGenerated = !labelGenerated;
                                                   status = Status.scanBin;
                                                   label = value;
                                                 });
@@ -1506,7 +1376,6 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                             fontSize: 16.0,
                                           );
                                         }
-                                       
                                       }),
                             ],
                           ),
@@ -1538,9 +1407,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
               child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                 Text('     Cutting Rejection Cases',
                     style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12,
-                        fontFamily: fonts.openSans)),
+                        fontWeight: FontWeight.w700, fontSize: 12, fontFamily: fonts.openSans)),
                 // Text(' Rejecttion Quantity: ${total()}',
                 //     style: TextStyle(
                 //       fontWeight: FontWeight.w500,
@@ -1586,8 +1453,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                           quantitycell(
                             name: "Strip Length Variation",
                             quantity: 10,
-                            textEditingController:
-                                stripLengthVariationController,
+                            textEditingController: stripLengthVariationController,
                           ),
                         ],
                       ),
@@ -1643,9 +1509,8 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                   Text("Bundle Qty :  "),
                                   Text(
                                     "${bundleQty.text}",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                                   )
                                 ],
                               ),
@@ -1654,9 +1519,8 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                   Text("Rejected Qty :  "),
                                   Text(
                                     "${total()}",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                                   )
                                 ],
                               ),
@@ -1704,21 +1568,16 @@ class _GenerateLabelState extends State<GenerateLabel> {
                           loading
                               ? ElevatedButton(
                                   style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
+                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: BorderSide(
-                                                color: Colors.transparent))),
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color>(
+                                            borderRadius: BorderRadius.circular(20.0),
+                                            side: BorderSide(color: Colors.transparent))),
+                                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                       (Set<MaterialState> states) {
-                                        if (states
-                                            .contains(MaterialState.pressed))
+                                        if (states.contains(MaterialState.pressed))
                                           return Colors.green.shade200;
-                                        return Colors.green
-                                            .shade500; // Use the component's default.
+                                        return Colors
+                                            .green.shade500; // Use the component's default.
                                       },
                                     ),
                                   ),
@@ -1728,56 +1587,43 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: CircularProgressIndicator(
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                Colors.white)),
+                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
                                   ))
                               : ElevatedButton(
                                   style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
+                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: BorderSide(
-                                                color: Colors.transparent))),
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color>(
+                                            borderRadius: BorderRadius.circular(20.0),
+                                            side: BorderSide(color: Colors.transparent))),
+                                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                       (Set<MaterialState> states) {
-                                        if (states
-                                            .contains(MaterialState.pressed))
+                                        if (states.contains(MaterialState.pressed))
                                           return Colors.green.shade200;
-                                        return Colors.green
-                                            .shade500; // Use the component's default.
+                                        return Colors
+                                            .green.shade500; // Use the component's default.
                                       },
                                     ),
                                   ),
                                   child: Text("Save & Print"),
                                   onPressed: () {
-                                    if (bundleQty.text.length > 0 &&
-                                        bundleQty.text != "0") {
+                                    if (bundleQty.text.length > 0 && bundleQty.text != "0") {
                                       setState(() {
                                         loading = true;
                                       });
-                                      log(postGenerateLabelToJson(
-                                          getPostGeneratelabel()));
-                                      if (widget.toalQuantity +
-                                              int.parse(bundleQty.text) <=
-                                          int.parse(widget
-                                              .schedule.scheduledQuantity)) {
+                                      log(postGenerateLabelToJson(getPostGeneratelabel()));
+                                      if (widget.toalQuantity + int.parse(bundleQty.text) <=
+                                          int.parse(widget.schedule.scheduledQuantity)) {
                                         apiService!
                                             .postGeneratelabel(
-                                                getPostGeneratelabel(),
-                                                bundleQty.text)
+                                                getPostGeneratelabel(), bundleQty.text, uom)
                                             .then((value) {
                                           if (value != null) {
                                             DateTime now = DateTime.now();
                                             GeneratedLabel label1 = value;
                                             _print(
-                                              ipaddress:
-                                                  "${widget.machine.printerIp}",
+                                              ipaddress: "${widget.machine.printerIp}",
                                               // ipaddress: "172.25.16.53",
-                                              bq: bundleQty.text,
+                                              bq: "${label1.bundleQuantity}",
                                               qr: "${label1.bundleId}",
                                               routenumber1: "${label1.routeNo}",
                                               date: now.day.toString() +
@@ -1785,26 +1631,19 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                                   now.month.toString() +
                                                   "-" +
                                                   now.year.toString(),
-                                              orderId:
-                                                  "${widget.schedule.orderId}",
+                                              orderId: "${widget.schedule.orderId}",
                                               fgPartNumber:
                                                   "${widget.schedule.finishedGoodsNumber}",
-                                              cutlength:
-                                                  "${widget.schedule.length}",
-                                              cablepart:
-                                                  "${widget.schedule.cablePartNumber}",
+                                              cutlength: "${widget.schedule.length}",
+                                              cablepart: "${widget.schedule.cablePartNumber}",
                                               wireGauge: "${label1.wireGauge}",
-                                              terminalfrom:
-                                                  "${label1.terminalFrom}",
-                                              terminalto:
-                                                  "${label1.terminalTo}",
-                                              userid:
-                                                  "${widget.employee.empId}",
+                                              terminalfrom: '${terminalA?.terminalPart ?? '0'}',
+                                              terminalto: "${terminalB?.terminalPart ?? '0'}",
+                                              userid: "${widget.employee.empId}",
                                               shift: "${getShift()}",
                                               // shift:
                                               //     "${widget.schedule.shiftNumber}",
-                                              machine:
-                                                  "${widget.machine.machineNumber}",
+                                              machine: "${widget.machine.machineNumber}",
                                             );
                                             setState(() {
                                               loading = false;
@@ -1815,12 +1654,10 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                               labelGenerated = !labelGenerated;
                                               status = Status.scanBin;
                                               label = value;
-                                              widget.updateQty(widget
-                                                      .toalQuantity +
-                                                  int.parse(bundleQty.text));
+                                              widget.updateQty(
+                                                  widget.toalQuantity + int.parse(bundleQty.text));
                                               SystemChannels.textInput
-                                                  .invokeMethod(
-                                                      'TextInput.hide');
+                                                  .invokeMethod('TextInput.hide');
                                             });
                                           } else {
                                             setState(() {
@@ -1833,8 +1670,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                           loading = false;
                                         });
                                         Fluttertoast.showToast(
-                                          msg:
-                                              "Actual Quantity is Greater than Schedule Quantity",
+                                          msg: "Actual Quantity is Greater than Schedule Quantity",
                                           toastLength: Toast.LENGTH_SHORT,
                                           gravity: ToastGravity.BOTTOM,
                                           timeInSecForIosWeb: 1,
@@ -1900,124 +1736,82 @@ class _GenerateLabelState extends State<GenerateLabel> {
       machineIdentification: widget.machine.machineNumber,
       operatorIdentification: widget.employee.empId,
       bundleIdentification: _bundleScanController.text,
-      crimpFromSchId:
-          widget.method.contains("a") ? "${widget.schedule.scheduledId}" : "",
-      crimpToSchId:
-          widget.method.contains("b") ? "${widget.schedule.scheduledId}" : "",
+      crimpFromSchId: widget.method.contains("a") ? "${widget.schedule.scheduledId}" : "",
+      crimpToSchId: widget.method.contains("b") ? "${widget.schedule.scheduledId}" : "",
       preparationCompleteFlag: "0",
       viCompleted: "0",
       processType: getprocesstype(),
       rejectedQuantity: int.parse(total()),
 
       // Rejected Quantity
-      endWire: int.parse(
-          endWireController.text == '' ? "0" : endWireController.text),
-      rejectionsTerminalFrom: int.parse(endTerminalControllerFrom.text == ''
-          ? "0"
-          : endTerminalControllerFrom.text),
-      rejectionsTerminalTo: int.parse(endTerminalControllerTo.text == ''
-          ? "0"
-          : endTerminalControllerTo.text),
-      setUpRejections: int.parse(setupRejectionsControllerCable.text == ''
-          ? "0"
-          : setupRejectionsControllerCable.text),
+      endWire: int.parse(endWireController.text == '' ? "0" : endWireController.text),
+      rejectionsTerminalFrom:
+          int.parse(endTerminalControllerFrom.text == '' ? "0" : endTerminalControllerFrom.text),
+      rejectionsTerminalTo:
+          int.parse(endTerminalControllerTo.text == '' ? "0" : endTerminalControllerTo.text),
+      setUpRejections: int.parse(
+          setupRejectionsControllerCable.text == '' ? "0" : setupRejectionsControllerCable.text),
       setUpRejectionTerminalFrom: int.parse(
-          setupRejectionsControllerFrom.text == ''
-              ? "0"
-              : setupRejectionsControllerFrom.text),
-      setUpRejectionTerminalTo: int.parse(setupRejectionsControllerTo.text == ''
-          ? "0"
-          : setupRejectionsControllerTo.text),
-      cvmRejectionsCable: int.parse(cvmRejectionsControllerCable.text == ''
-          ? "0"
-          : cvmRejectionsControllerCable.text),
+          setupRejectionsControllerFrom.text == '' ? "0" : setupRejectionsControllerFrom.text),
+      setUpRejectionTerminalTo: int.parse(
+          setupRejectionsControllerTo.text == '' ? "0" : setupRejectionsControllerTo.text),
+      cvmRejectionsCable: int.parse(
+          cvmRejectionsControllerCable.text == '' ? "0" : cvmRejectionsControllerCable.text),
       cvmRejectionsCableTerminalFrom: int.parse(
-          cvmRejectionsControllerFrom.text == ''
-              ? "0"
-              : cvmRejectionsControllerFrom.text),
-      cvmRejectionsCableTerminalTo: int.parse(
-          cvmRejectionsControllerTo.text == ''
-              ? "0"
-              : cvmRejectionsControllerTo.text),
-      cfmRejectionsCable: int.parse(cfmRejectionsControllerCable.text == ''
-          ? "0"
-          : cfmRejectionsControllerCable.text),
+          cvmRejectionsControllerFrom.text == '' ? "0" : cvmRejectionsControllerFrom.text),
+      cvmRejectionsCableTerminalTo:
+          int.parse(cvmRejectionsControllerTo.text == '' ? "0" : cvmRejectionsControllerTo.text),
+      cfmRejectionsCable: int.parse(
+          cfmRejectionsControllerCable.text == '' ? "0" : cfmRejectionsControllerCable.text),
       cfmRejectionsCableTerminalFrom: int.parse(
-          cfmRejectionsControllerFrom.text == ''
-              ? "0"
-              : cfmRejectionsControllerFrom.text),
-      cfmRejectionsCableTerminalTo: int.parse(
-          cfmRejectionsControllerTo.text == ''
-              ? "0"
-              : cfmRejectionsControllerTo.text),
+          cfmRejectionsControllerFrom.text == '' ? "0" : cfmRejectionsControllerFrom.text),
+      cfmRejectionsCableTerminalTo:
+          int.parse(cfmRejectionsControllerTo.text == '' ? "0" : cfmRejectionsControllerTo.text),
 
-      cableDamage: int.parse(
-          cableDamageController.text == '' ? "0" : cableDamageController.text),
-      lengthVariation: int.parse(lengthvariationController.text == ''
-          ? "0"
-          : lengthvariationController.text),
-      rollerMark: int.parse(
-          rollerMarkController.text == '' ? "0" : rollerMarkController.text),
-      stringLengthVariation: int.parse(stripLengthVariationController.text == ''
-          ? "0"
-          : stripLengthVariationController.text),
-      nickMark: int.parse(
-          nickMarkController.text == '' ? "0" : nickMarkController.text),
-      terminalDamage: int.parse(terminalDamageController.text == ''
-          ? "0"
-          : terminalDamageController.text),
+      cableDamage: int.parse(cableDamageController.text == '' ? "0" : cableDamageController.text),
+      lengthVariation:
+          int.parse(lengthvariationController.text == '' ? "0" : lengthvariationController.text),
+      rollerMark: int.parse(rollerMarkController.text == '' ? "0" : rollerMarkController.text),
+      stringLengthVariation: int.parse(
+          stripLengthVariationController.text == '' ? "0" : stripLengthVariationController.text),
+      nickMark: int.parse(nickMarkController.text == '' ? "0" : nickMarkController.text),
+      terminalDamage:
+          int.parse(terminalDamageController.text == '' ? "0" : terminalDamageController.text),
 
-      terminalBend: int.parse(terminalBendController.text == ''
-          ? "0"
-          : terminalBendController.text),
-      terminalTwist: int.parse(terminalTwistController.text == ''
-          ? "0"
-          : terminalTwistController.text),
-      windowGap: int.parse(
-          windowGapController.text == '' ? "0" : windowGapController.text),
-      crimpOnInsulationC: int.parse(crimpOnInsulationController.text == ''
-          ? "0"
-          : crimpOnInsulationController.text),
-      bellMouthError: int.parse(bellMoutherrorController.text == ''
-          ? "0"
-          : bellMoutherrorController.text),
-      cutOffBurr: int.parse(
-          cutoffBarController.text == '' ? "0" : cutoffBarController.text),
-      exposureStrands: int.parse(exposureStrandsController.text == ''
-          ? "0"
-          : exposureStrandsController.text),
+      terminalBend:
+          int.parse(terminalBendController.text == '' ? "0" : terminalBendController.text),
+      terminalTwist:
+          int.parse(terminalTwistController.text == '' ? "0" : terminalTwistController.text),
+      windowGap: int.parse(windowGapController.text == '' ? "0" : windowGapController.text),
+      crimpOnInsulationC: int.parse(
+          crimpOnInsulationController.text == '' ? "0" : crimpOnInsulationController.text),
+      bellMouthError:
+          int.parse(bellMoutherrorController.text == '' ? "0" : bellMoutherrorController.text),
+      cutOffBurr: int.parse(cutoffBarController.text == '' ? "0" : cutoffBarController.text),
+      exposureStrands:
+          int.parse(exposureStrandsController.text == '' ? "0" : exposureStrandsController.text),
 // 5IYKJXTD6RRNHI6N
-      strandsCut: int.parse(
-          strandsCutController.text == '' ? "0" : strandsCutController.text),
+      strandsCut: int.parse(strandsCutController.text == '' ? "0" : strandsCutController.text),
 
       brushLengthLessorMore: int.parse(
-          brushLengthLessorMoreController.text == ''
-              ? "0"
-              : brushLengthLessorMoreController.text),
+          brushLengthLessorMoreController.text == '' ? "0" : brushLengthLessorMoreController.text),
 
-      halfCurlingA: int.parse(
-          halfCurlingController.text == '' ? "0" : halfCurlingController.text),
-      wrongTerminal: int.parse(wrongTerminalController.text == ''
-          ? "0"
-          : wrongTerminalController.text),
-      wrongCable: int.parse(
-          wrongcableController.text == '' ? "0" : wrongcableController.text),
-      seamOpen: int.parse(
-          seamOpenController.text == '' ? "0" : seamOpenController.text),
-      wrongCutLength: int.parse(wrongCutLengthController.text == ''
-          ? "0"
-          : wrongCutLengthController.text),
-      missCrimp: int.parse(
-          missCrimpController.text == '' ? "0" : missCrimpController.text),
-      extrusionBurr: int.parse(extrusionBurrController.text == ''
-          ? "0"
-          : extrusionBurrController.text),
+      halfCurlingA: int.parse(halfCurlingController.text == '' ? "0" : halfCurlingController.text),
+      wrongTerminal:
+          int.parse(wrongTerminalController.text == '' ? "0" : wrongTerminalController.text),
+      wrongCable: int.parse(wrongcableController.text == '' ? "0" : wrongcableController.text),
+      seamOpen: int.parse(seamOpenController.text == '' ? "0" : seamOpenController.text),
+      wrongCutLength:
+          int.parse(wrongCutLengthController.text == '' ? "0" : wrongCutLengthController.text),
+      missCrimp: int.parse(missCrimpController.text == '' ? "0" : missCrimpController.text),
+      extrusionBurr:
+          int.parse(extrusionBurrController.text == '' ? "0" : extrusionBurrController.text),
 
       //TODO
 
       method: widget.method,
-      terminalFrom: int.parse('${terminalA!.terminalPart ?? '0'}'),
-      terminalTo: int.parse('${terminalB!.terminalPart ?? '0'}'),
+      terminalFrom: int.parse('${terminalA?.terminalPart ?? '0'}'),
+      terminalTo: int.parse('${terminalB?.terminalPart ?? '0'}'),
       awg: "${widget.schedule.awg}",
     );
   }
@@ -2060,16 +1854,14 @@ class _GenerateLabelState extends State<GenerateLabel> {
               actions: <Widget>[
                 ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith(
-                          (states) => Colors.green),
+                      backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.green),
                     ),
                     onPressed: () {
                       Navigator.pop(context);
                       Future.delayed(
                         const Duration(milliseconds: 50),
                         () {
-                          SystemChannels.textInput
-                              .invokeMethod('TextInput.hide');
+                          SystemChannels.textInput.invokeMethod('TextInput.hide');
                         },
                       );
                     },
@@ -2090,16 +1882,15 @@ class _GenerateLabelState extends State<GenerateLabel> {
               actions: <Widget>[
                 ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith(
-                          (states) => Colors.redAccent),
+                      backgroundColor:
+                          MaterialStateProperty.resolveWith((states) => Colors.redAccent),
                     ),
                     onPressed: () {
                       Navigator.pop(context);
                       Future.delayed(
                         const Duration(milliseconds: 50),
                         () {
-                          SystemChannels.textInput
-                              .invokeMethod('TextInput.hide');
+                          SystemChannels.textInput.invokeMethod('TextInput.hide');
                         },
                       );
                     },
@@ -2396,8 +2187,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
   }
 
   Widget quantityDisp() {
-    double percent =
-        widget.toalQuantity / int.parse(widget.schedule.scheduledQuantity);
+    double percent = widget.toalQuantity / int.parse(widget.schedule.scheduledQuantity);
     return Container(
         child: Column(
       children: [
@@ -2419,8 +2209,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
               child: Center(
                   child: Text(
                 "${(percent * 100).round()}%",
-                style: TextStyle(
-                    color: percent >= 0.9 ? Colors.green : Colors.red),
+                style: TextStyle(color: percent >= 0.9 ? Colors.green : Colors.red),
               )),
             ),
             Container(
@@ -2477,8 +2266,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                       Future.delayed(
                         const Duration(milliseconds: 50),
                         () {
-                          SystemChannels.textInput
-                              .invokeMethod('TextInput.hide');
+                          SystemChannels.textInput.invokeMethod('TextInput.hide');
                         },
                       );
                       if (_binController.text.length > 0) {
@@ -2514,25 +2302,20 @@ class _GenerateLabelState extends State<GenerateLabel> {
                             ? GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    SystemChannels.textInput
-                                        .invokeMethod('TextInput.hide');
+                                    SystemChannels.textInput.invokeMethod('TextInput.hide');
                                     _binController.clear();
                                   });
                                 },
-                                child: Icon(Icons.clear,
-                                    size: 18, color: Colors.red))
+                                child: Icon(Icons.clear, size: 18, color: Colors.red))
                             : Container(),
                         focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.redAccent, width: 2.0),
+                          borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.grey.shade400, width: 2.0),
+                          borderSide: BorderSide(color: Colors.grey.shade400, width: 2.0),
                         ),
                         labelText: 'Scan bin',
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 5.0))),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 5.0))),
               ),
             ),
           ),
@@ -2548,19 +2331,14 @@ class _GenerateLabelState extends State<GenerateLabel> {
                       width: 120,
                       child: ElevatedButton(
                         style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(100.0),
-                                      side: BorderSide(color: Colors.red))),
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith<Color>(
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(100.0),
+                                  side: BorderSide(color: Colors.red))),
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
                             (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.pressed))
-                                return Colors.white;
-                              return Colors
-                                  .white; // Use the component's default.
+                              if (states.contains(MaterialState.pressed)) return Colors.white;
+                              return Colors.white; // Use the component's default.
                             },
                           ),
                         ),
@@ -2591,18 +2369,15 @@ class _GenerateLabelState extends State<GenerateLabel> {
                       width: 120,
                       child: ElevatedButton(
                         style: ButtonStyle(
-                          shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(100.0),
                                   side: BorderSide(color: Colors.transparent))),
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith<Color>(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
                             (Set<MaterialState> states) {
                               if (states.contains(MaterialState.pressed))
                                 return Colors.green.shade200;
-                              return Colors
-                                  .red.shade400; // Use the component's default.
+                              return Colors.red.shade400; // Use the component's default.
                             },
                           ),
                         ),
@@ -2616,8 +2391,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                           Future.delayed(
                             const Duration(milliseconds: 50),
                             () {
-                              SystemChannels.textInput
-                                  .invokeMethod('TextInput.hide');
+                              SystemChannels.textInput.invokeMethod('TextInput.hide');
                             },
                           );
                           if (_binController.text.length > 0) {
@@ -2676,15 +2450,11 @@ class _GenerateLabelState extends State<GenerateLabel> {
                         controller: _bundleScanController,
                         onSubmitted: (value) {
                           if (_bundleScanController.text.length > 0) {
-                            if (_bundleScanController.text ==
-                                getpostBundletoBin().bundleId) {
+                            if (_bundleScanController.text == getpostBundletoBin().bundleId) {
                               apiService!.postTransferBundletoBin(
-                                  transferBundleToBin: [
-                                    getpostBundletoBin()
-                                  ]).then((value) {
+                                  transferBundleToBin: [getpostBundletoBin()]).then((value) {
                                 if (value != null) {
-                                  BundleTransferToBin
-                                      bundleTransferToBinTracking = value[0];
+                                  BundleTransferToBin bundleTransferToBinTracking = value[0];
                                   Fluttertoast.showToast(
                                       msg:
                                           "Transfered Bundle-${bundleTransferToBinTracking.bundleIdentification} to Bin- ${_binController.text ?? ''}",
@@ -2697,16 +2467,14 @@ class _GenerateLabelState extends State<GenerateLabel> {
 
                                   setState(() {
                                     getBundles();
-                                    widget.sendData(
-                                        generatedBundleList.length + 1);
+                                    widget.sendData(generatedBundleList.length + 1);
                                     clear();
                                     _bundleScanController.clear();
                                     _binController.clear();
                                     label = new GeneratedLabel();
                                     status = Status.generateLabel;
                                     if (widget.toalQuantity ==
-                                        int.parse(widget
-                                            .schedule.scheduledQuantity)) {
+                                        int.parse(widget.schedule.scheduledQuantity)) {
                                       // widget.fullcomplete();
                                     }
                                   });
@@ -2749,8 +2517,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                           setState(() {});
                         },
                         onChanged: (value) {
-                          SystemChannels.textInput
-                              .invokeMethod('TextInput.hide');
+                          SystemChannels.textInput.invokeMethod('TextInput.hide');
                           setState(() {
                             bundleId = value;
                           });
@@ -2763,20 +2530,16 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                         _bundleScanController.clear();
                                       });
                                     },
-                                    child: Icon(Icons.clear,
-                                        size: 18, color: Colors.red))
+                                    child: Icon(Icons.clear, size: 18, color: Colors.red))
                                 : Container(),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.redAccent, width: 2.0),
+                              borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.grey.shade400, width: 2.0),
+                              borderSide: BorderSide(color: Colors.grey.shade400, width: 2.0),
                             ),
                             labelText: 'Scan Bundle',
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 5.0))),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 5.0))),
                   ),
                 ),
               ),
@@ -2789,18 +2552,15 @@ class _GenerateLabelState extends State<GenerateLabel> {
                       children: [
                         ElevatedButton(
                           style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(100.0),
                                     side: BorderSide(color: Colors.red))),
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
+                            backgroundColor: MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.pressed))
                                   return Colors.green.shade200;
-                                return Colors
-                                    .white; // Use the component's default.
+                                return Colors.white; // Use the component's default.
                               },
                             ),
                           ),
@@ -2821,19 +2581,15 @@ class _GenerateLabelState extends State<GenerateLabel> {
                         ),
                         ElevatedButton(
                           style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(100.0),
-                                    side:
-                                        BorderSide(color: Colors.transparent))),
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
+                                    side: BorderSide(color: Colors.transparent))),
+                            backgroundColor: MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.pressed))
                                   return Colors.green.shade200;
-                                return Colors
-                                    .red; // Use the component's default.
+                                return Colors.red; // Use the component's default.
                               },
                             ),
                           ),
@@ -2845,15 +2601,11 @@ class _GenerateLabelState extends State<GenerateLabel> {
                           ),
                           onPressed: () {
                             if (_bundleScanController.text.length > 0) {
-                              if (_bundleScanController.text ==
-                                  getpostBundletoBin().bundleId) {
+                              if (_bundleScanController.text == getpostBundletoBin().bundleId) {
                                 apiService!.postTransferBundletoBin(
-                                    transferBundleToBin: [
-                                      getpostBundletoBin()
-                                    ]).then((value) {
+                                    transferBundleToBin: [getpostBundletoBin()]).then((value) {
                                   if (value != null) {
-                                    BundleTransferToBin
-                                        bundleTransferToBinTracking = value[0];
+                                    BundleTransferToBin bundleTransferToBinTracking = value[0];
                                     Fluttertoast.showToast(
                                         msg:
                                             "Transfered Bundle-${bundleTransferToBinTracking.bundleIdentification} to Bin- ${_binController.text ?? ''}",
@@ -2866,16 +2618,14 @@ class _GenerateLabelState extends State<GenerateLabel> {
 
                                     setState(() {
                                       getBundles();
-                                      widget.sendData(
-                                          generatedBundleList.length + 1);
+                                      widget.sendData(generatedBundleList.length + 1);
                                       clear();
                                       _bundleScanController.clear();
                                       _binController.clear();
                                       label = new GeneratedLabel();
                                       status = Status.generateLabel;
                                       if (widget.toalQuantity ==
-                                          int.parse(widget
-                                              .schedule.scheduledQuantity)) {
+                                          int.parse(widget.schedule.scheduledQuantity)) {
                                         // widget.fullcomplete();
                                       }
                                     });
@@ -2917,19 +2667,15 @@ class _GenerateLabelState extends State<GenerateLabel> {
                         ),
                         ElevatedButton(
                             style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(100.0),
+                                      borderRadius: BorderRadius.circular(100.0),
                                       side: BorderSide(color: Colors.red))),
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith<Color>(
+                              backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.pressed))
                                     return Colors.red.shade200;
-                                  return Colors
-                                      .white; // Use the component's default.
+                                  return Colors.white; // Use the component's default.
                                 },
                               ),
                             ),
@@ -2950,8 +2696,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                     "-" +
                                     now.year.toString(),
                                 orderId: "${widget.schedule.orderId}",
-                                fgPartNumber:
-                                    "${widget.schedule.finishedGoodsNumber}",
+                                fgPartNumber: "${widget.schedule.finishedGoodsNumber}",
                                 cutlength: "${widget.schedule.length}",
                                 cablepart: "${widget.schedule.cablePartNumber}",
                                 wireGauge: "${label!.wireGauge}",
@@ -3012,8 +2757,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
     int getTotalint(List<TextEditingController> textList) {
       int total = 0;
       for (int i = 0; i < textList.length; i++) {
-        total = total +
-            int.parse(textList[i].text.length > 0 ? textList[i].text : '0');
+        total = total + int.parse(textList[i].text.length > 0 ? textList[i].text : '0');
       }
       return total;
     }
@@ -3035,44 +2779,29 @@ class _GenerateLabelState extends State<GenerateLabel> {
   }
 
   String total() {
-    int total = int.parse(cableDamageController.text.length > 0
-            ? cableDamageController.text
-            : '0') +
-        int.parse(lengthvariationController.text.length > 0
-            ? lengthvariationController.text
-            : '0') +
-        int.parse(rollerMarkController.text.length > 0
-            ? rollerMarkController.text
-            : '0') +
+    int total = int.parse(
+            cableDamageController.text.length > 0 ? cableDamageController.text : '0') +
+        int.parse(
+            lengthvariationController.text.length > 0 ? lengthvariationController.text : '0') +
+        int.parse(rollerMarkController.text.length > 0 ? rollerMarkController.text : '0') +
         int.parse(stripLengthVariationController.text.length > 0
             ? stripLengthVariationController.text
             : '0') +
-        int.parse(nickMarkController.text.length > 0
-            ? nickMarkController.text
-            : '0') +
-        int.parse(terminalDamageController.text.length > 0
-            ? terminalDamageController.text
-            : '0') +
-        int.parse(terminalBendController.text.length > 0
-            ? terminalBendController.text
-            : '0') +
-        int.parse(terminalTwistController.text.length > 0
-            ? terminalTwistController.text
-            : '0') +
-        int.parse(windowGapController.text.length > 0
-            ? windowGapController.text
-            : '0') +
-        int.parse(crimpOnInsulationController.text.length > 0
-            ? crimpOnInsulationController.text
-            : '0') +
-        int.parse(bellMoutherrorController.text.length > 0
-            ? bellMoutherrorController.text
-            : '0') +
+        int.parse(nickMarkController.text.length > 0 ? nickMarkController.text : '0') +
+        int.parse(terminalDamageController.text.length > 0 ? terminalDamageController.text : '0') +
+        int.parse(terminalBendController.text.length > 0 ? terminalBendController.text : '0') +
+        int.parse(terminalTwistController.text.length > 0 ? terminalTwistController.text : '0') +
+        int.parse(windowGapController.text.length > 0 ? windowGapController.text : '0') +
         int.parse(
-            cutoffBarController.text.length > 0 ? cutoffBarController.text : '0') +
-        int.parse(exposureStrandsController.text.length > 0 ? exposureStrandsController.text : '0') +
+            crimpOnInsulationController.text.length > 0 ? crimpOnInsulationController.text : '0') +
+        int.parse(bellMoutherrorController.text.length > 0 ? bellMoutherrorController.text : '0') +
+        int.parse(cutoffBarController.text.length > 0 ? cutoffBarController.text : '0') +
+        int.parse(
+            exposureStrandsController.text.length > 0 ? exposureStrandsController.text : '0') +
         int.parse(strandsCutController.text.length > 0 ? strandsCutController.text : '0') +
-        int.parse(brushLengthLessorMoreController.text.length > 0 ? brushLengthLessorMoreController.text : '0') +
+        int.parse(brushLengthLessorMoreController.text.length > 0
+            ? brushLengthLessorMoreController.text
+            : '0') +
         int.parse(halfCurlingController.text.length > 0 ? halfCurlingController.text : '0') +
         int.parse(wrongTerminalController.text.length > 0 ? wrongTerminalController.text : '0') +
         int.parse(wrongcableController.text.length > 0 ? wrongcableController.text : '0') +
@@ -3127,42 +2856,34 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                 children: [
                                   field(
                                       title: "Bundle ID",
-                                      data:
-                                          generatedBundle.label.bundleId ?? ''),
+                                      data: generatedBundle.label.bundleId ?? ''),
                                   field(
                                       title: "Bundle Qty",
-                                      data:
-                                          generatedBundle.bundleQty.toString()),
+                                      data: generatedBundle.bundleQty.toString()),
                                   field(
                                       title: "Bundle Status",
                                       data: "${generatedBundle.label.status}"),
                                   field(
                                       title: "Cut Length",
-                                      data:
-                                          "${generatedBundle.label.cutLength}"),
+                                      data: "${generatedBundle.label.cutLength}"),
                                   field(
                                       title: "Color",
-                                      data:
-                                          "${generatedBundle.bundleDetail.color}"),
+                                      data: "${generatedBundle.bundleDetail.color}"),
                                 ],
                               ),
                               Column(
                                 children: [
                                   field(
                                       title: "Cable Part Number",
-                                      data: generatedBundle
-                                          .bundleDetail.cablePartNumber
-                                          .toString()),
+                                      data:
+                                          generatedBundle.bundleDetail.cablePartNumber.toString()),
                                   field(
                                     title: "Cable part Description",
-                                    data: generatedBundle
-                                        .bundleDetail.cablePartDescription,
+                                    data: generatedBundle.bundleDetail.cablePartDescription,
                                   ),
                                   field(
                                     title: "Finished Goods",
-                                    data: generatedBundle
-                                        .bundleDetail.finishedGoodsPart
-                                        .toString(),
+                                    data: generatedBundle.bundleDetail.finishedGoodsPart.toString(),
                                   ),
                                   field(
                                     title: "Order Id",
@@ -3170,8 +2891,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                   ),
                                   field(
                                     title: "Update From",
-                                    data: generatedBundle
-                                        .bundleDetail.updateFromProcess,
+                                    data: generatedBundle.bundleDetail.updateFromProcess,
                                   ),
                                 ],
                               ),
@@ -3179,30 +2899,23 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                 children: [
                                   field(
                                     title: "Machine Id",
-                                    data: generatedBundle
-                                        .bundleDetail.machineIdentification,
+                                    data: generatedBundle.bundleDetail.machineIdentification,
                                   ),
                                   field(
                                     title: "Schedule ID",
-                                    data: generatedBundle
-                                        .bundleDetail.scheduledId
-                                        .toString(),
+                                    data: generatedBundle.bundleDetail.scheduledId.toString(),
                                   ),
                                   field(
                                     title: "Finished Goods",
-                                    data: generatedBundle
-                                        .bundleDetail.finishedGoodsPart
-                                        .toString(),
+                                    data: generatedBundle.bundleDetail.finishedGoodsPart.toString(),
                                   ),
                                   field(
                                     title: "Bin Id",
-                                    data: generatedBundle.bundleDetail.binId
-                                        .toString(),
+                                    data: generatedBundle.bundleDetail.binId.toString(),
                                   ),
                                   field(
                                     title: "Location Id",
-                                    data:
-                                        generatedBundle.bundleDetail.locationId,
+                                    data: generatedBundle.bundleDetail.locationId,
                                   ),
                                 ],
                               ),
@@ -3231,10 +2944,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                 padding: const EdgeInsets.all(0.0),
                 child: Text(
                   "$title",
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w400),
+                  style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w400),
                 ),
               ),
             ],
@@ -3246,10 +2956,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                 padding: const EdgeInsets.all(0.0),
                 child: Text(
                   "$data",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400),
+                  style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w400),
                 ),
               )
             ],

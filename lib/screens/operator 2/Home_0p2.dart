@@ -231,67 +231,67 @@ class _HomePageOp2State extends State<HomePageOp2> {
   }
 
   Widget search() {
-    if (type == 1) {
-      return Container(
-        height: 50,
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          children: [
-            SizedBox(width: 10),
-            dropdown(options: ["Order Id", "FG Part No.", "Cable Part No"], name: "Order Id"),
-            SizedBox(width: 10),
-            Container(
-              height: 38,
-              width: 220,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-                color: Colors.grey.shade100,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.search,
-                      size: 20,
-                      color: Colors.red.shade400,
-                    ),
-                    SizedBox(width: 5),
-                    Container(
-                      width: 180,
-                      height: 40,
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      child: TextField(
-                        keyboardType: TextInputType.number,
-                        controller: _searchController,
-                        onChanged: (value) {
-                          setState(() {});
-                        },
-                        style: TextStyle(fontSize: 16),
-                        onTap: () {},
-                        decoration: new InputDecoration(
-                          hintText: _chosenValue,
-                          hintStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          contentPadding: EdgeInsets.only(left: 15, bottom: 13, top: 11, right: 0),
-                          fillColor: Colors.white,
-                        ),
-                        //fillColor: Colors.green
+    // if (type == 1) {
+    return Container(
+      height: 50,
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        children: [
+          SizedBox(width: 10),
+          dropdown(options: ["Order Id", "FG Part No.", "Cable Part No"], name: "Order Id"),
+          SizedBox(width: 10),
+          Container(
+            height: 38,
+            width: 220,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              color: Colors.grey.shade100,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.search,
+                    size: 20,
+                    color: Colors.red.shade400,
+                  ),
+                  SizedBox(width: 5),
+                  Container(
+                    width: 180,
+                    height: 40,
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: _searchController,
+                      onChanged: (value) {
+                        setState(() {});
+                      },
+                      style: TextStyle(fontSize: 16),
+                      onTap: () {},
+                      decoration: new InputDecoration(
+                        hintText: _chosenValue,
+                        hintStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        contentPadding: EdgeInsets.only(left: 15, bottom: 13, top: 11, right: 0),
+                        fillColor: Colors.white,
                       ),
+                      //fillColor: Colors.green
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      );
-    } else {
-      return Container();
-    }
+          ),
+        ],
+      ),
+    );
+    // } else {
+    //   return Container();
+    // }
   }
 
   Widget dropdown({required List<String> options, required String name}) {
@@ -424,7 +424,10 @@ class _SchudleTableState extends State<SchudleTable> {
                           sameMachine: "${widget.scheduleType}"),
                       builder: (context, AsyncSnapshot<List<CrimpingSchedule>> snapshot) {
                         if (snapshot.hasData) {
-                          List<CrimpingSchedule>? schedulelist = searchfilter(snapshot.data);
+                          List<CrimpingSchedule>? schedulelist = multiCrimpingFilter(
+                              crimpingList: searchfilter(snapshot.data) ?? [])['crimpingList'];
+                          List<CrimpingSchedule>? extraCrimpingScheduleList = multiCrimpingFilter(
+                              crimpingList: searchfilter(snapshot.data) ?? [])['extraCrimpList'];
                           schedulelist = schedulelist!
                               .where((element) =>
                                   element.schedulestatus.toLowerCase() != "Complete".toLowerCase())
@@ -445,14 +448,15 @@ class _SchudleTableState extends State<SchudleTable> {
                                   physics: const AlwaysScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   itemCount: schedulelist.length,
+                                  padding: EdgeInsets.only(bottom: 200),
                                   itemBuilder: (context, index) {
                                     return CrimpingScheduleDataRow(
-                                      schedule: schedulelist![index],
-                                      machine: widget.machine,
-                                      employee: widget.employee,
-                                      type: widget.type,
-                                      sameMachine: widget.scheduleType,
-                                    );
+                                        schedule: schedulelist![index],
+                                        machine: widget.machine,
+                                        employee: widget.employee,
+                                        type: widget.type,
+                                        sameMachine: widget.scheduleType,
+                                        extraCrimpingSchedules: extraCrimpingScheduleList ?? []);
                                   }),
                             );
                           } else {
@@ -575,6 +579,35 @@ class _SchudleTableState extends State<SchudleTable> {
         ),
       ),
     );
+  }
+
+  Map<String, List<CrimpingSchedule>> multiCrimpingFilter(
+      {required List<CrimpingSchedule> crimpingList}) {
+    List<CrimpingSchedule> extraCrimpList = [];
+    List<CrimpingSchedule> newList = [];
+
+    for (CrimpingSchedule crimpingSchedule in crimpingList) {
+      if (!extraCrimpList.contains(crimpingSchedule)) {
+        List<CrimpingSchedule> crimpingListLoop = crimpingList;
+        // crimpingListLoop.remove(crimpingSchedule);
+        int a = 0;
+
+        for (CrimpingSchedule checkCrimpingSchedule in crimpingListLoop) {
+          if (crimpingSchedule.scheduleId == checkCrimpingSchedule.scheduleId) {
+            if (a == 0) {
+              a++;
+            } else {
+              extraCrimpList.add(checkCrimpingSchedule);
+            }
+          }
+        }
+        newList.add(crimpingSchedule);
+      } else {}
+    }
+    for (CrimpingSchedule s in extraCrimpList) {
+      log("crimpingTest : ${s.scheduleId}");
+    }
+    return {"crimpingList": newList, "extraCrimpList": extraCrimpList};
   }
 
   Widget tableHeading() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:molex/screens/widgets/drawer.dart';
 
 import '../../main.dart';
 import '../../model_api/login_model.dart';
@@ -13,7 +14,9 @@ import '../../service/apiService.dart';
 class HomeVisualInspector extends StatefulWidget {
   Employee employee;
 
-  HomeVisualInspector({required this.employee, });
+  HomeVisualInspector({
+    required this.employee,
+  });
   @override
   _HomeVisualInspectorState createState() => _HomeVisualInspectorState();
 }
@@ -30,21 +33,22 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
 
   @override
   Widget build(BuildContext context) {
-       SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
+        drawer: Drawer(
+          child: DrawerWidget(employee: widget.employee, type: "process"),
+        ),
         appBar: AppBar(
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(
             color: Colors.red,
           ),
           backwardsCompatibility: false,
-          leading: null,
           title: Text(
             'Visual Inspector Dashboard',
-            style: TextStyle(color: Colors.red,fontFamily: fonts.openSans,fontSize: 18),
+            style: TextStyle(color: Colors.red, fontFamily: fonts.openSans, fontSize: 18),
           ),
           elevation: 0,
-          automaticallyImplyLeading: false,
           actions: [
             Container(
               padding: EdgeInsets.all(1),
@@ -66,8 +70,7 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
                               child: Icon(
                                 Icons.person,
                                 size: 18,
@@ -76,8 +79,7 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
                             ),
                             Text(
                               widget.employee.empId,
-                              style:
-                                  TextStyle(fontSize: 13, color: Colors.black),
+                              style: TextStyle(fontSize: 13, color: Colors.black),
                             ),
                           ],
                         )),
@@ -88,7 +90,6 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
               ),
             ),
             TimeDisplay(),
-           
           ],
         ),
         body: SingleChildScrollView(
@@ -97,8 +98,7 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
               Padding(
                 padding: const EdgeInsets.only(),
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10.0, vertical: 7),
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 7),
                   height: 70,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -128,13 +128,11 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
                                       height: 38,
                                       width: 180,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5)),
+                                        borderRadius: BorderRadius.all(Radius.circular(5)),
                                         color: Colors.grey.shade100,
                                       ),
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0),
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                         child: Row(
                                           children: [
                                             Icon(
@@ -146,8 +144,7 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
                                             Container(
                                               width: 130,
                                               height: 30,
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 5),
+                                              padding: EdgeInsets.symmetric(vertical: 5),
                                               child: TextField(
                                                 controller: _searchController,
                                                 onChanged: (value) {
@@ -157,25 +154,14 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
                                                 onTap: () {},
                                                 decoration: new InputDecoration(
                                                   hintText: _chosenValue,
-                                                  hintStyle:
-                                                      TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  
-                                                  focusedBorder:
-                                                      InputBorder.none,
-                                                  enabledBorder:
-                                                      InputBorder.none,
+                                                  hintStyle: TextStyle(
+                                                      fontSize: 12, fontWeight: FontWeight.w500),
+                                                  focusedBorder: InputBorder.none,
+                                                  enabledBorder: InputBorder.none,
                                                   errorBorder: InputBorder.none,
-                                                  disabledBorder:
-                                                      InputBorder.none,
-                                                  contentPadding:
-                                                      EdgeInsets.only(
-                                                          left: 15,
-                                                          bottom: 11,
-                                                          top: 11,
-                                                          right: 15),
+                                                  disabledBorder: InputBorder.none,
+                                                  contentPadding: EdgeInsets.only(
+                                                      left: 15, bottom: 11, top: 11, right: 15),
                                                   fillColor: Colors.white,
                                                 ),
                                                 //fillColor: Colors.green
@@ -190,20 +176,16 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
                                 Container(
                                   child: ElevatedButton(
                                     style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                              side: BorderSide(
-                                                  color: Colors.transparent))),
-                                      backgroundColor: MaterialStateProperty
-                                          .resolveWith<Color>(
+                                              borderRadius: BorderRadius.circular(10.0),
+                                              side: BorderSide(color: Colors.transparent))),
+                                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                         (Set<MaterialState> states) {
-                                          if (states
-                                              .contains(MaterialState.pressed))
+                                          if (states.contains(MaterialState.pressed))
                                             return Colors.green.shade200;
-                                          return Colors.green.shade500; // Use the component's default.
+                                          return Colors
+                                              .green.shade500; // Use the component's default.
                                         },
                                       ),
                                     ),
@@ -216,15 +198,12 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
                                             width: 20,
                                             decoration: BoxDecoration(
                                                 image: DecorationImage(
-                                                    image: AssetImage(
-                                                        "assets/image/scan.png"))),
+                                                    image: AssetImage("assets/image/scan.png"))),
                                           ),
                                           SizedBox(width: 5),
                                           Text(
                                             'Scan',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12),
+                                            style: TextStyle(color: Colors.white, fontSize: 12),
                                           ),
                                         ],
                                       ),
@@ -282,8 +261,7 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
       }).toList(),
       hint: Text(
         name,
-        style: TextStyle(
-            color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
+        style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
       ),
       onChanged: (String? value) {
         setState(() {
@@ -295,13 +273,9 @@ class _HomeVisualInspectorState extends State<HomeVisualInspector> {
 }
 
 class ViScheduleTable extends StatefulWidget {
- 
-  
   String searchType;
   String query;
   ViScheduleTable({
-   
-  
     required this.searchType,
     required this.query,
   });
@@ -320,23 +294,20 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
   List<ViScheduler> searchfilter(List<ViScheduler> scheduleList) {
     switch (widget.searchType) {
       case "Order ID":
-        return scheduleList
-            .where((element) => element.orderId.startsWith(widget.query))
-            .toList();
+        return scheduleList.where((element) => element.orderId.startsWith(widget.query)).toList();
         break;
       case "FG No.":
-        return scheduleList
-            .where((element) => element.fgNo.startsWith(widget.query))
-            .toList();
+        return scheduleList.where((element) => element.fgNo.startsWith(widget.query)).toList();
         break;
       case "Schedule ID":
         return scheduleList
             .where((element) => element.scheduleId.startsWith(widget.query))
             .toList();
         break;
-        case "Location ID":
+      case "Location ID":
         return scheduleList
-            .where((element) => element.binLocationId.toLowerCase().startsWith(widget.query.toLowerCase()))
+            .where((element) =>
+                element.binLocationId.toLowerCase().startsWith(widget.query.toLowerCase()))
             .toList();
       default:
         return scheduleList;
@@ -359,16 +330,14 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
                 // height: double.parse("${rowList.length*60}"),
                 child: FutureBuilder(
                     future: apiService.getviSchedule(),
-                    builder: (context,AsyncSnapshot<List<ViScheduler>> snapshot) {
+                    builder: (context, AsyncSnapshot<List<ViScheduler>> snapshot) {
                       if (snapshot.hasData) {
-                        List<ViScheduler> vischedule =
-                            searchfilter(snapshot.data??[]);
+                        List<ViScheduler> vischedule = searchfilter(snapshot.data ?? []);
                         return ListView.builder(
                             shrinkWrap: true,
                             itemCount: vischedule.length,
                             itemBuilder: (context, index) {
-                              return buildDataRow(
-                                  viSchedule: vischedule[index], c: index + 1);
+                              return buildDataRow(viSchedule: vischedule[index], c: index + 1);
                             });
                       } else {
                         return Container();
@@ -391,13 +360,14 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(name,
-                  style:  TextStyle(
-                        // color: Color(0xffBF3947),
-                        color: Colors.red,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600),
-                  ),
+              Text(
+                name,
+                style: TextStyle(
+                    // color: Color(0xffBF3947),
+                    color: Colors.red,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600),
+              ),
             ],
           ),
         ),
@@ -414,8 +384,7 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
           width: MediaQuery.of(context).size.width,
           height: 40,
           decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(5))),
+              color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(5))),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -448,7 +417,6 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
           child: Text(
             name,
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-            
           ),
         ),
       );
@@ -459,8 +427,7 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
       child: Material(
         elevation: 1,
         shadowColor: Colors.white,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 50,
@@ -494,7 +461,7 @@ class _ViScheduleTableState extends State<ViScheduleTable> {
                 //Process
                 cell(viSchedule.totalBundles, 0.10),
                 // Cut length
-                 cell(viSchedule.binLocationId, 0.10),
+                cell(viSchedule.binLocationId, 0.10),
 
                 //Color
               ],

@@ -1,17 +1,17 @@
 // To parse this JSON data, do
 //
-//     final saveKitting = saveKittingFromJson(jsonString);
+//     final postKittingModel = postKittingModelFromJson(jsonString);
 
 import 'dart:convert';
 
-List<SaveKitting> saveKittingFromJson(String str) =>
-    List<SaveKitting>.from(json.decode(str).map((x) => SaveKitting.fromJson(x)));
+List<PostKittingModel> postKittingModelFromJson(String str) =>
+    List<PostKittingModel>.from(json.decode(str).map((x) => PostKittingModel.fromJson(x)));
 
-String saveKittingToJson(List<SaveKitting> data) =>
+String postKittingModelToJson(List<PostKittingModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class SaveKitting {
-  SaveKitting({
+class PostKittingModel {
+  PostKittingModel({
     required this.fgPartNumber,
     required this.orderId,
     required this.cablePartNumber,
@@ -33,7 +33,6 @@ class SaveKitting {
     required this.suggestedBundleId,
     required this.suggestedBundleQty,
     required this.status,
-    required this.userId,
   });
 
   int fgPartNumber;
@@ -49,7 +48,7 @@ class SaveKitting {
   int actualQty;
   String binId;
   String binLocation;
-  List<String> bundleId;
+  String bundleId;
   int bundleQty;
   int suggetedScheduledQty;
   int suggestedActualQty;
@@ -57,9 +56,8 @@ class SaveKitting {
   String suggestedBundleId;
   int suggestedBundleQty;
   String status;
-  String userId;
 
-  factory SaveKitting.fromJson(Map<String, dynamic> json) => SaveKitting(
+  factory PostKittingModel.fromJson(Map<String, dynamic> json) => PostKittingModel(
         fgPartNumber: json["fgPartNumber"],
         orderId: json["orderId"],
         cablePartNumber: json["cablePartNumber"],
@@ -73,7 +71,7 @@ class SaveKitting {
         actualQty: json["actualQty"],
         binId: json["binId"],
         binLocation: json["binLocation"],
-        bundleId: List<String>.from(json["bundleId"].map((x) => x)),
+        bundleId: json["bundleId"],
         bundleQty: json["bundleQty"],
         suggetedScheduledQty: json["SuggetedScheduledQty"],
         suggestedActualQty: json["suggestedActualQty"],
@@ -81,7 +79,6 @@ class SaveKitting {
         suggestedBundleId: json["suggestedBundleId"],
         suggestedBundleQty: json["suggestedBundleQty"],
         status: json["status"],
-        userId: json["userId"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -98,7 +95,7 @@ class SaveKitting {
         "actualQty": actualQty,
         "binId": binId,
         "binLocation": binLocation,
-        "bundleId": List<dynamic>.from(bundleId!.map((x) => x)),
+        "bundleId": bundleId,
         "bundleQty": bundleQty,
         "SuggetedScheduledQty": suggetedScheduledQty,
         "suggestedActualQty": suggestedActualQty,
@@ -106,6 +103,5 @@ class SaveKitting {
         "suggestedBundleId": suggestedBundleId,
         "suggestedBundleQty": suggestedBundleQty,
         "status": status,
-        "userId": userId,
       };
 }

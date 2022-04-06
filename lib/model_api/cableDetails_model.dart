@@ -10,10 +10,10 @@ String getCableDetailToJson(GetCableDetail data) => json.encode(data.toJson());
 
 class GetCableDetail {
     GetCableDetail({
-       required this.status,
-        required this.statusMsg,
-        required this.errorCode,
-        required this.data,
+      required  this.status,
+      required  this.statusMsg,
+      required  this.errorCode,
+      required  this.data,
     });
 
     String status;
@@ -41,38 +41,50 @@ class Data {
        required this.findCableDetails,
     });
 
-    CableDetails findCableDetails;
+    List<CableDetails> findCableDetails;
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
-        findCableDetails: CableDetails.fromJson(json["findCableDetails "]),
+        findCableDetails: List<CableDetails>.from(json["findCableDetails "].map((x) => CableDetails.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
-        "findCableDetails ": findCableDetails.toJson(),
+        "findCableDetails ": List<dynamic>.from(findCableDetails.map((x) => x.toJson())),
     };
 }
 
 class CableDetails {
     CableDetails({
-      required  this.cutLengthSpec,
-      required  this.cablePartNumber,
-      required  this.description,
-      required  this.stripLengthFrom,
-      required  this.stripLengthTo,
+       required this.cutLengthSpec,
+       required this.cablePartNumber,
+       required this.description,
+       required this.stripLengthFrom,
+       required this.stripLengthTo,
+       required this.crimpFrom,
+       required this.crimpTo,
+       required this.crimpColor,
+       required this.wireCuttingSortingNumber,
     });
 
-    String ?cutLengthSpec;
-    String? cablePartNumber;
-    String? description;
-    String ?stripLengthFrom;
-    String ?stripLengthTo;
+    int cutLengthSpec;
+    int cablePartNumber;
+    String description;
+    String stripLengthFrom;
+    String stripLengthTo;
+    String crimpFrom;
+    String crimpTo;
+    String crimpColor;
+    int wireCuttingSortingNumber;
 
     factory CableDetails.fromJson(Map<String, dynamic> json) => CableDetails(
-        cutLengthSpec: json["cutLengthSpec"]?.toString().replaceAll("Â±", "±"),
-        cablePartNumber: json["cablePartNumber"]?.toString()?.replaceAll("Â±", "±"),
-        description: json["description"]?.toString()?.replaceAll("Â±", "±"),
-        stripLengthFrom: json["stripLengthFrom"]?.toString()?.replaceAll("Â±", "±"),
-        stripLengthTo: json["stripLengthTo"]?.toString()?.replaceAll("Â±", "±"),
+        cutLengthSpec: json["cutLengthSpec"],
+        cablePartNumber: json["cablePartNumber"],
+        description: json["description"].toString().replaceAll("Â±", "±"),
+        stripLengthFrom: json["stripLengthFrom"].toString().replaceAll("Â±", "±"),
+        stripLengthTo: json["stripLengthTo"].toString().replaceAll("Â±", "±"),
+        crimpFrom: json["crimpFrom"],
+        crimpTo: json["crimpTo"],
+        crimpColor: json["crimpColor"],
+        wireCuttingSortingNumber: json["wireCuttingSortingNumber"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -81,5 +93,9 @@ class CableDetails {
         "description": description,
         "stripLengthFrom": stripLengthFrom,
         "stripLengthTo": stripLengthTo,
+        "crimpFrom": crimpFrom,
+        "crimpTo": crimpTo,
+        "crimpColor": crimpColor,
+        "wireCuttingSortingNumber": wireCuttingSortingNumber,
     };
 }

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:input_with_keyboard_control/input_with_keyboard_control.dart';
 import 'package:molex/model_api/kitting_plan/getKittingData_model.dart';
@@ -23,8 +24,8 @@ class KittingDash extends StatefulWidget {
 }
 
 class _KittingDashState extends State<KittingDash> {
-  String ?fgNumber;
-  String ?orderId;
+  String? fgNumber;
+  String? orderId;
   String? qty;
   ApiService? apiService;
   List<KittingPost> kittingList = [];
@@ -32,6 +33,11 @@ class _KittingDashState extends State<KittingDash> {
   bool loadingSave = false;
 
   TextEditingController textEditingController = new TextEditingController();
+  TextEditingController orderIdController = new TextEditingController();
+
+  TextEditingController fgNumberController = new TextEditingController();
+
+  TextEditingController qtyController = new TextEditingController();
 
   @override
   void initState() {
@@ -76,8 +82,7 @@ class _KittingDashState extends State<KittingDash> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Icon(
                               Icons.person,
                               size: 18,
@@ -100,10 +105,7 @@ class _KittingDashState extends State<KittingDash> {
         ],
       ),
       drawer: Drawer(
-        child: DrawerWidget(
-            employee: widget.employee,
-           
-            type: "process"),
+        child: DrawerWidget(employee: widget.employee, type: "process"),
       ),
       body: Column(
         children: [
@@ -111,6 +113,7 @@ class _KittingDashState extends State<KittingDash> {
             children: [
               search(),
               save(),
+              kittingList.length >= 1 ? displayFgDetails() : Container()
             ],
           ),
           dataTable()
@@ -143,6 +146,7 @@ class _KittingDashState extends State<KittingDash> {
                         fgNumber = value;
                       });
                     },
+                    controller: fgNumberController,
                     style: TextStyle(fontSize: 15),
                     decoration: InputDecoration(
                         labelText: "Fg Number",
@@ -176,6 +180,7 @@ class _KittingDashState extends State<KittingDash> {
                       });
                     },
                     style: TextStyle(fontSize: 15),
+                    controller: orderIdController,
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(0),
                         labelText: "Order ID",
@@ -206,6 +211,7 @@ class _KittingDashState extends State<KittingDash> {
                       //TODO
                     },
                     style: TextStyle(fontSize: 15),
+                    controller: qtyController,
                     decoration: InputDecoration(
                         labelText: "Qty",
                         contentPadding: EdgeInsets.all(0),
@@ -222,50 +228,65 @@ class _KittingDashState extends State<KittingDash> {
             ),
             ElevatedButton(
               style: ButtonStyle(
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40.0),
-                        side: BorderSide(color: Colors.transparent))),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40.0),
+                    side: BorderSide(color: Colors.transparent))),
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
                   (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.pressed))
-                      return Colors.blue.shade200;
+                    if (states.contains(MaterialState.pressed)) return Colors.blue.shade200;
                     return Colors.blue.shade500; // Use the component's default.
                   },
                 ),
               ),
               onPressed: () {
-                setState(() {
-                  loading = true;
-                });
-                FocusScope.of(context).unfocus();
-                FocusNode focusNode = FocusNode();
-                focusNode.unfocus();
-                PostKittingData postKittingData = new PostKittingData(
-                    orderNo: orderId??'',
-                    fgNumber: int?.parse(fgNumber??"0"),
-                    quantity: int?.parse(qty??'0'));
-                apiService!.getkittingDetail(postKittingData).then((value) {
-                  //84671404
-                  //369100004
-                  if (value != null) {
-                    setState(() {
-                      List<KittingEJobDtoList> kitlis = value;
-                      for (KittingEJobDtoList kit in kitlis) {
-                        kittingList.add(KittingPost(
-                            kittingEJobDtoList: kit,
-                            selectedBundles: getList(kit.bundleMaster)));
-                        log("${kit.bundleMaster.length}");
-                      }
-                      loading = false;
-                    });
-                  } else {
-                    setState(() {
-                      loading = false;
-                    });
-                    //TODO toast
-                  }
-                });
+                kittingList = [];
+                if (fgNumberController.text.isNotEmpty &&
+                    orderIdController.text.isNotEmpty &&
+                    qtyController.text.isNotEmpty) {
+                  setState(() {
+                    loading = true;
+                  });
+                  FocusScope.of(context).unfocus();
+                  FocusNode focusNode = FocusNode();
+                  focusNode.unfocus();
+                  PostKittingData postKittingData = new PostKittingData(
+                      orderNo: orderId ?? '',
+                      fgNumber: int?.parse(fgNumber ?? "0"),
+                      quantity: int?.parse(qty ?? '0'));
+                  apiService!.getkittingDetail(postKittingData).then((value) {
+                    //84671404
+                    //369100004
+                    if (value != null) {
+                      setState(() {
+                        List<KittingEJobDtoList> kitlis = value;
+                        for (KittingEJobDtoList kit in kitlis) {
+                          kittingList.add(KittingPost(
+                              kittingEJobDtoList: kit, selectedBundles: getList(kit.bundleMaster)));
+                          log("${kit.bundleMaster.length}");
+                        }
+                        loading = false;
+                        qtyController.clear();
+                        fgNumberController.clear();
+                        orderIdController.clear();
+                      });
+                    } else {
+                      setState(() {
+                        loading = false;
+                      });
+                      //TODO toast
+                    }
+                  });
+                } else {
+                  Fluttertoast.showToast(
+                    msg: "Enter valid details",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                }
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -275,8 +296,7 @@ class _KittingDashState extends State<KittingDash> {
                         width: 22,
                         child: CircularProgressIndicator(
                           strokeWidth: 3,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
                     : Row(
@@ -297,6 +317,37 @@ class _KittingDashState extends State<KittingDash> {
     );
   }
 
+  Widget displayFgDetails() {
+    return Container(
+        width: 200,
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("FG Number : ", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                Text("$fgNumber",
+                    style: TextStyle(
+                      fontSize: 15,
+                    )),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Order ID : ", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                Text("$orderId",
+                    style: TextStyle(
+                      fontSize: 15,
+                    )),
+              ],
+            )
+          ],
+        ));
+  }
+
   getList(List<BundleMaster> bundleList) {
     List<BundleMaster> temp = [];
     int totalQty = 0;
@@ -312,8 +363,8 @@ class _KittingDashState extends State<KittingDash> {
   }
 
   Widget dataTable() {
-    TextStyle headingStyle = TextStyle(
-        fontSize: 13, fontWeight: FontWeight.w500, fontFamily: fonts.openSans);
+    TextStyle headingStyle =
+        TextStyle(fontSize: 13, fontWeight: FontWeight.w500, fontFamily: fonts.openSans);
     TextStyle dataStyle = TextStyle(
       fontSize: 12,
     );
@@ -328,13 +379,13 @@ class _KittingDashState extends State<KittingDash> {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.8,
               colums: [
-                CustomCell(
-                  width: 100,
-                  child: Text(
-                    'FG',
-                    style: headingStyle,
-                  ),
-                ),
+                // CustomCell(
+                //   width: 100,
+                //   child: Text(
+                //     'FG',
+                //     style: headingStyle,
+                //   ),
+                // ),
                 CustomCell(
                   width: 100,
                   child: Text(
@@ -357,21 +408,17 @@ class _KittingDashState extends State<KittingDash> {
                   ),
                 ),
                 CustomCell(
-                  width: 100,
-                  child: Text(
-                    'Bundles',
-                    style: headingStyle,
-                  ),
+                  width: 120,
+                  child: Text('Selected\nBundles / Bundles Qty',
+                      textAlign: TextAlign.center, style: headingStyle.copyWith(fontSize: 10)),
                 ),
                 CustomCell(
-                  width: 100,
-                  child: Text(
-                    'Total Bundles',
-                    style: headingStyle,
-                  ),
+                  width: 120,
+                  child: Text('Total\nBundles / Bundles Qty',
+                      textAlign: TextAlign.center, style: headingStyle.copyWith(fontSize: 10)),
                 ),
                 CustomCell(
-                  width: 100,
+                  width: 70,
                   child: Text(
                     'Color',
                     style: headingStyle,
@@ -396,12 +443,12 @@ class _KittingDashState extends State<KittingDash> {
                   var length2 = e.kittingEJobDtoList.bundleMaster.length;
 
                   return CustomRow(cells: [
-                    CustomCell(
-                        width: 100,
-                        child: Text(
-                          "${e.kittingEJobDtoList.fgNumber}",
-                          style: dataStyle,
-                        )),
+                    // CustomCell(
+                    //     width: 100,
+                    //     child: Text(
+                    //       "${e.kittingEJobDtoList.fgNumber}",
+                    //       style: dataStyle,
+                    //     )),
                     CustomCell(
                         width: 100,
                         child: Text(
@@ -422,14 +469,14 @@ class _KittingDashState extends State<KittingDash> {
                         )),
 
                     CustomCell(
-                        width: 100,
+                        width: 120,
                         child: Container(
-                          width: 80,
+                          width: 90,
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                "$length2",
+                                "${e.selectedBundles.length} / ${getBundleQty(e.selectedBundles)}",
                                 style: dataStyle,
                               ),
                               IconButton(
@@ -438,14 +485,11 @@ class _KittingDashState extends State<KittingDash> {
                                   onPressed: () {
                                     showBundleDetail(
                                         context: context,
-                                        fgNo:
-                                            "${e.kittingEJobDtoList.fgNumber}",
-                                        cablePartNo:
-                                            "${e.kittingEJobDtoList.cableNumber}",
-                                        awg:
-                                            "${e.kittingEJobDtoList.wireGuage}",
-                                        bundles:
-                                            e.kittingEJobDtoList.bundleMaster,
+                                        fgNo: "${e.kittingEJobDtoList.fgNumber}",
+                                        cablePartNo: "${e.kittingEJobDtoList.cableNumber}",
+                                        awg: "${e.kittingEJobDtoList.wireGuage}",
+                                        bundles: e.kittingEJobDtoList.bundleMaster,
+                                        cutLength: "${e.kittingEJobDtoList.cutLength}",
                                         selectedBundles: e.selectedBundles);
                                   },
                                   icon: Icon(
@@ -457,13 +501,13 @@ class _KittingDashState extends State<KittingDash> {
                           ),
                         )),
                     CustomCell(
-                        width: 100,
+                        width: 120,
                         child: Text(
-                          "${getBundleQty(e.selectedBundles)}",
+                          " $length2 / ${getBundleQty(e.kittingEJobDtoList.bundleMaster)}",
                           style: dataStyle,
                         )),
                     CustomCell(
-                        width: 100,
+                        width: 70,
                         child: Text(
                           e.kittingEJobDtoList.cableColor ?? "",
                           style: dataStyle,
@@ -479,14 +523,13 @@ class _KittingDashState extends State<KittingDash> {
                     //     "${e.kittingEJobDtoList.bundleMaster!.length - e.selectedBundles.length}")),
 
                     CustomCell(
-                      width: 100,
+                        width: 100,
                         child: Text(
                             "${getPendingQty(e.kittingEJobDtoList.bundleMaster, e.selectedBundles).abs()}",
                             style: TextStyle(
                                 fontSize: 12,
                                 color: getPendingQty(
-                                            e.kittingEJobDtoList.bundleMaster,
-                                            e.selectedBundles) <=
+                                            e.kittingEJobDtoList.bundleMaster, e.selectedBundles) <=
                                         0
                                     ? Colors.green
                                     : Colors.red))),
@@ -499,8 +542,7 @@ class _KittingDashState extends State<KittingDash> {
   }
 
   int getBundleQty(List<BundleMaster> bundles) {
-    int sum =
-        bundles.map((e) => e.bundleQuantity).toList().fold(0, (p, c) => p + c);
+    int sum = bundles.map((e) => e.bundleQuantity).toList().fold(0, (p, c) => p + c);
     return sum;
   }
 
@@ -508,10 +550,7 @@ class _KittingDashState extends State<KittingDash> {
     List<BundleMaster> bundlesmaster,
     List<BundleMaster> selectedBundle1,
   ) {
-    int sum1 = selectedBundle1
-        .map((e) => e.bundleQuantity)
-        .toList()
-        .fold(0, (p, c) => p + c);
+    int sum1 = selectedBundle1.map((e) => e.bundleQuantity).toList().fold(0, (p, c) => p + c);
 
     int sum2 = int.parse(qty ?? '0');
 
@@ -528,6 +567,7 @@ class _KittingDashState extends State<KittingDash> {
       required String fgNo,
       required String cablePartNo,
       required String awg,
+      required String cutLength,
       required List<BundleMaster> selectedBundles}) async {
     Future.delayed(
       const Duration(milliseconds: 50),
@@ -546,6 +586,7 @@ class _KittingDashState extends State<KittingDash> {
           cablePartNo: cablePartNo,
           bundleList: bundles,
           selectedBundleList: selectedBundles,
+          cutLength: cutLength,
           reload: () {
             setState(() {});
           },
@@ -557,14 +598,12 @@ class _KittingDashState extends State<KittingDash> {
   Widget save() {
     return ElevatedButton(
         style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40.0),
-                  side: BorderSide(color: Colors.transparent))),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(40.0),
+              side: BorderSide(color: Colors.transparent))),
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
-              if (states.contains(MaterialState.pressed))
-                return Colors.green.shade200;
+              if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
               return Colors.green.shade500; // Use the component's default.
             },
           ),
@@ -573,42 +612,21 @@ class _KittingDashState extends State<KittingDash> {
           setState(() {
             loadingSave = true;
           });
-          List<SaveKitting> saveKitting = kittingList.map((e) {
-            // for (KittingPost e in kittingList) {
-            // SaveKitting saveKitting =
-            return new SaveKitting(
-              fgPartNumber: e.kittingEJobDtoList.fgNumber,
-              orderId: orderId??"",
-              cablePartNumber: e.kittingEJobDtoList.cableNumber.toString(),
-              cableType: "",
-              length: e.kittingEJobDtoList.cutLength,
-              wireCuttingColor: e.kittingEJobDtoList.cableColor,
-              average: 0,
-              customerName: "",
-              routeMaster: "",
-              scheduledQty: 0,
-              binId: "",
-              binLocation: "",
-              bundleQty: 0,
-              bundleId:
-                  e.selectedBundles.map((e) => e.bundleIdentification).toList(),
-            );
-          }).toList();
-          apiService!.postKittingData(saveKitting).then((value) {
+          apiService!
+              .postKittingData(getSaveKitting(kittingList, orderId ?? '', widget.employee.empId))
+              .then((value) {
             if (value) {
               setState(() {
                 loadingSave = false;
+                kittingList = [];
               });
             } else {
-              log("saved $saveKitting");
+              log("saved ${getSaveKitting(kittingList, orderId ?? '', widget.employee.empId)}");
               setState(() {
                 loadingSave = false;
               });
             }
           });
-          // }).toList();
-
-          // }
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -636,6 +654,52 @@ class _KittingDashState extends State<KittingDash> {
   }
 }
 
+// getSaveKittingNew(List<KittingPost> kittingList, String orderId) {
+//   for (KittingPost kitting in kittingList) {}
+// }
+
+getSaveKitting(List<KittingPost> kittingList, String orderId, String userId) {
+  List<SaveKitting> saveKittng = [];
+  for (KittingPost kitting in kittingList) {
+    List<String> locationList =
+        kitting.selectedBundles.map((e) => e.locationId).toList().toSet().toList();
+    List<String> binList =
+        kitting.selectedBundles.map((e) => e.binId.toString()).toList().toSet().toList();
+    for (String bin in binList) {
+      for (String location in locationList) {
+        List<BundleMaster> bundleList = kitting.selectedBundles
+            .where((element) => element.locationId == location && element.binId.toString() == bin)
+            .toList();
+        saveKittng.add(SaveKitting(
+            fgPartNumber: kitting.kittingEJobDtoList.fgNumber,
+            orderId: orderId ?? "",
+            cablePartNumber: kitting.kittingEJobDtoList.cableNumber.toString(),
+            cableType: "",
+            length: kitting.kittingEJobDtoList.cutLength,
+            wireCuttingColor: kitting.kittingEJobDtoList.cableColor,
+            average: int.parse(bundleList[0].awg),
+            customerName: "",
+            routeMaster: "",
+            scheduledQty: 0,
+            binId: bundleList.isNotEmpty ? "${bundleList[0].binId}" : "",
+            binLocation: bundleList.isNotEmpty ? "${bundleList[0].locationId}" : "",
+            actualQty: 0,
+            bundleQty:
+                kitting.selectedBundles.isNotEmpty ? kitting.selectedBundles[0].bundleQuantity : 0,
+            status: "Active",
+            bundleId: bundleList.map((e) => e.bundleIdentification).toList(),
+            suggestedActualQty: bundleList.isNotEmpty ? bundleList[0].bundleQuantity : 0,
+            suggestedBinLocation: bundleList.isNotEmpty ? "${bundleList[0].locationId}" : "",
+            suggestedBundleId: bundleList.isNotEmpty ? "${bundleList[0].binId}" : "",
+            suggestedBundleQty: bundleList.isNotEmpty ? bundleList[0].bundleQuantity : 0,
+            suggetedScheduledQty: bundleList.isNotEmpty ? bundleList[0].bundleQuantity : 0,
+            userId: userId));
+      }
+    }
+  }
+  return saveKittng.where((element) => element.bundleId?.length != 0).toList();
+}
+
 // ignore: must_be_immutable
 class ShowBundleList extends StatefulWidget {
   List<BundleMaster> bundleList;
@@ -643,6 +707,7 @@ class ShowBundleList extends StatefulWidget {
   String fgNo;
   String cablePartNo;
   String awg;
+  String cutLength;
   Function reload;
 
   ShowBundleList(
@@ -651,6 +716,7 @@ class ShowBundleList extends StatefulWidget {
       required this.selectedBundleList,
       required this.awg,
       required this.cablePartNo,
+      required this.cutLength,
       required this.fgNo});
   @override
   _ShowBundleListState createState() => _ShowBundleListState();
@@ -682,22 +748,18 @@ class _ShowBundleListState extends State<ShowBundleList> {
               children: [
                 Container(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       SizedBox(
                         width: 50,
                       ),
-                      field(
-                          title: "Fg No.", data: "${widget.fgNo}", width: 140),
-                      field(
-                          title: "Cable Part No.",
-                          data: "${widget.cablePartNo}",
-                          width: 140),
+                      field(title: "Fg No.", data: "${widget.fgNo}", width: 140),
+
+                      field(title: "Cable Part No.", data: "${widget.cablePartNo}", width: 120),
+                      field(title: "Cut Length", data: "${widget.cutLength}", width: 80),
                       field(title: "AWG", data: "${widget.awg}", width: 100),
                       field(
-                          title: "Total Qty",
-                          data: "${widget.bundleList.length}",
-                          width: 100),
+                          title: "Total Bundles", data: "${widget.bundleList.length}", width: 100),
                       field(
                           title: "Dispatch Bundles",
                           data: "${widget.selectedBundleList.length}",
@@ -725,43 +787,37 @@ class _ShowBundleListState extends State<ShowBundleList> {
                         DataColumn(
                           label: Text(
                             'Bundle Id',
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ),
                         DataColumn(
                           label: Text(
                             'Bin Id',
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ),
                         DataColumn(
                           label: Text(
                             'location ',
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ),
                         DataColumn(
                           label: Text(
                             'Color',
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ),
                         DataColumn(
                           label: Text(
                             'Qty',
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
                       rows: widget.bundleList
                           .map((e) => DataRow(
-                                  selected:
-                                      widget.selectedBundleList.contains(e),
+                                  selected: widget.selectedBundleList.contains(e),
                                   onSelectChanged: (value) {
                                     setState(() {
                                       if (value ?? false) {
@@ -802,19 +858,15 @@ class _ShowBundleListState extends State<ShowBundleList> {
                   children: [
                     ElevatedButton(
                       style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(40.0),
-                                    side:
-                                        BorderSide(color: Colors.transparent))),
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(40.0),
+                                side: BorderSide(color: Colors.transparent))),
+                        backgroundColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.pressed))
                               return Colors.green.shade200;
-                            return Colors
-                                .green.shade500; // Use the component's default.
+                            return Colors.green.shade500; // Use the component's default.
                           },
                         ),
                       ),
@@ -839,6 +891,7 @@ class _ShowBundleListState extends State<ShowBundleList> {
             ),
             Positioned(
                 right: 0,
+                top: -10,
                 child: IconButton(
                   onPressed: () {
                     Navigator.pop(context);

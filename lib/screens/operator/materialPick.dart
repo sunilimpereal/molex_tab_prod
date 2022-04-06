@@ -17,8 +17,9 @@ import '../utils/loadingButton.dart';
 import '../widgets/time.dart';
 import '../../service/apiService.dart';
 import 'package:intl/date_symbol_data_local.dart';
+
 enum MaterialPickType {
-  newload, 
+  newload,
   reload,
 }
 
@@ -43,7 +44,9 @@ class MaterialPick extends StatefulWidget {
       required this.schedule,
       required this.materialPickType,
       required this.homeReload,
-      required this.reload,required this.sameMachine,required this.type});
+      required this.reload,
+      required this.sameMachine,
+      required this.type});
   @override
   _MaterialPickState createState() => _MaterialPickState();
 }
@@ -56,27 +59,26 @@ class _MaterialPickState extends State<MaterialPick> {
   FocusNode _trackingNumber = new FocusNode();
   FocusNode _qtyFocus = new FocusNode();
   FocusNode keyboardfocus = new FocusNode();
-  String ?partNumber;
-  String ?trackingNumber;
-  String ?qty;
+  String? partNumber;
+  String? trackingNumber;
+  String? qty;
   List<ItemPart> items = [];
   List<ItemPart> selectditems = [];
   List<PostRawMaterial> selectdItems = [];
-  List<RawMaterial> ?rawMaterial = [];
+  List<RawMaterial>? rawMaterial = [];
   bool isCollapsedRawMaterial = false;
   bool isCollapsedScannedMaterial = false;
   DateTime selectedDate = DateTime.now();
   ApiService? apiService;
   bool keyBoard = true;
-  List<RawMaterial> ?rawmaterial1;
+  List<RawMaterial>? rawmaterial1;
   bool nextPageLoading = false;
 
   Future<List<RawMaterial>> getRawmaterialFut(List<RawMaterial> rawMat) async {
     return rawMat;
   }
 
-  Future<List<MaterialDetail>> getmatTrkDetail(
-      List<MaterialDetail> mattrack) async {
+  Future<List<MaterialDetail>> getmatTrkDetail(List<MaterialDetail> mattrack) async {
     return mattrack;
   }
 
@@ -160,8 +162,7 @@ class _MaterialPickState extends State<MaterialPick> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
                               child: Icon(
                                 Icons.person,
                                 size: 18,
@@ -170,8 +171,7 @@ class _MaterialPickState extends State<MaterialPick> {
                             ),
                             Text(
                               widget.employee.empId,
-                              style:
-                                  TextStyle(fontSize: 13, color: Colors.black),
+                              style: TextStyle(fontSize: 13, color: Colors.black),
                             ),
                           ],
                         )),
@@ -188,8 +188,7 @@ class _MaterialPickState extends State<MaterialPick> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
                               child: Icon(
                                 Icons.settings,
                                 size: 18,
@@ -198,8 +197,7 @@ class _MaterialPickState extends State<MaterialPick> {
                             ),
                             Text(
                               widget.machine.machineNumber ?? "",
-                              style:
-                                  TextStyle(fontSize: 13, color: Colors.black),
+                              style: TextStyle(fontSize: 13, color: Colors.black),
                             ),
                           ],
                         )),
@@ -279,8 +277,7 @@ class _MaterialPickState extends State<MaterialPick> {
                                     Future.delayed(
                                       const Duration(milliseconds: 100),
                                       () {
-                                        SystemChannels.textInput
-                                            .invokeMethod('TextInput.hide');
+                                        SystemChannels.textInput.invokeMethod('TextInput.hide');
                                       },
                                     );
                                   }
@@ -295,10 +292,8 @@ class _MaterialPickState extends State<MaterialPick> {
                             onTap: () {
                               setState(() {
                                 keyBoard
-                                    ? SystemChannels.textInput
-                                        .invokeMethod('TextInput.show')
-                                    : SystemChannels.textInput
-                                        .invokeMethod('TextInput.hide');
+                                    ? SystemChannels.textInput.invokeMethod('TextInput.show')
+                                    : SystemChannels.textInput.invokeMethod('TextInput.hide');
                               });
                             },
                             decoration: new InputDecoration(
@@ -309,8 +304,7 @@ class _MaterialPickState extends State<MaterialPick> {
                                           _partNumberController.clear();
                                         });
                                       },
-                                      child: Icon(Icons.clear,
-                                          size: 18, color: Colors.red))
+                                      child: Icon(Icons.clear, size: 18, color: Colors.red))
                                   : Container(),
                               labelText: "Part No.",
                               fillColor: Colors.white,
@@ -339,16 +333,14 @@ class _MaterialPickState extends State<MaterialPick> {
                                   initialDate: selectedDate, // Refer step 1
                                   firstDate: DateTime(2000),
                                   // lastDate: DateTime.now().add(Duration(days:1)),
-                                  lastDate:
-                                      DateTime.now().add(Duration(days: 0)));
+                                  lastDate: DateTime.now().add(Duration(days: 0)));
                               if (picked != null && picked != selectedDate)
                                 setState(() {
                                   selectedDate = picked;
                                   Future.delayed(
                                     const Duration(milliseconds: 100),
                                     () {
-                                      SystemChannels.textInput
-                                          .invokeMethod('TextInput.hide');
+                                      SystemChannels.textInput.invokeMethod('TextInput.hide');
                                     },
                                   );
                                 });
@@ -357,10 +349,8 @@ class _MaterialPickState extends State<MaterialPick> {
                             onTap: () {
                               setState(() {
                                 keyBoard
-                                    ? SystemChannels.textInput
-                                        .invokeMethod('TextInput.show')
-                                    : SystemChannels.textInput
-                                        .invokeMethod('TextInput.hide');
+                                    ? SystemChannels.textInput.invokeMethod('TextInput.show')
+                                    : SystemChannels.textInput.invokeMethod('TextInput.hide');
                               });
                             },
                             onChanged: (value) {
@@ -377,8 +367,7 @@ class _MaterialPickState extends State<MaterialPick> {
                                           _trackingNumberController.clear();
                                         });
                                       },
-                                      child: Icon(Icons.clear,
-                                          size: 18, color: Colors.red))
+                                      child: Icon(Icons.clear, size: 18, color: Colors.red))
                                   : Container(),
                               labelText: "Tracebility Number",
                               fillColor: Colors.white,
@@ -396,8 +385,7 @@ class _MaterialPickState extends State<MaterialPick> {
                             keyBoard = !keyBoard;
                           });
                         },
-                        child: Icon(Icons.keyboard,
-                            color: keyBoard ? Colors.green : Colors.grey)),
+                        child: Icon(Icons.keyboard, color: keyBoard ? Colors.green : Colors.grey)),
                     GestureDetector(
                       onTap: () async {
                         final DateTime? picked = await showDatePicker(
@@ -412,8 +400,7 @@ class _MaterialPickState extends State<MaterialPick> {
                             Future.delayed(
                               const Duration(milliseconds: 100),
                               () {
-                                SystemChannels.textInput
-                                    .invokeMethod('TextInput.hide');
+                                SystemChannels.textInput.invokeMethod('TextInput.hide');
                               },
                             );
                           });
@@ -430,9 +417,7 @@ class _MaterialPickState extends State<MaterialPick> {
                             Text(
                               "${selectedDate.toLocal()}".split(' ')[0],
                               style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w500),
+                                  fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
@@ -489,37 +474,29 @@ class _MaterialPickState extends State<MaterialPick> {
                                   if (ip.partNunber == partNumber) {
                                     if (!selectdItems.contains(ip)) {
                                       print('loop ${ip.partNunber.toString()}');
-                                      PostRawMaterial postRawmaterial =
-                                          new PostRawMaterial(
-                                              partDescription: ip.description,
-                                              existingQuantity: 0,
-                                              schedulerIdentification:
-                                                  widget.schedule.scheduledId,
-                                              date: DateFormat("dd-MM-yyyy")
-                                                  .format(selectedDate), //ODO
-                                              machineIdentification:
-                                                  widget.machine.machineNumber,
-                                              finishedGoodsNumber: int.parse(
-                                                  widget.schedule
-                                                      .finishedGoodsNumber),
-                                              orderidentification: int.parse(
-                                                  widget.schedule.orderId),
-                                              partNumber:
-                                                  int.parse(ip.partNunber??'0'),
-                                              requiredQuantityOrPiece:
-                                                  double.parse(
-                                                      ip.requireQuantity??'0'),
-                                              totalScheduledQuantity: double.parse(
-                                                  ip.toatalScheduleQuantity??'0'),
-                                              unitOfMeasurement: ip.uom,
-                                              traceabilityNumber:trackingNumber??'',
-                                              scannedQuantity: double.parse(qty??"0"),
-                                              cablePartNumber:
-                                                  int.parse(widget.schedule.cablePartNumber),
-                                              length: int.parse(widget.schedule.length),
-                                              color: widget.schedule.color,
-                                              process: widget.schedule.process,
-                                              status: 'SUCCESS');
+                                      PostRawMaterial postRawmaterial = new PostRawMaterial(
+                                          partDescription: ip.description,
+                                          existingQuantity: 0,
+                                          schedulerIdentification: widget.schedule.scheduledId,
+                                          date: DateFormat("dd-MM-yyyy").format(selectedDate), //ODO
+                                          machineIdentification: widget.machine.machineNumber,
+                                          finishedGoodsNumber:
+                                              int.parse(widget.schedule.finishedGoodsNumber),
+                                          orderidentification: int.parse(widget.schedule.orderId),
+                                          partNumber: int.parse(ip.partNunber ?? '0'),
+                                          requiredQuantityOrPiece:
+                                              double.parse(ip.requireQuantity ?? '0'),
+                                          totalScheduledQuantity:
+                                              double.parse(ip.toatalScheduleQuantity ?? '0'),
+                                          unitOfMeasurement: ip.uom,
+                                          traceabilityNumber: trackingNumber ?? '',
+                                          scannedQuantity: double.parse(qty ?? "0"),
+                                          cablePartNumber:
+                                              int.parse(widget.schedule.cablePartNumber),
+                                          length: int.parse(widget.schedule.length),
+                                          color: widget.schedule.color,
+                                          process: widget.schedule.process,
+                                          status: 'SUCCESS');
                                       selectdItems.add(postRawmaterial);
                                       _partNumberController.clear();
                                       _trackingNumberController.clear();
@@ -531,8 +508,7 @@ class _MaterialPickState extends State<MaterialPick> {
                                       Future.delayed(
                                         const Duration(milliseconds: 100),
                                         () {
-                                          SystemChannels.textInput
-                                              .invokeMethod('TextInput.hide');
+                                          SystemChannels.textInput.invokeMethod('TextInput.hide');
                                         },
                                       );
                                     }
@@ -540,10 +516,9 @@ class _MaterialPickState extends State<MaterialPick> {
                                 }
                               } else {
                                 Fluttertoast.showToast(
-                                    msg:
-                                        "Part No. not present in reqired raw material",
+                                    msg: "Part No. not present in reqired raw material",
                                     toastLength: Toast.LENGTH_SHORT,
-                                     gravity: ToastGravity.BOTTOM,
+                                    gravity: ToastGravity.BOTTOM,
                                     timeInSecForIosWeb: 1,
                                     backgroundColor: Colors.red,
                                     textColor: Colors.white,
@@ -566,21 +541,18 @@ class _MaterialPickState extends State<MaterialPick> {
                     onPrimary: Colors.white,
                   ),
                   onPressed: () {
-                 
                     log(postRawMaterialListToJson(selectdItems));
                     // if (setEquals(rawPartNo.toSet(), scannedPartNo.toSet())) {
                     MatTrkPostDetail matTrkPostDetail = new MatTrkPostDetail(
-                      machineId: widget.machine.machineNumber??'',
+                      machineId: widget.machine.machineNumber ?? '',
                       schedulerId: widget.schedule.scheduledId,
-                      cablePartNumbers: rawMaterial!
-                          .map((e) => e.partNunber.toString())
-                          .toList(),
+                      cablePartNumbers: rawMaterial!.map((e) => e.partNunber.toString()).toList(),
                     );
                     apiService!.postRawmaterial(selectdItems).then((value) {
                       if (value) {
                         widget.reload(matTrkPostDetail);
-                        widget.materialPickType == MaterialPickType.newload?
-                             Navigator.pushReplacement(
+                        widget.materialPickType == MaterialPickType.newload
+                            ? Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ProcessPage(
@@ -662,8 +634,7 @@ class _MaterialPickState extends State<MaterialPick> {
                                     Future.delayed(
                                       const Duration(milliseconds: 100),
                                       () {
-                                        SystemChannels.textInput
-                                            .invokeMethod('TextInput.hide');
+                                        SystemChannels.textInput.invokeMethod('TextInput.hide');
                                       },
                                     );
                                   }
@@ -678,10 +649,8 @@ class _MaterialPickState extends State<MaterialPick> {
                             onTap: () {
                               setState(() {
                                 keyBoard
-                                    ? SystemChannels.textInput
-                                        .invokeMethod('TextInput.show')
-                                    : SystemChannels.textInput
-                                        .invokeMethod('TextInput.hide');
+                                    ? SystemChannels.textInput.invokeMethod('TextInput.show')
+                                    : SystemChannels.textInput.invokeMethod('TextInput.hide');
                               });
                             },
                             decoration: new InputDecoration(
@@ -692,8 +661,7 @@ class _MaterialPickState extends State<MaterialPick> {
                                           _partNumberController.clear();
                                         });
                                       },
-                                      child: Icon(Icons.clear,
-                                          size: 18, color: Colors.red))
+                                      child: Icon(Icons.clear, size: 18, color: Colors.red))
                                   : Container(),
                               labelText: "Part No.",
                               fillColor: Colors.white,
@@ -722,16 +690,14 @@ class _MaterialPickState extends State<MaterialPick> {
                                   initialDate: selectedDate, // Refer step 1
                                   firstDate: DateTime(2000),
                                   // lastDate: DateTime.now().add(Duration(days:1)),
-                                  lastDate:
-                                      DateTime.now().add(Duration(days: 0)));
+                                  lastDate: DateTime.now().add(Duration(days: 0)));
                               if (picked != null && picked != selectedDate)
                                 setState(() {
                                   selectedDate = picked;
                                   Future.delayed(
                                     const Duration(milliseconds: 100),
                                     () {
-                                      SystemChannels.textInput
-                                          .invokeMethod('TextInput.hide');
+                                      SystemChannels.textInput.invokeMethod('TextInput.hide');
                                     },
                                   );
                                 });
@@ -740,10 +706,8 @@ class _MaterialPickState extends State<MaterialPick> {
                             onTap: () {
                               setState(() {
                                 keyBoard
-                                    ? SystemChannels.textInput
-                                        .invokeMethod('TextInput.show')
-                                    : SystemChannels.textInput
-                                        .invokeMethod('TextInput.hide');
+                                    ? SystemChannels.textInput.invokeMethod('TextInput.show')
+                                    : SystemChannels.textInput.invokeMethod('TextInput.hide');
                               });
                             },
                             onChanged: (value) {
@@ -760,8 +724,7 @@ class _MaterialPickState extends State<MaterialPick> {
                                           _trackingNumberController.clear();
                                         });
                                       },
-                                      child: Icon(Icons.clear,
-                                          size: 18, color: Colors.red))
+                                      child: Icon(Icons.clear, size: 18, color: Colors.red))
                                   : Container(),
                               labelText: "Tracebility Number",
                               fillColor: Colors.white,
@@ -779,8 +742,7 @@ class _MaterialPickState extends State<MaterialPick> {
                             keyBoard = !keyBoard;
                           });
                         },
-                        child: Icon(Icons.keyboard,
-                            color: keyBoard ? Colors.green : Colors.grey)),
+                        child: Icon(Icons.keyboard, color: keyBoard ? Colors.green : Colors.grey)),
                     GestureDetector(
                       onTap: () async {
                         final DateTime? picked = await showDatePicker(
@@ -795,8 +757,7 @@ class _MaterialPickState extends State<MaterialPick> {
                             Future.delayed(
                               const Duration(milliseconds: 100),
                               () {
-                                SystemChannels.textInput
-                                    .invokeMethod('TextInput.hide');
+                                SystemChannels.textInput.invokeMethod('TextInput.hide');
                               },
                             );
                           });
@@ -813,9 +774,7 @@ class _MaterialPickState extends State<MaterialPick> {
                             Text(
                               "${selectedDate.toLocal()}".split(' ')[0],
                               style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w500),
+                                  fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
@@ -871,37 +830,29 @@ class _MaterialPickState extends State<MaterialPick> {
                                   if (ip.partNunber == partNumber) {
                                     if (!selectdItems.contains(ip)) {
                                       print('loop ${ip.partNunber.toString()}');
-                                      PostRawMaterial postRawmaterial =
-                                          new PostRawMaterial(
-                                              partDescription: ip.description,
-                                              existingQuantity: 0,
-                                              schedulerIdentification:
-                                                  widget.schedule.scheduledId,
-                                              date: DateFormat("dd-MM-yyyy")
-                                                  .format(selectedDate), //ODO
-                                              machineIdentification:
-                                                  widget.machine.machineNumber,
-                                              finishedGoodsNumber: int.parse(
-                                                  widget.schedule
-                                                      .finishedGoodsNumber),
-                                              orderidentification: int.parse(
-                                                  widget.schedule.orderId),
-                                              partNumber:
-                                                  int.parse(ip.partNunber!),
-                                              requiredQuantityOrPiece:
-                                                  double.parse(
-                                                      ip.requireQuantity!),
-                                              totalScheduledQuantity: double.parse(
-                                                  ip.toatalScheduleQuantity!),
-                                              unitOfMeasurement: ip.uom,
-                                              traceabilityNumber:trackingNumber??'',
-                                              scannedQuantity: double.parse(qty??'0'),
-                                              cablePartNumber:
-                                                  int.parse(widget.schedule.cablePartNumber),
-                                              length: int.parse(widget.schedule.length),
-                                              color: widget.schedule.color,
-                                              process: widget.schedule.process,
-                                              status: 'SUCCESS');
+                                      PostRawMaterial postRawmaterial = new PostRawMaterial(
+                                          partDescription: ip.description,
+                                          existingQuantity: 0,
+                                          schedulerIdentification: widget.schedule.scheduledId,
+                                          date: DateFormat("dd-MM-yyyy").format(selectedDate), //ODO
+                                          machineIdentification: widget.machine.machineNumber,
+                                          finishedGoodsNumber:
+                                              int.parse(widget.schedule.finishedGoodsNumber),
+                                          orderidentification: int.parse(widget.schedule.orderId),
+                                          partNumber: int.parse(ip.partNunber!),
+                                          requiredQuantityOrPiece:
+                                              double.parse(ip.requireQuantity!),
+                                          totalScheduledQuantity:
+                                              double.parse(ip.toatalScheduleQuantity!),
+                                          unitOfMeasurement: ip.uom,
+                                          traceabilityNumber: trackingNumber ?? '',
+                                          scannedQuantity: double.parse(qty ?? '0'),
+                                          cablePartNumber:
+                                              int.parse(widget.schedule.cablePartNumber),
+                                          length: int.parse(widget.schedule.length),
+                                          color: widget.schedule.color,
+                                          process: widget.schedule.process,
+                                          status: 'SUCCESS');
                                       selectdItems.add(postRawmaterial);
                                       _partNumberController.clear();
                                       _trackingNumberController.clear();
@@ -913,8 +864,7 @@ class _MaterialPickState extends State<MaterialPick> {
                                       Future.delayed(
                                         const Duration(milliseconds: 100),
                                         () {
-                                          SystemChannels.textInput
-                                              .invokeMethod('TextInput.hide');
+                                          SystemChannels.textInput.invokeMethod('TextInput.hide');
                                         },
                                       );
                                     }
@@ -922,8 +872,7 @@ class _MaterialPickState extends State<MaterialPick> {
                                 }
                               } else {
                                 Fluttertoast.showToast(
-                                    msg:
-                                        "Part No. not present in reqired raw material",
+                                    msg: "Part No. not present in reqired raw material",
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.BOTTOM,
                                     timeInSecForIosWeb: 1,
@@ -1028,11 +977,12 @@ class _MaterialPickState extends State<MaterialPick> {
           child: FutureBuilder(
               future: rawMaterial!.length == 0
                   ? apiService!.rawMaterial(
-                      machineId: widget.schedule.machineNumber??'',
+                      machineId: widget.machine.machineNumber ?? '',
                       fgNo: widget.schedule.finishedGoodsNumber,
-                      type: widget.machine.category??'',
+                      type: widget.machine.category ?? '',
                       process: "${widget.schedule.process}",
-                      scheduleId: widget.schedule.scheduledId, partNo: '')
+                      scheduleId: widget.schedule.scheduledId,
+                      partNo: '')
                   : getRawmaterialFut(rawMaterial!),
               // 'EMU-M/C-038B', '367760913', '367870011', '1223445'),
               builder: (context, snapshot) {
@@ -1042,16 +992,13 @@ class _MaterialPickState extends State<MaterialPick> {
 
                   rawMaterial = snapshot.data as List<RawMaterial>?;
                   MatTrkPostDetail matTrkPostDetail = new MatTrkPostDetail(
-                    machineId: widget.schedule.machineNumber??'',
+                    machineId: widget.machine.machineNumber ?? '',
                     schedulerId: widget.schedule.scheduledId,
-                    cablePartNumbers: rawMaterial!
-                        .map((e) => e.partNunber.toString())
-                        .toList(),
+                    cablePartNumbers: rawMaterial!.map((e) => e.partNunber.toString()).toList(),
                   );
 
                   return FutureBuilder(
-                      future: apiService!
-                          .getMaterialTrackingCableDetail(matTrkPostDetail),
+                      future: apiService!.getMaterialTrackingCableDetail(matTrkPostDetail),
                       builder: (context, snapshot1) {
                         List<MaterialDetail>? matDetail = [];
                         matDetail = snapshot1.data as List<MaterialDetail>?;
@@ -1084,8 +1031,7 @@ class _MaterialPickState extends State<MaterialPick> {
                                               triggerCollapseRawMaterial();
                                             },
                                             child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(4.0),
+                                              padding: const EdgeInsets.all(4.0),
                                               child: Icon(isCollapsedRawMaterial
                                                   ? Icons.keyboard_arrow_down
                                                   : Icons.keyboard_arrow_up),
@@ -1147,90 +1093,72 @@ class _MaterialPickState extends State<MaterialPick> {
                                             ),
                                           ],
                                           rows: rawmaterial!
-                                              .map(
-                                                  (e) =>
-                                                      DataRow(cells: <DataCell>[
-                                                        DataCell(
-                                                            GestureDetector(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              _partNumberController
-                                                                      .text =
-                                                                  e.partNunber??'';
-                                                              partNumber =
-                                                                  e.partNunber;
-                                                              _qtyFocusController
-                                                                      .text =
-                                                                  e.toatalScheduleQuantity
-                                                                      .toString();
-                                                              qty = e
-                                                                  .toatalScheduleQuantity
-                                                                  .toString();
-                                                            });
-                                                          },
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(vertical:5),
-                                                            child: Text(
-                                                              e.partNunber
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  fontSize: 11),
-                                                            ),
-                                                          ),
-                                                        )),
-                                                        DataCell(Text(
-                                                          e.description??'',
-                                                          style: TextStyle(
-                                                              fontSize: 11),
-                                                        )),
-                                                        DataCell(Text(
-                                                          e.uom??'',
-                                                          style: TextStyle(
-                                                              fontSize: 11),
-                                                        )),
-                                                        DataCell(Text(
-                                                          e.requireQuantity
-                                                              .toString(),
-                                                          style: TextStyle(
-                                                              fontSize: 11),
-                                                        )),
-                                                        DataCell(Text(
-                                                          e.toatalScheduleQuantity
-                                                              .toString(),
-                                                          style: TextStyle(
-                                                              fontSize: 11),
-                                                        )),
-                                                        DataCell(Text(
-                                                          matDetail?.length != 0
-                                                              ? matDetail
-                                                                      ?.firstWhere(
-                                                                          (element) =>
-                                                                              element.cablePartNo ==
-                                                                              e.partNunber,
-                                                                          orElse: () => MaterialDetail(availableQty: '0'))
-                                                                      ?.availableQty ??
-                                                                  '0'.toString()
-                                                              : '0',
-                                                          style: TextStyle(
-                                                              fontSize: 11),
-                                                        )),
-                                                        DataCell(Text(
-                                                          matDetail?.length != 0
-                                                              ? matDetail
-                                                                      ?.firstWhere(
-                                                                          (element) =>
-                                                                              element.cablePartNo ==
-                                                                              e.partNunber,
-                                                                          orElse: () => MaterialDetail(loadedQty: '0'))
-                                                                      ?.loadedQty ??
-                                                                  '0'.toString()
-                                                              : '0',
-                                                          style: TextStyle(
-                                                              fontSize: 11),
-                                                        )),
-                                                      ]))
+                                              .map((e) => DataRow(cells: <DataCell>[
+                                                    DataCell(GestureDetector(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          _partNumberController.text =
+                                                              e.partNunber ?? '';
+                                                          partNumber = e.partNunber;
+                                                          _qtyFocusController.text =
+                                                              e.toatalScheduleQuantity.toString();
+                                                          qty = e.toatalScheduleQuantity.toString();
+                                                        });
+                                                      },
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets.symmetric(vertical: 5),
+                                                        child: Text(
+                                                          e.partNunber.toString(),
+                                                          style: TextStyle(fontSize: 11),
+                                                        ),
+                                                      ),
+                                                    )),
+                                                    DataCell(Text(
+                                                      e.description ?? '',
+                                                      style: TextStyle(fontSize: 11),
+                                                    )),
+                                                    DataCell(Text(
+                                                      e.uom ?? '',
+                                                      style: TextStyle(fontSize: 11),
+                                                    )),
+                                                    DataCell(Text(
+                                                      e.requireQuantity.toString(),
+                                                      style: TextStyle(fontSize: 11),
+                                                    )),
+                                                    DataCell(Text(
+                                                      e.toatalScheduleQuantity.toString(),
+                                                      style: TextStyle(fontSize: 11),
+                                                    )),
+                                                    DataCell(Text(
+                                                      matDetail?.length != 0
+                                                          ? matDetail
+                                                                  ?.firstWhere(
+                                                                      (element) =>
+                                                                          element.cablePartNo ==
+                                                                          e.partNunber,
+                                                                      orElse: () => MaterialDetail(
+                                                                          availableQty: '0'))
+                                                                  ?.availableQty ??
+                                                              '0'.toString()
+                                                          : '0',
+                                                      style: TextStyle(fontSize: 11),
+                                                    )),
+                                                    DataCell(Text(
+                                                      matDetail?.length != 0
+                                                          ? matDetail
+                                                                  ?.firstWhere(
+                                                                      (element) =>
+                                                                          element.cablePartNo ==
+                                                                          e.partNunber,
+                                                                      orElse: () => MaterialDetail(
+                                                                          loadedQty: '0'))
+                                                                  ?.loadedQty ??
+                                                              '0'.toString()
+                                                          : '0',
+                                                      style: TextStyle(fontSize: 11),
+                                                    )),
+                                                  ]))
                                               .toList()),
                                     );
                                   } else {
@@ -1375,7 +1303,7 @@ class _MaterialPickState extends State<MaterialPick> {
                                     style: TextStyle(fontSize: 11),
                                   )),
                                   DataCell(Text(
-                                    e.partDescription??'',
+                                    e.partDescription ?? '',
                                     style: TextStyle(fontSize: 11),
                                   )),
                                   DataCell(Text(
@@ -1437,8 +1365,8 @@ class _MaterialPickState extends State<MaterialPick> {
             actions: <Widget>[
               ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith(
-                        (states) => Colors.redAccent),
+                    backgroundColor:
+                        MaterialStateProperty.resolveWith((states) => Colors.redAccent),
                   ),
                   onPressed: () {
                     Navigator.pop(context1);
@@ -1453,8 +1381,7 @@ class _MaterialPickState extends State<MaterialPick> {
               LoadingButton(
                 loading: nextPageLoading,
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith(
-                      (states) => Colors.green),
+                  backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.green),
                 ),
                 loadingChild: Container(
                   height: 25,
@@ -1466,21 +1393,18 @@ class _MaterialPickState extends State<MaterialPick> {
                 child: Text('       Confirm      '),
                 onPressed: () async {
                   apiService = ApiService();
-                  
+
                   log(postRawMaterialListToJson(selectdItems));
                   // if (setEquals(rawPartNo.toSet(), scannedPartNo.toSet())) {
                   // _showConfirmationDialog();
                   MatTrkPostDetail matTrkPostDetail = new MatTrkPostDetail(
-                    machineId: widget.machine.machineNumber??'',
+                    machineId: widget.machine.machineNumber ?? '',
                     schedulerId: widget.schedule.scheduledId,
                     selectedRawMaterial: selectdItems,
-                    cablePartNumbers: rawMaterial!
-                        .map((e) => e.partNunber.toString())
-                        .toList(),
+                    cablePartNumbers: rawMaterial!.map((e) => e.partNunber.toString()).toList(),
                   );
                   apiService!.postRawmaterial(selectdItems).then((value) {
                     if (value) {
-                     
                       Navigator.pop(context1);
                       widget.materialPickType == MaterialPickType.newload
                           ? Navigator.pushReplacement(
@@ -1490,7 +1414,8 @@ class _MaterialPickState extends State<MaterialPick> {
                                         schedule: widget.schedule,
                                         employee: widget.employee,
                                         machine: widget.machine,
-                                        matTrkPostDetail: matTrkPostDetail, homeReload: (){}, 
+                                        matTrkPostDetail: matTrkPostDetail,
+                                        homeReload: () {},
                                         type: widget.type,
                                         sameMachine: widget.sameMachine,
                                       )),
@@ -1516,7 +1441,6 @@ class _MaterialPickState extends State<MaterialPick> {
                   });
                 },
               ),
-            
             ],
           ),
         );
@@ -1530,8 +1454,7 @@ class _MaterialPickState extends State<MaterialPick> {
       child: Material(
         shadowColor: Colors.white,
         elevation: 2,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         child: Container(
           height: 50,
           width: MediaQuery.of(context).size.width,

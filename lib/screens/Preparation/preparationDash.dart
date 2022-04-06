@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:molex/model_api/machinedetails_model.dart';
+import 'package:molex/screens/widgets/drawer.dart';
 
 import '../../Machine_Id.dart';
 import '../../model_api/Preparation/getpreparationSchedule.dart';
@@ -32,24 +34,26 @@ class _PreprationDashState extends State<PreprationDash> {
 
   @override
   Widget build(BuildContext context) {
-     SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
+      drawer: Drawer(
+        child: DrawerWidget(
+            employee: widget.employee,
+            machineDetails: MachineDetails(machineNumber: "preparation"),
+            type: "process"),
+      ),
       appBar: AppBar(
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(
           color: Colors.red,
         ),
         backwardsCompatibility: false,
-        leading: null,
         title: const Text(
           'Preparation DashBoard',
           style: TextStyle(color: Colors.red),
         ),
         elevation: 0,
-        automaticallyImplyLeading: false,
         actions: [
-         
-
           // machineID
           Container(
             padding: EdgeInsets.all(1),
@@ -71,8 +75,7 @@ class _PreprationDashState extends State<PreprationDash> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Icon(
                               Icons.person,
                               size: 18,
@@ -98,8 +101,7 @@ class _PreprationDashState extends State<PreprationDash> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Icon(
                               Icons.settings,
                               size: 18,
@@ -120,7 +122,6 @@ class _PreprationDashState extends State<PreprationDash> {
           ),
 
           TimeDisplay(),
-        
         ],
       ),
       body: SingleChildScrollView(
@@ -144,10 +145,8 @@ class _PreprationDashState extends State<PreprationDash> {
                               side: BorderSide(color: Colors.transparent))),
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.pressed))
-                            return Colors.green.shade200;
-                          return Colors
-                              .green.shade500; // Use the component's default.
+                          if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                          return Colors.green.shade500; // Use the component's default.
                         },
                       ),
                     ),
@@ -156,7 +155,7 @@ class _PreprationDashState extends State<PreprationDash> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => Preparationprocess(
-                                  employee :widget.employee,
+                                  employee: widget.employee,
                                   machineId: widget.machineId,
                                 )),
                       );
@@ -169,9 +168,7 @@ class _PreprationDashState extends State<PreprationDash> {
                             height: 20,
                             width: 20,
                             decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image:
-                                        AssetImage("assets/image/scan.png"))),
+                                image: DecorationImage(image: AssetImage("assets/image/scan.png"))),
                           ),
                           SizedBox(width: 5),
                           Text(
@@ -283,11 +280,9 @@ class _PreprationDashState extends State<PreprationDash> {
 }
 
 class SchudleTable extends StatefulWidget {
-
   String userId;
   String machineId;
-  SchudleTable({Key? key, required this.machineId, required this.userId})
-      : super(key: key);
+  SchudleTable({Key? key, required this.machineId, required this.userId}) : super(key: key);
 
   @override
   _SchudleTableState createState() => _SchudleTableState();
@@ -303,7 +298,8 @@ class _SchudleTableState extends State<SchudleTable> {
     apiService = ApiService();
     super.initState();
   }
-    Future<Null> _onRefresh() {
+
+  Future<Null> _onRefresh() {
     Completer<Null> completer = new Completer<Null>();
     Timer timer = new Timer(new Duration(seconds: 3), () {
       completer.complete();
@@ -324,22 +320,20 @@ class _SchudleTableState extends State<SchudleTable> {
             Container(
                 // height: double.parse("${rowList.length*60}"),
                 child: FutureBuilder(
-              future: apiService.getPreparationSchedule(
-                  type: "A", machineNo: widget.machineId),
+              future: apiService.getPreparationSchedule(type: "A", machineNo: widget.machineId),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   List<PreparationSchedule>? preparationSchedulelist =
                       snapshot.data as List<PreparationSchedule>?;
                   return RefreshIndicator(
-                          onRefresh: _onRefresh,
-                         child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: preparationSchedulelist!.length,
-                      itemBuilder: (context, index) {
-                        return buildDataRow(
-                            schedule: preparationSchedulelist[index], c: index);
-                      }));
+                      onRefresh: _onRefresh,
+                      child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: preparationSchedulelist!.length,
+                          itemBuilder: (context, index) {
+                            return buildDataRow(schedule: preparationSchedulelist[index], c: index);
+                          }));
                 } else {
                   return Container();
                 }
@@ -360,13 +354,14 @@ class _SchudleTableState extends State<SchudleTable> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(name,
-                  style:  TextStyle(
-                        // color: Color(0xffBF3947),
-                        color: Colors.red,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600),
-                  ),
+              Text(
+                name,
+                style: TextStyle(
+                    // color: Color(0xffBF3947),
+                    color: Colors.red,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600),
+              ),
             ],
           ),
         ),
@@ -376,10 +371,10 @@ class _SchudleTableState extends State<SchudleTable> {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Material(
-          elevation: 4,
-          shadowColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-            child: Container(
+        elevation: 4,
+        shadowColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+        child: Container(
           width: MediaQuery.of(context).size.width,
           height: 50,
           child: Column(
@@ -443,21 +438,21 @@ class _SchudleTableState extends State<SchudleTable> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             // orderId
-            cell(schedule.orderId??'', 0.1),
+            cell(schedule.orderId ?? '', 0.1),
             //Fg Part
-            cell(schedule.finishedGoodsNumber??'', 0.1),
+            cell(schedule.finishedGoodsNumber ?? '', 0.1),
 
             //Schudule ID
-            cell(schedule.scheduledId??'NULL', 0.1),
+            cell(schedule.scheduledId ?? 'NULL', 0.1),
             //Cable Part
-            cell(schedule.cablePartNumber??'null', 0.1),
+            cell(schedule.cablePartNumber ?? 'null', 0.1),
 
             //Process
-            cell(schedule.process??'null', 0.07),
+            cell(schedule.process ?? 'null', 0.07),
             // Cut length
-            cell(schedule.length??"null", 0.07),
+            cell(schedule.length ?? "null", 0.07),
             //Color
-            cell(schedule.color??"null", 0.04),
+            cell(schedule.color ?? "null", 0.04),
             //Bin Id
             cell("${schedule.binIdentification}", 0.09),
             // Total bundles
@@ -481,16 +476,15 @@ class _SchudleTableState extends State<SchudleTable> {
                 ),
                 child: Center(
                   child: Text(
-                    schedule.scheduledStatus??"status",
-                    style:  TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: schedule.scheduledStatus == 'Complete'
-                            ? Colors.green
-                            : schedule.scheduledStatus == "Partial"
-                                ? Colors.yellow[900]
-                                : Colors.blue[900],
-                      
+                    schedule.scheduledStatus ?? "status",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: schedule.scheduledStatus == 'Complete'
+                          ? Colors.green
+                          : schedule.scheduledStatus == "Partial"
+                              ? Colors.yellow[900]
+                              : Colors.blue[900],
                     ),
                   ),
                 ),

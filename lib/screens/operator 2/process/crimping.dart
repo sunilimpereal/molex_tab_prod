@@ -3,7 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:molex/model_api/crimping/double_crimping/doubleCrimpingEjobDetail.dart';
+import 'package:molex/model_api/rawMaterial_modal.dart';
 import 'package:molex/screens/utils/loadingButton.dart';
+import 'package:molex/screens/widgets/alertDialog/alertdialogMultiCore.dart';
 import '../../../model_api/Transfer/binToLocation_model.dart';
 import '../../../model_api/Transfer/postgetBundleMaster.dart';
 import '../../../model_api/materialTrackingCableDetails_model.dart';
@@ -24,6 +27,8 @@ import '../../operator/process/materialTableWIP.dart';
 import '../../widgets/keypad.dart';
 import '../../../service/apiService.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+
+import 'double crimp/doubleCrimpInfo.dart';
 // 3008
 // 3009
 //
@@ -54,6 +59,8 @@ class ScanBundle extends StatefulWidget {
   //variables for schedule type
   String type;
   String sameMachine;
+
+  List<RawMaterial> rawMaterial;
   ScanBundle({
     required this.machineId,
     required this.method,
@@ -71,6 +78,7 @@ class ScanBundle extends StatefulWidget {
     required this.matTrkPostDetail,
     required this.sameMachine,
     required this.type,
+    required this.rawMaterial,
   });
   @override
   _ScanBundleState createState() => _ScanBundleState();
@@ -123,8 +131,10 @@ class _ScanBundleState extends State<ScanBundle> {
   BundlesRetrieved? scannedBundle;
   bool checkmappingdone = false;
   bool donotrepeatalert = false;
+  bool donotrepeatMultiCorealert = false;
   bool visibility = true;
   bool scanbundleLoading = false;
+  String cableType = "";
 
   String? binId;
   //to store the bundle Quantity fetched from api after scanning bundle Id
@@ -140,10 +150,22 @@ class _ScanBundleState extends State<ScanBundle> {
             cablepartno: widget.schedule.cablePartNo.toString(),
             length: "${widget.schedule.length}",
             color: widget.schedule.wireColour,
+            terminalPartNumberFrom: widget.schedule.terminalFrom,
+            terminalPartNumberTo: widget.schedule.terminalTo,
+            isCrimping: true,
+            crimpFrom: widget.schedule.crimpFrom,
+            crimpTo: widget.schedule.crimpTo,
+            wireCuttingSortNum: widget.schedule.wireCuttingSortingNumber.toString(),
             awg: int.parse(widget.schedule.awg))
         .then((termiA) {
       apiService
           .getCableTerminalB(
+              isCrimping: true,
+              crimpFrom: widget.schedule.crimpFrom,
+              crimpTo: widget.schedule.crimpTo,
+              terminalPartNumberFrom: widget.schedule.terminalFrom,
+              terminalPartNumberTo: widget.schedule.terminalTo,
+              wireCuttingSortNum: widget.schedule.wireCuttingSortingNumber.toString(),
               fgpartNo: "${widget.schedule.finishedGoods}",
               cablepartno: widget.schedule.cablePartNo.toString(),
               length: "${widget.schedule.length}",
@@ -157,22 +179,24 @@ class _ScanBundleState extends State<ScanBundle> {
       });
     });
   }
-  getActualQty(){
+
+  getActualQty() {
     ApiService apiService = new ApiService();
-    apiService.getCrimpingSchedule(machineNo: widget.machineId , scheduleType: widget.type, sameMachine: widget.sameMachine).then((value) {
+    apiService
+        .getCrimpingSchedule(
+            machineNo: widget.machineId, scheduleType: widget.type, sameMachine: widget.sameMachine)
+        .then((value) {
       List<CrimpingSchedule> scheduleList = value!;
       CrimpingSchedule schedule = scheduleList.firstWhere((element) {
-        return (
-          element.scheduleId ==widget.schedule.scheduleId 
-        );
+        return (element.scheduleId == widget.schedule.scheduleId);
       });
       setState(() {
         log("total Qty : ${schedule.actualQuantity}");
         widget.totalQuantity = schedule.actualQuantity;
       });
     });
-
   }
+
   @override
   void initState() {
     status = Status.scan;
@@ -276,6 +300,7 @@ class _ScanBundleState extends State<ScanBundle> {
         children: [
           MaterialtableWIP(
             matTrkPostDetail: widget.matTrkPostDetail,
+            getUom: (um) {},
           ),
           Container(
             width: MediaQuery.of(context).size.width * 0.64,
@@ -403,33 +428,93 @@ class _ScanBundleState extends State<ScanBundle> {
   }
 
   Widget showBundleButton() {
-    return ElevatedButton(
-      style: ButtonStyle(
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100.0),
-            side: BorderSide(color: Colors.red),
+    return Column(
+      children: [
+        ElevatedButton(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100.0),
+                side: BorderSide(color: Colors.red),
+              ),
+            ),
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+                if (states.contains(MaterialState.pressed)) return Colors.red.shade200;
+                return Colors.red.shade500; // Use the component's default.
+              },
+            ),
           ),
-        ),
-        backgroundColor: MaterialStateProperty.resolveWith<Color>(
-          (Set<MaterialState> states) {
-            if (states.contains(MaterialState.pressed)) return Colors.red.shade200;
-            return Colors.red.shade500; // Use the component's default.
+          onPressed: () {
+            String type = "";
+            String selected = widget.method;
+            if (selected.contains('a')) {
+              type = terminalA?.processType ?? '';
+            }
+            if (selected.contains('b')) {
+              type = terminalB?.processType ?? '';
+            }
+            showDoubleCrimpInfo(
+                context: context,
+                fg: widget.schedule.finishedGoods.toString(),
+                processType: type,
+                cablepart: widget.schedule.cablePartNo.toString(),
+                crimping: true,
+                filter: (list) {
+                  return list.where((element) {
+                    return true;
+                  }).toList();
+                  // return list.where((element) {
+                  //   if (element.awg.toString() == widget.schedule.awg &&
+                  //       element.cablePartNumber == widget.schedule.cablePartNo &&
+                  //       element.wireCuttingColor == widget.schedule.wireColour &&
+                  //       element.length == widget.schedule.length) {
+                  //     return true;
+                  //   } else {
+                  //     return false;
+                  //   }
+                  // }).toList();
+                });
           },
-        ),
-      ),
-      onPressed: () {
-        showBundles();
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text("Bundles"),
-          SizedBox(
-            width: 5,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("  Detail  "),
+              SizedBox(
+                width: 5,
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        ElevatedButton(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100.0),
+                side: BorderSide(color: Colors.red),
+              ),
+            ),
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+                if (states.contains(MaterialState.pressed)) return Colors.red.shade200;
+                return Colors.red.shade500; // Use the component's default.
+              },
+            ),
+          ),
+          onPressed: () {
+            showBundles();
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Bundles"),
+              SizedBox(
+                width: 5,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -468,6 +553,15 @@ class _ScanBundleState extends State<ScanBundle> {
         return [];
       }
     });
+  }
+
+  getProcessName(String name) {
+    //used to get process name for crimping
+    name = name.toLowerCase();
+    if (name == "Crimp From & To".toLowerCase()) {
+      return "crimp from,crimp to";
+    }
+    return name;
   }
 
   Future<void> showBundles() {
@@ -574,9 +668,11 @@ class _ScanBundleState extends State<ScanBundle> {
                                 ],
                                 rows: totalbundleList
                                     .map((e) => CustomRow(
-                                            completed: e.updateFromProcess
-                                                .toLowerCase()
-                                                .contains(widget.processName.toLowerCase()),
+                                            completed: e.updateFromProcess.toLowerCase().contains(
+                                                    getProcessName(
+                                                        widget.processName.toLowerCase())) ||
+                                                checkCrimpingcompletedofbundle(e),
+                                            // completed: checkCrimpingcompletedofbundle(e),
                                             cells: [
                                               CustomCell(
                                                 width: 100,
@@ -606,9 +702,10 @@ class _ScanBundleState extends State<ScanBundle> {
                                               ),
                                               CustomCell(
                                                 width: 100,
-                                                color: e.locationId == null
-                                                    ? Colors.red.shade100
-                                                    : Colors.transparent,
+                                                color:
+                                                    e.locationId == null || e.locationId.length <= 1
+                                                        ? Colors.red.shade100
+                                                        : Colors.transparent,
                                                 child: Text(
                                                   "${e.locationId}",
                                                   style: TextStyle(fontSize: 12),
@@ -657,6 +754,27 @@ class _ScanBundleState extends State<ScanBundle> {
         });
   }
 
+  bool checkCrimpingcompletedofbundle(BundlesRetrieved bundle) {
+    if (widget.schedule.process == "Crimp From & To") {
+      if (bundle.crimpFromSchId.length > 1) {
+        if (bundle.crimpToSchId.length > 1) {
+          return true;
+        }
+      }
+    }
+    if (widget.schedule.process == "Crimp From") {
+      if (bundle.crimpFromSchId.length > 1) {
+        return true;
+      }
+    }
+    if (widget.schedule.process == "Crimp To") {
+      if (bundle.crimpToSchId.length > 1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   String getProcessType(String process) {
     if (widget.method.contains("a")) {
       process = process + ",crimp from";
@@ -665,13 +783,13 @@ class _ScanBundleState extends State<ScanBundle> {
       process = process + "cutlength";
     }
     if (widget.method.contains("b")) {
-      process = process + ",Crimp to";
+      process = process + ",crimp to";
     }
     return process;
   }
 
   Future<bool> checkMapping() async {
-    if (!checkmappingdone) {
+    if (!await checkCompulsoryMapping()) {
       showMappingAlert();
       setState(() {
         checkmappingdone = true;
@@ -679,6 +797,36 @@ class _ScanBundleState extends State<ScanBundle> {
       return false;
     }
 
+    return true;
+  }
+
+  Future<bool> checkCompulsoryMapping() async {
+    ApiService apiService = new ApiService();
+    PostgetBundleMaster postgetBundleMaste = new PostgetBundleMaster(
+      binId: 0,
+      scheduleId: 0,
+      bundleId: '',
+      location: '',
+      status: '',
+      finishedGoods: widget.schedule.finishedGoods,
+      cablePartNumber: widget.schedule.cablePartNo,
+      orderId: widget.schedule.purchaseOrder.toString(),
+    );
+    List<BundlesRetrieved> bundleList = await apiService.getBundlesInSchedule(
+            postgetBundleMaster: postgetBundleMaste, scheduleID: "") ??
+        [];
+    bundleList = bundleList
+        .where((element) => element.updateFromProcess
+            .toLowerCase()
+            .contains(getProcessName(widget.processName.toLowerCase())))
+        .toList();
+
+    for (BundlesRetrieved bundle in bundleList) {
+      if (bundle.locationId.length > 1) {
+      } else {
+        return false;
+      }
+    }
     return true;
   }
 
@@ -844,7 +992,7 @@ class _ScanBundleState extends State<ScanBundle> {
                                       data: "${bundlesRetrieved.finishedGoodsPart}"),
                                   field(
                                     title: "Order Id",
-                                    data: "${bundlesRetrieved.operatorIdentification}",
+                                    data: "${bundlesRetrieved.orderId}",
                                   ),
                                   field(
                                       title: "Update From",
@@ -1000,7 +1148,29 @@ class _ScanBundleState extends State<ScanBundle> {
     );
   }
 
-  getScannedBundle() {
+  getScannedBundle() async {
+    if (_scanIdController.text.length > 0) {
+      if (await checkCableType() && donotrepeatMultiCorealert == false) {
+        await showMultiCoreAlertCrimping(
+          context: context,
+          onDoNotRemindAgain: (value) {
+            setState(() {
+              donotrepeatMultiCorealert = value;
+              log("message donotrepeat multiCore alert $donotrepeatMultiCorealert");
+            });
+          },
+          onSubmitted: () {
+            processScannedbundles();
+          },
+          cableType: cableType,
+        );
+      } else {
+        processScannedbundles();
+      }
+    }
+  }
+
+  processScannedbundles() {
     PostgetBundleMaster postgetBundleMaste = new PostgetBundleMaster(
       scheduleId: 0,
       binId: 0,
@@ -1012,10 +1182,10 @@ class _ScanBundleState extends State<ScanBundle> {
       orderId: "",
     );
 
-    if (_scanIdController.text.length > 0) {
-      apiService
-          .getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: "")
-          .then((value) {
+    apiService
+        .getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: "")
+        .then((value) async {
+      try {
         List<BundlesRetrieved> bundleList = value!;
         BundlesRetrieved bundleDetail = bundleList[0];
 
@@ -1033,7 +1203,7 @@ class _ScanBundleState extends State<ScanBundle> {
                 fontSize: 16.0);
             return true;
           } else {
-            if (validateBundle(bundleDetail)) {
+            if (validateBundle(bundleDetail) || await checkCableType()) {
               if (bundleDetail.bundleStatus.toLowerCase() == "dropped") {
                 setState(() {
                   scannedBundle = bundleDetail;
@@ -1075,6 +1245,8 @@ class _ScanBundleState extends State<ScanBundle> {
                   });
                 }
               }
+            } else {
+              setState(() {});
             }
           }
         } else {
@@ -1082,8 +1254,41 @@ class _ScanBundleState extends State<ScanBundle> {
             _scanIdController.clear();
           });
         }
-      });
+      } catch (e) {
+        setState(() {
+          _scanIdController.clear();
+        });
+      }
+    });
+  }
+
+  Future<bool> checkCableType() async {
+    String type = "";
+    String selected = widget.method;
+    if (selected.contains('a')) {
+      type = terminalA?.processType ?? '';
     }
+    if (selected.contains('b')) {
+      type = terminalB?.processType ?? '';
+    }
+    //todo  check type
+    List<EJobTicketMasterDetails> ejobDetailList = await apiService.getDoubleCrimpDetail(
+            cablepart: widget.schedule.cablePartNo.toString(),
+            fgNo: widget.schedule.finishedGoods.toString(),
+            crimpType: type) ??
+        [];
+
+    if (ejobDetailList != null) {
+      if (ejobDetailList.isNotEmpty) {
+        setState(() {
+          cableType = ejobDetailList[0].cableType;
+        });
+        if (ejobDetailList[0].cableType == "DISCRETE") {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   /// to validate the bundle and check wheather it is peresent in same fg
@@ -1112,8 +1317,8 @@ class _ScanBundleState extends State<ScanBundle> {
 
     if ("${bundleDetail.finishedGoodsPart}" == "${widget.schedule.finishedGoods}" &&
         "${bundleDetail.cablePartNumber}" == "${widget.schedule.cablePartNo}" &&
-        "${bundleDetail.cutLengthSpecificationInmm}" == "${widget.schedule.length}" &&
-        "${bundleDetail.color}" == "${widget.schedule.wireColour}" &&
+        // "${bundleDetail.cutLengthSpecificationInmm}" == "${widget.schedule.length}" &&
+        // "${bundleDetail.color}" == "${widget.schedule.wireColour}" &&
         "${bundleDetail.orderId}" == "${widget.schedule.purchaseOrder}") {
       // ignore: null_aware_in_logical_operator
       if (!bundleDetail.updateFromProcess
@@ -1123,7 +1328,7 @@ class _ScanBundleState extends State<ScanBundle> {
         return true;
       }
       Fluttertoast.showToast(
-          msg: "Bundle terminal does not match",
+          msg: "Bundle Crimping already completed",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
@@ -1416,6 +1621,18 @@ class _ScanBundleState extends State<ScanBundle> {
                                     )
                                   : Text("Save & Scan Next"),
                               onPressed: () {
+                                if (total() > int.parse(bundleQty ?? '0')) {
+                                  Fluttertoast.showToast(
+                                    msg: "Invalid Rejection Qty",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0,
+                                  );
+                                  return;
+                                }
                                 setState(() {
                                   loading = true;
                                 });
@@ -1436,13 +1653,11 @@ class _ScanBundleState extends State<ScanBundle> {
                                     });
                                     setState(() {
                                       widget.updateQty(widget.totalQuantity + int.parse(bundleQty));
-
-                                      Future.delayed(const Duration(milliseconds: 10), () {
+                                      Future.delayed(const Duration(milliseconds: 2), () {
                                         SystemChannels.textInput.invokeMethod('TextInput.hide');
                                       });
                                       status = Status.scanBin;
                                     });
-
                                     Fluttertoast.showToast(
                                       msg: "Saved Crimping Detail ",
                                       toastLength: Toast.LENGTH_SHORT,
@@ -1546,16 +1761,32 @@ class _ScanBundleState extends State<ScanBundle> {
       passedQuantity: int.parse(bundleQty ?? '0') - total(),
       rejectedQuantity: total(),
       endWire: int.parse(endwireController.text.length > 0 ? endwireController.text : "0"),
-      rejectionsTerminalFrom:
-          int.parse(endTerminalControllerFrom.text.length > 0 ? endTerminalControllerTo.text : "0"),
+      rejectionsTerminalFrom: int.parse(
+          endTerminalControllerFrom.text.length > 0 ? endTerminalControllerFrom.text : "0"),
       rejectionsTerminalTo:
           int.parse(endTerminalControllerTo.text.length > 0 ? endTerminalControllerTo.text : "0"),
-      setUpRejectionTerminalFrom: int.parse(
-          setUpRejectionControllerFrom.text.length > 0 ? setUpRejectionControllerFrom.text : '0'),
+      setUpRejectionTerminalFrom: int.parse(setUpRejectionControllerFrom.text.length > 0
+              ? setUpRejectionControllerFrom.text
+              : '0') +
+          getRawMaterialQtyforInventory(
+                  rawMaterials: widget.rawMaterial,
+                  method: widget.method,
+                  bundleQty: int.parse(bundleQty),
+                  terminalFrom:
+                      '${terminalA?.terminalPart == null ? '0' : terminalA?.terminalPart}',
+                  terminalTo: "0")
+              .floor(),
       setUpRejections: int.parse(
           setUpRejectionControllerCable.text.length > 0 ? setUpRejectionControllerCable.text : '0'),
       setUpRejectionTerminalTo: int.parse(
-          setUpRejectionControllerTo.text.length > 0 ? setUpRejectionControllerTo.text : '0'),
+              setUpRejectionControllerTo.text.length > 0 ? setUpRejectionControllerTo.text : '0') +
+          getRawMaterialQtyforInventory(
+                  rawMaterials: widget.rawMaterial,
+                  method: widget.method,
+                  bundleQty: int.parse(bundleQty),
+                  terminalTo: '${terminalB?.terminalPart == null ? '0' : terminalB?.terminalPart}',
+                  terminalFrom: "0")
+              .floor(),
       //terminaldamage
       terminalBendOrClosedOrDamage: int.parse(
               terminalBendController.text.length > 0 ? terminalBendController.text : '0') +
@@ -1596,8 +1827,8 @@ class _ScanBundleState extends State<ScanBundle> {
       scheduleId: widget.schedule.scheduleId,
       // ignore: unnecessary_null_comparison
       awg: widget.schedule.awg != null ? widget.schedule.awg.toString() : "",
-      terminalFrom: int.parse('${terminalA!.terminalPart}'),
-      terminalTo: int.parse('${terminalB!.terminalPart}'),
+      terminalFrom: int.parse('${terminalA?.terminalPart == null ? '0' : terminalA?.terminalPart}'),
+      terminalTo: int.parse('${terminalB?.terminalPart == null ? '0' : terminalB?.terminalPart}'),
     );
   }
 
@@ -1998,37 +2229,38 @@ class _ScanBundleState extends State<ScanBundle> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(100.0),
-                                side: BorderSide(color: Colors.red))),
-                        backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                            if (states.contains(MaterialState.pressed)) return Colors.red.shade200;
-                            return Colors.white; // Use the component's default.
-                          },
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Back',
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                        ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _binController.clear();
-                        });
-                        setState(() {
-                          status = Status.rejection;
-                        });
-                      },
-                    ),
+                    // ElevatedButton(
+                    //   style: ButtonStyle(
+                    //     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    //         RoundedRectangleBorder(
+                    //             borderRadius: BorderRadius.circular(100.0),
+                    //             side: BorderSide(color: Colors.red))),
+                    //     backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                    //       (Set<MaterialState> states) {
+                    //         if (states.contains(MaterialState.pressed)) return Colors.red.shade200;
+                    //         return Colors.white; // Use the component's default.
+                    //       },
+                    //     ),
+                    //   ),
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.all(8.0),
+                    //     child: Text(
+                    //       'Skip',
+                    //       style: TextStyle(
+                    //         color: Colors.red,
+                    //       ),
+                    //     ),
+                    //   ),
+                    //   onPressed: () {
+                    //     setState(() {
+                    //       _binController.clear();
+                    //       _scanIdController.clear();
+                    //     });
+                    //     setState(() {
+                    //       status = Status.scan;
+                    //     });
+                    //   },
+                    // ),
                     ElevatedButton(
                       style: ButtonStyle(
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -2065,9 +2297,13 @@ class _ScanBundleState extends State<ScanBundle> {
       TransferBundleToBin bundleToBin = TransferBundleToBin(
           userId: widget.userId,
           binIdentification: binId ?? '',
-          locationId: "",
+          locationId: "wip",
           bundleId: _scanIdController.text);
+      TransferBinToLocation bintoLocation = TransferBinToLocation(
+          userId: widget.userId, binIdentification: binId ?? '', locationId: "", bundleId: "");
+
       apiService.postTransferBundletoBin(transferBundleToBin: [bundleToBin]).then((value) {
+        //apiService.postTransferBinToLocation([bintoLocation]).then((value1) {
         if (value != null) {
           BundleTransferToBin bundleTransferToBinTracking = value[0];
           Fluttertoast.showToast(
@@ -2084,9 +2320,9 @@ class _ScanBundleState extends State<ScanBundle> {
             scannedBundle!.locationId = "";
             bundleList.add(scannedBundle!);
             Future.delayed(
-              const Duration(milliseconds: 4000),
+              const Duration(milliseconds: 1000),
               () {
-                updateLocationtoempty(_binController.text);
+                updateLocationtoempty(binID: _binController.text, userId: widget.userId);
                 _binController.clear();
               },
             );
@@ -2105,6 +2341,7 @@ class _ScanBundleState extends State<ScanBundle> {
             fontSize: 16.0,
           );
         }
+        // });
       });
 
       setState(() {
@@ -2127,7 +2364,31 @@ class _ScanBundleState extends State<ScanBundle> {
     }
   }
 
-  updateLocationtoempty(String binID) {
+// method to get raw material calculation
+
+  double getRawMaterialQtyforInventory({
+    required List<RawMaterial> rawMaterials,
+    required String method,
+    required int bundleQty,
+    required String terminalFrom,
+    required String terminalTo,
+  }) {
+    for (RawMaterial rawMaterialitem in rawMaterials) {
+      if (terminalFrom == rawMaterialitem.partNunber) {
+        if (double.parse(rawMaterialitem.requireQuantity ?? "0.0") > 1) {
+          return (double.parse(rawMaterialitem.requireQuantity ?? "0.0") * bundleQty) - bundleQty;
+        }
+      }
+      if (terminalTo == rawMaterialitem.partNunber) {
+        if (double.parse(rawMaterialitem.requireQuantity ?? "0.0") > 1) {
+          return double.parse(rawMaterialitem.requireQuantity ?? "0.0") * bundleQty - bundleQty;
+        }
+      }
+    }
+    return 0.0;
+  }
+
+  updateLocationtoempty({required String binID, required String userId}) {
     log("updateloc : $binID");
     PostgetBundleMaster postgetBundleMaste = new PostgetBundleMaster(
       scheduleId: 0,
@@ -2153,7 +2414,7 @@ class _ScanBundleState extends State<ScanBundle> {
                   bundleId: e.bundleIdentification,
                   locationId: "",
                   binIdentification: binID,
-                  userId: widget.userId))
+                  userId: userId))
               .toList());
         } else {}
       } else {

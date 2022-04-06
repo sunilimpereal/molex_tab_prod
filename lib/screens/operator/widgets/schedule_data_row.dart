@@ -79,7 +79,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                 Tooltip(
                     showDuration: const Duration(seconds: 2),
                     waitDuration: const Duration(seconds: 1),
-                    message: "${widget.schedule.machineNumber}",
+                    message: "${widget.machine.machineNumber}",
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.07,
                       height: 34,
@@ -92,7 +92,7 @@ class _ScheduleDataRowState extends State<ScheduleDataRow> {
                               style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              widget.schedule.machineNumber,
+                              widget.schedule.machineNumber ?? '',
                               style: TextStyle(fontSize: 9, fontWeight: FontWeight.w500),
                             ),
                           ],

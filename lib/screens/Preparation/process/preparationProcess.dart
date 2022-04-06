@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:molex/screens/Preparation/process/preparationInfo.dart';
 
 import '../../../model_api/Transfer/postgetBundleMaster.dart';
 import '../../../model_api/process1/getBundleListGl.dart';
@@ -68,19 +69,14 @@ class _PreparationprocessState extends State<Preparationprocess> {
   TextEditingController cablecrosscutController = new TextEditingController();
   TextEditingController stripLengthController = new TextEditingController();
   TextEditingController stripNickController = new TextEditingController();
-  TextEditingController unsheathingLengthController =
-      new TextEditingController();
+  TextEditingController unsheathingLengthController = new TextEditingController();
   TextEditingController drainWirecutController = new TextEditingController();
-  TextEditingController trimmingCableWrongController =
-      new TextEditingController();
-  TextEditingController trimmingLengthlessController =
-      new TextEditingController();
-  TextEditingController hstImproperShrinkingController =
-      new TextEditingController();
+  TextEditingController trimmingCableWrongController = new TextEditingController();
+  TextEditingController trimmingLengthlessController = new TextEditingController();
+  TextEditingController hstImproperShrinkingController = new TextEditingController();
   TextEditingController hstDamageController = new TextEditingController();
   TextEditingController bootReverseController = new TextEditingController();
-  TextEditingController wrongBootInsertionController =
-      new TextEditingController();
+  TextEditingController wrongBootInsertionController = new TextEditingController();
   TextEditingController bootDamageController = new TextEditingController();
 
   int selectedindex = 0;
@@ -93,6 +89,8 @@ class _PreparationprocessState extends State<Preparationprocess> {
     });
   }
 
+  int terminalFrom = 0;
+  int terminalTo = 0;
   late CableTerminalA terminalA;
   late CableTerminalB terminalB;
   getTerminal(
@@ -104,6 +102,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
     ApiService apiService = new ApiService();
     apiService
         .getCableTerminalA(
+            isCrimping: false,
             fgpartNo: fgNumber,
             cablepartno: cablePtNo,
             length: length,
@@ -112,6 +111,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
         .then((termiA) {
       apiService
           .getCableTerminalB(
+              isCrimping: false,
               fgpartNo: fgNumber,
               cablepartno: cablePtNo,
               length: length,
@@ -120,7 +120,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
           .then((termiB) {
         setState(() {
           terminalA = termiA!;
-          terminalB = termiB;
+          terminalB = termiB!;
         });
       });
     });
@@ -181,8 +181,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
                               child: Icon(
                                 Icons.person,
                                 size: 18,
@@ -191,8 +190,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                             ),
                             Text(
                               widget.employee.empId,
-                              style:
-                                  TextStyle(fontSize: 13, color: Colors.black),
+                              style: TextStyle(fontSize: 13, color: Colors.black),
                             ),
                           ],
                         )),
@@ -209,8 +207,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
                               child: Icon(
                                 Icons.settings,
                                 size: 18,
@@ -219,8 +216,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                             ),
                             Text(
                               widget.machineId ?? "",
-                              style:
-                                  TextStyle(fontSize: 13, color: Colors.black),
+                              style: TextStyle(fontSize: 13, color: Colors.black),
                             ),
                           ],
                         )),
@@ -273,28 +269,15 @@ class _PreparationprocessState extends State<Preparationprocess> {
       children: [
         P3ScheduleDetailWIP(
           schedule: PreparationSchedule(
-              orderId: preparationList[selectedindex]
-                  .bundleDetail
-                  .orderId
-                  .toString(),
-              finishedGoodsNumber: preparationList[selectedindex]
-                  .bundleDetail
-                  .finishedGoodsPart
-                  .toString(),
-              scheduledId: preparationList[selectedindex]
-                  .bundleDetail
-                  .scheduledId
-                  .toString(),
-              cablePartNumber: preparationList[selectedindex]
-                  .bundleDetail
-                  .cablePartNumber
-                  .toString(),
-              length: preparationList[selectedindex]
-                  .bundleDetail
-                  .cutLengthSpecificationInmm
-                  .toString(),
-              process:
-                  preparationList[selectedindex].bundleDetail.updateFromProcess,
+              orderId: preparationList[selectedindex].bundleDetail.orderId.toString(),
+              finishedGoodsNumber:
+                  preparationList[selectedindex].bundleDetail.finishedGoodsPart.toString(),
+              scheduledId: preparationList[selectedindex].bundleDetail.scheduledId.toString(),
+              cablePartNumber:
+                  preparationList[selectedindex].bundleDetail.cablePartNumber.toString(),
+              length:
+                  preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm.toString(),
+              process: preparationList[selectedindex].bundleDetail.updateFromProcess,
               color: preparationList[selectedindex].bundleDetail.color,
               scheduledQuantity: ""),
         ),
@@ -316,86 +299,135 @@ class _PreparationprocessState extends State<Preparationprocess> {
             Container(
               child: FutureBuilder(
                   future: apiService.getCableTerminalA(
-                      fgpartNo: preparationList[selectedindex]
-                          .bundleDetail
-                          .finishedGoodsPart
-                          .toString(),
-                      cablepartno: preparationList[selectedindex]
-                              .bundleDetail
-                              .cablePartNumber
-                              .toString(),
+                      fgpartNo:
+                          preparationList[selectedindex].bundleDetail.finishedGoodsPart.toString(),
+                      cablepartno:
+                          preparationList[selectedindex].bundleDetail.cablePartNumber.toString(),
+                      isCrimping: false,
                       length:
                           "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
-                      color:
-                          "${preparationList[selectedindex].bundleDetail.color}",
+                      color: "${preparationList[selectedindex].bundleDetail.color}",
                       awg: int.parse(
                         preparationList[selectedindex].bundleDetail.awg,
                       )),
                   builder: (context, snapshot) {
-                    CableTerminalA? terminalA = snapshot.data as CableTerminalA?;
+                    CableTerminalA? cableterminalA = snapshot.data as CableTerminalA?;
+                    Future.delayed(Duration(seconds: 1)).then((value) {
+                      if (terminalFrom == 0) {
+                        setState(() {
+                          terminalFrom = cableterminalA?.terminalPart ?? 0;
+                        });
+                      }
+                    });
+
                     if (snapshot.hasData) {
                       return process1(
-                          'From Process Unsheathing Length : ${terminalA!.unsheathingLength}',
+                          'From Process Unsheathing Length : ${cableterminalA!.unsheathingLength}',
                           0.30);
                     } else {
-                      return process1(
-                          'From Process Unsheathing Length :', 0.325);
+                      return process1('From Process Unsheathing Length :', 0.325);
                     }
                   }),
             ),
-            FutureBuilder(
-                future: apiService.getCableDetails(
-                    fgpartNo: preparationList[selectedindex]
-                        .bundleDetail
-                        .finishedGoodsPart
-                        .toString(),
-                    cablepartno: preparationList[selectedindex]
-                            .bundleDetail
-                            .cablePartNumber
-                            .toString(),
-                    length:
-                        "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
-                    color:
-                        "${preparationList[selectedindex].bundleDetail.color}",
-                    awg: int.parse(
-                      preparationList[selectedindex].bundleDetail.awg ?? '0',
-                    )),
-                builder: (context, snapshot) {
-                  CableDetails? cableDetail = snapshot.data as CableDetails?;
-                  if (snapshot.hasData) {
-                    return process(
-                        'Cable',
-                        'Cut Length Spec(mm) -${cableDetail!.cutLengthSpec}',
-                        'Cable Part Number(Description)',
-                        '${cableDetail!.cablePartNumber}(${cableDetail.description})',
-                        'From Strip Length Spec(mm) ${cableDetail.stripLengthFrom} \n To Strip Length Spec(mm) ${cableDetail.stripLengthTo}',
-                        0.36);
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                }),
+            ElevatedButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100.0),
+                    side: BorderSide(color: Colors.red),
+                  ),
+                ),
+                backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.pressed)) return Colors.red.shade200;
+                    return Colors.white; // Use the component's default.
+                  },
+                ),
+              ),
+              onPressed: () {
+                showPreparationInfo(
+                  awg: int.parse(
+                    preparationList[selectedindex].bundleDetail.awg ?? '0',
+                  ),
+                  cablePartNo:
+                      preparationList[selectedindex].bundleDetail.cablePartNumber.toString(),
+                  color: "${preparationList[selectedindex].bundleDetail.color}",
+                  context: context,
+                  fgNumber:
+                      preparationList[selectedindex].bundleDetail.finishedGoodsPart.toString(),
+                  length:
+                      "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
+                  terminalFrom: terminalFrom,
+                  terminalTo: terminalTo,
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "    Info  ",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                ],
+              ),
+            ),
+            // FutureBuilder(
+            //     future: apiService.getCableDetails(
+            //         fgpartNo:
+            //             preparationList[selectedindex].bundleDetail.finishedGoodsPart.toString(),
+            //         cablepartno:
+            //             preparationList[selectedindex].bundleDetail.cablePartNumber.toString(),
+            //         length:
+            //             "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
+            //         color: "${preparationList[selectedindex].bundleDetail.color}",
+            //         awg: int.parse(
+            //           preparationList[selectedindex].bundleDetail.awg ?? '0',
+            //         ),
+            //         isCrimping: false),
+            //     builder: (context, snapshot) {
+            //       CableDetails? cableDetail = snapshot.data as CableDetails?;
+            //       if (snapshot.hasData) {
+            //         return process(
+            //             'Cable',
+            //             'Cut Length Spec(mm) -${cableDetail!.cutLengthSpec}',
+            //             'Cable Part Number(Description)',
+            //             '${cableDetail!.cablePartNumber}(${cableDetail.description})',
+            //             'From Strip Length Spec(mm) ${cableDetail.stripLengthFrom} \n To Strip Length Spec(mm) ${cableDetail.stripLengthTo}',
+            //             0.36);
+            //       } else {
+            //         return Center(
+            //           child: CircularProgressIndicator(),
+            //         );
+            //       }
+            //     }),
             FutureBuilder(
                 future: apiService.getCableTerminalB(
-                    fgpartNo: preparationList[selectedindex]
-                        .bundleDetail
-                        .finishedGoodsPart
-                        .toString(),
-                    cablepartno: preparationList[selectedindex]
-                            .bundleDetail
-                            .cablePartNumber
-                            .toString(),
+                    isCrimping: false,
+                    fgpartNo:
+                        preparationList[selectedindex].bundleDetail.finishedGoodsPart.toString(),
+                    cablepartno:
+                        preparationList[selectedindex].bundleDetail.cablePartNumber.toString(),
                     length:
                         "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
-                    color:
-                        "${preparationList[selectedindex].bundleDetail.color}",
+                    color: "${preparationList[selectedindex].bundleDetail.color}",
                     awg: int.parse(
                       preparationList[selectedindex].bundleDetail.awg ?? '0',
                     )),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     CableTerminalB? cableTerminalB = snapshot.data as CableTerminalB?;
+
+                    Future.delayed(Duration(seconds: 1)).then((value) {
+                      if (terminalTo == 0) {
+                        setState(() {
+                          terminalTo = cableTerminalB?.terminalPart ?? 0;
+                        });
+                      }
+                    });
+
                     return process1(
                         'To Process Unsheathing Length : ${cableTerminalB!.unsheathingLength} ',
                         0.30);
@@ -409,8 +441,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
     );
   }
 
-  Widget process(
-      String p1, String p2, String p3, String p4, String p5, double width) {
+  Widget process(String p1, String p2, String p3, String p4, String p5, double width) {
     return Material(
       elevation: 10,
       shadowColor: Colors.grey.shade100,
@@ -446,10 +477,8 @@ class _PreparationprocessState extends State<Preparationprocess> {
                       children: [
                         Text(
                           p1,
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: ''),
+                          style:
+                              TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: ''),
                         ),
                         SizedBox(width: 20),
                         Text(
@@ -537,10 +566,8 @@ class _PreparationprocessState extends State<Preparationprocess> {
                       children: [
                         Text(
                           p1,
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: ''),
+                          style:
+                              TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: ''),
                         ),
                         SizedBox(width: 20),
                       ],
@@ -601,8 +628,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                         padding: const EdgeInsets.all(8.0),
                         child: feild(
                             heading: "Bundle Qty",
-                            value:
-                                "${preparationList[selectedindex].bundleDetail.bundleQuantity}",
+                            value: "${preparationList[selectedindex].bundleDetail.bundleQuantity}",
                             width: 0.12),
                       ),
                       Padding(
@@ -641,36 +667,28 @@ class _PreparationprocessState extends State<Preparationprocess> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Column(children: [
-                              quantity(
-                                  'Cable Damage', 10, cableDamageController),
-                              quantity('Cable Cross Cut', 10,
-                                  cablecrosscutController),
-                              quantity(' Strip Length less / More', 10,
-                                  stripLengthController),
-                              quantity('Strip Nick mark / blade mark', 10,
-                                  stripNickController),
+                              quantity('Cable Damage', 10, cableDamageController),
+                              quantity('Cable Cross Cut', 10, cablecrosscutController),
+                              quantity(' Strip Length less / More', 10, stripLengthController),
+                              quantity('Strip Nick mark / blade mark', 10, stripNickController),
                             ]),
                             Column(children: [
                               quantity('Unsheathing Length less / More', 10,
                                   unsheathingLengthController),
+                              quantity('Drain Wire Cut', 10, drainWirecutController),
+                              quantity('Trimming cable Wrong', 10, trimmingCableWrongController),
                               quantity(
-                                  'Drain Wire Cut', 10, drainWirecutController),
-                              quantity('Trimming cable Wrong', 10,
-                                  trimmingCableWrongController),
-                              quantity('Trimming Length less / More', 10,
-                                  trimmingLengthlessController),
+                                  'Trimming Length less / More', 10, trimmingLengthlessController),
                             ]),
                             Column(children: [
-                              quantity('HST Improper Shrinking', 10,
-                                  hstImproperShrinkingController),
-                              quantity('HST Damage', 10, hstDamageController),
                               quantity(
-                                  'Boot Reverse', 10, bootReverseController),
+                                  'HST Improper Shrinking', 10, hstImproperShrinkingController),
+                              quantity('HST Damage', 10, hstDamageController),
+                              quantity('Boot Reverse', 10, bootReverseController),
                               quantity('Boot Damage', 10, bootDamageController),
                             ]),
                             Column(children: [
-                              quantity('Wrong Boot Insertion', 10,
-                                  wrongBootInsertionController),
+                              quantity('Wrong Boot Insertion', 10, wrongBootInsertionController),
                             ]),
                           ],
                         ),
@@ -689,8 +707,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                       onPressed: () {
                         apiService
                             .postPreparationDetail(
-                                postPreparationDetail:
-                                    getPostPreparationDetail())
+                                postPreparationDetail: getPostPreparationDetail())
                             .then((value) {
                           if (value) {
                             showtoast(msg: "Preparation Detail Saved");
@@ -701,10 +718,8 @@ class _PreparationprocessState extends State<Preparationprocess> {
                         });
                       },
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 10),
-                        child:
-                            Text('Save', style: TextStyle(color: Colors.white)),
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                        child: Text('Save', style: TextStyle(color: Colors.white)),
                       ),
                     )),
                   ),
@@ -748,18 +763,12 @@ class _PreparationprocessState extends State<Preparationprocess> {
     }
 
     return PostPreparationDetail(
-      bundleIdentification:
-          preparationList[selectedindex].bundleDetail.bundleIdentification,
-      bundleQuantity:
-          preparationList[selectedindex].bundleDetail.bundleQuantity,
-      passedQuantity:
-          (preparationList[selectedindex].bundleDetail.bundleQuantity) -
-              (rejectedQtyController.text == ""
-                  ? 0
-                  : int.parse(rejectedQtyController.text)),
-      rejectedQuantity: rejectedQtyController.text == ""
-          ? 0
-          : int.parse(rejectedQtyController.text),
+      bundleIdentification: preparationList[selectedindex].bundleDetail.bundleIdentification,
+      bundleQuantity: preparationList[selectedindex].bundleDetail.bundleQuantity,
+      passedQuantity: (preparationList[selectedindex].bundleDetail.bundleQuantity) -
+          (rejectedQtyController.text == "" ? 0 : int.parse(rejectedQtyController.text)),
+      rejectedQuantity:
+          rejectedQtyController.text == "" ? 0 : int.parse(rejectedQtyController.text),
       cableDamage: getInt(cableDamageController),
       //unsheathing length
       //hst improper
@@ -799,41 +808,28 @@ class _PreparationprocessState extends State<Preparationprocess> {
       method: "",
       status: "",
       machineIdentification: widget.machineId,
-      cablePartNumber:
-          preparationList[selectedindex].bundleDetail.cablePartNumber,
-      cutLength: preparationList[selectedindex]
-          .bundleDetail
-          .cutLengthSpecificationInmm,
+      cablePartNumber: preparationList[selectedindex].bundleDetail.cablePartNumber,
+      cutLength: preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm,
       color: preparationList[selectedindex].bundleDetail.color,
-      finishedGoods:
-          preparationList[selectedindex].bundleDetail.finishedGoodsPart,
-      terminalFrom: terminalA.terminalPart??0,
+      finishedGoods: preparationList[selectedindex].bundleDetail.finishedGoodsPart,
+      terminalFrom: terminalA.terminalPart ?? 0,
       terminalTo: terminalB.terminalPart ?? 0,
       awg: preparationList[selectedindex].bundleDetail.awg,
       viCompleted: preparationList[selectedindex].bundleDetail.viCompleted,
       preparationCompleteFlag: "1",
       crimpToSchId: preparationList[selectedindex].bundleDetail.crimpToSchId,
-      crimpFromSchId:
-          preparationList[selectedindex].bundleDetail.crimpFromSchId,
+      crimpFromSchId: preparationList[selectedindex].bundleDetail.crimpFromSchId,
     );
   }
 
   int total() {
-    int total = int.parse(cableDamageController.text.length > 0
-            ? cableDamageController.text
-            : '0') +
-        int.parse(cablecrosscutController.text.length > 0
-            ? cablecrosscutController.text
-            : '0') +
-        int.parse(stripLengthController.text.length > 0
-            ? stripLengthController.text
-            : '0') +
-        int.parse(unsheathingLengthController.text.length > 0
-            ? unsheathingLengthController.text
-            : '0') +
-        int.parse(drainWirecutController.text.length > 0
-            ? drainWirecutController.text
-            : '0') +
+    int total = int.parse(
+            cableDamageController.text.length > 0 ? cableDamageController.text : '0') +
+        int.parse(cablecrosscutController.text.length > 0 ? cablecrosscutController.text : '0') +
+        int.parse(stripLengthController.text.length > 0 ? stripLengthController.text : '0') +
+        int.parse(
+            unsheathingLengthController.text.length > 0 ? unsheathingLengthController.text : '0') +
+        int.parse(drainWirecutController.text.length > 0 ? drainWirecutController.text : '0') +
         int.parse(hstImproperShrinkingController.text.length > 0
             ? hstImproperShrinkingController.text
             : '0') +
@@ -843,18 +839,12 @@ class _PreparationprocessState extends State<Preparationprocess> {
         int.parse(trimmingLengthlessController.text.length > 0
             ? trimmingLengthlessController.text
             : '0') +
-        int.parse(stripNickController.text.length > 0
-            ? stripNickController.text
-            : '0') +
-        int.parse(hstDamageController.text.length > 0
-            ? hstDamageController.text
-            : '0') +
-        int.parse(bootReverseController.text.length > 0
-            ? bootReverseController.text
-            : '0') +
+        int.parse(stripNickController.text.length > 0 ? stripNickController.text : '0') +
+        int.parse(hstDamageController.text.length > 0 ? hstDamageController.text : '0') +
+        int.parse(bootReverseController.text.length > 0 ? bootReverseController.text : '0') +
+        int.parse(bootDamageController.text.length > 0 ? bootDamageController.text : '0') +
         int.parse(
-            bootDamageController.text.length > 0 ? bootDamageController.text : '0') +
-        int.parse(wrongBootInsertionController.text.length > 0 ? wrongBootInsertionController.text : '0');
+            wrongBootInsertionController.text.length > 0 ? wrongBootInsertionController.text : '0');
 
     return total;
   }
@@ -914,10 +904,8 @@ class _PreparationprocessState extends State<Preparationprocess> {
                       builder: (context) => ViLocationTransfer(
                             employee: widget.employee,
                             type: "preparation",
-                            locationType: LocationType.partialTransfer, machine: MachineDetails(
-                              machineNumber: ""
-                            ),
-                           
+                            locationType: LocationType.partialTransfer,
+                            machine: MachineDetails(machineNumber: ""),
                           )),
                 );
                 log("lilst : $list");
@@ -926,8 +914,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                   for (String bundle in list) {
                     try {
                       preparationList.remove(preparationList[
-                          preparationList.indexWhere(
-                              (element) => element.bundleId == bundle)]);
+                          preparationList.indexWhere((element) => element.bundleId == bundle)]);
                     } catch (e) {}
                   }
                   list.map((e) {
@@ -965,8 +952,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
         print("userList $usersList ");
         if (usersList.contains(userId)) {
           apiService
-              .getBundlesInSchedule(
-                  postgetBundleMaster: postgetBundleMaste, scheduleID: "")
+              .getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: "")
               .then((value) {
             if (value != null && value.length != 0) {
               BundlesRetrieved bundleData = value[0];
@@ -975,32 +961,41 @@ class _PreparationprocessState extends State<Preparationprocess> {
                   .toList()
                   .contains(bundleData.bundleIdentification)) {
                 if (bundleData.updateFromProcess != "Preparation") {
-                  if (bundleData.crimpFromSchId.length < 2 ||
-                      bundleData.crimpToSchId.length < 2) {
+                  if (bundleData.crimpFromSchId.length < 2 || bundleData.crimpToSchId.length < 2) {
                     if (!donotrepeatalert) {
-                      showBundleAlertVi(
-                          context: context,
-                          crimpfrom: bundleData.crimpFromSchId,
-                          crimpto: bundleData.crimpToSchId,
-                          bundleStaus: bundleData.bundleStatus.toLowerCase(),
-                          onDoNotRemindAgain: (value) {
-                            setState(() {
-                              donotrepeatalert = value;
-                              log("message donotrepeatalert $donotrepeatalert");
-                            });
-                          },
-                          onSubmitted: () {
-                            setState(() {
-                              preparationList.add(PreparationScan(
-                                  employeeId: userId,
-                                  bundleId: bundleId,
-                                  bundleDetail: bundleData,
-                                  status: 'Not Complete',
-                                  binId: bundleData.binId.toString()));
-                              _bundleIdScanController.clear();
-                              bundleId = '';
-                            });
-                          });
+                      setState(() {
+                        preparationList.add(PreparationScan(
+                            employeeId: userId,
+                            bundleId: bundleId,
+                            bundleDetail: bundleData,
+                            status: 'Not Complete',
+                            binId: bundleData.binId.toString()));
+                        _bundleIdScanController.clear();
+                        bundleId = '';
+                      });
+                      // showBundleAlertVi(
+                      //     context: context,
+                      //     crimpfrom: bundleData.crimpFromSchId,
+                      //     crimpto: bundleData.crimpToSchId,
+                      //     bundleStaus: bundleData.bundleStatus.toLowerCase(),
+                      //     onDoNotRemindAgain: (value) {
+                      //       setState(() {
+                      //         donotrepeatalert = value;
+                      //         log("message donotrepeatalert $donotrepeatalert");
+                      //       });
+                      //     },
+                      //     onSubmitted: () {
+                      //       setState(() {
+                      //         preparationList.add(PreparationScan(
+                      //             employeeId: userId,
+                      //             bundleId: bundleId,
+                      //             bundleDetail: bundleData,
+                      //             status: 'Not Complete',
+                      //             binId: bundleData.binId.toString()));
+                      //         _bundleIdScanController.clear();
+                      //         bundleId = '';
+                      //       });
+                      //     });
                     } else {
                       setState(() {
                         preparationList.add(PreparationScan(
@@ -1120,8 +1115,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                           focusNode: _userScanFocus,
                           controller: _userScanController,
                           onTap: () {
-                            SystemChannels.textInput
-                                .invokeMethod('TextInput.hide');
+                            SystemChannels.textInput.invokeMethod('TextInput.hide');
                           },
                           onSubmitted: (value) {
                             _bundleIdScanFocus.requestFocus();
@@ -1139,20 +1133,16 @@ class _PreparationprocessState extends State<Preparationprocess> {
                                           _userScanController.clear();
                                         });
                                       },
-                                      child: Icon(Icons.clear,
-                                          size: 18, color: Colors.red))
+                                      child: Icon(Icons.clear, size: 18, color: Colors.red))
                                   : Container(),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.redAccent, width: 2.0),
+                                borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.grey.shade400, width: 2.0),
+                                borderSide: BorderSide(color: Colors.grey.shade400, width: 2.0),
                               ),
                               labelText: '  Scan User  ',
-                              contentPadding:
-                                  const EdgeInsets.symmetric(horizontal: 5.0))),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 5.0))),
                     ),
                   ),
                 ),
@@ -1190,8 +1180,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                           focusNode: _bundleIdScanFocus,
                           controller: _bundleIdScanController,
                           onTap: () {
-                            SystemChannels.textInput
-                                .invokeMethod('TextInput.hide');
+                            SystemChannels.textInput.invokeMethod('TextInput.hide');
                           },
                           onSubmitted: (value) {
                             addBundletoPreparation();
@@ -1210,16 +1199,13 @@ class _PreparationprocessState extends State<Preparationprocess> {
                                           _bundleIdScanController.clear();
                                         });
                                       },
-                                      child: Icon(Icons.clear,
-                                          size: 18, color: Colors.red))
+                                      child: Icon(Icons.clear, size: 18, color: Colors.red))
                                   : Container(),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.redAccent, width: 2.0),
+                                borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.grey.shade400, width: 2.0),
+                                borderSide: BorderSide(color: Colors.grey.shade400, width: 2.0),
                               ),
                               labelText: '  Scan Bundle ID  ',
                               contentPadding: const EdgeInsets.symmetric(
@@ -1252,39 +1238,30 @@ class _PreparationprocessState extends State<Preparationprocess> {
                   DataColumn(
                     label: Text(
                       'Employee Id',
-                      style:  TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.w400),
-                      
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                     ),
                   ),
                   DataColumn(
                       label: Text(
                     'Bundle ID',
-                    style: 
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
-                    
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                   )),
                   DataColumn(
                     label: Text(
                       'Bin ID',
-                      style:  TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.w400),
-                      ),
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                     ),
-                  
+                  ),
                   DataColumn(
                     label: Text(
                       'Status',
-                      style:  TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.w400),
-                      
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                     ),
                   ),
                   DataColumn(
                       label: Text(
                     '',
-                    style:  TextStyle(fontSize: 13),
-                    
+                    style: TextStyle(fontSize: 13),
                   ))
                 ],
                 rows: preparationList
@@ -1317,20 +1294,16 @@ class _PreparationprocessState extends State<Preparationprocess> {
                                             .bundleDetail
                                             .finishedGoodsPart
                                             .toString(),
-                                        cablePtNo:
-                                            preparationList[selectedindex]
-                                                .bundleDetail
-                                                .cablePartNumber
-                                                .toString(),
+                                        cablePtNo: preparationList[selectedindex]
+                                            .bundleDetail
+                                            .cablePartNumber
+                                            .toString(),
                                         length:
                                             "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
                                         color:
                                             "${preparationList[selectedindex].bundleDetail.color}",
                                         awg: int.parse(
-                                          preparationList[selectedindex]
-                                                  .bundleDetail
-                                                  .awg ??
-                                              '0',
+                                          preparationList[selectedindex].bundleDetail.awg ?? '0',
                                         ));
                                   });
                                 },
@@ -1376,8 +1349,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                             transfertobin();
                           },
                           onTap: () {
-                            SystemChannels.textInput
-                                .invokeMethod('TextInput.hide');
+                            SystemChannels.textInput.invokeMethod('TextInput.hide');
                           },
                           controller: _binController,
                           autofocus: true,
@@ -1392,8 +1364,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                                         _binController.clear();
                                       });
                                     },
-                                    child: Icon(Icons.clear,
-                                        size: 18, color: Colors.red))
+                                    child: Icon(Icons.clear, size: 18, color: Colors.red))
                                 : Container(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 3),
                             labelText: "Scan Bin",
@@ -1417,9 +1388,8 @@ class _PreparationprocessState extends State<Preparationprocess> {
                             width: 100,
                             child: ElevatedButton(
                                 style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.resolveWith(
-                                          (states) => Colors.redAccent),
+                                  backgroundColor: MaterialStateProperty.resolveWith(
+                                      (states) => Colors.redAccent),
                                 ),
                                 onPressed: transfertobin,
                                 child: Text('Scan Bin ')),
@@ -1480,14 +1450,12 @@ class _PreparationprocessState extends State<Preparationprocess> {
           children: [
             Row(
               children: [
-                Text(
-                  heading,
-                  style:  TextStyle(
-                    fontSize: 11,
-                    color: Colors.grey.shade500,
-                    fontWeight: FontWeight.normal,
-                  )),
-                
+                Text(heading,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey.shade500,
+                      fontWeight: FontWeight.normal,
+                    )),
               ],
             ),
             Padding(
@@ -1496,9 +1464,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                 children: [
                   Text(
                     value ?? '',
-                    style:
-                          TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
-                    
+                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
                   ),
                 ],
               ),
@@ -1524,14 +1490,12 @@ class _PreparationprocessState extends State<Preparationprocess> {
           children: [
             Row(
               children: [
-                Text(
-                  heading,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade500,
-                    fontWeight: FontWeight.normal,
-                  )),
-                
+                Text(heading,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade500,
+                      fontWeight: FontWeight.normal,
+                    )),
               ],
             ),
             Padding(
@@ -1561,15 +1525,12 @@ class _PreparationprocessState extends State<Preparationprocess> {
                           },
                           decoration: new InputDecoration(
                             hintText: value,
-                            hintStyle: TextStyle(
-                                  fontSize: 8, fontWeight: FontWeight.w500),
-                            
+                            hintStyle: TextStyle(fontSize: 8, fontWeight: FontWeight.w500),
                             border: new OutlineInputBorder(
                               borderRadius: new BorderRadius.circular(5.0),
                               borderSide: new BorderSide(),
                             ),
-                            contentPadding:
-                                EdgeInsets.only(bottom: 9, left: 5, right: 5),
+                            contentPadding: EdgeInsets.only(bottom: 9, left: 5, right: 5),
                             fillColor: Colors.white,
                           ),
                         ),
@@ -1590,8 +1551,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
     );
   }
 
-  Widget quantity(
-      String title, int quantity, TextEditingController textEditingController) {
+  Widget quantity(String title, int quantity, TextEditingController textEditingController) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
       child: Container(

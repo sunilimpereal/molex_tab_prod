@@ -7,8 +7,7 @@ import 'dart:convert';
 PostGenerateLabel postGenerateLabelFromJson(String str) =>
     PostGenerateLabel.fromJson(json.decode(str));
 
-String postGenerateLabelToJson(PostGenerateLabel data) =>
-    json.encode(data.toJson());
+String postGenerateLabelToJson(PostGenerateLabel data) => json.encode(data.toJson());
 
 class PostGenerateLabel {
   PostGenerateLabel({
@@ -24,7 +23,7 @@ class PostGenerateLabel {
     this.operatorIdentification,
     this.bundleIdentification,
     this.rejectedQuantity,
-    this.terminalDamage, 
+    this.terminalDamage,
     this.terminalBend,
     this.terminalTwist,
     this.conductorCurlingUpDown,
@@ -110,95 +109,94 @@ class PostGenerateLabel {
   int? orderIdentification;
   int? cablePartNumber;
   int? cutLength;
-  String ?color;
+  String? color;
   int? scheduleIdentification;
   int? scheduledQuantity;
   String? machineIdentification;
   String? operatorIdentification;
   String? bundleIdentification;
-  int ? rejectedQuantity;
-  int ? terminalDamage;
-  int ? terminalBend;
-  int ? terminalTwist;
-  int ? conductorCurlingUpDown;
-  int ? insulationCurlingUpDown;
-  int ? conductorBurr;
-  int ? windowGap;
-  int ? crimpOnInsulation;
-  int ? improperCrimping;
-  int ? tabBendOrTabOpen;
-  int ? bellMouthLessOrMore;
-  int ? cutOffLessOrMore;
-  int ? cutOffBurr;
-  int ? cutOffBend;
-  int ? insulationDamage;
-  int ? exposureStrands;
-  int ? strandsCut;
-  int ? brushLengthLessorMore;
-  int ? terminalCoppermark;
-  int ? setupRejections;
-  int ? terminalBackOut;
-  int ? cableDamage;
-  int ? crimpingPositionOutOrMissCrimp;
-  int ? terminalSeamOpen;
-  int ? rollerMark;
-  int ? lengthLessOrLengthMore;
-  int ? gripperMark;
-  int ? endTerminal;
-  int ? entangledCable;
-  int ? troubleShootingRejections;
-  int ? wireOverLoadRejectionsJam;
-  int ? halfCurlingA;
-  int ? brushLengthLessOrMoreC;
-  int ? exposureStrandsD;
-  int ? cameraPositionOutE;
-  int ? crimpOnInsulationF;
-  int ? cablePositionMovementG;
-  int ? crimpOnInsulationC;
-  int ? crimpingPositionOutOrMissCrimpD;
-  int ? crimpPositionOut;
-  int ? stripPositionOut;
-  int ? offCurling;
-  int ? cFmPfmRejections;
-  int ? incomingIssue;
-  int ? bladeMark;
-  int ? crossCut;
-  int ? insulationBarrel;
+  int? rejectedQuantity;
+  int? terminalDamage;
+  int? terminalBend;
+  int? terminalTwist;
+  int? conductorCurlingUpDown;
+  int? insulationCurlingUpDown;
+  int? conductorBurr;
+  int? windowGap;
+  int? crimpOnInsulation;
+  int? improperCrimping;
+  int? tabBendOrTabOpen;
+  int? bellMouthLessOrMore;
+  int? cutOffLessOrMore;
+  int? cutOffBurr;
+  int? cutOffBend;
+  int? insulationDamage;
+  int? exposureStrands;
+  int? strandsCut;
+  int? brushLengthLessorMore;
+  int? terminalCoppermark;
+  int? setupRejections;
+  int? terminalBackOut;
+  int? cableDamage;
+  int? crimpingPositionOutOrMissCrimp;
+  int? terminalSeamOpen;
+  int? rollerMark;
+  int? lengthLessOrLengthMore;
+  int? gripperMark;
+  int? endTerminal;
+  int? entangledCable;
+  int? troubleShootingRejections;
+  int? wireOverLoadRejectionsJam;
+  int? halfCurlingA;
+  int? brushLengthLessOrMoreC;
+  int? exposureStrandsD;
+  int? cameraPositionOutE;
+  int? crimpOnInsulationF;
+  int? cablePositionMovementG;
+  int? crimpOnInsulationC;
+  int? crimpingPositionOutOrMissCrimpD;
+  int? crimpPositionOut;
+  int? stripPositionOut;
+  int? offCurling;
+  int? cFmPfmRejections;
+  int? incomingIssue;
+  int? bladeMark;
+  int? crossCut;
+  int? insulationBarrel;
   String? method;
   int? terminalFrom;
   int? terminalTo;
   String? awg;
-  int ?setUpRejections;
-  int ?setUpRejectionTerminalFrom;
-  int ?setUpRejectionTerminalTo;
-  int ?cvmRejectionsCable;
-  int ?cvmRejectionsCableTerminalTo;
-  int ?cvmRejectionsCableTerminalFrom;
-  int ?cfmRejectionsCable;
-  int ?cfmRejectionsCableTerminalTo;
-  int ?cfmRejectionsCableTerminalFrom;
-  int ?endWire;
-  int ?rejectionsTerminalTo;
-  int ?rejectionsTerminalFrom;
-  int ?lengthVariation;
-  int ?stringLengthVariation;
-  int ?nickMark;
-  int ?bellMouthError;
-  int ?brushLengthLessMore;
-  int ?wrongTerminal;
-  int ?wrongCable;
-  int ?seamOpen;
-  int ?wrongCutLength;
-  int ?missCrimp;
-  int ?extrusionBurr;
-  String ?crimpFromSchId;
-  String ?crimpToSchId;
-  String ?preparationCompleteFlag;
-  String ?viCompleted;
-  String ?processType;
+  int? setUpRejections;
+  int? setUpRejectionTerminalFrom;
+  int? setUpRejectionTerminalTo;
+  int? cvmRejectionsCable;
+  int? cvmRejectionsCableTerminalTo;
+  int? cvmRejectionsCableTerminalFrom;
+  int? cfmRejectionsCable;
+  int? cfmRejectionsCableTerminalTo;
+  int? cfmRejectionsCableTerminalFrom;
+  int? endWire;
+  int? rejectionsTerminalTo;
+  int? rejectionsTerminalFrom;
+  int? lengthVariation;
+  int? stringLengthVariation;
+  int? nickMark;
+  int? bellMouthError;
+  int? brushLengthLessMore;
+  int? wrongTerminal;
+  int? wrongCable;
+  int? seamOpen;
+  int? wrongCutLength;
+  int? missCrimp;
+  int? extrusionBurr;
+  String? crimpFromSchId;
+  String? crimpToSchId;
+  String? preparationCompleteFlag;
+  String? viCompleted;
+  String? processType;
 
-  factory PostGenerateLabel.fromJson(Map<String, dynamic> json) =>
-      PostGenerateLabel(
+  factory PostGenerateLabel.fromJson(Map<String, dynamic> json) => PostGenerateLabel(
         finishedGoods: json["finishedGoods"],
         purchaseorder: json["purchaseorder"],
         orderIdentification: json["orderIdentification"],
@@ -249,8 +247,7 @@ class PostGenerateLabel {
         crimpOnInsulationF: json["crimpOnInsulation_F"],
         cablePositionMovementG: json["cablePositionMovement_G"],
         crimpOnInsulationC: json["crimpOnInsulation_C"],
-        crimpingPositionOutOrMissCrimpD:
-            json["crimpingPositionOutOrMissCrimp_D"],
+        crimpingPositionOutOrMissCrimpD: json["crimpingPositionOutOrMissCrimp_D"],
         crimpPositionOut: json["crimpPositionOut"],
         stripPositionOut: json["stripPositionOut"],
         offCurling: json["offCurling"],
@@ -344,8 +341,7 @@ class PostGenerateLabel {
         "crimpOnInsulation_F": crimpOnInsulationF ?? 0,
         "cablePositionMovement_G": cablePositionMovementG ?? 0,
         "crimpOnInsulation_C": crimpOnInsulationC ?? 0,
-        "crimpingPositionOutOrMissCrimp_D":
-            crimpingPositionOutOrMissCrimpD ?? 0,
+        "crimpingPositionOutOrMissCrimp_D": crimpingPositionOutOrMissCrimpD ?? 0,
         "crimpPositionOut": crimpPositionOut ?? 0,
         "stripPositionOut": stripPositionOut ?? 0,
         "offCurling": offCurling ?? 0,
@@ -381,10 +377,10 @@ class PostGenerateLabel {
         "wrongCutLength": wrongCutLength ?? 0,
         "missCrimp": missCrimp ?? 0,
         "extrusionBurr": extrusionBurr ?? 0,
-        "crimpFromSchId": crimpFromSchId??"",
-        "crimpToSchId": crimpToSchId??'',
-        "preparationCompleteFlag": preparationCompleteFlag??'0',
-        "viCompleted": viCompleted??'0',
+        "crimpFromSchId": crimpFromSchId ?? "",
+        "crimpToSchId": crimpToSchId ?? '',
+        "preparationCompleteFlag": preparationCompleteFlag ?? '0',
+        "viCompleted": viCompleted ?? '0',
         "processType": processType,
       };
 }
@@ -400,15 +396,14 @@ class PostGenerateLabel {
 ResponseGenerateLabel responseGenerateLabelFromJson(String str) =>
     ResponseGenerateLabel.fromJson(json.decode(str));
 
-String responseGenerateLabelToJson(ResponseGenerateLabel data) =>
-    json.encode(data.toJson());
+String responseGenerateLabelToJson(ResponseGenerateLabel data) => json.encode(data.toJson());
 
 class ResponseGenerateLabel {
   ResponseGenerateLabel({
-   required this.status,
-   required this.statusMsg,
-   required this.errorCode,
-   required this.data,
+    required this.status,
+    required this.statusMsg,
+    required this.errorCode,
+    required this.data,
   });
 
   String status;
@@ -416,8 +411,7 @@ class ResponseGenerateLabel {
   dynamic errorCode;
   Data data;
 
-  factory ResponseGenerateLabel.fromJson(Map<String, dynamic> json) =>
-      ResponseGenerateLabel(
+  factory ResponseGenerateLabel.fromJson(Map<String, dynamic> json) => ResponseGenerateLabel(
         status: json["status"],
         statusMsg: json["statusMsg"],
         errorCode: json["errorCode"],
@@ -434,7 +428,7 @@ class ResponseGenerateLabel {
 
 class Data {
   Data({
-   required this.generateLabel,
+    required this.generateLabel,
   });
 
   GeneratedLabel generateLabel;
@@ -460,18 +454,20 @@ class GeneratedLabel {
     this.routeNo,
     this.bundleId,
     this.status,
+    this.bStatus,
   });
 
   int? finishedGoods;
-  int ?cablePartNumber;
-  int ?cutLength;
+  int? cablePartNumber;
+  int? cutLength;
   String? wireGauge;
   int? terminalFrom;
   int? terminalTo;
-  int ?bundleQuantity;
+  int? bundleQuantity;
   String? routeNo;
   String? bundleId;
-  int ?status;
+  int? status;
+  String? bStatus;
 
   factory GeneratedLabel.fromJson(Map<String, dynamic> json) => GeneratedLabel(
         finishedGoods: json["finishedGoods"],
@@ -507,15 +503,14 @@ class GeneratedLabel {
 ErrorGenerateLabel errorGenerateLabelFromJson(String str) =>
     ErrorGenerateLabel.fromJson(json.decode(str));
 
-String errorGenerateLabelToJson(ErrorGenerateLabel data) =>
-    json.encode(data.toJson());
+String errorGenerateLabelToJson(ErrorGenerateLabel data) => json.encode(data.toJson());
 
 class ErrorGenerateLabel {
   ErrorGenerateLabel({
-   required this.status,
-   required this.statusMsg,
-   required this.errorCode,
-   required this.data,
+    required this.status,
+    required this.statusMsg,
+    required this.errorCode,
+    required this.data,
   });
 
   String status;
@@ -523,8 +518,7 @@ class ErrorGenerateLabel {
   String errorCode;
   Data1 data;
 
-  factory ErrorGenerateLabel.fromJson(Map<String, dynamic> json) =>
-      ErrorGenerateLabel(
+  factory ErrorGenerateLabel.fromJson(Map<String, dynamic> json) => ErrorGenerateLabel(
         status: json["status"],
         statusMsg: json["statusMsg"],
         errorCode: json["errorCode"],
@@ -546,6 +540,3 @@ class Data1 {
 
   Map<String, dynamic> toJson() => {};
 }
-
-
-
