@@ -28,14 +28,14 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  flutter_barcode_scanner: ^1.0.2
+  flutter_barcode_scanner: ^2.0.0
   fluttertoast: ^8.0.3
   intl: ^0.17.0
   lottie: ^1.0.0
   path_provider: ^2.0.1
-  flutter_speed_dial: ^3.0.5
+  flutter_speed_dial: ^5.1.0
   shared_preferences: ^2.0.5
-  toggle_switch: ^0.1.9
+  toggle_switch: ^2.0.1
   http: ^0.13.1
   async_button_builder:
   date_time_picker: ^2.0.0
@@ -45,12 +45,12 @@ dependencies:
   dio: ^4.0.0
   open_file: ^3.2.1
   flutter_icons: ^1.1.0
-  motion_toast: ^1.1.0
+  motion_toast: ^2.1.6
   clay_containers: ^0.3.2
   input_with_keyboard_control: ^1.0.8
   visibility_detector: ^0.2.2
-  syncfusion_flutter_datepicker: ^19.2.59
-  jiffy: ^4.1.0
+  syncfusion_flutter_datepicker: ^20.1.50
+  jiffy: ^5.0.0
   
 
 

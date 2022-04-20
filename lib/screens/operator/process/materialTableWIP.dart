@@ -137,7 +137,7 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
           if (snapshot.hasData) {
             List<MaterialDetail>? matList = snapshot.data as List<MaterialDetail>?;
             Future.delayed(Duration(seconds: 2)).then((value) {
-              widget.getUom(matList![0]?.uom ?? "");
+              widget.getUom(matList![1]?.uom ?? "");
             });
             if (matList!.length > 0) {
               return Container(
