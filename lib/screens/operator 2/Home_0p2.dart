@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_progress_button/flutter_progress_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:intl/intl.dart';
@@ -405,7 +404,7 @@ class _SchudleTableState extends State<SchudleTable> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: widget.type == "M" ? 465 : 538,
+      height: widget.type == "M" ? 465 : 480,
       child: Scaffold(
         body: Container(
           color: Colors.white,
@@ -415,7 +414,7 @@ class _SchudleTableState extends State<SchudleTable> {
               tableHeading(),
               SingleChildScrollView(
                 child: Container(
-                    height: widget.type == "M" ? 430 : 490,
+                    height: widget.type == "M" ? 425 : 490,
                     // height: double.parse("${rowList.length*60}"),
                     child: FutureBuilder(
                       future: apiService.getCrimpingSchedule(
@@ -438,6 +437,11 @@ class _SchudleTableState extends State<SchudleTable> {
                                       element.scheduleDate.isAfter(startDate) ||
                                   element.scheduleDate == startDate ||
                                   element.scheduleDate == endDate)
+                              .toList();
+                          schedulelist = schedulelist
+                              .where((element) => selectedMachine.length == 0
+                                  ? true
+                                  : selectedMachine.contains(element.machineNo))
                               .toList();
                           schedulelist.sort((a, b) => a.scheduleId.compareTo(b.scheduleId));
 
@@ -559,6 +563,13 @@ class _SchudleTableState extends State<SchudleTable> {
                       context: context,
                       startDate: startDate,
                       endDate: endDate,
+                      machineIds: value.map((e) => e.machineNo.toString()).toSet().toList(),
+                      selectedMachine: selectedMachine,
+                      onChangedMachine: (selectedList) {
+                        setState(() {
+                          selectedMachine = selectedList;
+                        });
+                      },
                       onchangedDateRange: (startDate1, endDate1) {
                         setState(() {
                           sharedPref.setStartandEndDate(
@@ -571,6 +582,9 @@ class _SchudleTableState extends State<SchudleTable> {
                           log("dater ${startDate.toString()}");
                         });
                       });
+              // setState(() {
+              //   floatingActionLoading = !floatingActionLoading;
+              // });
             });
           },
           child: floatingActionLoading

@@ -1010,7 +1010,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                                         onPressed: () {
                                           if (int.parse(rejectedQtyController.text.length == 0
                                                   ? "0"
-                                                  : rejectedQtyController.text) <
+                                                  : rejectedQtyController.text) <=
                                               int.parse(viIspectionBundleList[selectedindex]
                                                       .bundleQuantity
                                                       .toString() ??

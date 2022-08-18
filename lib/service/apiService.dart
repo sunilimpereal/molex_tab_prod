@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:molex/model_api/crimping/double_crimping/doubleCrimpingEjobDetail.dart';
+import 'package:molex/model_api/doublecrimp/dcValidationModel.dart';
+import 'package:molex/model_api/doublecrimp/doublecrimpBundlerequestModel.dart';
 import 'package:molex/model_api/error_model.dart';
 import 'package:molex/screens/operator%202/process/double%20crimp/doubleCrimpInfo.dart';
 import '../main.dart';
@@ -190,25 +192,31 @@ class ApiService {
   }
 
   List<RawMaterial> sortRaw(List<RawMaterial> rawmaterial) {
-    // RawMaterial temp = new RawMaterial();
-    // List<RawMaterial> newList = [];
-    // for (RawMaterial rawmat in rawmaterial) {
-    //   if (temp.partNunber == rawmat.partNunber) {
-    //     temp.requireQuantity =
-    //         (double.parse(temp.requireQuantity ?? "") + double.parse(rawmat.requireQuantity ?? ''))
-    //             .toString();
-    //     temp.toatalScheduleQuantity = (double.parse(temp.toatalScheduleQuantity ?? '') +
-    //             double.parse(rawmat.toatalScheduleQuantity ?? ''))
-    //         .toString();
-    //     newList.removeLast();
-    //     newList.add(temp);
-    //   } else {
-    //     newList.add(rawmat);
-    //     temp = rawmat;
-    //     // s
-    //   }
-    // }
-    return rawmaterial;
+    rawmaterial
+        .sort((a, b) => int.parse(a.partNunber ?? '0').compareTo(int.parse(b.partNunber ?? '0')));
+    // log("mesin : " + rawmaterial.toString());
+    RawMaterial temp = new RawMaterial();
+    List<RawMaterial> newList = [];
+    for (RawMaterial rawmat in rawmaterial) {
+      log("mesin : " + (temp.partNunber == rawmat.partNunber).toString());
+      if (temp.partNunber == rawmat.partNunber) {
+        log("mesin : " + temp.requireQuantity.toString());
+        temp.requireQuantity =
+            (double.parse(temp.requireQuantity ?? "") + double.parse(rawmat.requireQuantity ?? ''))
+                .toString();
+        temp.toatalScheduleQuantity = (double.parse(temp.toatalScheduleQuantity ?? '') +
+                double.parse(rawmat.toatalScheduleQuantity ?? ''))
+            .toString();
+        log("mesin 1: " + temp.requireQuantity.toString());
+        newList.removeLast();
+        newList.add(temp);
+      } else {
+        newList.add(rawmat);
+        temp = rawmat;
+        // s
+      }
+    }
+    return newList;
   }
 
   ///filter raw material baesd on process type
@@ -278,18 +286,54 @@ class ApiService {
         if (type == "Automatic Cut & Crimp") {
           rawMateriallist = rawmaterialListcable + rawmaterialListto + rawmaterialListfrom;
           rawMateriallist = rawMateriallist.where((element) => element.partNunber != "0").toList();
-          rawMateriallist = sortRaw(rawMateriallist);
+          // rawMateriallist = sortRaw(rawMateriallist);
+        }
+        if (process == "Crimp From, Cutlength, Crimp To") {
+          rawMateriallist = rawmaterialListcable + rawmaterialListto + rawmaterialListfrom;
+          rawMateriallist = rawMateriallist.where((element) => element.partNunber != "0").toList();
+          // rawMateriallist = sortRaw(rawMateriallist);
+        }
+        if (process == "Crimp From, Cutlength") {
+          rawMateriallist = rawmaterialListcable + rawmaterialListfrom;
+          rawMateriallist = rawMateriallist.where((element) => element.partNunber != "0").toList();
+          // rawMateriallist = sortRaw(rawMateriallist);
+        }
+        if (process == "Cutlength, Crimp To") {
+          rawMateriallist = rawmaterialListcable + rawmaterialListto;
+          rawMateriallist = rawMateriallist.where((element) => element.partNunber != "0").toList();
+          // rawMateriallist = sortRaw(rawMateriallist);
+        }
+        if (process == "Cutlength & both Side Stripping") {
+          rawMateriallist = rawmaterialListcable;
+          rawMateriallist = rawMateriallist.where((element) => element.partNunber != "0").toList();
+          // rawMateriallist = sortRaw(rawMateriallist);
         }
         if (type.contains("Cutting")) {
           rawMateriallist = rawmaterialListcable;
           rawMateriallist = rawMateriallist.where((element) => element.partNunber != "0").toList();
-          rawMateriallist = sortRaw(rawMateriallist);
+          // rawMateriallist = sortRaw(rawMateriallist);
         }
         if (type.contains("Crimping")) {
           rawMateriallist = rawmaterialListto + rawmaterialListfrom;
           rawMateriallist = rawMateriallist.where((element) => element.partNunber != "0").toList();
-          rawMateriallist = sortRaw(rawMateriallist);
+          // rawMateriallist = sortRaw(rawMateriallist);
         }
+        if (process == "Crimp To" || process == "Double Crimp To") {
+          rawMateriallist = rawmaterialListto;
+          rawMateriallist = rawMateriallist.where((element) => element.partNunber != "0").toList();
+          // rawMateriallist = sortRaw(rawMateriallist);
+        }
+        if (process == "Crimp From" || process == "Double Crimp From") {
+          rawMateriallist = rawmaterialListfrom;
+          rawMateriallist = rawMateriallist.where((element) => element.partNunber != "0").toList();
+          // rawMateriallist = sortRaw(rawMateriallist);
+        }
+        if (process == "Crimp From & To" || process == "Double Crimp From & To") {
+          rawMateriallist = rawmaterialListto + rawmaterialListfrom;
+          rawMateriallist = rawMateriallist.where((element) => element.partNunber != "0").toList();
+          // rawMateriallist = sortRaw(rawMateriallist);
+        }
+        rawMateriallist = sortRaw(rawMateriallist);
 
         print(rawMateriallist);
         return rawMateriallist;
@@ -888,7 +932,7 @@ class ApiService {
     if (response.statusCode == 200) {
       GetCrimpingSchedule getCrimpingSchedule = getCrimpingScheduleFromJson(response.body);
       List<CrimpingSchedule> crimpingScheduleList = getCrimpingSchedule.data.crimpingBundleList;
-      // log(" aa ${crimpingScheduleList}");
+      log(" aa ${crimpingScheduleList}");
       return crimpingScheduleList;
     } else {
       return [];
@@ -953,6 +997,51 @@ class ApiService {
     }
   }
 
+  //double crimp validation
+  Future<bool> dcBundleValidation({
+    required String fgNo,
+    required String crimpType,
+    required String scheduleID,
+    required String orderId,
+    required String bundleId,
+  }) async {
+    var url = Uri.parse(baseUrl + '/molex/bundlemaster/bundlevalidation');
+    BundleDcValidationRequestModel bundleDcValidationRequestModel = BundleDcValidationRequestModel(
+      fgNumber: fgNo,
+      orderId: orderId,
+      scheduleId: scheduleID,
+      crimpType: crimpType,
+      bundleId: bundleId,
+    );
+    var response = await http.post(url,
+        body: bundleDcValidationRequestModelToJson(bundleDcValidationRequestModel),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Encoding": "gzip, deflate, br,*",
+          "Connection": "keep-alive",
+          "Keep-Alive": "timeout=0",
+          "transfer-encoding": "chunked",
+          "Accept": "*/*",
+        });
+    log('Double validation  URL : ${url.toString()}');
+    log('Double validation Status: ${response.statusCode}');
+    log('Double validation response: ${response.body}');
+    log('Double validation body:${bundleDcValidationRequestModelToJson(bundleDcValidationRequestModel)}');
+    if (response.statusCode == 200) {
+      try {
+        BundleDcValidationModel bundleDcValidationModel =
+            bundleDcValidationModelFromJson(response.body);
+        bool val = bundleDcValidationModel.data.bundle;
+        return val;
+      } catch (e) {
+        log(e.toString());
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
+
   //post crimping rejected Quantity
   Future<CrimpingResponse?> postCrimpRejectedQty(
       PostCrimpingRejectedDetail postCrimpingRejectedDetail) async {
@@ -960,6 +1049,49 @@ class ApiService {
     var url = Uri.parse(baseUrl + 'molex/crimping/save-crimping-rejected-detal');
     var response = await http.post(url,
         body: postCrimpingRejectedDetailToJson(postCrimpingRejectedDetail), headers: headerList);
+    print('Post Rejected status Code: ${response.statusCode}');
+    log('Post Rejected response body :${response.body}');
+    if (response.statusCode == 200) {
+      try {
+        ResponsePostCrimpingDetail resPostCrimpingRejectedDetail =
+            responsePostCrimpingDetailFromJson(response.body);
+        CrimpingResponse crimpingRejectDetail = resPostCrimpingRejectedDetail.data.crimpingProcess;
+        return crimpingRejectDetail;
+      } catch (e) {
+        CrimpRejectionError crimpRejectionError = crimpRejectionErrorFromJson(response.body);
+        Fluttertoast.showToast(
+          msg: "${crimpRejectionError.statusMsg}",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        return null;
+      }
+    } else {
+      Fluttertoast.showToast(
+        msg: "Post Crimping Reject Deatil Status ${response.statusCode}",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return null;
+    }
+  }
+
+  //post crimping rejected Quantity
+  Future<CrimpingResponse?> postDoubleCrimpRejectedQty(
+      List<PostCrimpingRejectedDetail> postCrimpingRejectedDetailList) async {
+    log('Post Rejected  body :${postCrimpingRejectedDetailToJsonList(postCrimpingRejectedDetailList)}');
+    var url = Uri.parse(baseUrl + 'molex/crimping/save-crimping-rejected-detal-list');
+    var response = await http.post(url,
+        body: postCrimpingRejectedDetailToJsonList(postCrimpingRejectedDetailList),
+        headers: headerList);
     print('Post Rejected status Code: ${response.statusCode}');
     log('Post Rejected response body :${response.body}');
     if (response.statusCode == 200) {
@@ -1108,6 +1240,46 @@ class ApiService {
       try {
         GetBundleListGl getBundleListGl = getBundleListGlFromJson(response.body);
         List<BundlesRetrieved> bundleList = getBundleListGl.data.bundlesRetrieved;
+        if (scheduleID != '') {
+          bundleList =
+              bundleList.where((element) => element.scheduledId.toString() == scheduleID).toList();
+        } else {}
+
+        return bundleList;
+      } catch (e) {
+        log("error1 " + e.toString());
+        return [];
+      }
+    } else {
+      Fluttertoast.showToast(
+        msg: "Get Bundles From Schedule status Code: ${response.statusCode}",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return [];
+    }
+  }
+
+  // get bundle in schedule
+  Future<List<BundlesRetrieved>?> getDoubleCrimpBundlesInSchedule(
+      {required DoubleCrimpBundleRequestModel doubleCrimpBundleRequestModel,
+      required String scheduleID}) async {
+    var url = Uri.parse(baseUrl + 'molex/bundlemaster/retrievebundles');
+    var response = await http.post(url,
+        body: doubleCrimpBundleRequestModelToJson(doubleCrimpBundleRequestModel),
+        headers: headerList);
+    log('Get Bundles  post: ${doubleCrimpBundleRequestModelToJson(doubleCrimpBundleRequestModel)}');
+    log('Get Bundles From BundleID status Code: ${response.statusCode}');
+    log('Get Bundleslist From BundleID  response body :${response.body}');
+    if (response.statusCode == 200) {
+      try {
+        DoubleCrimpBundleListResponse getBundleListGl =
+            doubleCrimpBundleListResponseFromJson(response.body);
+        List<BundlesRetrieved> bundleList = getBundleListGl.data.bundles;
         if (scheduleID != '') {
           bundleList =
               bundleList.where((element) => element.scheduledId.toString() == scheduleID).toList();

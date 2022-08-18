@@ -13,6 +13,9 @@ Future<void> showFilterDashBoardCrimping({
   required Function onchangedDateRange,
   required DateTime startDate,
   required DateTime endDate,
+  required List<String> machineIds,
+  required List<String> selectedMachine,
+  required Function onChangedMachine,
 }) async {
   return showDialog<void>(
     context: context,
@@ -23,6 +26,9 @@ Future<void> showFilterDashBoardCrimping({
         startDate: startDate,
         endDate: endDate,
         onChangedDateRange: onchangedDateRange,
+        machineIds: machineIds,
+        selectedMachine: selectedMachine,
+        onChangedSelectedMachine: onChangedMachine,
       ));
     },
   );
@@ -32,13 +38,16 @@ class DateRangePickerDashCrimping extends StatefulWidget {
   DateTime startDate;
   DateTime endDate;
   Function onChangedDateRange;
-
+  List<String> machineIds;
+  List<String> selectedMachine;
+  Function onChangedSelectedMachine;
   DateRangePickerDashCrimping(
       {required this.onChangedDateRange,
       required this.endDate,
       required this.startDate,
-      
-      });
+      required this.machineIds,
+      required this.onChangedSelectedMachine,
+      required this.selectedMachine});
 
   @override
   _DateRangePickerDashCrimpingState createState() => _DateRangePickerDashCrimpingState();
@@ -67,12 +76,9 @@ class _DateRangePickerDashCrimpingState extends State<DateRangePickerDashCrimpin
         startDate = args.value.startDate;
         endDate = args.value.endDate;
         widget.onChangedDateRange(startDate, endDate);
-        _range =
-            DateFormat('dd/MM/yyyy').format(args.value.startDate).toString() +
-                ' - ' +
-                DateFormat('dd/MM/yyyy')
-                    .format(args.value.endDate ?? args.value.startDate)
-                    .toString();
+        _range = DateFormat('dd/MM/yyyy').format(args.value.startDate).toString() +
+            ' - ' +
+            DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate).toString();
       } else if (args.value is DateTime) {
         _selectedDate = args.value.toString();
       } else if (args.value is List<DateTime>) {
@@ -135,8 +141,8 @@ class _DateRangePickerDashCrimpingState extends State<DateRangePickerDashCrimpin
     switch (selected) {
       case FilterSelected.dateRange:
         return calendar();
-      // case FilterSelected.machine:
-      //   return machine();
+      case FilterSelected.machine:
+        return machine();
       default:
         return calendar();
     }
@@ -157,16 +163,16 @@ class _DateRangePickerDashCrimpingState extends State<DateRangePickerDashCrimpin
             },
             title: "Date Range",
             selected: selected),
-        // FilterMenuTile(
-        //     icon: Icons.settings,
-        //     type: FilterSelected.machine,
-        //     onTap: () {
-        //       setState(() {
-        //         selected = FilterSelected.machine;
-        //       });
-        //     },
-        //     title: "Machine",
-        //     selected: selected),
+        FilterMenuTile(
+            icon: Icons.settings,
+            type: FilterSelected.machine,
+            onTap: () {
+              setState(() {
+                selected = FilterSelected.machine;
+              });
+            },
+            title: "Machine",
+            selected: selected),
       ]),
     );
   }
@@ -180,11 +186,9 @@ class _DateRangePickerDashCrimpingState extends State<DateRangePickerDashCrimpin
           Container(
             child: Row(
               children: [
-                Text("${Jiffy(startDate).yMMMMd}",
-                    style: TextStyle(fontSize: 12)),
+                Text("${Jiffy(startDate).yMMMMd}", style: TextStyle(fontSize: 12)),
                 Text("  -  "),
-                Text("${Jiffy(endDate).yMMMMd}",
-                    style: TextStyle(fontSize: 12)),
+                Text("${Jiffy(endDate).yMMMMd}", style: TextStyle(fontSize: 12)),
               ],
             ),
           ),
@@ -208,52 +212,49 @@ class _DateRangePickerDashCrimpingState extends State<DateRangePickerDashCrimpin
     );
   }
 
-  // Widget machine() {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(top: 20.0, left: 20, right: 10),
-  //     child: Column(
-  //       children: [
-  //         Container(
-  //           height: 30,
-  //           width: 200,
-  //           child: TextField(
-  //             controller: searchController,
-  //             onChanged: (value){
-  //               setState(() {
-                  
-  //               });
-  //             },
-  //             decoration: InputDecoration(
-  //                 hintText: "Search", suffixIcon: Icon(Icons.search)),
-  //           ),
-  //         ),
-  //         SizedBox(height: 5),
-  //         Container(
-  //             width: 420,
-  //             height: 345,
-  //             child: SingleChildScrollView(
-  //               child: Wrap(
-  //                   clipBehavior: Clip.hardEdge,
-  //                   children: widget.machineIds
-  //                       .where((element) =>
-  //                           element.toLowerCase().contains(searchController.text.toLowerCase()))
-  //                       .map((e) => MachineNameTile(
-  //                           name: e,
-  //                           selected: widget.selectedMachine.contains(e),
-  //                           onTap: () {
-  //                             setState(() {
-  //                               widget.selectedMachine.contains(e)
-  //                                   ? widget.selectedMachine.remove(e)
-  //                                   : widget.selectedMachine.add(e);
-  //                                   widget.onChangedSelectedMachine(widget.selectedMachine);
-  //                             });
-  //                           }))
-  //                       .toList()),
-  //             )),
-  //       ],
-  //     ),
-  //   );
-  // }
+  Widget machine() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0, left: 20, right: 10),
+      child: Column(
+        children: [
+          Container(
+            height: 30,
+            width: 200,
+            child: TextField(
+              controller: searchController,
+              onChanged: (value) {
+                setState(() {});
+              },
+              decoration: InputDecoration(hintText: "Search", suffixIcon: Icon(Icons.search)),
+            ),
+          ),
+          SizedBox(height: 5),
+          Container(
+              width: 420,
+              height: 345,
+              child: SingleChildScrollView(
+                child: Wrap(
+                    clipBehavior: Clip.hardEdge,
+                    children: widget.machineIds
+                        .where((element) =>
+                            element.toLowerCase().contains(searchController.text.toLowerCase()))
+                        .map((e) => MachineNameTile(
+                            name: e,
+                            selected: widget.selectedMachine.contains(e),
+                            onTap: () {
+                              setState(() {
+                                widget.selectedMachine.contains(e)
+                                    ? widget.selectedMachine.remove(e)
+                                    : widget.selectedMachine.add(e);
+                                widget.onChangedSelectedMachine(widget.selectedMachine);
+                              });
+                            }))
+                        .toList()),
+              )),
+        ],
+      ),
+    );
+  }
 
   Widget saveButton() {
     return ElevatedButton(
@@ -272,11 +273,7 @@ class MachineNameTile extends StatelessWidget {
   String name;
   bool selected;
   Function onTap;
-  MachineNameTile(
-      {Key? key,
-      required this.name,
-      required this.selected,
-      required this.onTap})
+  MachineNameTile({Key? key, required this.name, required this.selected, required this.onTap})
       : super(key: key);
 
   @override
@@ -293,16 +290,13 @@ class MachineNameTile extends StatelessWidget {
             decoration: BoxDecoration(
               color: selected ? Colors.red : Colors.grey[50],
               borderRadius: BorderRadius.all(Radius.circular(20)),
-              border: Border.all(
-                  width: 1,
-                  color: selected ? Colors.white : Colors.red.shade500),
+              border: Border.all(width: 1, color: selected ? Colors.white : Colors.red.shade500),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 selected
-                    ? Icon(Icons.check,
-                        size: 15, color: selected ? Colors.white : Colors.black)
+                    ? Icon(Icons.check, size: 15, color: selected ? Colors.white : Colors.black)
                     : Container(),
                 Text(
                   "$name",

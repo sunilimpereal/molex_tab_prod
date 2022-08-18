@@ -173,7 +173,10 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                           ),
                           Text(
                             widget.employee.empId,
-                            style: TextStyle(fontSize: 13, color: Colors.black),
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.black,
+                            ),
                           ),
                         ],
                       )),

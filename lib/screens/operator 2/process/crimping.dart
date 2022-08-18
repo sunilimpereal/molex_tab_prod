@@ -59,9 +59,11 @@ class ScanBundle extends StatefulWidget {
   //variables for schedule type
   String type;
   String sameMachine;
+  Key? key;
 
   List<RawMaterial> rawMaterial;
   ScanBundle({
+    this.key,
     required this.machineId,
     required this.method,
     required this.userId,
@@ -142,6 +144,7 @@ class _ScanBundleState extends State<ScanBundle> {
   ApiService apiService = new ApiService();
   late CableTerminalA? terminalA;
   late CableTerminalB? terminalB;
+
   getTerminal() {
     ApiService apiService = new ApiService();
     apiService
@@ -197,8 +200,18 @@ class _ScanBundleState extends State<ScanBundle> {
     });
   }
 
+  List<MaterialDetail> materailList = [];
+  getMaterial() {
+    ApiService().getMaterialTrackingCableDetail(widget.matTrkPostDetail).then((value) {
+      setState(() {
+        materailList = (value as List<MaterialDetail>?)!;
+      });
+    });
+  }
+
   @override
   void initState() {
+    getMaterial();
     status = Status.scan;
     apiService = new ApiService();
     getTerminal();
@@ -300,6 +313,7 @@ class _ScanBundleState extends State<ScanBundle> {
         children: [
           MaterialtableWIP(
             matTrkPostDetail: widget.matTrkPostDetail,
+            materailList: materailList,
             getUom: (um) {},
           ),
           Container(
@@ -1203,7 +1217,7 @@ class _ScanBundleState extends State<ScanBundle> {
                 fontSize: 16.0);
             return true;
           } else {
-            if (validateBundle(bundleDetail) || await checkCableType()) {
+            if (validateBundle(bundleDetail)) {
               if (bundleDetail.bundleStatus.toLowerCase() == "dropped") {
                 setState(() {
                   scannedBundle = bundleDetail;
@@ -1315,6 +1329,26 @@ class _ScanBundleState extends State<ScanBundle> {
       return false;
     }
 
+    bool checkcrimpingSchedule({required String crimpFromShdl, required String crimpToSchl}) {
+      if (widget.processName == "Crimp From") {
+        if (widget.schedule.scheduleId.toString() == crimpFromShdl) {
+          return true;
+        }
+      }
+      if (widget.processName == "Crimp To") {
+        if (widget.schedule.scheduleId.toString() == crimpToSchl) {
+          return true;
+        }
+      }
+      if (widget.processName == "Crimp From & To") {
+        if (widget.schedule.scheduleId.toString() == crimpToSchl &&
+            widget.schedule.scheduleId.toString() == crimpFromShdl) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     if ("${bundleDetail.finishedGoodsPart}" == "${widget.schedule.finishedGoods}" &&
         "${bundleDetail.cablePartNumber}" == "${widget.schedule.cablePartNo}" &&
         // "${bundleDetail.cutLengthSpecificationInmm}" == "${widget.schedule.length}" &&
@@ -1327,14 +1361,28 @@ class _ScanBundleState extends State<ScanBundle> {
           checkCrimping(bundleDetail.crimpFromSchId, bundleDetail.crimpToSchId)) {
         return true;
       }
-      Fluttertoast.showToast(
+      if (checkcrimpingSchedule(
+          crimpFromShdl: bundleDetail.crimpFromSchId, crimpToSchl: bundleDetail.crimpToSchId)) {
+        Fluttertoast.showToast(
           msg: "Bundle Crimping already completed",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
           textColor: Colors.white,
-          fontSize: 16.0);
+          fontSize: 16.0,
+        );
+        return false;
+      }
+      Fluttertoast.showToast(
+        msg: "Bundle Crimping already completed",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
       return false;
     }
     Fluttertoast.showToast(
@@ -1647,6 +1695,7 @@ class _ScanBundleState extends State<ScanBundle> {
                                     .postCrimpRejectedQty(getPostCrimpingRejectDetail())
                                     .then((value) {
                                   if (value != null) {
+                                    getMaterial();
                                     getActualQty();
                                     setState(() {
                                       loading = false;
@@ -1668,6 +1717,7 @@ class _ScanBundleState extends State<ScanBundle> {
                                       fontSize: 16.0,
                                     );
                                   } else {
+                                    getMaterial();
                                     setState(() {
                                       loading = false;
                                     });

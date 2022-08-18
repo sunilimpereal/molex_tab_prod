@@ -28,11 +28,13 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
     sharedPref.setStartandEndDate(
-        startDate: DateUtils.dateOnly(
-            DateTime.now().subtract(const Duration(days: 5))),
-        endDate:
-            DateUtils.dateOnly(DateTime.now().add(const Duration(days: 5))));
+        startDate: DateUtils.dateOnly(DateTime.now().subtract(const Duration(days: 5))),
+        endDate: DateUtils.dateOnly(DateTime.now().add(const Duration(days: 5))));
     super.initState();
   }
 

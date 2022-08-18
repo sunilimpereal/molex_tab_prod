@@ -4,6 +4,13 @@
 
 import 'dart:convert';
 
+List<PostCrimpingRejectedDetail> postCrimpingRejectedDetailFromJsonList(String str) =>
+    List<PostCrimpingRejectedDetail>.from(
+        json.decode(str).map((x) => PostCrimpingRejectedDetail.fromJson(x)));
+
+String postCrimpingRejectedDetailToJsonList(List<PostCrimpingRejectedDetail> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
 PostCrimpingRejectedDetail postCrimpingRejectedDetailFromJson(String str) =>
     PostCrimpingRejectedDetail.fromJson(json.decode(str));
 
@@ -12,65 +19,65 @@ String postCrimpingRejectedDetailToJson(PostCrimpingRejectedDetail data) =>
 
 class PostCrimpingRejectedDetail {
   PostCrimpingRejectedDetail({
-     this.bundleIdentification,
-     this.bundleQuantity,
-     this.passedQuantity,
-     this.rejectedQuantity,
-     this.crimpInslation,
-     this.insulationSlug,
-     this.windowGap, 
-     this.exposedStrands,
-     this.burrOrCutOff,
-     this.terminalBendOrClosedOrDamage,
-     this.nickMarkOrStrandsCut,
-     this.frontBellMouth,
-     this.backBellMouth,
-     this.extrusionOnBurr,
-     this.brushLength,
-     this.cableDamage,
-     this.terminalTwist,
-     this.orderId,
-     this.fgPart,
-     this.scheduleId,
-     this.binId,
-     this.processType,
-     this.method,
-     this.status,
-     this.machineIdentification,
-     this.cablePartNumber,
-     this.cutLength,
-     this.color,
-     this.finishedGoods,
-     this.terminalFrom,
-     this.terminalTo,
-     this.awg,
-     this.setUpRejections,
-     this.setUpRejectionTerminalFrom,
-     this.setUpRejectionTerminalTo,
-     this.cvmRejectionsCable,
-     this.cvmRejectionsCableTerminalTo,
-     this.cvmRejectionsCableTerminalFrom,
-     this.cfmRejectionsCable,
-     this.cfmRejectionsCableTerminalTo,
-     this.cfmRejectionsCableTerminalFrom,
-     this.endWire,
-     this.rejectionsTerminalTo,
-     this.rejectionsTerminalFrom,
-     this.lengthVariation,
-     this.stringLengthVariation,
-     this.nickMark,
-     this.bellMouthError,
-     this.brushLengthLessMore,
-     this.wrongTerminal,
-     this.wrongCable,
-     this.seamOpen,
-     this.wrongCutLength,
-     this.missCrimp,
-     this.extrusionBurr,
-     this.crimpFromSchId,
-     this.crimpToSchId,
-     this.preparationCompleteFlag,
-     this.viCompleted,
+    this.bundleIdentification,
+    this.bundleQuantity,
+    this.passedQuantity,
+    this.rejectedQuantity,
+    this.crimpInslation,
+    this.insulationSlug,
+    this.windowGap,
+    this.exposedStrands,
+    this.burrOrCutOff,
+    this.terminalBendOrClosedOrDamage,
+    this.nickMarkOrStrandsCut,
+    this.frontBellMouth,
+    this.backBellMouth,
+    this.extrusionOnBurr,
+    this.brushLength,
+    this.cableDamage,
+    this.terminalTwist,
+    this.orderId,
+    this.fgPart,
+    this.scheduleId,
+    this.binId,
+    this.processType,
+    this.method,
+    this.status,
+    this.machineIdentification,
+    this.cablePartNumber,
+    this.cutLength,
+    this.color,
+    this.finishedGoods,
+    this.terminalFrom,
+    this.terminalTo,
+    this.awg,
+    this.setUpRejections,
+    this.setUpRejectionTerminalFrom,
+    this.setUpRejectionTerminalTo,
+    this.cvmRejectionsCable,
+    this.cvmRejectionsCableTerminalTo,
+    this.cvmRejectionsCableTerminalFrom,
+    this.cfmRejectionsCable,
+    this.cfmRejectionsCableTerminalTo,
+    this.cfmRejectionsCableTerminalFrom,
+    this.endWire,
+    this.rejectionsTerminalTo,
+    this.rejectionsTerminalFrom,
+    this.lengthVariation,
+    this.stringLengthVariation,
+    this.nickMark,
+    this.bellMouthError,
+    this.brushLengthLessMore,
+    this.wrongTerminal,
+    this.wrongCable,
+    this.seamOpen,
+    this.wrongCutLength,
+    this.missCrimp,
+    this.extrusionBurr,
+    this.crimpFromSchId,
+    this.crimpToSchId,
+    this.preparationCompleteFlag,
+    this.viCompleted,
   });
 
   String? bundleIdentification;
@@ -100,10 +107,10 @@ class PostCrimpingRejectedDetail {
   int? cablePartNumber;
   int? cutLength;
   String? color;
-  int ?finishedGoods;
+  int? finishedGoods;
   int? terminalFrom;
   int? terminalTo;
-  String ?awg;
+  String? awg;
   int? setUpRejections;
   int? setUpRejectionTerminalFrom;
   int? setUpRejectionTerminalTo;

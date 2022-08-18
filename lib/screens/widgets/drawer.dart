@@ -29,12 +29,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             right: 0,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("v 1.0.0+68",
-                  style: TextStyle(
-                    color: Colors.red,
-                    letterSpacing: 2,
-                    fontWeight: FontWeight.w500,
-                  )),
+              child: Text(
+                "v 1.0.0+86",
+                style: TextStyle(
+                  color: Colors.red,
+                  letterSpacing: 2,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           )
         ],
@@ -59,9 +61,13 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       borderRadius: BorderRadius.all(Radius.circular(500))),
                   child: Center(
                     child: Text(
-                        "${widget.employee.employeeName.substring(0, 2).toUpperCase()}", // TODO
-                        style: TextStyle(
-                            color: Colors.black, fontSize: 30, fontWeight: FontWeight.w500)),
+                      "${widget.employee.employeeName.substring(0, 2).toUpperCase()}", // TODO
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -73,9 +79,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       children: [
                         Container(
                           width: 200,
-                          child: Text("${widget.employee.employeeName}",
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500)),
+                          child: Text(
+                            "${widget.employee.employeeName}",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
                       ],
                     ),

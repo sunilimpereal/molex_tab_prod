@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_progress_button/flutter_progress_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:molex/screens/operator/widgets/filter_dashboard.dart';
@@ -480,7 +479,7 @@ class _SchudleTableState extends State<SchudleTable> {
                                 // 0)
                                 .toList();
                             schedulelist = schedulelist
-                                .where((element) => selectedMachine.length <= 1
+                                .where((element) => selectedMachine.length == 0
                                     ? true
                                     : selectedMachine.contains(element.machineNumber))
                                 .toList();

@@ -11,7 +11,6 @@ import 'package:molex/screens/utils/changeIp.dart';
 import 'package:molex/screens/utils/customKeyboard.dart';
 import 'package:molex/screens/utils/updateApp.dart';
 import 'package:molex/service/apiService.dart';
-import 'package:motion_toast/motion_toast.dart';
 
 class LoginScan extends StatefulWidget {
   @override
@@ -343,7 +342,7 @@ class _LoginScanState extends State<LoginScan> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text("v 1.0.0+68"),
+                          child: Text("v 1.0.0+86"),
                         )
                       ],
                     ),

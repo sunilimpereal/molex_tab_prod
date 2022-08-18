@@ -1,11 +1,20 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import '../../../model_api/materialTrackingCableDetails_model.dart';
 import '../../../service/apiService.dart';
 
 class MaterialtableWIP extends StatefulWidget {
-  MatTrkPostDetail matTrkPostDetail;
-  Function(String) getUom;
-  MaterialtableWIP({Key? key, required this.matTrkPostDetail, required this.getUom})
+  final MatTrkPostDetail matTrkPostDetail;
+  final Function(String) getUom;
+  final String? cablePartNumber;
+  final List<MaterialDetail> materailList;
+  const MaterialtableWIP(
+      {Key? key,
+      this.cablePartNumber = '',
+      required this.materailList,
+      required this.matTrkPostDetail,
+      required this.getUom})
       : super(key: key);
 
   @override
@@ -13,6 +22,11 @@ class MaterialtableWIP extends StatefulWidget {
 }
 
 class _MaterialtableWIPState extends State<MaterialtableWIP> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return materialtable();
@@ -131,59 +145,67 @@ class _MaterialtableWIPState extends State<MaterialtableWIP> {
     }
 
     ApiService apiService = new ApiService();
-    return FutureBuilder(
-        future: apiService.getMaterialTrackingCableDetail(widget.matTrkPostDetail),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<MaterialDetail>? matList = snapshot.data as List<MaterialDetail>?;
-            Future.delayed(Duration(seconds: 2)).then((value) {
-              widget.getUom(matList![1]?.uom ?? "");
-            });
-            if (matList!.length > 0) {
-              return Container(
-                width: 320,
-                height: 68,
-                child: ListView.builder(
-                    itemCount: matList.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, index) {
-                      return row(
-                        partNo: "${matList[index].cablePartNo}",
-                        uom: "${matList[index].uom.toString()}",
-                        require: "${matList[index].requiredQty.toString()}",
-                        loaded: "${matList[index].loadedQty.toString()}",
-                        available: "${matList[index].availableQty.toString()}",
-                      );
-                    }),
+    // return
+    //  FutureBuilder(
+    //     future: apiService.getMaterialTrackingCableDetail(widget.matTrkPostDetail),
+    //     builder: (context, snapshot) {
+    //       if (snapshot.hasData) {
+    //         List<MaterialDetail>? matList = snapshot.data as List<MaterialDetail>?;
+    //         Future.delayed(Duration(seconds: 2)).then((value) {
+    //           if (widget.cablePartNumber != ' ') {
+    //             for (MaterialDetail matDet in matList ?? []) {
+    //               if (widget.cablePartNumber == matDet.cablePartNo) {
+    //                 widget.getUom(matDet.uom ?? "");
+    //                 log(matDet.uom ?? "");
+    //               }
+    //             }
+    //           }
+    //         });
+    if (widget.materailList!.length > 0) {
+      return Container(
+        width: 320,
+        height: 68,
+        child: ListView.builder(
+            itemCount: widget.materailList.length,
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) {
+              return row(
+                partNo: "${widget.materailList[index].cablePartNo}",
+                uom: "${widget.materailList[index].uom.toString()}",
+                require: "${widget.materailList[index].requiredQty.toString()}",
+                loaded: "${widget.materailList[index].loadedQty.toString()}",
+                available: "${widget.materailList[index].availableQty.toString()}",
               );
-            } else {
-              return Container(
-                  width: 320,
-                  height: 68,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 10),
-                      Text(
-                        "no stock found",
-                        style: TextStyle(color: Colors.black),
-                      )
-                    ],
-                  ));
-            }
-          } else {
-            return Container(
-                width: 320,
-                height: 68,
-                child: Column(
-                  children: [
-                    SizedBox(height: 10),
-                    Text(
-                      "no stock found",
-                      style: TextStyle(color: Colors.black),
-                    )
-                  ],
-                ));
-          }
-        });
+            }),
+      );
+    } else {
+      return Container(
+          width: 320,
+          height: 68,
+          child: Column(
+            children: [
+              SizedBox(height: 10),
+              Text(
+                "no stock found",
+                style: TextStyle(color: Colors.black),
+              )
+            ],
+          ));
+    }
+    // } else {
+    //   return Container(
+    //       width: 320,
+    //       height: 68,
+    //       child: Column(
+    //         children: [
+    //           SizedBox(height: 10),
+    //           Text(
+    //             "no stock found",
+    //             style: TextStyle(color: Colors.black),
+    //           )
+    //         ],
+    //       ));
+    // }
+    // });
   }
 }

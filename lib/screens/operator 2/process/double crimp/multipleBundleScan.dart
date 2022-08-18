@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:molex/model_api/Transfer/binToLocation_model.dart';
 import 'package:molex/model_api/Transfer/postgetBundleMaster.dart';
 import 'package:molex/model_api/crimping/double_crimping/doubleCrimpingEjobDetail.dart';
+import 'package:molex/model_api/doublecrimp/doublecrimpBundlerequestModel.dart';
 import 'package:molex/model_api/materialTrackingCableDetails_model.dart';
 import 'package:molex/model_api/process1/getBundleListGl.dart';
 import 'package:molex/screens/operator%202/process/double%20crimp/doubleCrimpInfo.dart';
@@ -55,8 +56,10 @@ class MultipleBundleScan extends StatefulWidget {
   //variables for schedule type
   String type;
   String sameMachine;
+  Key? key;
   MultipleBundleScan(
-      {required this.machineId,
+      {this.key,
+      required this.machineId,
       required this.fullyComplete,
       required this.matTrkPostDetail,
       required this.method,
@@ -123,7 +126,8 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
   TextEditingController _binController = new TextEditingController();
 
   late bool hasBin;
-
+  bool loadingSaveandNext = false;
+  bool loadingScanBundle = false;
   late String binId;
   //to store the bundle Quantity fetched from api after scanning bundle Id
   String bundleQty = '';
@@ -141,6 +145,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
   bool scanbundleLoading = false;
 
   bool hundPercentloading = false;
+  List<MaterialDetail> materailList = [];
   getTerminal() {
     ApiService apiService = new ApiService();
     apiService
@@ -170,12 +175,14 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
         setState(() {
           terminalA = termiA;
           terminalB = termiB;
+          getMaterial();
         });
       });
     });
   }
 
   getActualQty() {
+    log("getting quantity");
     ApiService apiService = new ApiService();
     apiService
         .getCrimpingSchedule(
@@ -193,11 +200,39 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
     });
   }
 
+  getMaterial() {
+    ApiService().getMaterialTrackingCableDetail(widget.matTrkPostDetail).then((value) {
+      List<MaterialDetail> materailListFil = [];
+      materailList = (value as List<MaterialDetail>?)!;
+      if (widget.method.contains('a')) {
+        materailListFil.addAll(materailList
+            .where((element) => int.parse(element.cablePartNo ?? "0") == terminalA?.terminalPart)
+            .toList());
+      }
+      // if (widget.method.contains('c')) {
+      //   materailListFil.addAll(materailList
+      //       .where(
+      //           (element) => int.parse(element.cablePartNo ?? "0") == cableDetails?.cablePartNumber)
+      //       .toList());
+      // }
+      if (widget.method.contains('b')) {
+        materailListFil.addAll(materailList
+            .where((element) => int.parse(element.cablePartNo ?? "0") == terminalB?.terminalPart)
+            .toList());
+      }
+      setState(() {
+        materailList = materailListFil;
+      });
+    });
+  }
+
   @override
   void initState() {
+    log("intialised");
     status = Status.scan;
     apiService = new ApiService();
     getTerminal();
+    getMaterial();
     Future.delayed(
       const Duration(milliseconds: 10),
       () {
@@ -303,6 +338,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
           MaterialtableWIP(
             matTrkPostDetail: widget.matTrkPostDetail,
             getUom: (um) {},
+            materailList: materailList,
           ),
           Container(
             width: MediaQuery.of(context).size.width * 0.64,
@@ -473,20 +509,20 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
           cablepart: "",
         ) ??
         [];
-    bundlesList = bundlesList
-        .where((element) {
-          if ("${element.orderId}" == "${widget.schedule.purchaseOrder}" &&
-              "${element.finishedGoodsPart}" == "${widget.schedule.finishedGoods}" &&
-              details.map((e) => e.crimpColor).toList().contains(element.color) &&
-              details.map((e) => e.length).toList().contains(element.cutLengthSpecificationInmm)) {
-            return true;
-          } else {
-            return false;
-          }
-        })
-        .toList()
-        // .where((element) => checkcompleted(element.updateFromProcess.toLowerCase()))
-        .toList();
+    // bundlesList = bundlesList
+    //     .where((element) {
+    //       if ("${element.orderId}" == "${widget.schedule.purchaseOrder}" &&
+    //           "${element.finishedGoodsPart}" == "${widget.schedule.finishedGoods}" &&
+    //           details.map((e) => e.crimpColor).toList().contains(element.color) &&
+    //           details.map((e) => e.length).toList().contains(element.cutLengthSpecificationInmm)) {
+    //         return true;
+    //       } else {
+    //         return false;
+    //       }
+    //     })
+    //     .toList()
+    // .where((element) => checkcompleted(element.updateFromProcess.toLowerCase()))
+    // .toList();
     for (BundlesRetrieved bundle in bundlesList) {
       if (bundle.locationId.length > 1 && bundle.locationId != "null") {
       } else {
@@ -713,7 +749,13 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                           setState(() {});
                         },
                         onSubmitted: (abc) {
-                          getScannedBundle();
+                          if (loadingScanBundle == false) {
+                            setState(() {
+                              loadingScanBundle = true;
+                            });
+
+                            getScannedBundle();
+                          } else {}
                         },
                         autofocus: true,
                         textAlign: TextAlign.center,
@@ -759,9 +801,23 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                       (states) => Colors.redAccent),
                                 ),
                                 onPressed: () {
-                                  getScannedBundle();
+                                  if (loadingScanBundle == false) {
+                                    setState(() {
+                                      loadingScanBundle = true;
+                                    });
+
+                                    getScannedBundle();
+                                  } else {}
                                 },
-                                child: Text('Scan Bundles  ')),
+                                child: loadingScanBundle
+                                    ? Container(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Text('Scan Bundle  ')),
                           ),
                         ),
                         Padding(
@@ -839,7 +895,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
   }
 
   handleKey(RawKeyEventData key) {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    // SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
   Widget rejectioncase() {
@@ -1111,193 +1167,234 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                                   },
                                 ),
                               ),
-                              child: Text("Save & Scan Next"),
-                              onPressed: () {
-                                Future.delayed(
-                                  const Duration(milliseconds: 50),
-                                  () {
-                                    SystemChannels.textInput.invokeMethod('TextInput.hide');
-                                  },
-                                );
-                                for (BundlesRetrieved e in scannedBundles) {
-                                  // //temproary
-                                  // BundlesRetrieved e = scannedBundles.last;
-                                  //temproapry end
-                                  log("${scannedBundles.indexOf(e)}");
-                                  PostCrimpingRejectedDetail postCrimpingRejectedDetail =
-                                      PostCrimpingRejectedDetail(
-                                    bundleIdentification: e.bundleIdentification,
-                                    finishedGoods: widget.schedule.finishedGoods,
-                                    cutLength: e.cutLengthSpecificationInmm,
-                                    color: e.color,
-                                    cablePartNumber: e.cablePartNumber,
-                                    processType: getProcessType(widget.schedule.process ?? ''),
-                                    method: getterminalmethod(),
-                                    status: "",
-                                    machineIdentification: widget.machineId,
-                                    binId: "",
-                                    // bundleQuantity: e.bundleQuantity, // old // the bundle with minimum quantity will be taken as bundle quantity
-                                    bundleQuantity: scannedBundlesMinumQuantity,
-                                    passedQuantity: scannedBundlesMinumQuantity - total(),
-                                    rejectedQuantity: total(),
-                                    crimpFromSchId: widget.method.contains("a")
-                                        ? "${widget.schedule.scheduleId}"
-                                        : "",
-                                    crimpToSchId: widget.method.contains("b")
-                                        ? "${widget.schedule.scheduleId}"
-                                        : "",
-                                    endWire: int.parse(endwireController.text.length > 0
-                                        ? endwireController.text
-                                        : "0"),
-                                    rejectionsTerminalFrom: int.parse(
-                                        endTerminalControllerFrom.text.length > 0
-                                            ? endTerminalControllerFrom.text
-                                            : "0"),
-                                    rejectionsTerminalTo: int.parse(
-                                        endTerminalControllerTo.text.length > 0
-                                            ? endTerminalControllerTo.text
-                                            : "0"),
-                                    setUpRejectionTerminalFrom: int.parse(
-                                        setUpRejectionControllerFrom.text.length > 0
-                                            ? setUpRejectionControllerFrom.text
-                                            : '0'),
-                                    setUpRejections: int.parse(
-                                        setUpRejectionControllerCable.text.length > 0
-                                            ? setUpRejectionControllerCable.text
-                                            : '0'),
-                                    setUpRejectionTerminalTo: int.parse(
-                                        setUpRejectionControllerTo.text.length > 0
-                                            ? setUpRejectionControllerTo.text
-                                            : '0'),
-                                    terminalBendOrClosedOrDamage: int.parse(
-                                            terminalBendController.text.length > 0
-                                                ? terminalBendController.text
-                                                : '0') +
-                                        int.parse(terminalDamageController.text.length > 0
-                                            ? terminalDamageController.text
-                                            : '0'),
-                                    terminalTwist: int.parse(terminalTwistController.text.length > 0
-                                        ? terminalTwistController.text
-                                        : '0'),
-                                    windowGap: int.parse(windowGapController.text.length > 0
-                                            ? windowGapController.text
-                                            : '0') +
-                                        int.parse(halfCurlingController.text.length > 0
-                                            ? halfCurlingController.text
-                                            : '0'),
-                                    crimpInslation: int.parse(
-                                        crimpOnInsulationController.text.length > 0
-                                            ? crimpOnInsulationController.text
-                                            : "0"),
-                                    bellMouthError: int.parse(
-                                            bellMouthErrorController.text.length > 0
-                                                ? bellMouthErrorController.text
-                                                : '0') +
-                                        int.parse(lockingTabOpenController.text.length > 0
-                                            ? lockingTabOpenController.text
-                                            : '0'),
-                                    burrOrCutOff: int.parse(cutoffBurrController.text.length > 0
-                                        ? cutoffBurrController.text
-                                        : '0'),
-                                    exposedStrands: int.parse(exposureStrands.text.length > 0
-                                        ? exposureStrands.text
-                                        : '0'),
-                                    nickMark: int.parse(nickMarkController.text.length > 0
-                                        ? nickMarkController.text
-                                        : '0'),
-                                    brushLengthLessMore: int.parse(
-                                        brushLengthLessMoreController.text.length > 0
-                                            ? brushLengthLessMoreController.text
-                                            : '0'),
-                                    nickMarkOrStrandsCut: int.parse(
-                                        strandsCutController.text.length > 0
-                                            ? strandsCutController.text
-                                            : '0'),
-                                    cableDamage: int.parse(cableDamageController.text.length > 0
-                                        ? cableDamageController.text
-                                        : '0'),
-                                    //half curling
-                                    //locking tab open close
-                                    wrongTerminal: int.parse(wrongTerminalController.text.length > 0
-                                        ? wrongTerminalController.text
-                                        : '0'),
-                                    seamOpen: int.parse(seamOpenController.text.length > 0
-                                        ? seamOpenController.text
-                                        : '0'),
-                                    missCrimp: int.parse(missCrimpController.text.length > 0
-                                        ? missCrimpController.text
-                                        : '0'),
-                                    extrusionOnBurr: int.parse(
-                                        extrusionBurrController.text.length > 0
-                                            ? extrusionBurrController.text
-                                            : '0'),
-
-                                    brushLength: int.parse(terminalTwistController.text.length > 0
-                                        ? terminalTwistController.text
-                                        : '0'),
-
-                                    frontBellMouth: int.parse(
-                                        terminalTwistController.text.length > 0
-                                            ? terminalTwistController.text
-                                            : '0'),
-                                    backBellMouth: int.parse(terminalTwistController.text.length > 0
-                                        ? terminalTwistController.text
-                                        : '0'),
-
-                                    orderId: widget.schedule.purchaseOrder,
-                                    fgPart: widget.schedule.finishedGoods,
-                                    scheduleId: widget.schedule.scheduleId,
-                                    awg: widget.schedule.awg != null
-                                        ? widget.schedule.awg.toString()
-                                        : "",
-                                    terminalFrom: int.parse(
-                                        '${terminalA!.terminalPart == null ? '0' : terminalA!.terminalPart}'),
-                                    terminalTo: int.parse(
-                                        '${terminalB!.terminalPart == null ? '0' : terminalB!.terminalPart}'),
+                              child: loadingSaveandNext
+                                  ? Container(
+                                      width: 30,
+                                      height: 30,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Text("Save & Scan Next"),
+                              onPressed: () async {
+                                if (total() > scannedBundles[0].bundleQuantity) {
+                                  Fluttertoast.showToast(
+                                    msg: "Invalid Rejection Qty",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0,
                                   );
-                                  apiService
-                                      .postCrimpRejectedQty(postCrimpingRejectedDetail)
-                                      .then((value) {
-                                    if (value != null) {
-                                      setState(() {
-                                        // scannedBundles.indexOf(e) == (scannedBundles.length - 1)
-                                        //     ? widget
-                                        //         .updateQty(widget.totalQuantity + e.bundleQuantity)
-                                        //     : null;
-                                        Future.delayed(const Duration(milliseconds: 10), () {
-                                          SystemChannels.textInput.invokeMethod('TextInput.hide');
-                                        });
-                                        status = Status.scanBin;
-                                      });
-                                      getActualQty();
-
-                                      Fluttertoast.showToast(
-                                        msg: "Saved Crimping Detail ",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Colors.red,
-                                        textColor: Colors.white,
-                                        fontSize: 16.0,
-                                      );
-                                    } else {
-                                      Future.delayed(Duration(seconds: 5))
-                                          .then((value) => Fluttertoast.showToast(
-                                                msg: " Save Crimping Reject detail failed ",
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.BOTTOM,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Colors.red,
-                                                textColor: Colors.white,
-                                                fontSize: 16.0,
-                                              ));
-                                    }
+                                  setState(() {
+                                    loadingSaveandNext = false;
                                   });
+                                } else {
+                                  if (loadingSaveandNext == false) {
+                                    log("executes");
+                                    setState(() {
+                                      loadingSaveandNext = true;
+                                    });
+                                    List<PostCrimpingRejectedDetail> postRejList = [];
+                                    Future.delayed(
+                                      const Duration(milliseconds: 50),
+                                      () {
+                                        SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                      },
+                                    );
+                                    // await Future.delayed(Duration(seconds: 50));
+                                    for (BundlesRetrieved e in scannedBundles) {
+                                      // //temproary
+                                      // BundlesRetrieved e = scannedBundles.last;
+                                      //temproapry end
+                                      log("${scannedBundles.indexOf(e)}");
+                                      postRejList.add(PostCrimpingRejectedDetail(
+                                        bundleIdentification: e.bundleIdentification,
+                                        finishedGoods: widget.schedule.finishedGoods,
+                                        cutLength: e.cutLengthSpecificationInmm,
+                                        color: e.color,
+                                        cablePartNumber: e.cablePartNumber,
+                                        processType: getProcessType(widget.schedule.process ?? ''),
+                                        method: getterminalmethod(),
+                                        status: "",
+                                        machineIdentification: widget.machineId,
+                                        binId: "",
+                                        // bundleQuantity: e.bundleQuantity, // old // the bundle with minimum quantity will be taken as bundle quantity
+                                        bundleQuantity: scannedBundlesMinumQuantity,
+                                        passedQuantity: scannedBundlesMinumQuantity - total(),
+                                        rejectedQuantity: total(),
+                                        crimpFromSchId: widget.method.contains("a")
+                                            ? "${widget.schedule.scheduleId}"
+                                            : "",
+                                        crimpToSchId: widget.method.contains("b")
+                                            ? "${widget.schedule.scheduleId}"
+                                            : "",
+                                        endWire: int.parse(endwireController.text.length > 0
+                                            ? endwireController.text
+                                            : "0"),
+                                        rejectionsTerminalFrom: int.parse(
+                                            endTerminalControllerFrom.text.length > 0
+                                                ? endTerminalControllerFrom.text
+                                                : "0"),
+                                        rejectionsTerminalTo: int.parse(
+                                            endTerminalControllerTo.text.length > 0
+                                                ? endTerminalControllerTo.text
+                                                : "0"),
+                                        setUpRejectionTerminalFrom: int.parse(
+                                            setUpRejectionControllerFrom.text.length > 0
+                                                ? setUpRejectionControllerFrom.text
+                                                : '0'),
+                                        setUpRejections: int.parse(
+                                            setUpRejectionControllerCable.text.length > 0
+                                                ? setUpRejectionControllerCable.text
+                                                : '0'),
+                                        setUpRejectionTerminalTo: int.parse(
+                                            setUpRejectionControllerTo.text.length > 0
+                                                ? setUpRejectionControllerTo.text
+                                                : '0'),
+                                        terminalBendOrClosedOrDamage: int.parse(
+                                                terminalBendController.text.length > 0
+                                                    ? terminalBendController.text
+                                                    : '0') +
+                                            int.parse(terminalDamageController.text.length > 0
+                                                ? terminalDamageController.text
+                                                : '0'),
+                                        terminalTwist: int.parse(
+                                            terminalTwistController.text.length > 0
+                                                ? terminalTwistController.text
+                                                : '0'),
+                                        windowGap: int.parse(windowGapController.text.length > 0
+                                                ? windowGapController.text
+                                                : '0') +
+                                            int.parse(halfCurlingController.text.length > 0
+                                                ? halfCurlingController.text
+                                                : '0'),
+                                        crimpInslation: int.parse(
+                                            crimpOnInsulationController.text.length > 0
+                                                ? crimpOnInsulationController.text
+                                                : "0"),
+                                        bellMouthError: int.parse(
+                                                bellMouthErrorController.text.length > 0
+                                                    ? bellMouthErrorController.text
+                                                    : '0') +
+                                            int.parse(lockingTabOpenController.text.length > 0
+                                                ? lockingTabOpenController.text
+                                                : '0'),
+                                        burrOrCutOff: int.parse(cutoffBurrController.text.length > 0
+                                            ? cutoffBurrController.text
+                                            : '0'),
+                                        exposedStrands: int.parse(exposureStrands.text.length > 0
+                                            ? exposureStrands.text
+                                            : '0'),
+                                        nickMark: int.parse(nickMarkController.text.length > 0
+                                            ? nickMarkController.text
+                                            : '0'),
+                                        brushLengthLessMore: int.parse(
+                                            brushLengthLessMoreController.text.length > 0
+                                                ? brushLengthLessMoreController.text
+                                                : '0'),
+                                        nickMarkOrStrandsCut: int.parse(
+                                            strandsCutController.text.length > 0
+                                                ? strandsCutController.text
+                                                : '0'),
+                                        cableDamage: int.parse(cableDamageController.text.length > 0
+                                            ? cableDamageController.text
+                                            : '0'),
+                                        //half curling
+                                        //locking tab open close
+                                        wrongTerminal: int.parse(
+                                            wrongTerminalController.text.length > 0
+                                                ? wrongTerminalController.text
+                                                : '0'),
+                                        seamOpen: int.parse(seamOpenController.text.length > 0
+                                            ? seamOpenController.text
+                                            : '0'),
+                                        missCrimp: int.parse(missCrimpController.text.length > 0
+                                            ? missCrimpController.text
+                                            : '0'),
+                                        extrusionOnBurr: int.parse(
+                                            extrusionBurrController.text.length > 0
+                                                ? extrusionBurrController.text
+                                                : '0'),
+
+                                        brushLength: int.parse(
+                                            terminalTwistController.text.length > 0
+                                                ? terminalTwistController.text
+                                                : '0'),
+
+                                        frontBellMouth: int.parse(
+                                            terminalTwistController.text.length > 0
+                                                ? terminalTwistController.text
+                                                : '0'),
+                                        backBellMouth: int.parse(
+                                            terminalTwistController.text.length > 0
+                                                ? terminalTwistController.text
+                                                : '0'),
+
+                                        orderId: widget.schedule.purchaseOrder,
+                                        fgPart: widget.schedule.finishedGoods,
+                                        scheduleId: widget.schedule.scheduleId,
+                                        awg: widget.schedule.awg != null
+                                            ? widget.schedule.awg.toString()
+                                            : "",
+                                        terminalFrom: int.parse(
+                                            '${terminalA!.terminalPart == null ? '0' : terminalA!.terminalPart}'),
+                                        terminalTo: int.parse(
+                                            '${terminalB!.terminalPart == null ? '0' : terminalB!.terminalPart}'),
+                                      ));
+                                    }
+                                    apiService
+                                        .postDoubleCrimpRejectedQty(postRejList)
+                                        .then((value) {
+                                      if (value != null) {
+                                        setState(() {
+                                          // scannedBundles.indexOf(e) == (scannedBundles.length - 1)
+                                          //     ? widget
+                                          //         .updateQty(widget.totalQuantity + e.bundleQuantity)
+                                          //     : null;
+                                          Future.delayed(const Duration(milliseconds: 10), () {
+                                            SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                          });
+                                          status = Status.scanBin;
+                                        });
+                                        getActualQty();
+                                        getMaterial();
+                                        Fluttertoast.showToast(
+                                          msg: "Saved Crimping Detail ",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.red,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0,
+                                        );
+                                      } else {
+                                        getMaterial();
+                                        Future.delayed(Duration(seconds: 2))
+                                            .then((value) => Fluttertoast.showToast(
+                                                  msg: " Save Crimping Reject detail failed ",
+                                                  toastLength: Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: Colors.red,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0,
+                                                ));
+                                      }
+                                      setState(() {
+                                        loadingSaveandNext = false;
+                                      });
+                                    });
+
+                                    setState(() {
+                                      clear();
+                                      //   scannedBundles.clear();
+                                    });
+                                    // getMaterial();
+
+                                  } else {}
                                 }
-                                setState(() {
-                                  clear();
-                                  //   scannedBundles.clear();
-                                });
                               },
                               loadingChild: Container(
                                 width: 30,
@@ -1997,16 +2094,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
 
   Future<void> showBundles() {
     ApiService apiService = new ApiService();
-    PostgetBundleMaster postgetBundleMaste = new PostgetBundleMaster(
-      binId: 0,
-      scheduleId: 0,
-      bundleId: '',
-      location: '',
-      status: '',
-      finishedGoods: widget.schedule.finishedGoods,
-      cablePartNumber: 0,
-      orderId: widget.schedule.purchaseOrder.toString(),
-    );
+
     String type = "";
     String selected = getterminalmethod();
     if (selected.contains('a')) {
@@ -2015,6 +2103,13 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
     if (selected.contains('b')) {
       type = terminalB!.processType ?? '';
     }
+    DoubleCrimpBundleRequestModel doubleCrimpBundleRequestModel = DoubleCrimpBundleRequestModel(
+      bundleId: '',
+      crimpType: type,
+      fgNumber: widget.schedule.finishedGoods.toString(),
+      orderId: widget.schedule.purchaseOrder.toString(),
+      scheduleId: widget.schedule.scheduleId.toString(),
+    );
 
     return showDialog<void>(
         context: context,
@@ -2051,25 +2146,27 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                             );
                           List<EJobTicketMasterDetails> details = snapshotCrimpDetail.data ?? [];
                           return FutureBuilder(
-                              future: apiService.getBundlesInSchedule(
-                                  postgetBundleMaster: postgetBundleMaste, scheduleID: ""),
+                              future: apiService.getDoubleCrimpBundlesInSchedule(
+                                  doubleCrimpBundleRequestModel: doubleCrimpBundleRequestModel,
+                                  scheduleID: ""),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   List<BundlesRetrieved>? totalbundleList =
                                       snapshot.data as List<BundlesRetrieved>?;
                                   totalbundleList = totalbundleList!.where((element) {
-                                    if ("${element.orderId}" ==
-                                            "${widget.schedule.purchaseOrder}" &&
-                                        "${element.finishedGoodsPart}" ==
-                                            "${widget.schedule.finishedGoods}" &&
-                                        details
-                                            .map((e) => e.crimpColor)
-                                            .toList()
-                                            .contains(element.color) &&
-                                        details
-                                            .map((e) => e.length)
-                                            .toList()
-                                            .contains(element.cutLengthSpecificationInmm)) {
+                                    // if ("${element.orderId}" ==
+                                    //         "${widget.schedule.purchaseOrder}" &&
+                                    //     "${element.finishedGoodsPart}" ==
+                                    //         "${widget.schedule.finishedGoods}" &&
+                                    //     details
+                                    //         .map((e) => e.crimpColor)
+                                    //         .toList()
+                                    //         .contains(element.color) &&
+                                    //     details
+                                    //         .map((e) => e.length)
+                                    //         .toList()
+                                    //         .contains(element.cutLengthSpecificationInmm)) {
+                                    if (true) {
                                       return true;
                                     } else {
                                       return false;
@@ -2389,7 +2486,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
     );
   }
 
-  getScannedBundle() {
+  Future<bool>? getScannedBundle() {
     PostgetBundleMaster postgetBundleMaste = new PostgetBundleMaster(
       scheduleId: 0,
       binId: 0,
@@ -2466,15 +2563,16 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                 fontSize: 16.0);
             return true;
           } else {
-            if (validateBundle(bundleDetail)) {
-              // if (!scannedBundles
-              //     .map((e) => e.bundleIdentification)
-              //     .toList()
-              //     .contains(bundleDetail.bundleIdentification)) {
-              await checkSameScheduleCrimping(bundleDetail);
-              if (true) {
+            if (await validateBundle(bundleDetail)) {
+              if (!scannedBundles
+                  .map((e) => e.bundleIdentification)
+                  .toList()
+                  .contains(bundleDetail.bundleIdentification)) {
+                await checkSameScheduleCrimping(bundleDetail);
+
                 if (bundleDetail.bundleStatus.toLowerCase() == "dropped") {
                   setState(() {
+                    loadingScanBundle = false;
                     scannedBundles.add(bundleDetail);
                     _scanIdController.clear();
                     updateMinimumQuantity();
@@ -2492,6 +2590,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                         },
                         onSubmitted: () {
                           setState(() {
+                            loadingScanBundle = false;
                             scannedBundles.add(bundleDetail);
                             _scanIdController.clear();
                             updateMinimumQuantity();
@@ -2499,6 +2598,7 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                         });
                   } else {
                     setState(() {
+                      loadingScanBundle = false;
                       scannedBundles.add(bundleDetail);
                       _scanIdController.clear();
                       clear();
@@ -2506,7 +2606,10 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                   }
                 }
               } else {
-                _scanIdController.clear();
+                setState(() {
+                  loadingScanBundle = false;
+                  _scanIdController.clear();
+                });
                 Fluttertoast.showToast(
                     msg: "Bundle already Present",
                     toastLength: Toast.LENGTH_SHORT,
@@ -2516,6 +2619,11 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
                     textColor: Colors.white,
                     fontSize: 16.0);
               }
+            } else {
+              setState(() {
+                loadingScanBundle = false;
+                _scanIdController.clear();
+              });
             }
           }
         } else {
@@ -2531,26 +2639,65 @@ class _MultipleBundleScanState extends State<MultipleBundleScan> {
           );
 
           setState(() {
+            loadingScanBundle = false;
             _scanIdController.clear();
           });
         }
+        return true;
       });
     }
   }
 
   /// to validate the bundle and check wheather it is peresent in same fg
-  bool validateBundle(BundlesRetrieved bundleDetail) {
+  Future<bool> validateBundle(BundlesRetrieved bundleDetail) async {
     String msg = "";
     showtoast(String a) {
       msg = a;
     }
 
+    String type = "";
+    String selected = getterminalmethod();
+    if (selected.contains('a')) {
+      type = terminalA!.processType ?? '';
+    }
+    if (selected.contains('b')) {
+      type = terminalB!.processType ?? '';
+    }
+
     if ("${bundleDetail.finishedGoodsPart}" == "${widget.schedule.finishedGoods}" &&
         "${bundleDetail.orderId}" == "${widget.schedule.purchaseOrder}") {
-      return true;
+      bool isValid = await ApiService().dcBundleValidation(
+          fgNo: widget.schedule.finishedGoods.toString(),
+          crimpType: type,
+          scheduleID: widget.schedule.scheduleId.toString(),
+          orderId: widget.schedule.purchaseOrder.toString(),
+          bundleId: bundleDetail.bundleIdentification);
+      if (isValid == true) {
+        if (scannedBundles.isEmpty) {
+          if ("${bundleDetail.finishedGoodsPart}" == "${widget.schedule.finishedGoods}" &&
+              "${bundleDetail.orderId}" == "${widget.schedule.purchaseOrder}" &&
+              "${bundleDetail.awg}" == "${widget.schedule.awg}" &&
+              "${bundleDetail.color}" == "${widget.schedule.wireColour}" &&
+              "${bundleDetail.cutLengthSpecificationInmm}" == "${widget.schedule.length}" &&
+              "${bundleDetail.cablePartNumber}" == "${widget.schedule.cablePartNo}") {
+            return true;
+          } else {
+            Fluttertoast.showToast(
+                msg: "Scan Primary Bundle",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+            return false;
+          }
+        }
+        return isValid;
+      }
     }
     Fluttertoast.showToast(
-        msg: "Bundle does not match FG Detials",
+        msg: "Bundle Validation Failed",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,

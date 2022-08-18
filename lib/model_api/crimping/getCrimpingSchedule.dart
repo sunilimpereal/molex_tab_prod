@@ -86,6 +86,7 @@ class CrimpingSchedule {
     required this.wireCuttingSortingNumber,
     required this.terminalFrom,
     required this.terminalTo,
+    required this.machineNo,
   });
 
   int cablePartNo;
@@ -118,6 +119,7 @@ class CrimpingSchedule {
   int wireCuttingSortingNumber;
   int terminalFrom;
   int terminalTo;
+  String machineNo;
 
   factory CrimpingSchedule.fromJson(Map<String, dynamic> json) => CrimpingSchedule(
         cablePartNo: json["cablePartNo"],
@@ -150,6 +152,7 @@ class CrimpingSchedule {
         wireCuttingSortingNumber: json["wireCuttingSortingNumber"],
         terminalFrom: json["terminalFrom"],
         terminalTo: json["terminalTo"],
+        machineNo: json["machineNo"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -184,5 +187,6 @@ class CrimpingSchedule {
         "wireCuttingSortingNumber": wireCuttingSortingNumber,
         "terminalFrom": terminalFrom,
         "terminalTo": terminalTo,
+        "machineNo": machineNo,
       };
 }

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:molex/model_api/cableDetails_model.dart';
 import 'package:molex/screens/kitting_plan/kitting_plan_dash.dart';
 import 'package:molex/screens/operator/widgets/show_bundle_list.dart';
 import '../../../model_api/login_model.dart';
@@ -66,8 +67,10 @@ class GenerateLabel extends StatefulWidget {
   //variables for schedule data
   String type;
   String sameMachine;
+  Key? key;
   GenerateLabel(
-      {required this.machine,
+      {this.key,
+      required this.machine,
       required this.schedule,
       required this.sendData,
       required this.employee,
@@ -220,6 +223,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
   ApiService? apiService;
   CableTerminalA? terminalA;
   CableTerminalB? terminalB;
+  CableDetails? cableDetails;
   String uom = "";
   getTerminal() {
     ApiService apiService = new ApiService();
@@ -245,11 +249,25 @@ class _GenerateLabelState extends State<GenerateLabel> {
               color: widget.schedule.color,
               awg: widget.schedule.awg)
           .then((termiB) {
-        setState(() {
-          terminalA = termiA;
-          terminalB = termiB;
-          getBundles();
-          log("init");
+        apiService
+            .getCableDetails(
+                isCrimping: false,
+                fgpartNo: widget.schedule.finishedGoodsNumber,
+                cablepartno: widget.schedule.cablePartNumber,
+                length: widget.schedule.length,
+                terminalPartNumberFrom: widget.schedule.terminalPartNumberFrom,
+                terminalPartNumberTo: widget.schedule.terminalPartNumberTo,
+                color: widget.schedule.color,
+                awg: widget.schedule.awg)
+            .then((cableDet) {
+          setState(() {
+            terminalA = termiA;
+            terminalB = termiB;
+            cableDetails = cableDet;
+            getBundles();
+            getMaterial();
+            log("init");
+          });
         });
       });
     });
@@ -330,9 +348,50 @@ class _GenerateLabelState extends State<GenerateLabel> {
 
   GeneratedLabel? label;
   bool printerStatus = false;
+  List<MaterialDetail> materailList = [];
+  getMaterial() {
+    ApiService().getMaterialTrackingCableDetail(widget.matTrkPostDetail).then((value) {
+      List<MaterialDetail> materailListFil = [];
+      materailList = (value as List<MaterialDetail>?)!;
+      if (widget.method.contains('a')) {
+        materailListFil.addAll(materailList
+            .where((element) => int.parse(element.cablePartNo ?? "0") == terminalA?.terminalPart)
+            .toList());
+      }
+      if (widget.method.contains('c')) {
+        materailListFil.addAll(materailList
+            .where(
+                (element) => int.parse(element.cablePartNo ?? "0") == cableDetails?.cablePartNumber)
+            .toList());
+      }
+      if (widget.method.contains('b')) {
+        materailListFil.addAll(materailList
+            .where((element) => int.parse(element.cablePartNo ?? "0") == terminalB?.terminalPart)
+            .toList());
+      }
+      setState(() {
+        materailList = materailListFil;
+      });
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        if (widget.schedule.cablePartNumber != ' ') {
+          for (MaterialDetail matDet in materailList ?? []) {
+            if (widget.schedule.cablePartNumber == matDet.cablePartNo) {
+              if (uom.isEmpty) {
+                setState(() {
+                  uom = matDet.uom ?? "";
+                });
+              }
+              log(matDet.uom ?? "");
+            }
+          }
+        }
+      });
+    });
+  }
 
   @override
   void initState() {
+    getMaterial();
     apiService = new ApiService();
     getTerminal();
     checkMapping();
@@ -527,14 +586,10 @@ class _GenerateLabelState extends State<GenerateLabel> {
       child: Row(
         children: [
           MaterialtableWIP(
+            cablePartNumber: cableDetails?.cablePartNumber.toString(),
             matTrkPostDetail: widget.matTrkPostDetail,
-            getUom: (um) {
-              if (uom.isEmpty) {
-                setState(() {
-                  uom = um;
-                });
-              }
-            },
+            materailList: materailList,
+            getUom: (um) {},
           ),
           Padding(
             padding: const EdgeInsets.all(2.0),
@@ -1348,6 +1403,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                                   loading = false;
                                                 });
                                               }
+                                              getMaterial();
                                             });
                                           } else {
                                             setState(() {
@@ -1648,7 +1704,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                             setState(() {
                                               loading = false;
                                             });
-
+                                            getMaterial();
                                             setState(() {
                                               widget.reload();
                                               labelGenerated = !labelGenerated;
@@ -1660,12 +1716,14 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                                   .invokeMethod('TextInput.hide');
                                             });
                                           } else {
+                                            getMaterial();
                                             setState(() {
                                               loading = false;
                                             });
                                           }
                                         });
                                       } else {
+                                        getMaterial();
                                         setState(() {
                                           loading = false;
                                         });
@@ -1680,6 +1738,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                         );
                                       }
                                     } else {
+                                      getMaterial();
                                       setState(() {
                                         loading = false;
                                       });
@@ -1693,6 +1752,7 @@ class _GenerateLabelState extends State<GenerateLabel> {
                                         fontSize: 16.0,
                                       );
                                     }
+                                    getMaterial();
                                   }),
                         ],
                       ),

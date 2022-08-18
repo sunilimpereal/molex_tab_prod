@@ -705,17 +705,22 @@ class _PreparationprocessState extends State<Preparationprocess> {
                         onPrimary: Colors.white,
                       ),
                       onPressed: () {
-                        apiService
-                            .postPreparationDetail(
-                                postPreparationDetail: getPostPreparationDetail())
-                            .then((value) {
-                          if (value) {
-                            showtoast(msg: "Preparation Detail Saved");
-                            setState(() {
-                              status = Status.scanBin;
-                            });
-                          } else {}
-                        });
+                        if (int.parse(rejectedQtyController.text) <=
+                            preparationList[selectedindex].bundleDetail.bundleQuantity) {
+                          apiService
+                              .postPreparationDetail(
+                                  postPreparationDetail: getPostPreparationDetail())
+                              .then((value) {
+                            if (value) {
+                              showtoast(msg: "Preparation Detail Saved");
+                              setState(() {
+                                status = Status.scanBin;
+                              });
+                            } else {}
+                          });
+                        } else {
+                          showtoast(msg: "Invalid rejection detail");
+                        }
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),

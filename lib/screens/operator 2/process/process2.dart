@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -72,6 +73,8 @@ class _ProcessPage2State extends State<ProcessPage2> {
   List<String>? items;
   int totalQuanity = 0;
   bool processStarted = false;
+
+  Object redrawObject = Object();
   @override
   void initState() {
     apiService = new ApiService();
@@ -139,199 +142,222 @@ class _ProcessPage2State extends State<ProcessPage2> {
     });
   }
 
+  Future<Null> _onRefresh() {
+    Completer<Null> completer = new Completer<Null>();
+    Timer timer = new Timer(new Duration(seconds: 2), () {
+      log("message reload");
+      completer.complete();
+      setState(() {});
+    });
+    return completer.future;
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        showDialog<bool>(
-          context: context,
-          builder: (c) => AlertDialog(
-            title: Text('Warning'),
-            content: Text('Do not use back button to exit'),
-            actions: [
-              // ignore: deprecated_member_use
-              FlatButton(
-                child: Text('Ok'),
-                onPressed: () => Navigator.pop(c, false),
-              ),
-            ],
-          ),
-        );
-        return false;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          title: startProcess(),
-
-          //  Text(
-          //   'Crimping',
-          //   style: TextStyle(
-          //     color: Colors.red,
-          //   ),
-          // ),
-          iconTheme: IconThemeData(
-            color: Colors.red,
-          ),
-          actions: [
-            widget.extraCrimpingSchedules
-                    .where((element) => element.scheduleId == widget.schedule.scheduleId)
-                    .toList()
-                    .isEmpty
-                ? Container()
-                : IconButton(
-                    icon: Container(
-                      child: Row(
-                        children: [
-                          Icon(Icons.align_horizontal_left),
-                          // Text(.al
-                          //   "Schedules",
-                          //   style: TextStyle(color: Colors.red),
-                          // ),
-                        ],
-                      ),
-                    ),
-                    onPressed: () {
-                      showExtraCrimpingSchedule(
-                        context: context,
-                        crimpingSchedules: widget.extraCrimpingSchedules,
-                        selectedSchedule: widget.schedule,
-                      );
-                    },
-                  ),
-            Container(
-              padding: EdgeInsets.all(1),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        height: 24,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.all(Radius.circular(100)),
-                        ),
-                        child: Center(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Icon(
-                                Icons.person,
-                                size: 18,
-                                color: Colors.redAccent,
-                              ),
-                            ),
-                            Text(
-                              widget.employee.empId,
-                              style: TextStyle(fontSize: 13, color: Colors.black),
-                            ),
-                          ],
-                        )),
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        height: 24,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.all(Radius.circular(100)),
-                        ),
-                        child: Center(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Icon(
-                                Icons.settings,
-                                size: 18,
-                                color: Colors.redAccent,
-                              ),
-                            ),
-                            Text(
-                              widget.machine.machineNumber ?? "",
-                              style: TextStyle(fontSize: 13, color: Colors.black),
-                            ),
-                          ],
-                        )),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+        onWillPop: () async {
+          showDialog<bool>(
+            context: context,
+            builder: (c) => AlertDialog(
+              title: Text('Warning'),
+              content: Text('Do not use back button to exit'),
+              actions: [
+                // ignore: deprecated_member_use
+                TextButton(
+                  child: Text('Ok'),
+                  onPressed: () => Navigator.pop(c, false),
+                ),
+              ],
             ),
-            TimeDisplay(),
-          ],
-        ),
-        drawer: DrawerWidgetWIP(
-          employee: widget.employee,
-          machineDetails: widget.machine,
-          transfer: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => Location(
-                        locationType: LocationType.partialTransfer,
-                        type: "process",
-                        employee: widget.employee,
-                        machine: widget.machine,
-                      )),
-            ).then((value) {
-              log("received1");
-              setState(() {
-                widget.matTrkPostDetail = widget.matTrkPostDetail;
-              });
-            });
-          },
-          reloadmaterial: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MaterialPickOp2(
-                  schedule: widget.schedule,
-                  employee: widget.employee,
-                  reload: reload,
-                  machine: widget.machine,
-                  materialPickType: MaterialPickType.reload,
-                  type: widget.type,
-                  sameMachine: widget.sameMachine,
-                  extraCrimpingSchedules: widget.extraCrimpingSchedules,
+          );
+          return false;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: Colors.white,
+            title: startProcess(),
+
+            //  Text(
+            //   'Crimping',
+            //   style: TextStyle(
+            //     color: Colors.red,
+            //   ),
+            // ),
+            iconTheme: IconThemeData(
+              color: Colors.red,
+            ),
+            actions: [
+              widget.extraCrimpingSchedules
+                      .where((element) => element.scheduleId == widget.schedule.scheduleId)
+                      .toList()
+                      .isEmpty
+                  ? Container()
+                  : IconButton(
+                      icon: Container(
+                        child: Row(
+                          children: [
+                            Icon(Icons.align_horizontal_left),
+                            // Text(.al
+                            //   "Schedules",
+                            //   style: TextStyle(color: Colors.red),
+                            // ),
+                          ],
+                        ),
+                      ),
+                      onPressed: () {
+                        showExtraCrimpingSchedule(
+                          context: context,
+                          crimpingSchedules: widget.extraCrimpingSchedules,
+                          selectedSchedule: widget.schedule,
+                        );
+                      },
+                    ),
+              Container(
+                padding: EdgeInsets.all(1),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          height: 24,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.all(Radius.circular(100)),
+                          ),
+                          child: Center(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: Icon(
+                                  Icons.person,
+                                  size: 18,
+                                  color: Colors.redAccent,
+                                ),
+                              ),
+                              Text(
+                                widget.employee.empId,
+                                style: TextStyle(fontSize: 13, color: Colors.black),
+                              ),
+                            ],
+                          )),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          height: 24,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.all(Radius.circular(100)),
+                          ),
+                          child: Center(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: Icon(
+                                  Icons.settings,
+                                  size: 18,
+                                  color: Colors.redAccent,
+                                ),
+                              ),
+                              Text(
+                                widget.machine.machineNumber ?? "",
+                                style: TextStyle(fontSize: 13, color: Colors.black),
+                              ),
+                            ],
+                          )),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ),
-            );
-          },
-          homeReload: () {},
-          returnmaterial: () {},
-        ),
-        body: Container(
-          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-            Column(children: [
-              P2ScheduleDetailWIP(
-                schedule: widget.schedule,
+              TimeDisplay(),
+            ],
+          ),
+          drawer: DrawerWidgetWIP(
+            employee: widget.employee,
+            machineDetails: widget.machine,
+            transfer: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Location(
+                          locationType: LocationType.partialTransfer,
+                          type: "process",
+                          employee: widget.employee,
+                          machine: widget.machine,
+                        )),
+              ).then((value) {
+                log("received1");
+                setState(() {
+                  widget.matTrkPostDetail = widget.matTrkPostDetail;
+                });
+              });
+            },
+            reloadmaterial: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MaterialPickOp2(
+                    schedule: widget.schedule,
+                    employee: widget.employee,
+                    reload: reload,
+                    machine: widget.machine,
+                    materialPickType: MaterialPickType.reload,
+                    type: widget.type,
+                    sameMachine: widget.sameMachine,
+                    extraCrimpingSchedules: widget.extraCrimpingSchedules,
+                  ),
+                ),
+              ).then((value) {
+                setState(() {
+                  redrawObject = Object();
+                  log("returned");
+                });
+              });
+            },
+            homeReload: () {},
+            returnmaterial: () {},
+          ),
+          body: Container(
+            child: RefreshIndicator(
+              onRefresh: _onRefresh,
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Container(
+                  child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                    Column(children: [
+                      P2ScheduleDetailWIP(
+                        schedule: widget.schedule,
+                      ),
+                      // tableHeading(),
+                      // buildDataRow(schedule: widget.schedule),
+                      // fgDetails(),
+                    ]),
+                    Column(children: [
+                      terminal(),
+                      mainBox(mainb!),
+                    ]),
+                  ]),
+                ),
               ),
-              // tableHeading(),
-              // buildDataRow(schedule: widget.schedule),
-              // fgDetails(),
-            ]),
-            Column(children: [
-              terminal(),
-              mainBox(mainb!),
-            ]),
-          ]),
-        ),
-      ),
-    );
+            ),
+          ),
+        ));
   }
 
   Widget mainBox(String main) {
     if (main == "scanBundle") {
       return bundltype == "single"
           ? ScanBundle(
+              key: ValueKey<Object>(redrawObject),
               machineId: widget.machine.machineNumber ?? '',
               userId: widget.employee.empId,
               schedule: widget.schedule,
@@ -379,6 +405,7 @@ class _ProcessPage2State extends State<ProcessPage2> {
               },
             )
           : MultipleBundleScan(
+              key: ValueKey<Object>(redrawObject),
               machineId: widget.machine.machineNumber ?? '',
               userId: widget.employee.empId,
               schedule: widget.schedule,

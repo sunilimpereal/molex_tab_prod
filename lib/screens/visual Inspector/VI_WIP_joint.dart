@@ -854,7 +854,7 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                             Row(children: [
                               Text("Bundle Qty:   "),
                               Text(
-                                totalBundleQtyinList(viIspectionBundleList).toString(),
+                                satisfyBundleQtyinList(viIspectionBundleList).toString(),
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                               ),
                             ]),
@@ -942,8 +942,10 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
                                             ),
                                           ),
                                           onPressed: () {
-                                            if (int.parse(rejectedQtyController.text) <
-                                                totalBundleQtyinList(viIspectionBundleList)) {
+                                            if (int.parse(rejectedQtyController.text == ""
+                                                    ? "0"
+                                                    : rejectedQtyController.text) <=
+                                                satisfyBundleQtyinList(viIspectionBundleList)) {
                                               setState(() {
                                                 loading = true;
                                               });
@@ -1167,6 +1169,16 @@ class _VIWIP_Home_jointState extends State<VIWIP_Home_joint> {
       sum = sum + bundle.bundleQuantity!;
     }
     return sum;
+  }
+
+  int satisfyBundleQtyinList(List<ViInspectedbundle> bundleList) {
+    int selected = bundleList[0].bundleQuantity ?? 0;
+    for (ViInspectedbundle bundle in bundleList) {
+      if (bundle.bundleQuantity! < selected) {
+        selected = bundle.bundleQuantity ?? 0;
+      }
+    }
+    return selected;
   }
 
   Widget quantitycell({

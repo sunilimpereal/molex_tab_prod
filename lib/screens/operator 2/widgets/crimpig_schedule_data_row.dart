@@ -68,7 +68,7 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
                     waitDuration: const Duration(seconds: 1),
                     message: "${widget.machine.machineNumber}",
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.07,
+                      width: MediaQuery.of(context).size.width * 0.08,
                       height: 34,
                       child: Center(
                         child: Column(
@@ -78,10 +78,10 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
                               widget.schedule.scheduleId.toString(),
                               style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
                             ),
-                            // Text(
-                            //   widget.schedule ?? '',
-                            //   style: TextStyle(fontSize: 9, fontWeight: FontWeight.w500),
-                            // ),
+                            Text(
+                              widget.schedule.machineNo ?? '',
+                              style: TextStyle(fontSize: 9, fontWeight: FontWeight.w500),
+                            ),
                           ],
                         ),
                       ),
@@ -89,7 +89,7 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
                 //Cable Part
                 cell('${widget.schedule.cablePartNo}', 0.065),
                 //Process
-                cell('${widget.schedule.process}', 0.10),
+                cell('${widget.schedule.process}', 0.09),
 
                 // Cut length
                 cell('${widget.schedule.length}', 0.06),
@@ -319,6 +319,7 @@ class _CrimpingScheduleDataRowState extends State<CrimpingScheduleDataRow> {
       child: Center(
         child: Text(
           name,
+          textAlign: TextAlign.center,
           style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
         ),
       ),

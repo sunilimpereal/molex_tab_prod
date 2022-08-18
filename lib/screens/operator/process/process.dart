@@ -67,6 +67,7 @@ class _ProcessPageState extends State<ProcessPage> {
   String method = '';
   List<String>? items;
   int totalquantity = 0;
+  Object redrawObject = Object();
   @override
   void initState() {
     apiService = new ApiService();
@@ -155,7 +156,7 @@ class _ProcessPageState extends State<ProcessPage> {
               content: Text('Do not use back button to exit'),
               actions: [
                 // ignore: deprecated_member_use
-                FlatButton(
+                TextButton(
                   child: Text('Ok'),
                   onPressed: () => Navigator.pop(c, false),
                 ),
@@ -290,7 +291,12 @@ class _ProcessPageState extends State<ProcessPage> {
                           type: widget.type,
                           sameMachine: widget.sameMachine,
                         )),
-              );
+              ).then((value) {
+                setState(() {
+                  redrawObject = Object();
+                  log("returned");
+                });
+              });
             },
           ),
           body: Container(
@@ -318,6 +324,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                       return Container();
                                     } else if (rightside == "label") {
                                       return GenerateLabel(
+                                        key: ValueKey<Object>(redrawObject),
                                         reload: reloadlabel,
                                         schedule: widget.schedule,
                                         machine: widget.machine,

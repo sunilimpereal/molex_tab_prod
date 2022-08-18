@@ -45,6 +45,15 @@ class ReturnRawmaterial extends StatefulWidget {
 class _ReturnRawmaterialState extends State<ReturnRawmaterial> {
   ApiService? apiService;
   bool loading = false;
+  List<MaterialDetail> materailList = [];
+  getMaterial() {
+    ApiService().getMaterialTrackingCableDetail(widget.matTrkPostDetail).then((value) {
+      setState(() {
+        materailList = (value as List<MaterialDetail>?)!;
+      });
+    });
+  }
+
   @override
   void initState() {
     apiService = new ApiService();
@@ -66,6 +75,7 @@ class _ReturnRawmaterialState extends State<ReturnRawmaterial> {
                   MaterialtableWIP(
                     matTrkPostDetail: widget.matTrkPostDetail,
                     getUom: (uom) {},
+                    materailList: materailList,
                   ),
                   returnMaterialButtons(),
                 ],
