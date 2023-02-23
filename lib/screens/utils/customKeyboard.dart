@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../utils/config.dart';
+
 class TextFieldWithNoKeyboard extends EditableText {
   TextFieldWithNoKeyboard(
       {required TextEditingController controller,
@@ -34,7 +36,7 @@ class TextFieldEditableState extends EditableTextState {
   void requestKeyboard() {
     super.requestKeyboard();
     //hide keyboard
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
   }
 }
 

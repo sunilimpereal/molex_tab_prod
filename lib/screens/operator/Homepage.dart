@@ -173,8 +173,7 @@ class _HomepageState extends State<Homepage> {
                               color: Colors.redAccent,
                             ),
                           ),
-                          Text(widget.employee.empId,
-                              style: TextStyle(fontSize: 13, color: Colors.black)),
+                          Text(widget.employee.empId, style: TextStyle(fontSize: 13, color: Colors.black)),
                         ],
                       )),
                     ),
@@ -215,8 +214,7 @@ class _HomepageState extends State<Homepage> {
         ],
       ),
       drawer: Drawer(
-        child: DrawerWidget(
-            employee: widget.employee, machineDetails: widget.machine, type: "process"),
+        child: DrawerWidget(employee: widget.employee, machineDetails: widget.machine, type: "process"),
       ),
       body: Column(
         children: [
@@ -279,7 +277,7 @@ class _HomepageState extends State<Homepage> {
                         //         onTap: () {
                         //           setState(() {
                         //              SystemChannels.textInput
-                        //         .invokeMethod('TextInput.hide');
+                        //         .invokeMethod(keyboardType);
                         //             _searchController.clear();
                         //           });
                         //         },
@@ -379,10 +377,8 @@ class _SchudleTableState extends State<SchudleTable> {
 
   PostStartProcessP1? postStartprocess;
   //Filter
-  late DateTime startDate =
-      sharedPref.startDate ?? DateUtils.dateOnly(DateTime.now().subtract(const Duration(days: 5)));
-  late DateTime endDate =
-      sharedPref.endDate ?? DateUtils.dateOnly(DateTime.now().add(const Duration(days: 3)));
+  late DateTime startDate = sharedPref.startDate ?? DateUtils.dateOnly(DateTime.now().subtract(const Duration(days: 5)));
+  late DateTime endDate = sharedPref.endDate ?? DateUtils.dateOnly(DateTime.now().add(const Duration(days: 3)));
   bool floatingActionLoading = false;
   List<String> selectedMachine = [];
   @override
@@ -404,14 +400,10 @@ class _SchudleTableState extends State<SchudleTable> {
         return scheduleList!.where((element) => element.orderId.startsWith(widget.query)).toList();
         break;
       case "FG Part No.":
-        return scheduleList!
-            .where((element) => element.finishedGoodsNumber.startsWith(widget.query))
-            .toList();
+        return scheduleList!.where((element) => element.finishedGoodsNumber.startsWith(widget.query)).toList();
         break;
       case "Cable Part No":
-        return scheduleList!
-            .where((element) => element.cablePartNumber.startsWith(widget.query))
-            .toList();
+        return scheduleList!.where((element) => element.cablePartNumber.startsWith(widget.query)).toList();
         break;
       default:
         return scheduleList;
@@ -451,23 +443,17 @@ class _SchudleTableState extends State<SchudleTable> {
                       height: widget.type == "M" ? 425 : 495,
                       // height: double.parse("${rowList.length*60}"),
                       child: FutureBuilder<List<Schedule>?>(
-                        future: apiService!.getScheduelarData(
-                            machId: widget.machine.machineNumber ?? '',
-                            type: widget.type,
-                            sameMachine: widget.scheduleType),
+                        future: apiService!
+                            .getScheduelarData(machId: widget.machine.machineNumber ?? '', type: widget.type, sameMachine: widget.scheduleType),
                         builder: (context, AsyncSnapshot<List<Schedule>?> snapshot) {
                           if (snapshot.hasData) {
                             // return  buildDataRow(schedule:widget.schedule,c:2);
                             List<Schedule>? schedulelist = searchfilter(snapshot.data ?? []);
-                            schedulelist = schedulelist!
-                                .where((element) =>
-                                    element.scheduledStatus.toLowerCase() !=
-                                    "complete".toLowerCase())
-                                .toList();
+                            schedulelist =
+                                schedulelist!.where((element) => element.scheduledStatus.toLowerCase() != "complete".toLowerCase()).toList();
                             schedulelist = schedulelist
                                 .where((element) =>
-                                    element.currentDate.isBefore(endDate) &&
-                                        element.currentDate.isAfter(startDate) ||
+                                    element.currentDate.isBefore(endDate) && element.currentDate.isAfter(startDate) ||
                                     element.currentDate == startDate ||
                                     element.currentDate == endDate)
 
@@ -479,12 +465,9 @@ class _SchudleTableState extends State<SchudleTable> {
                                 // 0)
                                 .toList();
                             schedulelist = schedulelist
-                                .where((element) => selectedMachine.length == 0
-                                    ? true
-                                    : selectedMachine.contains(element.machineNumber))
+                                .where((element) => selectedMachine.length == 0 ? true : selectedMachine.contains(element.machineNumber))
                                 .toList();
-                            schedulelist.sort((a, b) =>
-                                int.parse(a.scheduledId).compareTo(int.parse(b.scheduledId)));
+                            schedulelist.sort((a, b) => int.parse(a.scheduledId).compareTo(int.parse(b.scheduledId)));
 
                             //  schedulelist =  schedulelist+ schedulelist+ schedulelist+ schedulelist+ schedulelist;
 
@@ -515,8 +498,7 @@ class _SchudleTableState extends State<SchudleTable> {
                                   child: Column(
                                     children: [
                                       Container(
-                                        child: Text('No Schedule Found',
-                                            style: TextStyle(color: Colors.black)),
+                                        child: Text('No Schedule Found', style: TextStyle(color: Colors.black)),
                                       ),
                                       SizedBox(
                                         height: 10,
@@ -525,19 +507,12 @@ class _SchudleTableState extends State<SchudleTable> {
                                         width: 150,
                                         child: ElevatedButton(
                                           style: ButtonStyle(
-                                            shape:
-                                                MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(100.0),
-                                                        side:
-                                                            BorderSide(color: Colors.transparent))),
-                                            backgroundColor:
-                                                MaterialStateProperty.resolveWith<Color>(
+                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(100.0), side: BorderSide(color: Colors.transparent))),
+                                            backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                               (Set<MaterialState> states) {
-                                                if (states.contains(MaterialState.pressed))
-                                                  return Colors.green.shade200;
-                                                return Colors
-                                                    .red.shade400; // Use the component's default.
+                                                if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                                                return Colors.red.shade400; // Use the component's default.
                                               },
                                             ),
                                           ),
@@ -575,8 +550,7 @@ class _SchudleTableState extends State<SchudleTable> {
                                   child: Column(
                                     children: [
                                       Container(
-                                        child: Text('No Schedule Found',
-                                            style: TextStyle(color: Colors.black)),
+                                        child: Text('No Schedule Found', style: TextStyle(color: Colors.black)),
                                       ),
                                       SizedBox(
                                         height: 10,
@@ -585,19 +559,12 @@ class _SchudleTableState extends State<SchudleTable> {
                                         width: 150,
                                         child: ElevatedButton(
                                           style: ButtonStyle(
-                                            shape:
-                                                MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(100.0),
-                                                        side:
-                                                            BorderSide(color: Colors.transparent))),
-                                            backgroundColor:
-                                                MaterialStateProperty.resolveWith<Color>(
+                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(100.0), side: BorderSide(color: Colors.transparent))),
+                                            backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                               (Set<MaterialState> states) {
-                                                if (states.contains(MaterialState.pressed))
-                                                  return Colors.green.shade200;
-                                                return Colors
-                                                    .red.shade400; // Use the component's default.
+                                                if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                                                return Colors.red.shade400; // Use the component's default.
                                               },
                                             ),
                                           ),
@@ -648,10 +615,7 @@ class _SchudleTableState extends State<SchudleTable> {
               floatingActionLoading = !floatingActionLoading;
             });
             apiService!
-                .getScheduelarData(
-                    machId: widget.machine.machineNumber ?? '',
-                    type: widget.type,
-                    sameMachine: widget.scheduleType)
+                .getScheduelarData(machId: widget.machine.machineNumber ?? '', type: widget.type, sameMachine: widget.scheduleType)
                 .then((value) {
               setState(() {
                 floatingActionLoading = !floatingActionLoading;
@@ -673,19 +637,14 @@ class _SchudleTableState extends State<SchudleTable> {
                       onchangedDateRange: (startDate1, endDate1) {
                         setState(() {
                           sharedPref.setStartandEndDate(
-                              startDate: startDate1,
-                              endDate: endDate1 ??
-                                  DateUtils.dateOnly(DateTime.now().add(Duration(days: 7))));
+                              startDate: startDate1, endDate: endDate1 ?? DateUtils.dateOnly(DateTime.now().add(Duration(days: 7))));
                           startDate = DateUtils.dateOnly(startDate1);
-                          endDate =
-                              endDate1 ?? DateUtils.dateOnly(DateTime.now().add(Duration(days: 7)));
+                          endDate = endDate1 ?? DateUtils.dateOnly(DateTime.now().add(Duration(days: 7)));
                         });
                       });
             });
           },
-          child: floatingActionLoading
-              ? CircularProgressIndicator(color: Colors.white)
-              : Icon(Icons.sort),
+          child: floatingActionLoading ? CircularProgressIndicator(color: Colors.white) : Icon(Icons.sort),
         ),
       ),
     );
@@ -726,8 +685,7 @@ class _SchudleTableState extends State<SchudleTable> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 40,
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(5))),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(5))),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

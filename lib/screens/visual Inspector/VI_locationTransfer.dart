@@ -7,6 +7,7 @@ import '../../model_api/Transfer/binToLocation_model.dart';
 import '../../model_api/Transfer/getBinDetail.dart';
 import '../../model_api/login_model.dart';
 import '../../model_api/machinedetails_model.dart';
+import '../../utils/config.dart';
 import '../Preparation/preparationDash.dart';
 import '../operator%202/Home_0p2.dart';
 import '../operator/Homepage.dart';
@@ -52,7 +53,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
     Future.delayed(
       const Duration(milliseconds: 100),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     super.initState();
@@ -61,7 +62,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
 
     return DefaultTabController(
       length: 2,
@@ -164,21 +165,18 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
             children: [
               Container(
                 width: MediaQuery.of(context).size.width,
-                child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 25),
-                        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                          location(),
-                          bin(),
-                          confirmTransfer(),
-                          completeTransfer(),
-                        ]),
-                      ),
-                      Container(child: SingleChildScrollView(child: dataTable())),
+                child: Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.start, children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 25),
+                    child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                      location(),
+                      bin(),
+                      confirmTransfer(),
+                      completeTransfer(),
                     ]),
+                  ),
+                  Container(child: SingleChildScrollView(child: dataTable())),
+                ]),
               ),
               ReMapBin(
                 userId: widget.employee.empId,
@@ -191,74 +189,71 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
 
   handleKey(RawKeyEventData key) {
     setState(() {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     });
   }
 
   Widget location() {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
 
     return Container(
       width: MediaQuery.of(context).size.width * 0.3,
-      child: Row(
-          mainAxisSize: MainAxisSize.min,
+      child: Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: [
+        Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: RawKeyboardListener(
-                        focusNode: FocusNode(),
-                        onKey: (event) => handleKey(event.data),
-                        child: TextField(
-                            focusNode: _locationFocus,
-                            autofocus: true,
-                            controller: _locationController,
-                            onTap: () {
-                              SystemChannels.textInput.invokeMethod('TextInput.hide');
-                            },
-                            onSubmitted: (value) {},
-                            onChanged: (value) {
-                              setState(() {
-                                locationId = value;
-                              });
-                            },
-                            decoration: new InputDecoration(
-                                suffix: _locationController.text.length > 1
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            _locationController.clear();
-                                          });
-                                        },
-                                        child: Icon(Icons.clear, size: 18, color: Colors.red))
-                                    : Container(),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey.shade400, width: 2.0),
-                                ),
-                                labelText: 'Scan Location',
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 5.0))),
-                      ),
-                    ),
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.25,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: RawKeyboardListener(
+                    focusNode: FocusNode(),
+                    onKey: (event) => handleKey(event.data),
+                    child: TextField(
+                        focusNode: _locationFocus,
+                        autofocus: true,
+                        controller: _locationController,
+                        onTap: () {
+                          SystemChannels.textInput.invokeMethod(keyboardType);
+                        },
+                        onSubmitted: (value) {},
+                        onChanged: (value) {
+                          setState(() {
+                            locationId = value;
+                          });
+                        },
+                        decoration: new InputDecoration(
+                            suffix: _locationController.text.length > 1
+                                ? GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _locationController.clear();
+                                      });
+                                    },
+                                    child: Icon(Icons.clear, size: 18, color: Colors.red))
+                                : Container(),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey.shade400, width: 2.0),
+                            ),
+                            labelText: 'Scan Location',
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 5.0))),
                   ),
                 ),
-              ],
+              ),
             ),
-          ]),
+          ],
+        ),
+      ]),
     );
   }
 
   Widget confirmTransfer() {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -276,10 +271,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
                   List<BundlesRetrieved> bundleist = value;
                   if (bundleist.length > 0) {
                     for (BundlesRetrieved bundle in value) {
-                      if (!transferList
-                          .map((e) => e.bundleId)
-                          .toList()
-                          .contains(bundle.bundleIdentification)) {
+                      if (!transferList.map((e) => e.bundleId).toList().contains(bundle.bundleIdentification)) {
                         setState(() {
                           transferList.add(TransferBinToLocation(
                               userId: widget.employee.empId,
@@ -338,7 +330,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
   }
 
   Widget completeTransfer() {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
 
     return transferList.length > 0
         ? Padding(
@@ -386,7 +378,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
                           focusNode: _binFocus,
                           controller: _binController,
                           onTap: () {
-                            SystemChannels.textInput.invokeMethod('TextInput.hide');
+                            SystemChannels.textInput.invokeMethod(keyboardType);
                             setState(() {
                               _binController.clear();
                               binId = "";
@@ -511,7 +503,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     return showDialog<void>(
@@ -524,15 +516,14 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
             actions: <Widget>[
               ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.resolveWith((states) => Colors.redAccent),
+                    backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.redAccent),
                   ),
                   onPressed: () {
                     Navigator.pop(context);
                     Future.delayed(
                       const Duration(milliseconds: 50),
                       () {
-                        SystemChannels.textInput.invokeMethod('TextInput.hide');
+                        SystemChannels.textInput.invokeMethod(keyboardType);
                       },
                     );
                   },
@@ -547,7 +538,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
                     Future.delayed(
                       const Duration(milliseconds: 50),
                       () {
-                        SystemChannels.textInput.invokeMethod('TextInput.hide');
+                        SystemChannels.textInput.invokeMethod(keyboardType);
                       },
                     );
                     apiService.postTransferBinToLocation(transferList).then((value) {
@@ -564,9 +555,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
                           );
                         }
                         if (widget.type == 'process') {
-                          apiService
-                              .getmachinedetails(widget.machine.machineNumber ?? "")
-                              .then((value) {
+                          apiService.getmachinedetails(widget.machine.machineNumber ?? "").then((value) {
                             // Navigator.pop(context);
                             MachineDetails machineDetails = value![0];
                             Fluttertoast.showToast(
@@ -678,7 +667,7 @@ class _ViLocationTransferState extends State<ViLocationTransfer> {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     apiService.postTransferBinToLocation(transferList).then((value) {

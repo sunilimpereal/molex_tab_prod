@@ -6,6 +6,7 @@ import '../../model_api/Transfer/binToLocation_model.dart';
 import '../../model_api/Transfer/getBinDetail.dart';
 import '../../model_api/login_model.dart';
 import '../../model_api/machinedetails_model.dart';
+import '../../utils/config.dart';
 import '../Preparation/preparationDash.dart';
 import '../operator%202/Home_0p2.dart';
 import 'Homepage.dart';
@@ -22,11 +23,7 @@ class Location extends StatefulWidget {
   MachineDetails machine;
   String type;
   LocationType locationType;
-  Location(
-      {required this.employee,
-      required this.machine,
-      required this.type,
-      required this.locationType});
+  Location({required this.employee, required this.machine, required this.type, required this.locationType});
   @override
   _LocationState createState() => _LocationState();
 }
@@ -58,7 +55,7 @@ class _LocationState extends State<Location> with SingleTickerProviderStateMixin
     Future.delayed(
       const Duration(milliseconds: 100),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     super.initState();
@@ -69,7 +66,7 @@ class _LocationState extends State<Location> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
 
     return DefaultTabController(
       length: 2,
@@ -137,8 +134,7 @@ class _LocationState extends State<Location> with SingleTickerProviderStateMixin
                                 color: Colors.redAccent,
                               ),
                             ),
-                            Text(widget.machine.machineNumber ?? "",
-                                style: TextStyle(fontSize: 13, color: Colors.black)),
+                            Text(widget.machine.machineNumber ?? "", style: TextStyle(fontSize: 13, color: Colors.black)),
                           ],
                         )),
                       ),
@@ -175,21 +171,18 @@ class _LocationState extends State<Location> with SingleTickerProviderStateMixin
             ),
             Container(
               width: MediaQuery.of(context).size.width,
-              child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 25),
-                      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                        location(),
-                        bin(),
-                        confirmTransfer(),
-                        // completeTransfer(),
-                      ]),
-                    ),
-                    Container(child: SingleChildScrollView(child: dataTable())),
+              child: Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.start, children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 25),
+                  child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                    location(),
+                    bin(),
+                    confirmTransfer(),
+                    // completeTransfer(),
                   ]),
+                ),
+                Container(child: SingleChildScrollView(child: dataTable())),
+              ]),
             ),
           ],
         ),
@@ -199,74 +192,71 @@ class _LocationState extends State<Location> with SingleTickerProviderStateMixin
 
   handleKey(RawKeyEventData key) {
     setState(() {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     });
   }
 
   Widget location() {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
 
     return Container(
       width: MediaQuery.of(context).size.width * 0.3,
-      child: Row(
-          mainAxisSize: MainAxisSize.min,
+      child: Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: [
+        Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: RawKeyboardListener(
-                        focusNode: FocusNode(),
-                        onKey: (event) => handleKey(event.data),
-                        child: TextField(
-                            focusNode: _locationFocus,
-                            autofocus: true,
-                            controller: _locationController,
-                            onTap: () {
-                              SystemChannels.textInput.invokeMethod('TextInput.hide');
-                            },
-                            onSubmitted: (value) {},
-                            onChanged: (value) {
-                              setState(() {
-                                locationId = value;
-                              });
-                            },
-                            decoration: new InputDecoration(
-                                suffix: _locationController.text.length > 1
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            _locationController.clear();
-                                          });
-                                        },
-                                        child: Icon(Icons.clear, size: 18, color: Colors.red))
-                                    : Container(),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey.shade400, width: 2.0),
-                                ),
-                                labelText: 'Scan Location',
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 5.0))),
-                      ),
-                    ),
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.25,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: RawKeyboardListener(
+                    focusNode: FocusNode(),
+                    onKey: (event) => handleKey(event.data),
+                    child: TextField(
+                        focusNode: _locationFocus,
+                        autofocus: true,
+                        controller: _locationController,
+                        onTap: () {
+                          SystemChannels.textInput.invokeMethod(keyboardType);
+                        },
+                        onSubmitted: (value) {},
+                        onChanged: (value) {
+                          setState(() {
+                            locationId = value;
+                          });
+                        },
+                        decoration: new InputDecoration(
+                            suffix: _locationController.text.length > 1
+                                ? GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _locationController.clear();
+                                      });
+                                    },
+                                    child: Icon(Icons.clear, size: 18, color: Colors.red))
+                                : Container(),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey.shade400, width: 2.0),
+                            ),
+                            labelText: 'Scan Location',
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 5.0))),
                   ),
                 ),
-              ],
+              ),
             ),
-          ]),
+          ],
+        ),
+      ]),
     );
   }
 
   Widget confirmTransfer() {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -306,10 +296,7 @@ class _LocationState extends State<Location> with SingleTickerProviderStateMixin
                     List<BundlesRetrieved> bundleist = value;
                     if (bundleist.length > 0) {
                       for (BundlesRetrieved bundle in value) {
-                        if (!transferList
-                            .map((e) => e.bundleId)
-                            .toList()
-                            .contains(bundle.bundleIdentification)) {
+                        if (!transferList.map((e) => e.bundleId).toList().contains(bundle.bundleIdentification)) {
                           setState(() {
                             transferList.add(TransferBinToLocation(
                                 userId: widget.employee.empId,
@@ -372,7 +359,7 @@ class _LocationState extends State<Location> with SingleTickerProviderStateMixin
   }
 
   Widget completeTransfer() {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
 
     return transferList.length > 0
         ? Padding(
@@ -391,16 +378,13 @@ class _LocationState extends State<Location> with SingleTickerProviderStateMixin
                         ),
                         backgroundColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
-                            if (states.contains(MaterialState.pressed))
-                              return Colors.green.shade200;
+                            if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
                             return Colors.green.shade500; // Use the component's default.
                           },
                         ),
                       ),
                       onPressed: () {
-                        _controller!.index == 0
-                            ? _controller!.animateTo(1)
-                            : postCompleteTransfer();
+                        _controller!.index == 0 ? _controller!.animateTo(1) : postCompleteTransfer();
                         // postCompleteTransfer();
                         // _showConfirmationDialog();
                       },
@@ -417,16 +401,13 @@ class _LocationState extends State<Location> with SingleTickerProviderStateMixin
                         ),
                         backgroundColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
-                            if (states.contains(MaterialState.pressed))
-                              return Colors.green.shade200;
+                            if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
                             return Colors.green.shade500; // Use the component's default.
                           },
                         ),
                       ),
                       onPressed: () {
-                        _controller!.index == 0
-                            ? _controller!.animateTo(1)
-                            : postCompleteTransfer();
+                        _controller!.index == 0 ? _controller!.animateTo(1) : postCompleteTransfer();
                         // _showConfirmationDialog();
                       },
                       child: Text('Complete Transfer')),
@@ -489,7 +470,7 @@ class _LocationState extends State<Location> with SingleTickerProviderStateMixin
                           focusNode: _binFocus,
                           controller: _binController,
                           onTap: () {
-                            SystemChannels.textInput.invokeMethod('TextInput.hide');
+                            SystemChannels.textInput.invokeMethod(keyboardType);
                             setState(() {
                               _binController.clear();
                               binId = null;
@@ -541,15 +522,10 @@ class _LocationState extends State<Location> with SingleTickerProviderStateMixin
         width: MediaQuery.of(context).size.width * 0.6,
         colums: [
           CustomCell(width: 100, child: Text('No.', style: TextStyle(fontWeight: FontWeight.w600))),
-          CustomCell(
-              width: 120,
-              child: Text('Location Id', style: TextStyle(fontWeight: FontWeight.w600))),
-          CustomCell(
-              width: 100, child: Text('Bin Id', style: TextStyle(fontWeight: FontWeight.w600))),
-          CustomCell(
-              width: 100, child: Text('Bundles', style: TextStyle(fontWeight: FontWeight.w600))),
-          CustomCell(
-              width: 100, child: Text('Remove', style: TextStyle(fontWeight: FontWeight.w600))),
+          CustomCell(width: 120, child: Text('Location Id', style: TextStyle(fontWeight: FontWeight.w600))),
+          CustomCell(width: 100, child: Text('Bin Id', style: TextStyle(fontWeight: FontWeight.w600))),
+          CustomCell(width: 100, child: Text('Bundles', style: TextStyle(fontWeight: FontWeight.w600))),
+          CustomCell(width: 100, child: Text('Remove', style: TextStyle(fontWeight: FontWeight.w600))),
         ],
         rows: transferList
             .map(
@@ -649,7 +625,7 @@ class _LocationState extends State<Location> with SingleTickerProviderStateMixin
     Future.delayed(
       const Duration(milliseconds: 50),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     apiService.postTransferBinToLocation(transferList).then((value) {

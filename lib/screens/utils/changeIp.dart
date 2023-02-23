@@ -6,6 +6,7 @@ import '../../login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
+import '../../utils/config.dart';
 
 class ChangeIp extends StatefulWidget {
   @override
@@ -17,7 +18,6 @@ class _ChangeIpState extends State<ChangeIp> {
   List<String> ipList1 = [
     "http://10.221.46.10:8080/wipts/", //client
     "http://10.221.46.8:8080/wipts/",
-
   ];
   // List<String> ipList = [
   //   "http://justerp.in:8080/wipts/",
@@ -62,9 +62,7 @@ class _ChangeIpState extends State<ChangeIp> {
                 return Stack(
                   children: [
                     ListTile(
-                      tileColor: baseip == ipList[index]
-                          ? Colors.red[200]
-                          : Colors.white,
+                      tileColor: baseip == ipList[index] ? Colors.red[200] : Colors.white,
                       title: Text(" ${ipList[index]}"),
                       onLongPress: () {
                         setState(() {
@@ -76,8 +74,7 @@ class _ChangeIpState extends State<ChangeIp> {
                           sharedPref.setbaseip(baseip: "${ipList[index]}");
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScan()),
+                            MaterialPageRoute(builder: (context) => LoginScan()),
                           );
                         });
                       },
@@ -125,13 +122,10 @@ class _ChangeIpState extends State<ChangeIp> {
     Widget continueButton = TextButton(
       style: ButtonStyle(
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                side: BorderSide(color: Colors.transparent))),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0), side: BorderSide(color: Colors.transparent))),
         backgroundColor: MaterialStateProperty.resolveWith<Color>(
           (Set<MaterialState> states) {
-            if (states.contains(MaterialState.pressed))
-              return Colors.red.shade200;
+            if (states.contains(MaterialState.pressed)) return Colors.red.shade200;
             return Colors.red.shade500; // Use the component's default.
           },
         ),
@@ -164,7 +158,7 @@ class _ChangeIpState extends State<ChangeIp> {
       ),
       content: Text(
         "Are you sure you want to delete ip: $ip ?",
-        style: TextStyle(fontFamily: fonts.openSans,fontSize: 16),
+        style: TextStyle(fontFamily: fonts.openSans, fontSize: 16),
       ),
       actions: [
         cancelButton,
@@ -185,7 +179,7 @@ class _ChangeIpState extends State<ChangeIp> {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     return showDialog<void>(

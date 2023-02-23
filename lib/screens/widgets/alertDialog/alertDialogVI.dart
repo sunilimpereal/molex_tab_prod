@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../main.dart';
+import '../../../utils/config.dart';
 
 Future<void> showBundleAlertVi(
     {required BuildContext context,
@@ -12,7 +13,7 @@ Future<void> showBundleAlertVi(
   Future.delayed(
     const Duration(milliseconds: 50),
     () {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     },
   );
   return showDialog<void>(
@@ -89,24 +90,20 @@ class _BundleAlertViState extends State<BundleViAlert> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Incomplete Crimping in Bundle",),
+          Text(
+            "Incomplete Crimping in Bundle",
+          ),
           SizedBox(
             height: 10,
           ),
           Text(
             "${getText()}",
-            style: TextStyle(
-                fontFamily: fonts.openSans,
-                fontSize: 16,
-                fontWeight: FontWeight.normal),
+            style: TextStyle(fontFamily: fonts.openSans, fontSize: 16, fontWeight: FontWeight.normal),
           ),
           widget.bundleStatus != "dropped"
               ? Text(
                   "Bundle Movement is not done! Do you what to process?",
-                  style: TextStyle(
-                      fontFamily: fonts.openSans,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
+                  style: TextStyle(fontFamily: fonts.openSans, fontSize: 16, fontWeight: FontWeight.w600),
                 )
               : Container(),
           Container(
@@ -148,10 +145,7 @@ class _BundleAlertViState extends State<BundleViAlert> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       '  Cancel  ',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: fonts.openSans,
-                          fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 16, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
                     ),
                   )),
               ElevatedButton(
@@ -168,11 +162,7 @@ class _BundleAlertViState extends State<BundleViAlert> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('  Add  ',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: fonts.openSans,
-                            fontWeight: FontWeight.bold)),
+                    child: Text('  Add  ', style: TextStyle(fontSize: 16, fontFamily: fonts.openSans, fontWeight: FontWeight.bold)),
                   )),
             ],
           )

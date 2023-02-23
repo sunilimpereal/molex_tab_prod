@@ -6,17 +6,17 @@ import '../../../model_api/machinedetails_model.dart';
 import '../../../model_api/materialTrackingCableDetails_model.dart';
 import '../../../model_api/postReturnMaterial.dart';
 import '../../../model_api/postrawmatList_model.dart';
+import '../../../utils/config.dart';
 import '../../utils/loadingButton.dart';
 import '../../../service/apiService.dart';
 
 import 'materialTableWIP.dart';
 
-Future<void> showReturnMaterial(
-    BuildContext context, MatTrkPostDetail matTrkPostDetail, MachineDetails machineDetails) async {
+Future<void> showReturnMaterial(BuildContext context, MatTrkPostDetail matTrkPostDetail, MachineDetails machineDetails) async {
   Future.delayed(
     const Duration(milliseconds: 50),
     () {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     },
   );
   return showDialog<void>(
@@ -35,8 +35,7 @@ Future<void> showReturnMaterial(
 class ReturnRawmaterial extends StatefulWidget {
   MatTrkPostDetail matTrkPostDetail;
   MachineDetails machineDetails;
-  ReturnRawmaterial({Key? key, required this.matTrkPostDetail, required this.machineDetails})
-      : super(key: key);
+  ReturnRawmaterial({Key? key, required this.matTrkPostDetail, required this.machineDetails}) : super(key: key);
 
   @override
   _ReturnRawmaterialState createState() => _ReturnRawmaterialState();
@@ -126,8 +125,7 @@ class _ReturnRawmaterialState extends State<ReturnRawmaterial> {
                         LoadingButton(
                           loading: loading,
                           style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith((states) => Colors.green),
+                            backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.green),
                           ),
                           loadingChild: Container(
                             height: 25,

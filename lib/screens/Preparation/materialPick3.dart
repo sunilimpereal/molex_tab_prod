@@ -45,7 +45,7 @@
 //     Future.delayed(
 //       const Duration(milliseconds: 100),
 //       () {
-//         SystemChannels.textInput.invokeMethod('TextInput.hide');
+//         SystemChannels.textInput.invokeMethod(keyboardType);
 //       },
 //     );
 //     items.add(ItemPart(
@@ -101,7 +101,7 @@
 //     //   checkTrackNumber(trackingNumber);
 //     // }
 //     if(!_qty.hasFocus){
-//          SystemChannels.textInput.invokeMethod('TextInput.hide');
+//          SystemChannels.textInput.invokeMethod(keyboardType);
 //     }
 //     return Scaffold(
 //       appBar: AppBar(
@@ -252,7 +252,7 @@
 //                                 const Duration(milliseconds: 100),
 //                                 () {
 //                                   SystemChannels.textInput
-//                                       .invokeMethod('TextInput.hide');
+//                                       .invokeMethod(keyboardType);
 //                                 },
 //                               );
 //                             }
@@ -265,7 +265,7 @@
 //                         });
 //                       },
 //                       onTap: () {
-//                         SystemChannels.textInput.invokeMethod('TextInput.hide');
+//                         SystemChannels.textInput.invokeMethod(keyboardType);
 //                       },
 //                       decoration: new InputDecoration(
 //                         labelText: "Part No.",
@@ -302,7 +302,7 @@
 //                               const Duration(milliseconds: 100),
 //                               () {
 //                                 SystemChannels.textInput
-//                                     .invokeMethod('TextInput.hide');
+//                                     .invokeMethod(keyboardType);
 //                               },
 //                             );
 //                           });
@@ -338,7 +338,7 @@
 //                         const Duration(milliseconds: 100),
 //                         () {
 //                           SystemChannels.textInput
-//                               .invokeMethod('TextInput.hide');
+//                               .invokeMethod(keyboardType);
 //                         },
 //                       );
 //                     });
@@ -424,7 +424,7 @@
 //                                 const Duration(milliseconds: 100),
 //                                 () {
 //                                   SystemChannels.textInput
-//                                       .invokeMethod('TextInput.hide');
+//                                       .invokeMethod(keyboardType);
 //                                 },
 //                               );
 //                             }
@@ -471,7 +471,7 @@
 
 //   handleKey(RawKeyEventData key) {
 //     setState(() {
-//       SystemChannels.textInput.invokeMethod('TextInput.hide');
+//       SystemChannels.textInput.invokeMethod(keyboardType);
 //     });
 //   }
 

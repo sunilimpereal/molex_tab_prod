@@ -7,15 +7,14 @@ import 'package:molex/screens/widgets/showBundles.dart';
 import 'package:molex/service/apiService.dart';
 
 import '../../../main.dart';
+import '../../../utils/config.dart';
 
 Future<void> showExtraCrimpingSchedule(
-    {required BuildContext context,
-    required List<CrimpingSchedule> crimpingSchedules,
-    required CrimpingSchedule selectedSchedule}) async {
+    {required BuildContext context, required List<CrimpingSchedule> crimpingSchedules, required CrimpingSchedule selectedSchedule}) async {
   Future.delayed(
     const Duration(milliseconds: 50),
     () {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     },
   );
   return showDialog<void>(
@@ -34,9 +33,7 @@ Future<void> showExtraCrimpingSchedule(
 class ExtraCrimpingScheduls extends StatefulWidget {
   final List<CrimpingSchedule> crimpingSchedules;
   final CrimpingSchedule selectedSchedule;
-  const ExtraCrimpingScheduls(
-      {Key? key, required this.crimpingSchedules, required this.selectedSchedule})
-      : super(key: key);
+  const ExtraCrimpingScheduls({Key? key, required this.crimpingSchedules, required this.selectedSchedule}) : super(key: key);
 
   @override
   _ExtraCrimpingSchedulsState createState() => _ExtraCrimpingSchedulsState();
@@ -67,10 +64,8 @@ class _ExtraCrimpingSchedulsState extends State<ExtraCrimpingScheduls> {
   }
 
   Widget showSchedules() {
-    TextStyle dataTextStyle =
-        TextStyle(fontSize: 12, fontWeight: FontWeight.normal, fontFamily: fonts.openSans);
-    TextStyle headingTextStyle =
-        TextStyle(fontSize: 12, fontWeight: FontWeight.w600, fontFamily: fonts.openSans);
+    TextStyle dataTextStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.normal, fontFamily: fonts.openSans);
+    TextStyle headingTextStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.w600, fontFamily: fonts.openSans);
     return Container(
         child: Column(
       children: [
@@ -99,9 +94,7 @@ class _ExtraCrimpingSchedulsState extends State<ExtraCrimpingScheduls> {
             CustomCell(width: 70, child: Text('Wire Color', style: headingTextStyle)),
             CustomCell(width: 55, child: Text('AWG', style: headingTextStyle)),
           ],
-          rows: widget.crimpingSchedules
-              .where((element) => element.scheduleId == widget.selectedSchedule.scheduleId)
-              .map((e) {
+          rows: widget.crimpingSchedules.where((element) => element.scheduleId == widget.selectedSchedule.scheduleId).map((e) {
             return CustomRow(cells: [
               CustomCell(width: 85, child: Text('${e.purchaseOrder}', style: headingTextStyle)),
               CustomCell(width: 85, child: Text('${e.finishedGoods}', style: headingTextStyle)),
@@ -123,8 +116,7 @@ class _ExtraCrimpingSchedulsState extends State<ExtraCrimpingScheduls> {
                         awg: int.parse(e.awg)),
                     builder: (c, snapshotA) {
                       if (snapshotA.connectionState == ConnectionState.waiting) return Text("...");
-                      if (!snapshotA.hasData && snapshotA.connectionState == ConnectionState.done)
-                        return Text("error A");
+                      if (!snapshotA.hasData && snapshotA.connectionState == ConnectionState.done) return Text("error A");
 
                       return FutureBuilder<CableTerminalB?>(
                         future: ApiService().getCableTerminalB(
@@ -135,19 +127,14 @@ class _ExtraCrimpingSchedulsState extends State<ExtraCrimpingScheduls> {
                             color: e.wireColour,
                             awg: int.parse(e.awg)),
                         builder: (c, snapshotB) {
-                          if (snapshotB.connectionState == ConnectionState.waiting)
-                            return Text("...");
-                          if (!snapshotB.hasData &&
-                              snapshotB.connectionState == ConnectionState.done)
-                            return Text("error B");
+                          if (snapshotB.connectionState == ConnectionState.waiting) return Text("...");
+                          if (!snapshotB.hasData && snapshotB.connectionState == ConnectionState.done) return Text("error B");
 
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Crimp From : ${snapshotA.data!.processType}',
-                                  style: headingTextStyle.copyWith(fontSize: 11.5)),
-                              Text('Crimp To : ${snapshotB.data!.processType}',
-                                  style: headingTextStyle.copyWith(fontSize: 11.5)),
+                              Text('Crimp From : ${snapshotA.data!.processType}', style: headingTextStyle.copyWith(fontSize: 11.5)),
+                              Text('Crimp To : ${snapshotB.data!.processType}', style: headingTextStyle.copyWith(fontSize: 11.5)),
                             ],
                           );
                         },
@@ -169,8 +156,7 @@ class _ExtraCrimpingSchedulsState extends State<ExtraCrimpingScheduls> {
                         awg: int.parse(e.awg)),
                     builder: (c, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) return Text("...");
-                      if (!snapshot.hasData && snapshot.connectionState == ConnectionState.done)
-                        return Text("error");
+                      if (!snapshot.hasData && snapshot.connectionState == ConnectionState.done) return Text("error");
 
                       return Text('${snapshot.data!.terminalPart}', style: headingTextStyle);
                     },
@@ -187,8 +173,7 @@ class _ExtraCrimpingSchedulsState extends State<ExtraCrimpingScheduls> {
                         awg: int.parse(e.awg)),
                     builder: (c, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) return Text("...");
-                      if (!snapshot.hasData && snapshot.connectionState == ConnectionState.done)
-                        return Text("error");
+                      if (!snapshot.hasData && snapshot.connectionState == ConnectionState.done) return Text("error");
 
                       return Text('${snapshot.data!.terminalPart}', style: headingTextStyle);
                     },

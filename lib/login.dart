@@ -4,6 +4,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:lottie/lottie.dart';
+import 'package:molex/utils/config.dart';
 import 'model_api/login_model.dart';
 // import 'package:lottie/lottie.dart';
 import 'package:molex/Machine_Id.dart';
@@ -31,11 +32,11 @@ class _LoginScanState extends State<LoginScan> {
     apiService = new ApiService();
     _textNode.requestFocus();
     SystemChrome.setEnabledSystemUIOverlays([]);
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     Future.delayed(
       const Duration(milliseconds: 10),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     super.initState();
@@ -49,16 +50,16 @@ class _LoginScanState extends State<LoginScan> {
 
   handleKey(RawKeyEventData key) {
     // setState(() {
-    //   SystemChannels.textInput.invokeMethod('TextInput.hide');
+    //   SystemChannels.textInput.invokeMethod(keyboardType);
     // });
   }
   TextEditingController scanController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     SystemChrome.setEnabledSystemUIOverlays([]);
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     return Scaffold(
       backgroundColor: Color(0xffE2BDA6),
       body: Center(
@@ -80,10 +81,7 @@ class _LoginScanState extends State<LoginScan> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                   child: Container(
                     width: 350,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        boxShadow: []),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(10)), boxShadow: []),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
@@ -111,8 +109,7 @@ class _LoginScanState extends State<LoginScan> {
                               : Container(
                                   width: 280,
                                 ),
-                          Lottie.asset('assets/lottie/scan-barcode.json',
-                              width: 280, fit: BoxFit.cover),
+                          Lottie.asset('assets/lottie/scan-barcode.json', width: 280, fit: BoxFit.cover),
                           Text(
                             'Scan Id Card to Login',
                             style: TextStyle(
@@ -139,19 +136,16 @@ class _LoginScanState extends State<LoginScan> {
                                 style: ButtonStyle(
                                   shadowColor: MaterialStateProperty.resolveWith<Color>(
                                     (Set<MaterialState> states) {
-                                      if (states.contains(MaterialState.pressed))
-                                        return Colors.white;
+                                      if (states.contains(MaterialState.pressed)) return Colors.white;
                                       return Colors.white; // Use the component's default.
                                     },
                                   ),
-                                  elevation: MaterialStateProperty.resolveWith<double>(
-                                      (Set<MaterialState> states) {
+                                  elevation: MaterialStateProperty.resolveWith<double>((Set<MaterialState> states) {
                                     return 10;
                                   }),
                                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                     (Set<MaterialState> states) {
-                                      if (states.contains(MaterialState.pressed))
-                                        return Colors.green;
+                                      if (states.contains(MaterialState.pressed)) return Colors.green;
                                       return Colors.red; // Use the component's default.
                                     },
                                   ),
@@ -211,7 +205,7 @@ class _LoginScanState extends State<LoginScan> {
                                     loginScan(context);
                                   },
                                   onTap: () {
-                                    SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                    SystemChannels.textInput.invokeMethod(keyboardType);
                                   },
                                   controller: _textController,
                                   autofocus: true,
@@ -251,9 +245,7 @@ class _LoginScanState extends State<LoginScan> {
             child: Padding(
               padding: const EdgeInsets.all(30.0),
               child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.5),
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                decoration: BoxDecoration(color: Colors.white.withOpacity(0.5), borderRadius: BorderRadius.all(Radius.circular(10))),
                 child: Column(
                   children: [
                     Padding(
@@ -335,14 +327,12 @@ class _LoginScanState extends State<LoginScan> {
               child: Stack(
                 children: [
                   Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.5),
-                        borderRadius: BorderRadius.all(Radius.circular(2))),
+                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.5), borderRadius: BorderRadius.all(Radius.circular(2))),
                     child: Row(
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text("v 1.0.0+86"),
+                          child: Text("v 1.0.0+90"),
                         )
                       ],
                     ),
@@ -399,8 +389,7 @@ class _LoginScanState extends State<LoginScan> {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      barcodeScanRes =
-          await FlutterBarcodeScanner.scanBarcode("#ff6666", "Cancel", true, ScanMode.BARCODE);
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode("#ff6666", "Cancel", true, ScanMode.BARCODE);
       print(barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';

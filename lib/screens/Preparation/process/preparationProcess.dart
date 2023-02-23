@@ -7,6 +7,7 @@ import 'package:molex/screens/Preparation/process/preparationInfo.dart';
 
 import '../../../model_api/Transfer/postgetBundleMaster.dart';
 import '../../../model_api/process1/getBundleListGl.dart';
+import '../../../utils/config.dart';
 import '../../widgets/alertDialog/alertDialogVI.dart';
 import '../../../model_api/Preparation/getpreparationSchedule.dart';
 import '../../../model_api/Preparation/postPreparationDetail.dart';
@@ -93,30 +94,13 @@ class _PreparationprocessState extends State<Preparationprocess> {
   int terminalTo = 0;
   late CableTerminalA terminalA;
   late CableTerminalB terminalB;
-  getTerminal(
-      {required String fgNumber,
-      required String cablePtNo,
-      required String length,
-      required String color,
-      required int awg}) {
+  getTerminal({required String fgNumber, required String cablePtNo, required String length, required String color, required int awg}) {
     ApiService apiService = new ApiService();
     apiService
-        .getCableTerminalA(
-            isCrimping: false,
-            fgpartNo: fgNumber,
-            cablepartno: cablePtNo,
-            length: length,
-            color: color,
-            awg: awg)
+        .getCableTerminalA(isCrimping: false, fgpartNo: fgNumber, cablepartno: cablePtNo, length: length, color: color, awg: awg)
         .then((termiA) {
       apiService
-          .getCableTerminalB(
-              isCrimping: false,
-              fgpartNo: fgNumber,
-              cablepartno: cablePtNo,
-              length: length,
-              color: color,
-              awg: awg)
+          .getCableTerminalB(isCrimping: false, fgpartNo: fgNumber, cablepartno: cablePtNo, length: length, color: color, awg: awg)
           .then((termiB) {
         setState(() {
           terminalA = termiA!;
@@ -134,7 +118,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
         backgroundColor: Colors.white,
@@ -234,7 +218,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
   }
 
   Widget main(Status status) {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     switch (status) {
       case Status.dash:
         return Container(
@@ -270,13 +254,10 @@ class _PreparationprocessState extends State<Preparationprocess> {
         P3ScheduleDetailWIP(
           schedule: PreparationSchedule(
               orderId: preparationList[selectedindex].bundleDetail.orderId.toString(),
-              finishedGoodsNumber:
-                  preparationList[selectedindex].bundleDetail.finishedGoodsPart.toString(),
+              finishedGoodsNumber: preparationList[selectedindex].bundleDetail.finishedGoodsPart.toString(),
               scheduledId: preparationList[selectedindex].bundleDetail.scheduledId.toString(),
-              cablePartNumber:
-                  preparationList[selectedindex].bundleDetail.cablePartNumber.toString(),
-              length:
-                  preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm.toString(),
+              cablePartNumber: preparationList[selectedindex].bundleDetail.cablePartNumber.toString(),
+              length: preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm.toString(),
               process: preparationList[selectedindex].bundleDetail.updateFromProcess,
               color: preparationList[selectedindex].bundleDetail.color,
               scheduledQuantity: ""),
@@ -299,13 +280,10 @@ class _PreparationprocessState extends State<Preparationprocess> {
             Container(
               child: FutureBuilder(
                   future: apiService.getCableTerminalA(
-                      fgpartNo:
-                          preparationList[selectedindex].bundleDetail.finishedGoodsPart.toString(),
-                      cablepartno:
-                          preparationList[selectedindex].bundleDetail.cablePartNumber.toString(),
+                      fgpartNo: preparationList[selectedindex].bundleDetail.finishedGoodsPart.toString(),
+                      cablepartno: preparationList[selectedindex].bundleDetail.cablePartNumber.toString(),
                       isCrimping: false,
-                      length:
-                          "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
+                      length: "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
                       color: "${preparationList[selectedindex].bundleDetail.color}",
                       awg: int.parse(
                         preparationList[selectedindex].bundleDetail.awg,
@@ -321,9 +299,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                     });
 
                     if (snapshot.hasData) {
-                      return process1(
-                          'From Process Unsheathing Length : ${cableterminalA!.unsheathingLength}',
-                          0.30);
+                      return process1('From Process Unsheathing Length : ${cableterminalA!.unsheathingLength}', 0.30);
                     } else {
                       return process1('From Process Unsheathing Length :', 0.325);
                     }
@@ -349,14 +325,11 @@ class _PreparationprocessState extends State<Preparationprocess> {
                   awg: int.parse(
                     preparationList[selectedindex].bundleDetail.awg ?? '0',
                   ),
-                  cablePartNo:
-                      preparationList[selectedindex].bundleDetail.cablePartNumber.toString(),
+                  cablePartNo: preparationList[selectedindex].bundleDetail.cablePartNumber.toString(),
                   color: "${preparationList[selectedindex].bundleDetail.color}",
                   context: context,
-                  fgNumber:
-                      preparationList[selectedindex].bundleDetail.finishedGoodsPart.toString(),
-                  length:
-                      "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
+                  fgNumber: preparationList[selectedindex].bundleDetail.finishedGoodsPart.toString(),
+                  length: "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
                   terminalFrom: terminalFrom,
                   terminalTo: terminalTo,
                 );
@@ -406,12 +379,9 @@ class _PreparationprocessState extends State<Preparationprocess> {
             FutureBuilder(
                 future: apiService.getCableTerminalB(
                     isCrimping: false,
-                    fgpartNo:
-                        preparationList[selectedindex].bundleDetail.finishedGoodsPart.toString(),
-                    cablepartno:
-                        preparationList[selectedindex].bundleDetail.cablePartNumber.toString(),
-                    length:
-                        "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
+                    fgpartNo: preparationList[selectedindex].bundleDetail.finishedGoodsPart.toString(),
+                    cablepartno: preparationList[selectedindex].bundleDetail.cablePartNumber.toString(),
+                    length: "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
                     color: "${preparationList[selectedindex].bundleDetail.color}",
                     awg: int.parse(
                       preparationList[selectedindex].bundleDetail.awg ?? '0',
@@ -428,9 +398,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                       }
                     });
 
-                    return process1(
-                        'To Process Unsheathing Length : ${cableTerminalB!.unsheathingLength} ',
-                        0.30);
+                    return process1('To Process Unsheathing Length : ${cableTerminalB!.unsheathingLength} ', 0.30);
                   } else {
                     return process1('To Process Unsheathing Length : ', 0.325);
                   }
@@ -477,8 +445,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                       children: [
                         Text(
                           p1,
-                          style:
-                              TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: ''),
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: ''),
                         ),
                         SizedBox(width: 20),
                         Text(
@@ -566,8 +533,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                       children: [
                         Text(
                           p1,
-                          style:
-                              TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: ''),
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: ''),
                         ),
                         SizedBox(width: 20),
                       ],
@@ -584,7 +550,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
   }
 
   Widget scanUserAndBundle() {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -598,7 +564,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
   }
 
   Widget scanbundleidpop(int selectedindex) {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -619,24 +585,15 @@ class _PreparationprocessState extends State<Preparationprocess> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: feild(
-                            heading: "Bundle Id",
-                            value: "${preparationList[selectedindex].bundleId}",
-                            width: 0.12),
+                        child: feild(heading: "Bundle Id", value: "${preparationList[selectedindex].bundleId}", width: 0.12),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: feild(
-                            heading: "Bundle Qty",
-                            value: "${preparationList[selectedindex].bundleDetail.bundleQuantity}",
-                            width: 0.12),
+                        child: feild(heading: "Bundle Qty", value: "${preparationList[selectedindex].bundleDetail.bundleQuantity}", width: 0.12),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: feild(
-                            heading: "Rejected Qty",
-                            value: "${rejectedQtyController.text}",
-                            width: 0.12),
+                        child: feild(heading: "Rejected Qty", value: "${rejectedQtyController.text}", width: 0.12),
                       ),
                       // Padding(
                       //   padding: const EdgeInsets.all(8.0),
@@ -673,16 +630,13 @@ class _PreparationprocessState extends State<Preparationprocess> {
                               quantity('Strip Nick mark / blade mark', 10, stripNickController),
                             ]),
                             Column(children: [
-                              quantity('Unsheathing Length less / More', 10,
-                                  unsheathingLengthController),
+                              quantity('Unsheathing Length less / More', 10, unsheathingLengthController),
                               quantity('Drain Wire Cut', 10, drainWirecutController),
                               quantity('Trimming cable Wrong', 10, trimmingCableWrongController),
-                              quantity(
-                                  'Trimming Length less / More', 10, trimmingLengthlessController),
+                              quantity('Trimming Length less / More', 10, trimmingLengthlessController),
                             ]),
                             Column(children: [
-                              quantity(
-                                  'HST Improper Shrinking', 10, hstImproperShrinkingController),
+                              quantity('HST Improper Shrinking', 10, hstImproperShrinkingController),
                               quantity('HST Damage', 10, hstDamageController),
                               quantity('Boot Reverse', 10, bootReverseController),
                               quantity('Boot Damage', 10, bootDamageController),
@@ -705,12 +659,8 @@ class _PreparationprocessState extends State<Preparationprocess> {
                         onPrimary: Colors.white,
                       ),
                       onPressed: () {
-                        if (int.parse(rejectedQtyController.text) <=
-                            preparationList[selectedindex].bundleDetail.bundleQuantity) {
-                          apiService
-                              .postPreparationDetail(
-                                  postPreparationDetail: getPostPreparationDetail())
-                              .then((value) {
+                        if (int.parse(rejectedQtyController.text) <= preparationList[selectedindex].bundleDetail.bundleQuantity) {
+                          apiService.postPreparationDetail(postPreparationDetail: getPostPreparationDetail()).then((value) {
                             if (value) {
                               showtoast(msg: "Preparation Detail Saved");
                               setState(() {
@@ -772,8 +722,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
       bundleQuantity: preparationList[selectedindex].bundleDetail.bundleQuantity,
       passedQuantity: (preparationList[selectedindex].bundleDetail.bundleQuantity) -
           (rejectedQtyController.text == "" ? 0 : int.parse(rejectedQtyController.text)),
-      rejectedQuantity:
-          rejectedQtyController.text == "" ? 0 : int.parse(rejectedQtyController.text),
+      rejectedQuantity: rejectedQtyController.text == "" ? 0 : int.parse(rejectedQtyController.text),
       cableDamage: getInt(cableDamageController),
       //unsheathing length
       //hst improper
@@ -828,28 +777,19 @@ class _PreparationprocessState extends State<Preparationprocess> {
   }
 
   int total() {
-    int total = int.parse(
-            cableDamageController.text.length > 0 ? cableDamageController.text : '0') +
+    int total = int.parse(cableDamageController.text.length > 0 ? cableDamageController.text : '0') +
         int.parse(cablecrosscutController.text.length > 0 ? cablecrosscutController.text : '0') +
         int.parse(stripLengthController.text.length > 0 ? stripLengthController.text : '0') +
-        int.parse(
-            unsheathingLengthController.text.length > 0 ? unsheathingLengthController.text : '0') +
+        int.parse(unsheathingLengthController.text.length > 0 ? unsheathingLengthController.text : '0') +
         int.parse(drainWirecutController.text.length > 0 ? drainWirecutController.text : '0') +
-        int.parse(hstImproperShrinkingController.text.length > 0
-            ? hstImproperShrinkingController.text
-            : '0') +
-        int.parse(trimmingCableWrongController.text.length > 0
-            ? trimmingCableWrongController.text
-            : '0') +
-        int.parse(trimmingLengthlessController.text.length > 0
-            ? trimmingLengthlessController.text
-            : '0') +
+        int.parse(hstImproperShrinkingController.text.length > 0 ? hstImproperShrinkingController.text : '0') +
+        int.parse(trimmingCableWrongController.text.length > 0 ? trimmingCableWrongController.text : '0') +
+        int.parse(trimmingLengthlessController.text.length > 0 ? trimmingLengthlessController.text : '0') +
         int.parse(stripNickController.text.length > 0 ? stripNickController.text : '0') +
         int.parse(hstDamageController.text.length > 0 ? hstDamageController.text : '0') +
         int.parse(bootReverseController.text.length > 0 ? bootReverseController.text : '0') +
         int.parse(bootDamageController.text.length > 0 ? bootDamageController.text : '0') +
-        int.parse(
-            wrongBootInsertionController.text.length > 0 ? wrongBootInsertionController.text : '0');
+        int.parse(wrongBootInsertionController.text.length > 0 ? wrongBootInsertionController.text : '0');
 
     return total;
   }
@@ -866,7 +806,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
   }
 
   Widget button() {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     return Column(
       children: [
         Padding(
@@ -918,8 +858,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                 setState(() {
                   for (String bundle in list) {
                     try {
-                      preparationList.remove(preparationList[
-                          preparationList.indexWhere((element) => element.bundleId == bundle)]);
+                      preparationList.remove(preparationList[preparationList.indexWhere((element) => element.bundleId == bundle)]);
                     } catch (e) {}
                   }
                   list.map((e) {
@@ -956,15 +895,10 @@ class _PreparationprocessState extends State<Preparationprocess> {
       setState(() {
         print("userList $usersList ");
         if (usersList.contains(userId)) {
-          apiService
-              .getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: "")
-              .then((value) {
+          apiService.getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: "").then((value) {
             if (value != null && value.length != 0) {
               BundlesRetrieved bundleData = value[0];
-              if (!preparationList
-                  .map((e) => e.bundleId)
-                  .toList()
-                  .contains(bundleData.bundleIdentification)) {
+              if (!preparationList.map((e) => e.bundleId).toList().contains(bundleData.bundleIdentification)) {
                 if (bundleData.updateFromProcess != "Preparation") {
                   if (bundleData.crimpFromSchId.length < 2 || bundleData.crimpToSchId.length < 2) {
                     if (!donotrepeatalert) {
@@ -1090,7 +1024,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
 
   handleKey(RawKeyEventData key) {
     setState(() {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     });
   }
 
@@ -1120,7 +1054,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                           focusNode: _userScanFocus,
                           controller: _userScanController,
                           onTap: () {
-                            SystemChannels.textInput.invokeMethod('TextInput.hide');
+                            SystemChannels.textInput.invokeMethod(keyboardType);
                           },
                           onSubmitted: (value) {
                             _bundleIdScanFocus.requestFocus();
@@ -1185,7 +1119,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                           focusNode: _bundleIdScanFocus,
                           controller: _bundleIdScanController,
                           onTap: () {
-                            SystemChannels.textInput.invokeMethod('TextInput.hide');
+                            SystemChannels.textInput.invokeMethod(keyboardType);
                           },
                           onSubmitted: (value) {
                             addBundletoPreparation();
@@ -1295,18 +1229,10 @@ class _PreparationprocessState extends State<Preparationprocess> {
                                     selectedindex = preparationList.indexOf(e);
                                     status = Status.rejection;
                                     getTerminal(
-                                        fgNumber: preparationList[selectedindex]
-                                            .bundleDetail
-                                            .finishedGoodsPart
-                                            .toString(),
-                                        cablePtNo: preparationList[selectedindex]
-                                            .bundleDetail
-                                            .cablePartNumber
-                                            .toString(),
-                                        length:
-                                            "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
-                                        color:
-                                            "${preparationList[selectedindex].bundleDetail.color}",
+                                        fgNumber: preparationList[selectedindex].bundleDetail.finishedGoodsPart.toString(),
+                                        cablePtNo: preparationList[selectedindex].bundleDetail.cablePartNumber.toString(),
+                                        length: "${preparationList[selectedindex].bundleDetail.cutLengthSpecificationInmm}",
+                                        color: "${preparationList[selectedindex].bundleDetail.color}",
                                         awg: int.parse(
                                           preparationList[selectedindex].bundleDetail.awg ?? '0',
                                         ));
@@ -1354,7 +1280,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                             transfertobin();
                           },
                           onTap: () {
-                            SystemChannels.textInput.invokeMethod('TextInput.hide');
+                            SystemChannels.textInput.invokeMethod(keyboardType);
                           },
                           controller: _binController,
                           autofocus: true,
@@ -1393,8 +1319,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
                             width: 100,
                             child: ElevatedButton(
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.resolveWith(
-                                      (states) => Colors.redAccent),
+                                  backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.redAccent),
                                 ),
                                 onPressed: transfertobin,
                                 child: Text('Scan Bin ')),
@@ -1424,9 +1349,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
       ]).then((value) {
         if (value != null) {
           BundleTransferToBin bundleTransferToBinTracking = value[0];
-          showtoast(
-              msg:
-                  "Transfered Bundle-${bundleTransferToBinTracking.bundleIdentification} to Bin- ${_binController.text ?? ''}");
+          showtoast(msg: "Transfered Bundle-${bundleTransferToBinTracking.bundleIdentification} to Bin- ${_binController.text ?? ''}");
 
           setState(() {
             status = Status.dash;
@@ -1480,11 +1403,7 @@ class _PreparationprocessState extends State<Preparationprocess> {
     );
   }
 
-  Widget feild1(
-      {required String heading,
-      required String value,
-      required double width,
-      required TextEditingController textEditingController}) {
+  Widget feild1({required String heading, required String value, required double width, required TextEditingController textEditingController}) {
     width = MediaQuery.of(context).size.width * width;
     return Padding(
       padding: const EdgeInsets.all(0.0),

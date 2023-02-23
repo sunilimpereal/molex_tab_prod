@@ -2,6 +2,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../utils/config.dart';
 
 class CrimpPatrolTable extends StatefulWidget {
   @override
@@ -14,10 +15,7 @@ class _CrimpPatrolTableState extends State<CrimpPatrolTable> {
     SystemChrome.setEnabledSystemUIOverlays([]);
     return Container(
       child: Column(
-        children: [
-          header(),
-         TableContent()
-        ],
+        children: [header(), TableContent()],
       ),
     );
   }
@@ -29,9 +27,7 @@ class _CrimpPatrolTableState extends State<CrimpPatrolTable> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-                width: MediaQuery.of(context).size.width * 0.2,
-                child: Text('Characteristics')),
+            child: Container(width: MediaQuery.of(context).size.width * 0.2, child: Text('Characteristics')),
           ),
           Container(
               width: MediaQuery.of(context).size.width * 0.2,
@@ -239,8 +235,7 @@ class _TableContentState extends State<TableContent> {
             ),
             TableItem(
               context: context,
-              name:
-                  'CHECK FOR CRIMP HT NUT, CRIMP SHUT HT NUT,& SHANK HOLDER NUT ARE TIGHTENED',
+              name: 'CHECK FOR CRIMP HT NUT, CRIMP SHUT HT NUT,& SHANK HOLDER NUT ARE TIGHTENED',
               valueFP: crimpOnInsulationFP,
               valueLP: crimpOnInsulationLP,
               valueP: crimpOnInsulationP,
@@ -253,32 +248,14 @@ class _TableContentState extends State<TableContent> {
               valueP: crimpOnInsulationP,
             ),
             timePicker('Time'),
-            fieldsItem(
-                name: "CONDUCTOR CRIMP HEIGHT (CCH)(MICROMETER)",
-                fiels1: "",
-                fiels2: "",
-                fiels3: ""),
-            fieldsItem(
-                name: "INSULATION CRIMP HEIGHT (CH)(VERINIER)",
-                fiels1: "",
-                fiels2: "",
-                fiels3: ""),
-            fieldsItem(
-                name: "CONDUCTOR CRIMP WIDTH - CCW ",
-                fiels1: "",
-                fiels2: "",
-                fiels3: ""),
-            fieldsItem(
-                name:
-                    "INSULATION CRIMP WIDTH -( CRIMP WIDTH - ICW (MAGNA, VENTRA & GM",
-                fiels1: "",
-                fiels2: "",
-                fiels3: ""),
+            fieldsItem(name: "CONDUCTOR CRIMP HEIGHT (CCH)(MICROMETER)", fiels1: "", fiels2: "", fiels3: ""),
+            fieldsItem(name: "INSULATION CRIMP HEIGHT (CH)(VERINIER)", fiels1: "", fiels2: "", fiels3: ""),
+            fieldsItem(name: "CONDUCTOR CRIMP WIDTH - CCW ", fiels1: "", fiels2: "", fiels3: ""),
+            fieldsItem(name: "INSULATION CRIMP WIDTH -( CRIMP WIDTH - ICW (MAGNA, VENTRA & GM", fiels1: "", fiels2: "", fiels3: ""),
             fieldsItem(name: "CUT OFF                      \n                                      ", fiels1: "", fiels2: "", fiels3: ""),
-            fieldsItem(
-                name: "CROSS SECTION\n", fiels1: "", fiels2: "", fiels3: ""),
+            fieldsItem(name: "CROSS SECTION\n", fiels1: "", fiels2: "", fiels3: ""),
             fieldsItem(name: "PULL FORCE\n", fiels1: "", fiels2: "", fiels3: ""),
-            SizedBox(height:50),
+            SizedBox(height: 50),
           ],
         ),
       ),
@@ -291,9 +268,7 @@ class _TableContentState extends State<TableContent> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-                width: MediaQuery.of(context).size.width * 0.2,
-                child: Text('$name')),
+            child: Container(width: MediaQuery.of(context).size.width * 0.2, child: Text('$name')),
           ),
           Container(
             width: MediaQuery.of(context).size.width * 0.2,
@@ -313,9 +288,7 @@ class _TableContentState extends State<TableContent> {
                   },
                 ),
                 Text(
-                  initialTime1.hour.toString() +
-                      ":" +
-                      initialTime1.minute.toString(),
+                  initialTime1.hour.toString() + ":" + initialTime1.minute.toString(),
                   style: TextStyle(fontSize: 18),
                 )
               ],
@@ -339,9 +312,7 @@ class _TableContentState extends State<TableContent> {
                   },
                 ),
                 Text(
-                  initialTime2.hour.toString() +
-                      ":" +
-                      initialTime2.minute.toString(),
+                  initialTime2.hour.toString() + ":" + initialTime2.minute.toString(),
                   style: TextStyle(fontSize: 18),
                 )
               ],
@@ -364,16 +335,14 @@ class _TableContentState extends State<TableContent> {
                     Future.delayed(
                       const Duration(milliseconds: 10),
                       () {
-                        SystemChannels.textInput.invokeMethod('TextInput.hide');
+                        SystemChannels.textInput.invokeMethod(keyboardType);
                       },
                     );
                     FocusScope.of(context).unfocus();
                   },
                 ),
                 Text(
-                  initialTime3.hour.toString() +
-                      ":" +
-                      initialTime3.minute.toString(),
+                  initialTime3.hour.toString() + ":" + initialTime3.minute.toString(),
                   style: TextStyle(fontSize: 18),
                 )
               ],
@@ -384,16 +353,13 @@ class _TableContentState extends State<TableContent> {
     );
   }
 
-  Widget fieldsItem( 
-      {required String name, required String fiels1, required String fiels2, required String fiels3}) {
+  Widget fieldsItem({required String name, required String fiels1, required String fiels2, required String fiels3}) {
     return Container(
       child: Row(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-                width: MediaQuery.of(context).size.width * 0.2,
-                child: Text('$name')),
+            child: Container(width: MediaQuery.of(context).size.width * 0.2, child: Text('$name')),
           ),
           Container(
             width: MediaQuery.of(context).size.width * 0.2,
@@ -416,10 +382,7 @@ class _TableContentState extends State<TableContent> {
                             child: TextField(
                               decoration: new InputDecoration(
                                 hintText: '$fiels1',
-                                hintStyle:  TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500),
-                                
+                                hintStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                                 focusedBorder: InputBorder.none,
                                 enabledBorder: InputBorder.none,
                                 errorBorder: InputBorder.none,
@@ -463,10 +426,7 @@ class _TableContentState extends State<TableContent> {
                             child: TextField(
                               decoration: new InputDecoration(
                                 hintText: '$fiels2',
-                                hintStyle: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500),
-                                
+                                hintStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                                 focusedBorder: InputBorder.none,
                                 enabledBorder: InputBorder.none,
                                 errorBorder: InputBorder.none,
@@ -510,10 +470,7 @@ class _TableContentState extends State<TableContent> {
                             child: TextField(
                               decoration: new InputDecoration(
                                 hintText: '$fiels3',
-                                hintStyle:TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500),
-                                
+                                hintStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                                 focusedBorder: InputBorder.none,
                                 enabledBorder: InputBorder.none,
                                 errorBorder: InputBorder.none,
@@ -588,9 +545,7 @@ class _TableItemState extends State<TableItem> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-                width: MediaQuery.of(context).size.width * 0.2,
-                child: Text('${widget.name}')),
+            child: Container(width: MediaQuery.of(context).size.width * 0.2, child: Text('${widget.name}')),
           ),
           Container(
             width: MediaQuery.of(context).size.width * 0.2,
@@ -600,7 +555,7 @@ class _TableItemState extends State<TableItem> {
                 Radio(
                   value: 1,
                   groupValue: widget.valueFP,
-                  onChanged: (int?a) {
+                  onChanged: (int? a) {
                     print('value $a');
                     onChangedFP(a!);
                   },
@@ -608,7 +563,7 @@ class _TableItemState extends State<TableItem> {
                 Radio(
                   value: 2,
                   groupValue: widget.valueFP,
-                  onChanged: (int?a) {
+                  onChanged: (int? a) {
                     onChangedFP(a!);
                     print('value $a');
                   },
@@ -631,7 +586,7 @@ class _TableItemState extends State<TableItem> {
                 Radio(
                   value: 2,
                   groupValue: widget.valueLP,
-                  onChanged: (int ?a) {
+                  onChanged: (int? a) {
                     onChangedLP(a!);
                   },
                 ),
@@ -646,14 +601,14 @@ class _TableItemState extends State<TableItem> {
                 Radio(
                   value: 1,
                   groupValue: widget.valueP,
-                  onChanged: (int?a) {
+                  onChanged: (int? a) {
                     onChangedP(a!);
                   },
                 ),
                 Radio(
                   value: 2,
                   groupValue: widget.valueP,
-                  onChanged: (int?a) {
+                  onChanged: (int? a) {
                     onChangedP(a!);
                   },
                 ),

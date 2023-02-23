@@ -78,9 +78,7 @@ class _ProcessPageState extends State<ProcessPage> {
       'Cutlength, Crimp To',
       'Cutlength & both Side Stripping',
     ];
-    _chosenValue = items!.contains("${widget.schedule.process}")
-        ? widget.schedule.process
-        : "Crimp From, Cutlength, Crimp To";
+    _chosenValue = items!.contains("${widget.schedule.process}") ? widget.schedule.process : "Crimp From, Cutlength, Crimp To";
 
     getMethod(_chosenValue);
     // _chosenValue = widget.machine.category.contains("Cutting")
@@ -146,7 +144,7 @@ class _ProcessPageState extends State<ProcessPage> {
   @override
   Widget build(BuildContext context) {
     log("null12");
-    // SystemChannels.textInput.invokeMethod('TextInput.hide');
+    // SystemChannels.textInput.invokeMethod(keyboardType);
     return new WillPopScope(
         onWillPop: () async {
           showDialog<bool>(
@@ -374,28 +372,22 @@ class _ProcessPageState extends State<ProcessPage> {
                                             print("pushed");
                                             Future.delayed(Duration.zero, () {
                                               FullyCompleteModel fullyComplete = FullyCompleteModel(
-                                                finishedGoodsNumber:
-                                                    int.parse(widget.schedule.finishedGoodsNumber),
+                                                finishedGoodsNumber: int.parse(widget.schedule.finishedGoodsNumber),
                                                 purchaseOrder: int.parse(widget.schedule.orderId),
                                                 orderId: int.parse(widget.schedule.orderId),
-                                                cablePartNumber:
-                                                    int.parse(widget.schedule.cablePartNumber),
+                                                cablePartNumber: int.parse(widget.schedule.cablePartNumber),
                                                 length: int.parse(widget.schedule.length),
                                                 color: widget.schedule.color,
                                                 scheduledStatus: "Complete",
                                                 scheduledId: int.parse(widget.schedule.scheduledId),
-                                                scheduledQuantity:
-                                                    int.parse(widget.schedule.scheduledQuantity),
-                                                machineIdentification:
-                                                    widget.machine.machineNumber ?? "",
+                                                scheduledQuantity: int.parse(widget.schedule.scheduledQuantity),
+                                                machineIdentification: widget.machine.machineNumber ?? "",
                                                 applicatorChangeover: 0,
                                                 bundleIdentification: '',
                                                 firstPieceAndPatrol: 0,
                                                 //TODO bundle ID
                                               );
-                                              apiService!
-                                                  .post100Complete(fullyComplete)
-                                                  .then((value) {
+                                              apiService!.post100Complete(fullyComplete).then((value) {
                                                 if (value) {
                                                   postCompleteTransfer(
                                                     context: context,
@@ -474,7 +466,7 @@ class _ProcessPageState extends State<ProcessPage> {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {
-        // SystemChannels.textInput.invokeMethod('TextInput.hide');
+        // SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     return showDialog<void>(
@@ -498,7 +490,7 @@ class _ProcessPageState extends State<ProcessPage> {
                   Future.delayed(
                     const Duration(milliseconds: 50),
                     () {
-                      // SystemChannels.textInput.invokeMethod('TextInput.hide');
+                      // SystemChannels.textInput.invokeMethod(keyboardType);
                     },
                   );
                 },
@@ -517,7 +509,7 @@ class _ProcessPageState extends State<ProcessPage> {
 
   //Material Sheet for qty
   Widget terminal() {
-    // SystemChannels.textInput.invokeMethod('TextInput.hide');
+    // SystemChannels.textInput.invokeMethod(keyboardType);
     return Padding(
       padding: const EdgeInsets.only(bottom: 0.0),
       child: Container(
@@ -525,9 +517,7 @@ class _ProcessPageState extends State<ProcessPage> {
         height: MediaQuery.of(context).size.height * 0.17,
         // color: Colors.white,
         child: Row(
-          mainAxisAlignment: widget.machine.category == "Automatic Cutting"
-              ? MainAxisAlignment.start
-              : MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: widget.machine.category == "Automatic Cutting" ? MainAxisAlignment.start : MainAxisAlignment.spaceEvenly,
           children: [
             // terminal A
             Container(
@@ -537,8 +527,7 @@ class _ProcessPageState extends State<ProcessPage> {
                     future: apiService!.getCableTerminalA(
                         isCrimping: false,
                         fgpartNo: widget.schedule.finishedGoodsNumber,
-                        cablepartno:
-                            widget.schedule.cablePartNumber ?? widget.schedule.finishedGoodsNumber,
+                        cablepartno: widget.schedule.cablePartNumber ?? widget.schedule.finishedGoodsNumber,
                         length: widget.schedule.length,
                         color: widget.schedule.color,
                         terminalPartNumberFrom: widget.schedule.terminalPartNumberFrom,
@@ -557,14 +546,8 @@ class _ProcessPageState extends State<ProcessPage> {
                             0.35,
                             method.contains('a') ? true : false);
                       } else {
-                        return process(
-                            'From Process',
-                            '',
-                            'Process (Strip Length)(Terminal Part#)Spec-(Crimp Height)(Pull Force)(Cmt)',
-                            '(-)()(-)(-)(-)',
-                            '',
-                            0.325,
-                            method.contains('a') ? true : false);
+                        return process('From Process', '', 'Process (Strip Length)(Terminal Part#)Spec-(Crimp Height)(Pull Force)(Cmt)',
+                            '(-)()(-)(-)(-)', '', 0.325, method.contains('a') ? true : false);
                       }
                     }),
               ),
@@ -585,10 +568,7 @@ class _ProcessPageState extends State<ProcessPage> {
                   builder: (context, snapshot) {
                     CableDetails? cableDetail = snapshot.data as CableDetails?;
                     if (snapshot.hasData) {
-                      return cable(
-                          cableDetails: cableDetail,
-                          width: 0.28,
-                          color: method.contains('c') ? true : false);
+                      return cable(cableDetails: cableDetail, width: 0.28, color: method.contains('c') ? true : false);
                       // process(
                       //     'Cable',
                       //     'Cut Length Spec(mm) -${cableDetail.cutLengthSpec}',
@@ -647,8 +627,7 @@ class _ProcessPageState extends State<ProcessPage> {
   Widget process(String p1, String p2, String p3, String p4, String p5, double width, bool color) {
     return Material(
       elevation: 0,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent)),
       shadowColor: Colors.grey.shade100,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 2.0),
@@ -671,8 +650,7 @@ class _ProcessPageState extends State<ProcessPage> {
                       children: [
                         Text(
                           p1,
-                          style:
-                              TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: ''),
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: ''),
                         ),
                         SizedBox(width: 20),
                         Text(
@@ -716,8 +694,7 @@ class _ProcessPageState extends State<ProcessPage> {
   Widget cable({CableDetails? cableDetails, double? width, bool? color}) {
     return Material(
       elevation: 0,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent)),
       shadowColor: Colors.grey.shade100,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 2.0),
@@ -726,8 +703,7 @@ class _ProcessPageState extends State<ProcessPage> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
           color: color ?? false ? Colors.red.shade50 : Colors.white,
-          border:
-              Border.all(width: 1.5, color: color ?? false ? Colors.red.shade300 : Colors.white),
+          border: Border.all(width: 1.5, color: color ?? false ? Colors.red.shade300 : Colors.white),
         ),
         child: Row(
           children: [
@@ -741,8 +717,7 @@ class _ProcessPageState extends State<ProcessPage> {
                       children: [
                         Text(
                           "Cable",
-                          style:
-                              TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: ''),
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, fontFamily: ''),
                         ),
                         SizedBox(width: 20),
                         Text(
@@ -782,11 +757,7 @@ class _ProcessPageState extends State<ProcessPage> {
                               ),
                               Text(
                                 "${cableDetails.stripLengthFrom} ",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: fonts.openSans,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red),
+                                style: TextStyle(fontSize: 12, fontFamily: fonts.openSans, fontWeight: FontWeight.bold, color: Colors.red),
                               ),
                             ],
                           ),
@@ -799,11 +770,7 @@ class _ProcessPageState extends State<ProcessPage> {
                               ),
                               Text(
                                 "${cableDetails.stripLengthTo}",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: fonts.openSans,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red),
+                                style: TextStyle(fontSize: 12, fontFamily: fonts.openSans, fontWeight: FontWeight.bold, color: Colors.red),
                               ),
                             ],
                           ),
@@ -981,8 +948,7 @@ class _ProcessPageState extends State<ProcessPage> {
             str1,
             style: TextStyle(fontSize: 10),
           ),
-          Text(str2,
-              style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12, color: Colors.black)),
+          Text(str2, style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12, color: Colors.black)),
         ]),
       ),
     );
@@ -1023,9 +989,7 @@ class _ProcessPageState extends State<ProcessPage> {
                           child: Container(
                             height: 30,
                             width: 130,
-                            decoration: BoxDecoration(
-                                image:
-                                    DecorationImage(image: AssetImage("assets/image/$value.png"))),
+                            decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/image/$value.png"))),
                           ),
                         ),
                       ],
@@ -1080,9 +1044,7 @@ class _ProcessPageState extends State<ProcessPage> {
                   child: Container(
                     height: 30,
                     width: 130,
-                    decoration: BoxDecoration(
-                        image:
-                            DecorationImage(image: AssetImage("assets/image/$_chosenValue.png"))),
+                    decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/image/$_chosenValue.png"))),
                   ),
                 ),
               ],
@@ -1090,8 +1052,7 @@ class _ProcessPageState extends State<ProcessPage> {
           );
   }
 
-  Future<void> machineDetail(
-      {required BuildContext context, required MachineDetails machineDetails}) async {
+  Future<void> machineDetail({required BuildContext context, required MachineDetails machineDetails}) async {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {},
@@ -1120,24 +1081,21 @@ class _ProcessPageState extends State<ProcessPage> {
                       Row(
                         children: [
                           Text('Machine Id : ', style: TextStyle(fontSize: 16)),
-                          Text('${machineDetails.machineNumber}',
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                          Text('${machineDetails.machineNumber}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                         ],
                       ),
                       SizedBox(height: 10),
                       Row(
                         children: [
                           Text('Printer Id : ', style: TextStyle(fontSize: 15)),
-                          Text('${machineDetails.printerIp}',
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                          Text('${machineDetails.printerIp}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                         ],
                       ),
                       SizedBox(height: 10),
                       Row(
                         children: [
                           Text('Machine Location :', style: TextStyle(fontSize: 15)),
-                          Text(" ${machineDetails.machineLocation}",
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                          Text(" ${machineDetails.machineLocation}", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                         ],
                       ),
                     ],
@@ -1158,8 +1116,7 @@ class _ProcessPageState extends State<ProcessPage> {
                       Row(
                         children: [
                           Text('Model Name : ', style: TextStyle(fontSize: 16)),
-                          Text('${machineDetails.modelName}',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                          Text('${machineDetails.modelName}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                         ],
                       ),
                       SizedBox(height: 10),
@@ -1188,8 +1145,7 @@ class _ProcessPageState extends State<ProcessPage> {
   }
 }
 
-postCompleteTransfer(
-    {required BuildContext context, required MachineDetails machine, required Employee employee}) {
+postCompleteTransfer({required BuildContext context, required MachineDetails machine, required Employee employee}) {
   ApiService apiService = new ApiService();
 
   apiService.getmachinedetails(machine.machineNumber ?? '').then((value) {

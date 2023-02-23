@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../utils/config.dart';
 
 class CrimpPatrolHeader extends StatefulWidget {
   @override
@@ -30,12 +31,8 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
                 child: Row(
                   children: [
                     feild(heading: "FG number", value: "12346789", width: 0.18),
-                    feild(
-                        heading: "Order Number",
-                        value: "12346789",
-                        width: 0.18),
-                    feild(
-                        heading: "Operator Id", value: "12346789", width: 0.18),
+                    feild(heading: "Order Number", value: "12346789", width: 0.18),
+                    feild(heading: "Operator Id", value: "12346789", width: 0.18),
                     feild(heading: "AWG", value: "12346789", width: 0.18),
                     Container(
                       width: MediaQuery.of(context).size.width * 0.18,
@@ -70,24 +67,11 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
               child: Container(
                 child: Row(
                   children: [
-                    feild(
-                        heading: "Terminal No", value: "12346789", width: 0.18),
-                    feild(
-                        heading: "Material Tracking No",
-                        value: "12346789",
-                        width: 0.18),
-                    feild(
-                        heading: "Material Tracking",
-                        value: "12346789",
-                        width: 0.18),
-                    feild(
-                        heading: "Retention From Spec",
-                        value: "12346789",
-                        width: 0.18),
-                    feild(
-                        heading: "Applicator No",
-                        value: "12346789",
-                        width: 0.18),
+                    feild(heading: "Terminal No", value: "12346789", width: 0.18),
+                    feild(heading: "Material Tracking No", value: "12346789", width: 0.18),
+                    feild(heading: "Material Tracking", value: "12346789", width: 0.18),
+                    feild(heading: "Retention From Spec", value: "12346789", width: 0.18),
+                    feild(heading: "Applicator No", value: "12346789", width: 0.18),
                   ],
                 ),
               ),
@@ -97,14 +81,8 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
               child: Container(
                 child: Row(
                   children: [
-                    feild(
-                        heading: "Cut Off Spec",
-                        value: "12346789",
-                        width: 0.18),
-                    feild(
-                        heading: "Crimp Height Spec",
-                        value: "12346789",
-                        width: 0.18),
+                    feild(heading: "Cut Off Spec", value: "12346789", width: 0.18),
+                    feild(heading: "Crimp Height Spec", value: "12346789", width: 0.18),
                     scanpartolId(),
                     qaApprovalId()
                   ],
@@ -128,14 +106,12 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
           children: [
             Row(
               children: [
-                Text(
-                  heading,
-                  style:  TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade500,
-                    fontWeight: FontWeight.normal,
-                  )),
-                
+                Text(heading,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade500,
+                      fontWeight: FontWeight.normal,
+                    )),
               ],
             ),
             Padding(
@@ -154,9 +130,7 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
                         child: TextField(
                           decoration: new InputDecoration(
                             hintText: heading,
-                            hintStyle:  TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.w500),
-                         
+                            hintStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                             focusedBorder: InputBorder.none,
                             enabledBorder: InputBorder.none,
                             errorBorder: InputBorder.none,
@@ -184,12 +158,12 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
 
   handleKey(RawKeyEventData key) {
     setState(() {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     });
   }
 
   Widget scanpartolId() {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     return Container(
       padding: const EdgeInsets.all(10.0),
       child: Column(
@@ -208,15 +182,14 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
                       Future.delayed(
                         const Duration(milliseconds: 50),
                         () {
-                          SystemChannels.textInput
-                              .invokeMethod('TextInput.hide');
+                          SystemChannels.textInput.invokeMethod(keyboardType);
                         },
                       );
                     },
                     onTap: () {
                       _scanPatrolIdController.clear();
                       setState(() {
-                        SystemChannels.textInput.invokeMethod('TextInput.hide');
+                        SystemChannels.textInput.invokeMethod(keyboardType);
                       });
                     },
                     onChanged: (value) {},
@@ -228,20 +201,16 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
                                     _scanPatrolIdController.clear();
                                   });
                                 },
-                                child: Icon(Icons.clear,
-                                    size: 18, color: Colors.red))
+                                child: Icon(Icons.clear, size: 18, color: Colors.red))
                             : Container(),
                         focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.redAccent, width: 2.0),
+                          borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.grey.shade400, width: 2.0),
+                          borderSide: BorderSide(color: Colors.grey.shade400, width: 2.0),
                         ),
                         labelText: 'Scan Patrol Id',
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 5.0))),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 5.0))),
               ),
             ),
           ),
@@ -252,7 +221,7 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
   }
 
   Widget qaApprovalId() {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     return Container(
       padding: const EdgeInsets.all(10.0),
       child: Column(
@@ -271,15 +240,14 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
                       Future.delayed(
                         const Duration(milliseconds: 50),
                         () {
-                          SystemChannels.textInput
-                              .invokeMethod('TextInput.hide');
+                          SystemChannels.textInput.invokeMethod(keyboardType);
                         },
                       );
                     },
                     onTap: () {
                       _qaApprovalController.clear();
                       setState(() {
-                        SystemChannels.textInput.invokeMethod('TextInput.hide');
+                        SystemChannels.textInput.invokeMethod(keyboardType);
                       });
                     },
                     onChanged: (value) {},
@@ -291,20 +259,16 @@ class _CrimpPatrolHeaderState extends State<CrimpPatrolHeader> {
                                     _scanPatrolIdController.clear();
                                   });
                                 },
-                                child: Icon(Icons.clear,
-                                    size: 18, color: Colors.red))
+                                child: Icon(Icons.clear, size: 18, color: Colors.red))
                             : Container(),
                         focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.redAccent, width: 2.0),
+                          borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.grey.shade400, width: 2.0),
+                          borderSide: BorderSide(color: Colors.grey.shade400, width: 2.0),
                         ),
                         labelText: 'QA Approval ID',
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 5.0))),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 5.0))),
               ),
             ),
           ),

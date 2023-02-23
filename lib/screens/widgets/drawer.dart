@@ -10,7 +10,8 @@ class DrawerWidget extends StatefulWidget {
   Employee employee;
   MachineDetails? machineDetails;
   String type;
-  DrawerWidget({required this.employee, this.machineDetails, required this.type});
+  DrawerWidget(
+      {required this.employee, this.machineDetails, required this.type});
   @override
   _DrawerWidgetState createState() => _DrawerWidgetState();
 }
@@ -30,7 +31,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "v 1.0.0+86",
+                "v 1.0.0+90",
                 style: TextStyle(
                   color: Colors.red,
                   letterSpacing: 2,
@@ -99,7 +100,9 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           width: 200,
                           child: Text("${widget.employee.empId}",
                               style: TextStyle(
-                                  color: Colors.black, fontSize: 15, fontWeight: FontWeight.w500)),
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500)),
                         ),
                       ],
                     ),

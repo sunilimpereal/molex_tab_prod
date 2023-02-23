@@ -84,7 +84,7 @@
 //   @override
 //   Widget build(BuildContext context) {
     
-//     SystemChannels.textInput.invokeMethod('TextInput.hide');
+//     SystemChannels.textInput.invokeMethod(keyboardType);
 //     return Scaffold(
 //       appBar: AppBar(
 //         backgroundColor: Colors.white,
@@ -193,7 +193,7 @@
 //   }
 
 //   Widget main(Status status) {
-//     SystemChannels.textInput.invokeMethod('TextInput.hide');
+//     SystemChannels.textInput.invokeMethod(keyboardType);
 //     switch (status) {
 //       case Status.rejection:
 //         return scanbundleidpop();
@@ -210,7 +210,7 @@
 //   }
 
 //   handleKey(RawKeyEventData key) {
-//     SystemChannels.textInput.invokeMethod('TextInput.hide');
+//     SystemChannels.textInput.invokeMethod(keyboardType);
 //   }
 
 //   Widget scanbundleidpop() {
@@ -382,7 +382,7 @@
 //                         child: TextField(
 //                           onTap: () {
 //                             SystemChannels.textInput
-//                                 .invokeMethod('TextInput.hide');
+//                                 .invokeMethod(keyboardType);
 //                           },
 //                           controller: _scanIdController,
 //                           autofocus: true,
@@ -452,7 +452,7 @@
 //                       child: TextField(
 //                         onTap: () {
 //                           SystemChannels.textInput
-//                               .invokeMethod('TextInput.hide');
+//                               .invokeMethod(keyboardType);
 //                         },
 //                         controller: _scanIdController,
 //                         autofocus: true,

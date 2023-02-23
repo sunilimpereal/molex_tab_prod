@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../main.dart';
+import '../../../utils/config.dart';
 
 Future<void> showBundleAlertCrimping(
-    {required BuildContext context,
-    required Function onDoNotRemindAgain,
-    required String bundleStaus,
-    required Function onSubmitted}) async {
+    {required BuildContext context, required Function onDoNotRemindAgain, required String bundleStaus, required Function onSubmitted}) async {
   Future.delayed(
     const Duration(milliseconds: 50),
     () {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     },
   );
   return showDialog<void>(
@@ -35,9 +33,7 @@ class BundleAlertCrimping extends StatefulWidget {
   String bundleStatus;
   @required
   Function onSubmitted;
-  BundleAlertCrimping(
-      {Key? key, required this.bundleStatus, required this.onDoNotRemindAgain, required this.onSubmitted})
-      : super(key: key);
+  BundleAlertCrimping({Key? key, required this.bundleStatus, required this.onDoNotRemindAgain, required this.onSubmitted}) : super(key: key);
 
   @override
   _BundleAlertCrimpingState createState() => _BundleAlertCrimpingState();
@@ -77,23 +73,20 @@ class _BundleAlertCrimpingState extends State<BundleAlertCrimping> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Bundle Status : ${widget.bundleStatus}",  style: TextStyle(
-                      fontFamily: fonts.openSans,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600),),
+          Text(
+            "Bundle Status : ${widget.bundleStatus}",
+            style: TextStyle(fontFamily: fonts.openSans, fontSize: 18, fontWeight: FontWeight.w600),
+          ),
           SizedBox(
             height: 0,
           ),
           widget.bundleStatus.toLowerCase() != "dropped"
               ? Text(
                   "Bundle Movement is not done! Do you what to process?",
-                  style: TextStyle(
-                      fontFamily: fonts.openSans,
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal),
+                  style: TextStyle(fontFamily: fonts.openSans, fontSize: 16, fontWeight: FontWeight.normal),
                 )
               : Container(),
-               SizedBox(
+          SizedBox(
             height: 0,
           ),
           Container(
@@ -104,8 +97,7 @@ class _BundleAlertCrimpingState extends State<BundleAlertCrimping> {
                 Checkbox(
                     fillColor: MaterialStateProperty.resolveWith<Color>(
                       (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.pressed))
-                          return Colors.green.shade200;
+                        if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
                         return Colors.green.shade400; // Use the component's default.
                       },
                     ),
@@ -142,10 +134,7 @@ class _BundleAlertCrimpingState extends State<BundleAlertCrimping> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       '  Cancel  ',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: fonts.openSans,
-                          fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 16, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
                     ),
                   )),
               ElevatedButton(
@@ -162,11 +151,7 @@ class _BundleAlertCrimpingState extends State<BundleAlertCrimping> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('Continue',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: fonts.openSans,
-                            fontWeight: FontWeight.bold)),
+                    child: Text('Continue', style: TextStyle(fontSize: 16, fontFamily: fonts.openSans, fontWeight: FontWeight.bold)),
                   )),
             ],
           )

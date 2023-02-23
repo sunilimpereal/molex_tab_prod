@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../main.dart';
+import '../../../utils/config.dart';
 
 Future<void> showMultiCoreAlertCrimping(
-    {required BuildContext context,
-    required Function onDoNotRemindAgain,
-    required String cableType,
-    required Function onSubmitted}) async {
+    {required BuildContext context, required Function onDoNotRemindAgain, required String cableType, required Function onSubmitted}) async {
   Future.delayed(
     const Duration(milliseconds: 50),
     () {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     },
   );
   return showDialog<void>(
@@ -36,12 +34,7 @@ class MultiCoreAlertCrimping extends StatefulWidget {
   Function onSubmitted;
   @required
   String cableType;
-  MultiCoreAlertCrimping(
-      {Key? key,
-      required this.onDoNotShowAgain,
-      required this.onSubmitted,
-      required this.cableType})
-      : super(key: key);
+  MultiCoreAlertCrimping({Key? key, required this.onDoNotShowAgain, required this.onSubmitted, required this.cableType}) : super(key: key);
 
   @override
   _BundleAlertCrimpingState createState() => _BundleAlertCrimpingState();
@@ -90,8 +83,7 @@ class _BundleAlertCrimpingState extends State<MultiCoreAlertCrimping> {
           ),
           Text(
             "Bundle type is ${widget.cableType}. Do you what to process?",
-            style:
-                TextStyle(fontFamily: fonts.openSans, fontSize: 16, fontWeight: FontWeight.normal),
+            style: TextStyle(fontFamily: fonts.openSans, fontSize: 16, fontWeight: FontWeight.normal),
           ),
           SizedBox(
             height: 0,
@@ -141,8 +133,7 @@ class _BundleAlertCrimpingState extends State<MultiCoreAlertCrimping> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       '  Cancel  ',
-                      style: TextStyle(
-                          fontSize: 16, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 16, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
                     ),
                   )),
               ElevatedButton(
@@ -159,9 +150,7 @@ class _BundleAlertCrimpingState extends State<MultiCoreAlertCrimping> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('Continue',
-                        style: TextStyle(
-                            fontSize: 16, fontFamily: fonts.openSans, fontWeight: FontWeight.bold)),
+                    child: Text('Continue', style: TextStyle(fontSize: 16, fontFamily: fonts.openSans, fontWeight: FontWeight.bold)),
                   )),
             ],
           )

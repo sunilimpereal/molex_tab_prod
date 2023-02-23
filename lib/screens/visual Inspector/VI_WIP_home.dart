@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../model_api/Transfer/postgetBundleMaster.dart';
 import '../../model_api/process1/getBundleListGl.dart';
+import '../../utils/config.dart';
 import '../widgets/alertDialog/alertDialogVI.dart';
 import '../../main.dart';
 import '../../model_api/Transfer/bundleToBin_model.dart';
@@ -98,30 +99,13 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
 
   late CableTerminalA terminalA;
   late CableTerminalB terminalB;
-  getTerminal(
-      {required String fgNumber,
-      required String cablePtNo,
-      required String length,
-      required String color,
-      required int awg}) {
+  getTerminal({required String fgNumber, required String cablePtNo, required String length, required String color, required int awg}) {
     ApiService apiService = new ApiService();
     apiService
-        .getCableTerminalA(
-            isCrimping: false,
-            fgpartNo: fgNumber,
-            cablepartno: cablePtNo,
-            length: length,
-            color: color,
-            awg: awg)
+        .getCableTerminalA(isCrimping: false, fgpartNo: fgNumber, cablepartno: cablePtNo, length: length, color: color, awg: awg)
         .then((termiA) {
       apiService
-          .getCableTerminalB(
-              isCrimping: false,
-              fgpartNo: fgNumber,
-              cablepartno: cablePtNo,
-              length: length,
-              color: color,
-              awg: awg)
+          .getCableTerminalB(isCrimping: false, fgpartNo: fgNumber, cablepartno: cablePtNo, length: length, color: color, awg: awg)
           .then((termiB) {
         setState(() {
           terminalA = termiA!;
@@ -141,8 +125,8 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
   @override
   Widget build(BuildContext context) {
     log(_locationController.text);
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
+    SystemChannels.textInput.invokeMethod(keyboardType);
     SystemChrome.setEnabledSystemUIOverlays([]);
     return DefaultTabController(
       length: 2,
@@ -310,8 +294,8 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                 setState(() {
                   for (String bundle in list) {
                     try {
-                      viIspectionBundleList.remove(viIspectionBundleList[viIspectionBundleList
-                          .indexWhere((element) => element.bundleIdentification == bundle)]);
+                      viIspectionBundleList
+                          .remove(viIspectionBundleList[viIspectionBundleList.indexWhere((element) => element.bundleIdentification == bundle)]);
                     } catch (e) {}
                   }
                   list.map((e) {
@@ -348,21 +332,13 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
       setState(() {
         print(" UserList $userId $usersList");
         if (usersList.contains(userId)) {
-          apiService
-              .getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: "")
-              .then((value) {
+          apiService.getBundlesInSchedule(postgetBundleMaster: postgetBundleMaste, scheduleID: "").then((value) {
             if (value != null) {
               BundlesRetrieved bundleData = value[0];
-              if (!viIspectionBundleList
-                  .map((e) => e.bundleIdentification)
-                  .toList()
-                  .contains(bundleData.bundleIdentification)) {
-                if (bundleData.updateFromProcess
-                    .toLowerCase()
-                    .contains("visualInspection".toLowerCase())) {
+              if (!viIspectionBundleList.map((e) => e.bundleIdentification).toList().contains(bundleData.bundleIdentification)) {
+                if (bundleData.updateFromProcess.toLowerCase().contains("visualInspection".toLowerCase())) {
                   Fluttertoast.showToast(
-                      msg:
-                          "Visual Inspection already completed for bundle Id ${bundleData.bundleIdentification}",
+                      msg: "Visual Inspection already completed for bundle Id ${bundleData.bundleIdentification}",
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIosWeb: 1,
@@ -514,7 +490,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
 
   handleKey(RawKeyEventData key) {
     setState(() {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     });
   }
 
@@ -524,19 +500,14 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
         int.parse(windowgapController.text.length > 0 ? windowgapController.text : '0') +
         int.parse(exposedStrandsController.text.length > 0 ? exposedStrandsController.text : '0') +
         int.parse(burrCutOffController.text.length > 0 ? burrCutOffController.text : '0') +
-        int.parse(terminalBendCloseddamageController.text.length > 0
-            ? terminalBendCloseddamageController.text
-            : '0') +
-        int.parse(
-            nickMarkStrandcutController.text.length > 0 ? nickMarkStrandcutController.text : '0') +
+        int.parse(terminalBendCloseddamageController.text.length > 0 ? terminalBendCloseddamageController.text : '0') +
+        int.parse(nickMarkStrandcutController.text.length > 0 ? nickMarkStrandcutController.text : '0') +
         int.parse(seamOpenController.text.length > 0 ? seamOpenController.text : '0') +
         int.parse(missCrimpController.text.length > 0 ? missCrimpController.text : '0') +
         int.parse(frontBelMouthController.text.length > 0 ? frontBelMouthController.text : '0') +
         int.parse(backBellMouthController.text.length > 0 ? backBellMouthController.text : '0') +
-        int.parse(
-            insulationCurlingController.text.length > 0 ? insulationCurlingController.text : '0') +
-        int.parse(
-            extructionOnBurrController.text.length > 0 ? extructionOnBurrController.text : '0') +
+        int.parse(insulationCurlingController.text.length > 0 ? insulationCurlingController.text : '0') +
+        int.parse(extructionOnBurrController.text.length > 0 ? extructionOnBurrController.text : '0') +
         int.parse(brushLengthController.text.length > 0 ? brushLengthController.text : '0') +
         int.parse(cabledamageController.text.length > 0 ? cabledamageController.text : '0') +
         int.parse(terminalTwistController.text.length > 0 ? terminalTwistController.text : '0');
@@ -570,7 +541,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                             focusNode: _userScanFocus,
                             controller: _userScanController,
                             onTap: () {
-                              SystemChannels.textInput.invokeMethod('TextInput.hide');
+                              SystemChannels.textInput.invokeMethod(keyboardType);
                             },
                             onSubmitted: (value) {
                               setState(() {
@@ -638,7 +609,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                           focusNode: _bundleIdScanFocus,
                           controller: _bundleIdScanController,
                           onTap: () {
-                            SystemChannels.textInput.invokeMethod('TextInput.hide');
+                            SystemChannels.textInput.invokeMethod(keyboardType);
                           },
                           onSubmitted: (value) {
                             addBundletoList();
@@ -786,15 +757,8 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                         width: MediaQuery.of(context).size.width * 0.65,
                         child: Row(
                           children: [
-                            feild(
-                                heading: "User Id",
-                                value: "${viIspectionBundleList[selectedindex].employeeid}",
-                                width: 0.15),
-                            feild(
-                                heading: "Bundle Id",
-                                value:
-                                    "${viIspectionBundleList[selectedindex].bundleIdentification}",
-                                width: 0.15),
+                            feild(heading: "User Id", value: "${viIspectionBundleList[selectedindex].employeeid}", width: 0.15),
+                            feild(heading: "Bundle Id", value: "${viIspectionBundleList[selectedindex].bundleIdentification}", width: 0.15),
                           ],
                         ),
                       ),
@@ -935,9 +899,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                             children: [
                               Text("Rejected Qty:   "),
                               Text(
-                                rejectedQtyController.text.length == 0
-                                    ? "0"
-                                    : rejectedQtyController.text,
+                                rejectedQtyController.text.length == 0 ? "0" : rejectedQtyController.text,
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                               ),
                             ],
@@ -956,24 +918,18 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                                 loading
                                     ? ElevatedButton(
                                         style: ButtonStyle(
-                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(20.0),
-                                                  side: BorderSide(color: Colors.transparent))),
+                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent))),
                                           backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                             (Set<MaterialState> states) {
-                                              if (states.contains(MaterialState.pressed))
-                                                return Colors.green.shade200;
-                                              return Colors
-                                                  .green.shade500; // Use the component's default.
+                                              if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                                              return Colors.green.shade500; // Use the component's default.
                                             },
                                           ),
                                           overlayColor: MaterialStateProperty.resolveWith<Color>(
                                             (Set<MaterialState> states) {
-                                              if (states.contains(MaterialState.pressed))
-                                                return Colors.green;
-                                              return Colors
-                                                  .green.shade500; // Use the component's default.
+                                              if (states.contains(MaterialState.pressed)) return Colors.green;
+                                              return Colors.green.shade500; // Use the component's default.
                                             },
                                           ),
                                         ),
@@ -986,43 +942,29 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                                         ))
                                     : ElevatedButton(
                                         style: ButtonStyle(
-                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(20.0),
-                                                  side: BorderSide(color: Colors.transparent))),
+                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent))),
                                           backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                             (Set<MaterialState> states) {
-                                              if (states.contains(MaterialState.pressed))
-                                                return Colors.green.shade200;
-                                              return Colors
-                                                  .green.shade500; // Use the component's default.
+                                              if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                                              return Colors.green.shade500; // Use the component's default.
                                             },
                                           ),
                                           overlayColor: MaterialStateProperty.resolveWith<Color>(
                                             (Set<MaterialState> states) {
-                                              if (states.contains(MaterialState.pressed))
-                                                return Colors.green;
-                                              return Colors
-                                                  .green.shade500; // Use the component's default.
+                                              if (states.contains(MaterialState.pressed)) return Colors.green;
+                                              return Colors.green.shade500; // Use the component's default.
                                             },
                                           ),
                                         ),
                                         onPressed: () {
-                                          if (int.parse(rejectedQtyController.text.length == 0
-                                                  ? "0"
-                                                  : rejectedQtyController.text) <=
-                                              int.parse(viIspectionBundleList[selectedindex]
-                                                      .bundleQuantity
-                                                      .toString() ??
-                                                  "0")) {
+                                          if (int.parse(rejectedQtyController.text.length == 0 ? "0" : rejectedQtyController.text) <=
+                                              int.parse(viIspectionBundleList[selectedindex].bundleQuantity.toString() ?? "0")) {
                                             setState(() {
                                               loading = true;
                                             });
 
-                                            apiService
-                                                .postVIinspectedBundle(
-                                                    viInspectedbudle: getVisualInspectedBundle())
-                                                .then((value) {
+                                            apiService.postVIinspectedBundle(viInspectedbudle: getVisualInspectedBundle()).then((value) {
                                               log("Visual inp : ${viIspectionBundleList[selectedindex].bundleQuantity}");
                                               if (value) {
                                                 setState(() {
@@ -1100,46 +1042,27 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
 
   ViInspectedbundle getVisualInspectedBundle() {
     //rejection cases
-    viIspectionBundleList[selectedindex].backBellMouth =
-        int.parse(backBellMouthController.text == '' ? "0" : backBellMouthController.text);
-    viIspectionBundleList[selectedindex].brushLength =
-        int.parse(brushLengthController.text == '' ? "0" : brushLengthController.text);
-    viIspectionBundleList[selectedindex].crimpInslation =
-        int.parse(crimpInslController.text == '' ? "0" : crimpInslController.text);
-    viIspectionBundleList[selectedindex].burrOrCutOff =
-        int.parse(burrCutOffController.text == '' ? "0" : burrCutOffController.text);
-    viIspectionBundleList[selectedindex].seamOpen =
-        int.parse(seamOpenController.text == '' ? "0" : seamOpenController.text);
-    viIspectionBundleList[selectedindex].insulationSlug =
-        int.parse(insulationSlugController.text == '' ? "0" : insulationSlugController.text);
-    viIspectionBundleList[selectedindex].terminalBendOrClosedOrDamage = int.parse(
-        terminalBendCloseddamageController.text == ''
-            ? "0"
-            : terminalBendCloseddamageController.text);
-    viIspectionBundleList[selectedindex].extrusionOnBurr =
-        int.parse(extructionOnBurrController.text == '' ? "0" : extructionOnBurrController.text);
-    viIspectionBundleList[selectedindex].frontBellMouth =
-        int.parse(frontBelMouthController.text == '' ? "0" : frontBelMouthController.text);
+    viIspectionBundleList[selectedindex].backBellMouth = int.parse(backBellMouthController.text == '' ? "0" : backBellMouthController.text);
+    viIspectionBundleList[selectedindex].brushLength = int.parse(brushLengthController.text == '' ? "0" : brushLengthController.text);
+    viIspectionBundleList[selectedindex].crimpInslation = int.parse(crimpInslController.text == '' ? "0" : crimpInslController.text);
+    viIspectionBundleList[selectedindex].burrOrCutOff = int.parse(burrCutOffController.text == '' ? "0" : burrCutOffController.text);
+    viIspectionBundleList[selectedindex].seamOpen = int.parse(seamOpenController.text == '' ? "0" : seamOpenController.text);
+    viIspectionBundleList[selectedindex].insulationSlug = int.parse(insulationSlugController.text == '' ? "0" : insulationSlugController.text);
+    viIspectionBundleList[selectedindex].terminalBendOrClosedOrDamage =
+        int.parse(terminalBendCloseddamageController.text == '' ? "0" : terminalBendCloseddamageController.text);
+    viIspectionBundleList[selectedindex].extrusionOnBurr = int.parse(extructionOnBurrController.text == '' ? "0" : extructionOnBurrController.text);
+    viIspectionBundleList[selectedindex].frontBellMouth = int.parse(frontBelMouthController.text == '' ? "0" : frontBelMouthController.text);
 
-    viIspectionBundleList[selectedindex].missCrimp =
-        int.parse(missCrimpController.text == '' ? "0" : missCrimpController.text);
-    viIspectionBundleList[selectedindex].brushLength =
-        int.parse(brushLengthController.text == '' ? "0" : brushLengthController.text);
-    viIspectionBundleList[selectedindex].windowGap =
-        int.parse(windowgapController.text == '' ? "0" : windowgapController.text);
-    viIspectionBundleList[selectedindex].cableDamage =
-        int.parse(cabledamageController.text == '' ? "0" : cabledamageController.text);
-    viIspectionBundleList[selectedindex].exposedStrands =
-        int.parse(exposedStrandsController.text == '' ? "0" : exposedStrandsController.text);
-    viIspectionBundleList[selectedindex].backBellMouth =
-        int.parse(backBellMouthController.text == '' ? "0" : backBellMouthController.text);
-    viIspectionBundleList[selectedindex].terminalTwist =
-        int.parse(terminalTwistController.text == '' ? "0" : terminalTwistController.text);
-    viIspectionBundleList[selectedindex].rejectedQuantity =
-        int.parse(rejectedQtyController.text == '' ? "0" : rejectedQtyController.text);
+    viIspectionBundleList[selectedindex].missCrimp = int.parse(missCrimpController.text == '' ? "0" : missCrimpController.text);
+    viIspectionBundleList[selectedindex].brushLength = int.parse(brushLengthController.text == '' ? "0" : brushLengthController.text);
+    viIspectionBundleList[selectedindex].windowGap = int.parse(windowgapController.text == '' ? "0" : windowgapController.text);
+    viIspectionBundleList[selectedindex].cableDamage = int.parse(cabledamageController.text == '' ? "0" : cabledamageController.text);
+    viIspectionBundleList[selectedindex].exposedStrands = int.parse(exposedStrandsController.text == '' ? "0" : exposedStrandsController.text);
+    viIspectionBundleList[selectedindex].backBellMouth = int.parse(backBellMouthController.text == '' ? "0" : backBellMouthController.text);
+    viIspectionBundleList[selectedindex].terminalTwist = int.parse(terminalTwistController.text == '' ? "0" : terminalTwistController.text);
+    viIspectionBundleList[selectedindex].rejectedQuantity = int.parse(rejectedQtyController.text == '' ? "0" : rejectedQtyController.text);
     viIspectionBundleList[selectedindex].passedQuantity =
-        (viIspectionBundleList[selectedindex].bundleQuantity! -
-            int.parse(rejectedQtyController.text == '' ? "0" : rejectedQtyController.text))!;
+        (viIspectionBundleList[selectedindex].bundleQuantity! - int.parse(rejectedQtyController.text == '' ? "0" : rejectedQtyController.text))!;
     viIspectionBundleList[selectedindex].status = "completed";
     viIspectionBundleList[selectedindex].viCompleted = "1";
     return viIspectionBundleList[selectedindex];
@@ -1169,7 +1092,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                 keyboardType: TextInputType.number,
                 controller: textEditingController,
                 onTap: () {
-                  SystemChannels.textInput.invokeMethod('TextInput.hide');
+                  SystemChannels.textInput.invokeMethod(keyboardType);
                   setState(() {
                     _output = '';
                     maincontroller = textEditingController;
@@ -1215,7 +1138,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                   controller: textEditingController,
                   readOnly: true,
                   onTap: () {
-                    SystemChannels.textInput.invokeMethod('TextInput.hide');
+                    SystemChannels.textInput.invokeMethod(keyboardType);
                     setState(() {
                       _output = '';
                       maincontroller = textEditingController;
@@ -1278,7 +1201,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
   }
 
   Widget binScan(int selectedindex) {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     return Padding(
       padding: const EdgeInsets.all(108.0),
       child: Container(
@@ -1303,12 +1226,12 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                           Future.delayed(
                             const Duration(milliseconds: 50),
                             () {
-                              SystemChannels.textInput.invokeMethod('TextInput.hide');
+                              SystemChannels.textInput.invokeMethod(keyboardType);
                             },
                           );
                         },
                         onTap: () {
-                          SystemChannels.textInput.invokeMethod('TextInput.hide');
+                          SystemChannels.textInput.invokeMethod(keyboardType);
 
                           _binController.clear();
                           setState(() {});
@@ -1376,25 +1299,19 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                             ),
                           ),
                           onPressed: () {
-                            if (_binController.text.length > 0 &&
-                                _locationController.text.length > 0) {
+                            if (_binController.text.length > 0 && _locationController.text.length > 0) {
                               setState(() {
                                 loadingBin = true;
                                 clear();
 
-                                viIspectionBundleList[selectedindex].binId =
-                                    "${_binController.text}";
+                                viIspectionBundleList[selectedindex].binId = "${_binController.text}";
                               });
                               apiService.postTransferBundletoBin(transferBundleToBin: [
                                 TransferBundleToBin(
                                   binIdentification: _binController.text,
                                   userId: widget.employee.empId,
-                                  bundleId:
-                                      viIspectionBundleList[selectedindex].bundleIdentification ??
-                                          '',
-                                  locationId: _locationController.text == ''
-                                      ? ""
-                                      : _locationController.text,
+                                  bundleId: viIspectionBundleList[selectedindex].bundleIdentification ?? '',
+                                  locationId: _locationController.text == '' ? "" : _locationController.text,
                                 )
                               ]).then((value) {
                                 if (value != null) {
@@ -1435,7 +1352,7 @@ class _VIWIP_HomeState extends State<VIWIP_Home> {
                               Future.delayed(
                                 const Duration(milliseconds: 50),
                                 () {
-                                  SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                  SystemChannels.textInput.invokeMethod(keyboardType);
                                 },
                               );
                             } else {

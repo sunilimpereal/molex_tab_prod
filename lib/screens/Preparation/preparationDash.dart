@@ -9,6 +9,7 @@ import '../../Machine_Id.dart';
 import '../../model_api/Preparation/getpreparationSchedule.dart';
 import '../../model_api/login_model.dart';
 import '../../model_api/schedular_model.dart';
+import '../../utils/config.dart';
 import 'process/preparationProcess.dart';
 import '../widgets/time.dart';
 import '../../service/apiService.dart';
@@ -37,10 +38,7 @@ class _PreprationDashState extends State<PreprationDash> {
     SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
       drawer: Drawer(
-        child: DrawerWidget(
-            employee: widget.employee,
-            machineDetails: MachineDetails(machineNumber: "preparation"),
-            type: "process"),
+        child: DrawerWidget(employee: widget.employee, machineDetails: MachineDetails(machineNumber: "preparation"), type: "process"),
       ),
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -140,9 +138,7 @@ class _PreprationDashState extends State<PreprationDash> {
                       child: ElevatedButton(
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: BorderSide(color: Colors.transparent))),
+                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0), side: BorderSide(color: Colors.transparent))),
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
                           if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
@@ -167,8 +163,7 @@ class _PreprationDashState extends State<PreprationDash> {
                           Container(
                             height: 20,
                             width: 20,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(image: AssetImage("assets/image/scan.png"))),
+                            decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/image/scan.png"))),
                           ),
                           SizedBox(width: 5),
                           Text(
@@ -209,7 +204,7 @@ class _PreprationDashState extends State<PreprationDash> {
                     setState(() {});
                   },
                   onTap: () {
-                    SystemChannels.textInput.invokeMethod('TextInput.hide');
+                    SystemChannels.textInput.invokeMethod(keyboardType);
                   },
                   decoration: new InputDecoration(
                     labelText: "FG Part No.",
@@ -230,7 +225,7 @@ class _PreprationDashState extends State<PreprationDash> {
                     setState(() {});
                   },
                   onTap: () {
-                    SystemChannels.textInput.invokeMethod('TextInput.hide');
+                    SystemChannels.textInput.invokeMethod(keyboardType);
                   },
                   decoration: new InputDecoration(
                     labelText: "Order Id.",
@@ -251,7 +246,7 @@ class _PreprationDashState extends State<PreprationDash> {
                     setState(() {});
                   },
                   onTap: () {
-                    SystemChannels.textInput.invokeMethod('TextInput.hide');
+                    SystemChannels.textInput.invokeMethod(keyboardType);
                   },
                   decoration: new InputDecoration(
                     labelText: "Cable Part No.",
@@ -323,8 +318,7 @@ class _SchudleTableState extends State<SchudleTable> {
               future: apiService.getPreparationSchedule(type: "A", machineNo: widget.machineId),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  List<PreparationSchedule>? preparationSchedulelist =
-                      snapshot.data as List<PreparationSchedule>?;
+                  List<PreparationSchedule>? preparationSchedulelist = snapshot.data as List<PreparationSchedule>?;
                   return RefreshIndicator(
                       onRefresh: _onRefresh,
                       child: ListView.builder(

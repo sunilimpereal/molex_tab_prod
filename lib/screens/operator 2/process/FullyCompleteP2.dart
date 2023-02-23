@@ -9,6 +9,7 @@ import '../../../model_api/process1/100Complete_model.dart';
 
 import '../../../model_api/startProcess_model.dart';
 
+import '../../../utils/config.dart';
 import '../../operator/location.dart';
 import '../../widgets/keypad.dart';
 import '../../../service/apiService.dart';
@@ -18,11 +19,7 @@ class FullCompleteP2 extends StatefulWidget {
   MachineDetails machine;
   CrimpingSchedule schedule;
   Function continueProcess;
-  FullCompleteP2(
-      {required this.employee,
-      required this.machine,
-      required this.schedule,
-      required this.continueProcess});
+  FullCompleteP2({required this.employee, required this.machine, required this.schedule, required this.continueProcess});
   @override
   _FullCompleteP2State createState() => _FullCompleteP2State();
 }
@@ -31,12 +28,9 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
   PostStartProcessP1? postStartprocess;
   TextEditingController mainController = new TextEditingController();
   TextEditingController noRawmaterialController = new TextEditingController();
-  TextEditingController machineBreakdownController =
-      new TextEditingController();
-  TextEditingController applicatorBreakdownController =
-      new TextEditingController();
-  TextEditingController toolingTechnicianNotAvailableController =
-      new TextEditingController();
+  TextEditingController machineBreakdownController = new TextEditingController();
+  TextEditingController applicatorBreakdownController = new TextEditingController();
+  TextEditingController toolingTechnicianNotAvailableController = new TextEditingController();
   TextEditingController noFeedController = new TextEditingController();
 
   // TextEditingController firsrPeicelastPieceController =
@@ -72,16 +66,14 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     return Padding(
       padding: const EdgeInsets.all(3.0),
       child: Material(
         elevation: 5,
         color: Colors.white,
         clipBehavior: Clip.hardEdge,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            side: BorderSide(color: Colors.transparent)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0), side: BorderSide(color: Colors.transparent)),
         child: Container(
           height: 345,
           child: Row(
@@ -123,8 +115,7 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
             Padding(
               padding: const EdgeInsets.all(0.0),
               child: Container(
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                   Text('Crimping Production Report',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -162,14 +153,12 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
                           quantitycell(
                             name: "Applicator BreakDown",
                             quantity: 10,
-                            textEditingController:
-                                applicatorBreakdownController,
+                            textEditingController: applicatorBreakdownController,
                           ),
                           quantitycell(
                             name: "Tooling Technician not available ",
                             quantity: 10,
-                            textEditingController:
-                                toolingTechnicianNotAvailableController,
+                            textEditingController: toolingTechnicianNotAvailableController,
                           ),
                         ],
                       ),
@@ -200,26 +189,19 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
                       child: Container(
                         child: ElevatedButton(
                             style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      side: BorderSide(color: Colors.green))),
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith<Color>(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.green))),
+                              backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.pressed))
-                                    return Colors.white;
-                                  return Colors
-                                      .white; // Use the component's default.
+                                  if (states.contains(MaterialState.pressed)) return Colors.white;
+                                  return Colors.white; // Use the component's default.
                                 },
                               ),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.keyboard_arrow_left,
-                                    color: Colors.green),
+                                Icon(Icons.keyboard_arrow_left, color: Colors.green),
                                 Text(
                                   "Back",
                                   style: TextStyle(color: Colors.green),
@@ -239,19 +221,12 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
                       child: Container(
                         child: ElevatedButton(
                             style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15.0),
-                                      side: BorderSide(
-                                          color: Colors.transparent))),
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith<Color>(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0), side: BorderSide(color: Colors.transparent))),
+                              backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.pressed))
-                                    return Colors.green.shade200;
-                                  return Colors.green
-                                      .shade500; // Use the component's default.
+                                  if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                                  return Colors.green.shade500; // Use the component's default.
                                 },
                               ),
                             ),
@@ -274,30 +249,22 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
                                 //       widget.schedule.bundleQuantityTotal ?? "0",
                                 //   scheduleStatus: "complete",
                                 // );
-                                FullyCompleteModel fullyComplete =
-                                    FullyCompleteModel(
-                                        finishedGoodsNumber:
-                                            widget.schedule.finishedGoods,
-                                        orderId: widget.schedule.purchaseOrder,
-                                        purchaseOrder:
-                                            widget.schedule.purchaseOrder,
-                                        cablePartNumber:
-                                            widget.schedule.cablePartNo,
-                                        length: widget.schedule.length,
-                                        color: widget.schedule.wireColour,
-                                        scheduledStatus: "Complete",
-                                        scheduledId: widget.schedule.scheduleId,
-                                        scheduledQuantity:
-                                            widget.schedule.bundleQuantityTotal,
-                                        machineIdentification:
-                                            widget.machine.machineNumber ?? '',
-                                        //TODO bundle ID
-                                        firstPieceAndPatrol: 0,
-                                        applicatorChangeover: 0,
-                                        bundleIdentification: '');
-                                apiService
-                                    .post100Complete(fullyComplete)
-                                    .then((value) {
+                                FullyCompleteModel fullyComplete = FullyCompleteModel(
+                                    finishedGoodsNumber: widget.schedule.finishedGoods,
+                                    orderId: widget.schedule.purchaseOrder,
+                                    purchaseOrder: widget.schedule.purchaseOrder,
+                                    cablePartNumber: widget.schedule.cablePartNo,
+                                    length: widget.schedule.length,
+                                    color: widget.schedule.wireColour,
+                                    scheduledStatus: "Complete",
+                                    scheduledId: widget.schedule.scheduleId,
+                                    scheduledQuantity: widget.schedule.bundleQuantityTotal,
+                                    machineIdentification: widget.machine.machineNumber ?? '',
+                                    //TODO bundle ID
+                                    firstPieceAndPatrol: 0,
+                                    applicatorChangeover: 0,
+                                    bundleIdentification: '');
+                                apiService.post100Complete(fullyComplete).then((value) {
                                   if (value) {
                                     postCompleteTransfer(
                                       context: context,
@@ -379,8 +346,7 @@ class _FullCompleteP2State extends State<FullCompleteP2> {
     );
   }
 
-  Widget quantity(
-      String title, int quantity, TextEditingController textEditingController) {
+  Widget quantity(String title, int quantity, TextEditingController textEditingController) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 6.0),
       child: Container(

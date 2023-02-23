@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
+import 'package:molex/utils/config.dart';
 import 'model_api/login_model.dart';
 import 'model_api/machinedetails_model.dart';
 import 'screens/Crimping%20Patrol/CrimpingPartrolDash.dart';
@@ -22,7 +23,7 @@ class MachineId extends StatefulWidget {
 class _MachineIdState extends State<MachineId> {
   TextEditingController _textController = new TextEditingController();
   FocusNode _textNode = new FocusNode();
-  late String machineId='';
+  late String machineId = '';
   late ApiService apiService;
   late bool loading;
   @override
@@ -33,7 +34,7 @@ class _MachineIdState extends State<MachineId> {
     Future.delayed(
       const Duration(milliseconds: 100),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     super.initState();
@@ -44,7 +45,7 @@ class _MachineIdState extends State<MachineId> {
     _keyCode = key!.keyLabel.toString(); //keyCode of key event(66 is return )
     print("why does this run twice $_keyCode");
     setState(() {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     });
   }
 
@@ -58,9 +59,9 @@ class _MachineIdState extends State<MachineId> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     SystemChrome.setEnabledSystemUIOverlays([]);
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     return Scaffold(
         backgroundColor: Color(0xffE2BDA6),
         body: Stack(
@@ -73,14 +74,10 @@ class _MachineIdState extends State<MachineId> {
                   Material(
                     elevation: 10,
                     shadowColor: Colors.red,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                     child: Container(
                         width: 350,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            boxShadow: []),
+                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(10)), boxShadow: []),
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Column(children: [
@@ -88,13 +85,12 @@ class _MachineIdState extends State<MachineId> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 "Scan Machine",
-                                style:  TextStyle(
-                                    fontSize: 30,
-                                    color: Colors.red.shade600,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.red.shade600,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              
+                              ),
                             ),
                             loading
                                 ? Container(
@@ -108,9 +104,8 @@ class _MachineIdState extends State<MachineId> {
                                 : Container(
                                     width: 280,
                                   ),
-                            Lottie.asset('assets/lottie/scan-barcode.json',
-                                width: 280, fit: BoxFit.cover),
-                                
+                            Lottie.asset('assets/lottie/scan-barcode.json', width: 280, fit: BoxFit.cover),
+
                             // Text(
                             //   'Scan Machine',
                             //   style: GoogleFonts.openSans(
@@ -124,10 +119,9 @@ class _MachineIdState extends State<MachineId> {
                                 ? Text(
                                     machineId,
                                     style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                      ),
-                                   
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                    ),
                                   )
                                 : Container(
                                     width: 10,
@@ -138,29 +132,19 @@ class _MachineIdState extends State<MachineId> {
                               width: 230,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                  shadowColor:
-                                      MaterialStateProperty.resolveWith<Color>(
+                                  shadowColor: MaterialStateProperty.resolveWith<Color>(
                                     (Set<MaterialState> states) {
-                                      if (states
-                                          .contains(MaterialState.pressed))
-                                        return Colors.white;
-                                      return Colors
-                                          .white; // Use the component's default.
+                                      if (states.contains(MaterialState.pressed)) return Colors.white;
+                                      return Colors.white; // Use the component's default.
                                     },
                                   ),
-                                  elevation:
-                                      MaterialStateProperty.resolveWith<double>(
-                                          (Set<MaterialState> states) {
+                                  elevation: MaterialStateProperty.resolveWith<double>((Set<MaterialState> states) {
                                     return 10;
                                   }),
-                                  backgroundColor:
-                                      MaterialStateProperty.resolveWith<Color>(
+                                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                     (Set<MaterialState> states) {
-                                      if (states
-                                          .contains(MaterialState.pressed))
-                                        return Colors.green;
-                                      return Colors
-                                          .red; // Use the component's default.
+                                      if (states.contains(MaterialState.pressed)) return Colors.green;
+                                      return Colors.red; // Use the component's default.
                                     },
                                   ),
                                 ),
@@ -168,29 +152,22 @@ class _MachineIdState extends State<MachineId> {
                                   machinScan();
                                 },
                                 child: Text(
-                                  'Machine Login' ,
-                                  style:  TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                 
+                                  'Machine Login',
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                                 ),
                               ),
                             ),
                             SizedBox(height: 10),
                             //INSPECTION
                             Container(
-                              height: 40,
-                              width: 230,
-                              child: ElevatedButton(
+                                height: 40,
+                                width: 230,
+                                child: ElevatedButton(
                                   style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color>(
+                                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                       (Set<MaterialState> states) {
-                                        if (states
-                                            .contains(MaterialState.pressed))
-                                          return Colors.green;
-                                        return Colors
-                                            .red; // Use the component's default.
+                                        if (states.contains(MaterialState.pressed)) return Colors.green;
+                                        return Colors.red; // Use the component's default.
                                       },
                                     ),
                                   ),
@@ -206,20 +183,17 @@ class _MachineIdState extends State<MachineId> {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              HomeVisualInspector(
+                                          builder: (context) => HomeVisualInspector(
                                                 employee: widget.employee,
                                               )),
                                     );
                                   },
                                   child: Text(
                                     'Visual Inspection',
-                                    style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  )),
-                           
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                  ),
+                                )),
+
                             //Kitting
                             SizedBox(height: 10),
                             Container(
@@ -227,14 +201,10 @@ class _MachineIdState extends State<MachineId> {
                               width: 230,
                               child: ElevatedButton(
                                   style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color>(
+                                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                       (Set<MaterialState> states) {
-                                        if (states
-                                            .contains(MaterialState.pressed))
-                                          return Colors.green;
-                                        return Colors
-                                            .red; // Use the component's default.
+                                        if (states.contains(MaterialState.pressed)) return Colors.green;
+                                        return Colors.red; // Use the component's default.
                                       },
                                     ),
                                   ),
@@ -251,16 +221,13 @@ class _MachineIdState extends State<MachineId> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => KittingDash(
-                                            employee: widget.employee,
-                                          )),
+                                                employee: widget.employee,
+                                              )),
                                     );
                                   },
                                   child: Text(
                                     'Kitting',
-                                    style:  TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
-                                    
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                                   )),
                             ),
                             //pREPARATION
@@ -269,8 +236,7 @@ class _MachineIdState extends State<MachineId> {
                               child: RawKeyboardListener(
                                   focusNode: FocusNode(),
                                   onKey: (event) {
-                                    if (event
-                                        .isKeyPressed(LogicalKeyboardKey.tab)) {
+                                    if (event.isKeyPressed(LogicalKeyboardKey.tab)) {
                                       machinScan();
                                     }
 
@@ -285,8 +251,7 @@ class _MachineIdState extends State<MachineId> {
                                         machinScan();
                                       },
                                       onTap: () {
-                                        SystemChannels.textInput
-                                            .invokeMethod('TextInput.hide');
+                                        SystemChannels.textInput.invokeMethod(keyboardType);
                                       },
                                       controller: _textController,
                                       autofocus: true,
@@ -324,9 +289,7 @@ class _MachineIdState extends State<MachineId> {
                 top: 20,
                 right: 30,
                 child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.4),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  decoration: BoxDecoration(color: Colors.white.withOpacity(0.4), borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Row(
@@ -343,7 +306,7 @@ class _MachineIdState extends State<MachineId> {
                               ),
                             ),
                             Text(
-                              widget.employee.empId ,
+                              widget.employee.empId,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500,
@@ -356,15 +319,11 @@ class _MachineIdState extends State<MachineId> {
                         Material(
                           elevation: 5,
                           shadowColor: Colors.grey.shade200,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100.0)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
                           child: Container(
                             height: 40,
                             width: 40,
-                            decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(100))),
+                            decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(100))),
                             child: Icon(
                               Icons.person,
                               color: Colors.white,
@@ -506,7 +465,7 @@ class _MachineIdState extends State<MachineId> {
           }
         } else {
           setState(() {
-               _textNode.requestFocus();
+            _textNode.requestFocus();
             loading = false;
           });
           Fluttertoast.showToast(

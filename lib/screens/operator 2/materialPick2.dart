@@ -11,6 +11,7 @@ import '../../model_api/materialTrackingCableDetails_model.dart';
 import '../../model_api/postrawmatList_model.dart';
 import '../../model_api/rawMaterial_modal.dart';
 import '../../models/materialItem.dart';
+import '../../utils/config.dart';
 import '../operator%202/process/process2.dart';
 import '../operator/materialPick.dart';
 import '../utils/loadingButton.dart';
@@ -74,7 +75,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
     Future.delayed(
       const Duration(milliseconds: 100),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
 
@@ -121,12 +122,12 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
   @override
   Widget build(BuildContext context) {
     if (!_qty.hasFocus && !keyBoard) {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     }
     print("key $keyBoard");
     if (!keyBoard) {
       if (!_qty.hasFocus) {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       }
     }
 
@@ -228,9 +229,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
 
             //Raw material
             buildDataRawMaterial(),
-            widget.materialPickType == MaterialPickType.newload
-                ? scannerInput()
-                : scannerInputreload(),
+            widget.materialPickType == MaterialPickType.newload ? scannerInput() : scannerInputreload(),
             // scannerInput(),
 
             //Selected material
@@ -285,7 +284,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                     Future.delayed(
                                       const Duration(milliseconds: 100),
                                       () {
-                                        SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                        SystemChannels.textInput.invokeMethod(keyboardType);
                                       },
                                     );
                                   }
@@ -301,7 +300,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                               setState(() {
                                 keyBoard
                                     ? SystemChannels.textInput.invokeMethod('TextInput.show')
-                                    : SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                    : SystemChannels.textInput.invokeMethod(keyboardType);
                               });
                             },
                             decoration: new InputDecoration(
@@ -347,7 +346,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                   Future.delayed(
                                     const Duration(milliseconds: 100),
                                     () {
-                                      SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                      SystemChannels.textInput.invokeMethod(keyboardType);
                                     },
                                   );
                                 });
@@ -357,7 +356,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                               setState(() {
                                 keyBoard
                                     ? SystemChannels.textInput.invokeMethod('TextInput.show')
-                                    : SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                    : SystemChannels.textInput.invokeMethod(keyboardType);
                               });
                             },
                             onChanged: (value) {
@@ -404,7 +403,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                             Future.delayed(
                               const Duration(milliseconds: 100),
                               () {
-                                SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                SystemChannels.textInput.invokeMethod(keyboardType);
                               },
                             );
                           });
@@ -420,8 +419,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                             ),
                             Text(
                               "${selectedDate.toLocal()}".split(' ')[0],
-                              style: TextStyle(
-                                  fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                              style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
@@ -439,7 +437,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                             setState(() {
                               keyBoard
                                   ? SystemChannels.textInput.invokeMethod('TextInput.show')
-                                  : SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                  : SystemChannels.textInput.invokeMethod(keyboardType);
                             });
                           },
                           focusNode: _qty,
@@ -468,8 +466,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.pressed))
-                                  return Colors.green.shade200;
+                                if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
                                 return Colors.blue; // Use the component's default.
                               },
                             ),
@@ -477,10 +474,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                           onPressed: () {
                             print('rawmaterial = $rawMaterial');
                             setState(() {
-                              if (rawMaterial!
-                                  .map((e) => e.partNunber)
-                                  .toList()
-                                  .contains(partNumber)) {
+                              if (rawMaterial!.map((e) => e.partNunber).toList().contains(partNumber)) {
                                 for (RawMaterial ip in rawMaterial!) {
                                   if (ip.partNunber == partNumber) {
                                     if (!selectdItems.contains(ip)) {
@@ -489,17 +483,14 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                           partDescription: ip.description,
                                           existingQuantity: 0,
                                           schedulerIdentification: "${widget.schedule.scheduleId}",
-                                          date:
-                                              DateFormat("dd-MM-yyyy").format(selectedDate), //TODO
+                                          date: DateFormat("dd-MM-yyyy").format(selectedDate), //TODO
                                           machineIdentification: widget.machine.machineNumber,
                                           finishedGoodsNumber: widget.schedule.finishedGoods,
                                           // purchaseOrder:
                                           //     "${widget.schedule.purchaseOrder}",
                                           partNumber: int.parse(ip.partNunber ?? '0'),
-                                          requiredQuantityOrPiece:
-                                              double.parse(ip.requireQuantity ?? '0'),
-                                          totalScheduledQuantity:
-                                              double.parse(ip.toatalScheduleQuantity ?? '0'),
+                                          requiredQuantityOrPiece: double.parse(ip.requireQuantity ?? '0'),
+                                          totalScheduledQuantity: double.parse(ip.toatalScheduleQuantity ?? '0'),
                                           unitOfMeasurement: ip.uom,
                                           traceabilityNumber: trackingNumber,
                                           scannedQuantity: double.parse(qty),
@@ -520,7 +511,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                       Future.delayed(
                                         const Duration(milliseconds: 100),
                                         () {
-                                          SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                          SystemChannels.textInput.invokeMethod(keyboardType);
                                         },
                                       );
                                     }
@@ -644,7 +635,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                     Future.delayed(
                                       const Duration(milliseconds: 100),
                                       () {
-                                        SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                        SystemChannels.textInput.invokeMethod(keyboardType);
                                       },
                                     );
                                   }
@@ -660,7 +651,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                               setState(() {
                                 keyBoard
                                     ? SystemChannels.textInput.invokeMethod('TextInput.show')
-                                    : SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                    : SystemChannels.textInput.invokeMethod(keyboardType);
                               });
                             },
                             decoration: new InputDecoration(
@@ -706,7 +697,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                   Future.delayed(
                                     const Duration(milliseconds: 100),
                                     () {
-                                      SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                      SystemChannels.textInput.invokeMethod(keyboardType);
                                     },
                                   );
                                 });
@@ -716,7 +707,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                               setState(() {
                                 keyBoard
                                     ? SystemChannels.textInput.invokeMethod('TextInput.show')
-                                    : SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                    : SystemChannels.textInput.invokeMethod(keyboardType);
                               });
                             },
                             onChanged: (value) {
@@ -763,7 +754,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                             Future.delayed(
                               const Duration(milliseconds: 100),
                               () {
-                                SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                SystemChannels.textInput.invokeMethod(keyboardType);
                               },
                             );
                           });
@@ -779,8 +770,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                             ),
                             Text(
                               "${selectedDate.toLocal()}".split(' ')[0],
-                              style: TextStyle(
-                                  fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                              style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
@@ -823,8 +813,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.pressed))
-                                  return Colors.green.shade200;
+                                if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
                                 return Colors.blue; // Use the component's default.
                               },
                             ),
@@ -832,10 +821,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                           onPressed: () {
                             print('rawmaterial = $rawMaterial');
                             setState(() {
-                              if (rawMaterial!
-                                  .map((e) => e.partNunber)
-                                  .toList()
-                                  .contains(partNumber)) {
+                              if (rawMaterial!.map((e) => e.partNunber).toList().contains(partNumber)) {
                                 for (RawMaterial ip in rawMaterial!) {
                                   if (ip.partNunber == partNumber) {
                                     if (!selectdItems.contains(ip)) {
@@ -844,17 +830,14 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                           partDescription: ip.description,
                                           existingQuantity: 0,
                                           schedulerIdentification: "${widget.schedule.scheduleId}",
-                                          date:
-                                              DateFormat("dd-MM-yyyy").format(selectedDate), //TODO
+                                          date: DateFormat("dd-MM-yyyy").format(selectedDate), //TODO
                                           machineIdentification: widget.machine.machineNumber,
                                           finishedGoodsNumber: widget.schedule.finishedGoods,
                                           // purchaseOrder:
                                           //     "${widget.schedule.purchaseOrder}",
                                           partNumber: int.parse(ip.partNunber ?? '0'),
-                                          requiredQuantityOrPiece:
-                                              double.parse(ip.requireQuantity ?? '0'),
-                                          totalScheduledQuantity:
-                                              double.parse(ip.toatalScheduleQuantity ?? "0"),
+                                          requiredQuantityOrPiece: double.parse(ip.requireQuantity ?? '0'),
+                                          totalScheduledQuantity: double.parse(ip.toatalScheduleQuantity ?? "0"),
                                           unitOfMeasurement: ip.uom,
                                           traceabilityNumber: trackingNumber,
                                           scannedQuantity: double.parse(qty),
@@ -875,7 +858,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                       Future.delayed(
                                         const Duration(milliseconds: 100),
                                         () {
-                                          SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                          SystemChannels.textInput.invokeMethod(keyboardType);
                                         },
                                       );
                                     }
@@ -967,9 +950,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
 
   handleKey(RawKeyEventData key) {
     setState(() {
-      keyBoard
-          ? SystemChannels.textInput.invokeMethod('TextInput.show')
-          : SystemChannels.textInput.invokeMethod('TextInput.hide');
+      keyBoard ? SystemChannels.textInput.invokeMethod('TextInput.show') : SystemChannels.textInput.invokeMethod(keyboardType);
     });
   }
 
@@ -978,12 +959,9 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
     List<RawMaterial> newList = [];
     for (RawMaterial rawmat in rawmaterial) {
       if (temp.partNunber == rawmat.partNunber) {
-        temp.requireQuantity = (double.parse(temp.requireQuantity ?? "0") +
-                double.parse(rawmat.requireQuantity ?? '0'))
-            .toString();
-        temp.toatalScheduleQuantity = (double.parse(temp.toatalScheduleQuantity ?? '0') +
-                double.parse(rawmat.toatalScheduleQuantity ?? '0'))
-            .toString();
+        temp.requireQuantity = (double.parse(temp.requireQuantity ?? "0") + double.parse(rawmat.requireQuantity ?? '0')).toString();
+        temp.toatalScheduleQuantity =
+            (double.parse(temp.toatalScheduleQuantity ?? '0') + double.parse(rawmat.toatalScheduleQuantity ?? '0')).toString();
         newList.removeLast();
 
         newList.add(temp);
@@ -1024,9 +1002,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                   var cbList = rawMaterial!.map((e) => e.partNunber.toString()).toList();
                   cbList.add(widget.schedule.cablePartNo.toString());
                   MatTrkPostDetail matTrkPostDetail = new MatTrkPostDetail(
-                      machineId: widget.machine.machineNumber ?? "",
-                      schedulerId: "${widget.schedule.scheduleId}",
-                      cablePartNumbers: cbList);
+                      machineId: widget.machine.machineNumber ?? "", schedulerId: "${widget.schedule.scheduleId}", cablePartNumbers: cbList);
 
                   return FutureBuilder(
                       future: apiService.getMaterialTrackingCableDetail(matTrkPostDetail),
@@ -1063,9 +1039,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                             },
                                             child: Padding(
                                               padding: const EdgeInsets.all(4.0),
-                                              child: Icon(isCollapsedRawMaterial
-                                                  ? Icons.keyboard_arrow_down
-                                                  : Icons.keyboard_arrow_up),
+                                              child: Icon(isCollapsedRawMaterial ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up),
                                             ))
                                       ],
                                     )
@@ -1128,11 +1102,9 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                                     DataCell(GestureDetector(
                                                       onTap: () {
                                                         setState(() {
-                                                          _partNumberController.text =
-                                                              e.partNunber ?? "";
+                                                          _partNumberController.text = e.partNunber ?? "";
                                                           partNumber = e.partNunber ?? '';
-                                                          _qtyController.text =
-                                                              e.toatalScheduleQuantity.toString();
+                                                          _qtyController.text = e.toatalScheduleQuantity.toString();
                                                           qty = e.toatalScheduleQuantity.toString();
                                                         });
                                                       },
@@ -1163,12 +1135,8 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                                     DataCell(Text(
                                                       matDetail?.length != 0
                                                           ? matDetail
-                                                                  ?.firstWhere(
-                                                                      (element) =>
-                                                                          element.cablePartNo ==
-                                                                          e.partNunber,
-                                                                      orElse: () => MaterialDetail(
-                                                                          availableQty: '0'))
+                                                                  ?.firstWhere((element) => element.cablePartNo == e.partNunber,
+                                                                      orElse: () => MaterialDetail(availableQty: '0'))
                                                                   ?.availableQty ??
                                                               '0'.toString()
                                                           : '0',
@@ -1177,12 +1145,8 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                                                     DataCell(Text(
                                                       matDetail?.length != 0
                                                           ? matDetail
-                                                                  ?.firstWhere(
-                                                                      (element) =>
-                                                                          element.cablePartNo ==
-                                                                          e.partNunber,
-                                                                      orElse: () => MaterialDetail(
-                                                                          loadedQty: '0'))
+                                                                  ?.firstWhere((element) => element.cablePartNo == e.partNunber,
+                                                                      orElse: () => MaterialDetail(loadedQty: '0'))
                                                                   ?.loadedQty ??
                                                               '0'.toString()
                                                           : '0',
@@ -1245,9 +1209,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(4.0),
-                          child: Icon(isCollapsedScannedMaterial
-                              ? Icons.keyboard_arrow_down
-                              : Icons.keyboard_arrow_up),
+                          child: Icon(isCollapsedScannedMaterial ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up),
                         ))
                   ],
                 )
@@ -1476,9 +1438,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
               width: width * 0.1,
               child: Center(
                 child: Text(
-                  schedule.scheduleDate == null
-                      ? ""
-                      : DateFormat("dd-MM-yyyy").format(schedule.scheduleDate),
+                  schedule.scheduleDate == null ? "" : DateFormat("dd-MM-yyyy").format(schedule.scheduleDate),
                   style: TextStyle(
                     color: Colors.blue,
                     fontSize: 12,
@@ -1497,7 +1457,7 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     return showDialog<void>(
@@ -1516,15 +1476,14 @@ class _MaterialPickOp2State extends State<MaterialPickOp2> {
             actions: <Widget>[
               ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.resolveWith((states) => Colors.redAccent),
+                    backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.redAccent),
                   ),
                   onPressed: () {
                     Navigator.pop(context);
                     Future.delayed(
                       const Duration(milliseconds: 50),
                       () {
-                        SystemChannels.textInput.invokeMethod('TextInput.hide');
+                        SystemChannels.textInput.invokeMethod(keyboardType);
                       },
                     );
                   },

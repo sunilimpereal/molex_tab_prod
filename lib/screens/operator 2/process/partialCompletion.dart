@@ -7,6 +7,7 @@ import '../../../model_api/login_model.dart';
 import '../../../model_api/machinedetails_model.dart';
 import '../../../model_api/partiallyComplete_model.dart';
 import '../../../model_api/transferLocation_model.dart';
+import '../../../utils/config.dart';
 import '../../operator/location.dart';
 import '../../operator/process/partiallyComplete.dart';
 import '../../widgets/keypad.dart';
@@ -17,8 +18,7 @@ class PartialCompletionP2 extends StatefulWidget {
   MachineDetails machine;
   Function continueProcess;
   CrimpingSchedule schedule;
-  PartialCompletionP2(
-      {required this.machine, required this.employee, required this.continueProcess, required this.schedule});
+  PartialCompletionP2({required this.machine, required this.employee, required this.continueProcess, required this.schedule});
   @override
   _PartialCompletionP2State createState() => _PartialCompletionP2State();
 }
@@ -26,77 +26,50 @@ class PartialCompletionP2 extends StatefulWidget {
 class _PartialCompletionP2State extends State<PartialCompletionP2> {
   TextEditingController firstPatrolController = new TextEditingController();
   TextEditingController spareChangeoverController = new TextEditingController();
-  TextEditingController crimpHeightSettingController =
-      new TextEditingController();
-  TextEditingController resettingCFMProgramController =
-      new TextEditingController();
-  TextEditingController newProgramSettingCVMCFMController =
-      new TextEditingController();
+  TextEditingController crimpHeightSettingController = new TextEditingController();
+  TextEditingController resettingCFMProgramController = new TextEditingController();
+  TextEditingController newProgramSettingCVMCFMController = new TextEditingController();
   TextEditingController airPressureLowController = new TextEditingController();
-  TextEditingController machineTakenforRemovingCVMController =
-      new TextEditingController();
+  TextEditingController machineTakenforRemovingCVMController = new TextEditingController();
   TextEditingController noMaterialController = new TextEditingController();
-  TextEditingController applicatorChangeoverController =
-      new TextEditingController();
-  TextEditingController sinkHeightAdjustmentController =
-      new TextEditingController();
-  TextEditingController feedingAdjustmentController =
-      new TextEditingController();
-  TextEditingController applicatorPositionSettingController =
-      new TextEditingController();
+  TextEditingController applicatorChangeoverController = new TextEditingController();
+  TextEditingController sinkHeightAdjustmentController = new TextEditingController();
+  TextEditingController feedingAdjustmentController = new TextEditingController();
+  TextEditingController applicatorPositionSettingController = new TextEditingController();
   TextEditingController validationController = new TextEditingController();
-  TextEditingController cFACrimpingFaultController =
-      new TextEditingController();
+  TextEditingController cFACrimpingFaultController = new TextEditingController();
   TextEditingController cableEntangleController = new TextEditingController();
   TextEditingController jobTicketIssueController = new TextEditingController();
-  TextEditingController lengthChangeoverController =
-      new TextEditingController();
+  TextEditingController lengthChangeoverController = new TextEditingController();
   TextEditingController terminalBendController = new TextEditingController();
   TextEditingController cutOffBurrIssueController = new TextEditingController();
-  TextEditingController cVMErrorCorrectionController =
-      new TextEditingController();
-  TextEditingController cableFeedingFrontUnitProblemController =
-      new TextEditingController();
-  TextEditingController driftLimitReachedController =
-      new TextEditingController();
+  TextEditingController cVMErrorCorrectionController = new TextEditingController();
+  TextEditingController cableFeedingFrontUnitProblemController = new TextEditingController();
+  TextEditingController driftLimitReachedController = new TextEditingController();
   TextEditingController machineSlowController = new TextEditingController();
-  TextEditingController noPlanforMachineController =
-      new TextEditingController();
-  TextEditingController terminalChangeoverController =
-      new TextEditingController();
+  TextEditingController noPlanforMachineController = new TextEditingController();
+  TextEditingController terminalChangeoverController = new TextEditingController();
   TextEditingController terminalTwistController = new TextEditingController();
-  TextEditingController extrusionBurrIssueController =
-      new TextEditingController();
+  TextEditingController extrusionBurrIssueController = new TextEditingController();
   TextEditingController cFMErrorController = new TextEditingController();
-  TextEditingController supplierTakenforMaintenanceController =
-      new TextEditingController();
-  TextEditingController rollerChangeoverController =
-      new TextEditingController();
-  TextEditingController gripenUnitProblemController =
-      new TextEditingController();
-  TextEditingController technicianNotAvailableController =
-      new TextEditingController();
+  TextEditingController supplierTakenforMaintenanceController = new TextEditingController();
+  TextEditingController rollerChangeoverController = new TextEditingController();
+  TextEditingController gripenUnitProblemController = new TextEditingController();
+  TextEditingController technicianNotAvailableController = new TextEditingController();
   TextEditingController coilChangeoverController = new TextEditingController();
-  TextEditingController bellmouthAdjustmentController =
-      new TextEditingController();
+  TextEditingController bellmouthAdjustmentController = new TextEditingController();
   TextEditingController cameraSettingController = new TextEditingController();
   TextEditingController cVMErrorController = new TextEditingController();
-  TextEditingController lengthVariationsController =
-      new TextEditingController();
+  TextEditingController lengthVariationsController = new TextEditingController();
   TextEditingController powerFailureController = new TextEditingController();
   TextEditingController machineCleaningController = new TextEditingController();
   TextEditingController noOperatorController = new TextEditingController();
   TextEditingController lastPieceController = new TextEditingController();
-  TextEditingController curlingAdjustmentController =
-      new TextEditingController();
-  TextEditingController wireFeedingAdjustmentController =
-      new TextEditingController();
-  TextEditingController cVMProgramReloadingController =
-      new TextEditingController();
-  TextEditingController sensorNotWorkingController =
-      new TextEditingController();
-  TextEditingController preventiveMaintenanceController =
-      new TextEditingController();
+  TextEditingController curlingAdjustmentController = new TextEditingController();
+  TextEditingController wireFeedingAdjustmentController = new TextEditingController();
+  TextEditingController cVMProgramReloadingController = new TextEditingController();
+  TextEditingController sensorNotWorkingController = new TextEditingController();
+  TextEditingController preventiveMaintenanceController = new TextEditingController();
   TextEditingController meetingController = new TextEditingController();
   TextEditingController systemFaultController = new TextEditingController();
   TextEditingController maincontroller = new TextEditingController();
@@ -110,7 +83,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
       const Duration(milliseconds: 200),
       () {
         showReasons();
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     super.initState();
@@ -118,7 +91,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     SystemChrome.setEnabledSystemUIOverlays([]);
     return Padding(
       padding: const EdgeInsets.all(3.0),
@@ -126,9 +99,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
         elevation: 5,
         color: Colors.white,
         clipBehavior: Clip.hardEdge,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            side: BorderSide(color: Colors.transparent)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0), side: BorderSide(color: Colors.transparent)),
         child: Container(
           height: 345,
           child: Row(
@@ -157,7 +128,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
   }
 
   Widget partialCompletion() {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     return Container(
       width: MediaQuery.of(context).size.width * 0.75,
       decoration: BoxDecoration(
@@ -170,34 +141,32 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 15),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                    Column(
                       children: [
-                        Column(
-                          children: [
-                            Container(
-                              width: 260,
-                              child: Row(
-                                children: [
-                                  Text('Partial Completion Reason',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                        fontFamily: fonts.openSans,
-                                      )),
-                                ],
-                              ),
-                            ),
-                            Text('Note: Update Reason in terms of minutes',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                  fontFamily: fonts.openSans,
-                                )),
-                          ],
-                        )
-                      ]),
+                        Container(
+                          width: 260,
+                          child: Row(
+                            children: [
+                              Text('Partial Completion Reason',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    fontFamily: fonts.openSans,
+                                  )),
+                            ],
+                          ),
+                        ),
+                        Text('Note: Update Reason in terms of minutes',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              fontFamily: fonts.openSans,
+                            )),
+                      ],
+                    )
+                  ]),
                 ),
                 SizedBox(width: 10),
                 Padding(
@@ -209,11 +178,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                     child: Container(
                       child: Row(
                         children: [
-                          Text(
-                            'reason',
-                            style: TextStyle(
-                                    color: Colors.blue, fontSize: 14)),
-                          
+                          Text('reason', style: TextStyle(color: Colors.blue, fontSize: 14)),
                           Icon(
                             Icons.edit,
                             color: Colors.blueAccent,
@@ -255,8 +220,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                           quantitycell(
                             name: "Resetting CFM Program",
                             quantity: 10,
-                            textEditingController:
-                                resettingCFMProgramController,
+                            textEditingController: resettingCFMProgramController,
                           ),
                         ],
                       ),
@@ -265,8 +229,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                           quantitycell(
                             name: "New Program Setting CVM/CFM	",
                             quantity: 10,
-                            textEditingController:
-                                newProgramSettingCVMCFMController,
+                            textEditingController: newProgramSettingCVMCFMController,
                           ),
                           quantitycell(
                             name: "Air Pressure Low",
@@ -290,14 +253,12 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                           quantitycell(
                             name: "Applicator Changeover	",
                             quantity: 10,
-                            textEditingController:
-                                applicatorChangeoverController,
+                            textEditingController: applicatorChangeoverController,
                           ),
                           quantitycell(
                             name: "Sink Height Adjustment",
                             quantity: 10,
-                            textEditingController:
-                                sinkHeightAdjustmentController,
+                            textEditingController: sinkHeightAdjustmentController,
                           ),
                           quantitycell(
                             name: "Feeding Adjustment	",
@@ -307,8 +268,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                           quantitycell(
                             name: "Applicator Position Setting		",
                             quantity: 10,
-                            textEditingController:
-                                applicatorPositionSettingController,
+                            textEditingController: applicatorPositionSettingController,
                           ),
                         ],
                       ),
@@ -365,8 +325,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                           quantitycell(
                             name: "Cable Feeding Front Unit Problem",
                             quantity: 10,
-                            textEditingController:
-                                cableFeedingFrontUnitProblemController,
+                            textEditingController: cableFeedingFrontUnitProblemController,
                           ),
                           quantitycell(
                             name: "Drift Limit Reached	",
@@ -414,8 +373,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                           quantitycell(
                             name: "Supplier Taken for Maintenance	",
                             quantity: 10,
-                            textEditingController:
-                                supplierTakenforMaintenanceController,
+                            textEditingController: supplierTakenforMaintenanceController,
                           ),
                           quantitycell(
                             name: "Roller Changeover",
@@ -430,8 +388,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                           quantitycell(
                             name: "Technician Not Available	",
                             quantity: 10,
-                            textEditingController:
-                                technicianNotAvailableController,
+                            textEditingController: technicianNotAvailableController,
                           ),
                         ],
                       ),
@@ -445,8 +402,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                           quantitycell(
                             name: "Bellmouth Adjustment",
                             quantity: 10,
-                            textEditingController:
-                                bellmouthAdjustmentController,
+                            textEditingController: bellmouthAdjustmentController,
                           ),
                           quantitycell(
                             name: "Camera Setting	",
@@ -499,8 +455,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                           quantitycell(
                             name: "Wire Feeding Adjustment",
                             quantity: 10,
-                            textEditingController:
-                                wireFeedingAdjustmentController,
+                            textEditingController: wireFeedingAdjustmentController,
                           ),
                           quantitycell(
                             name: "CVM Program Reloading",
@@ -519,8 +474,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                           quantitycell(
                             name: "Preventive Maintenance	",
                             quantity: 10,
-                            textEditingController:
-                                preventiveMaintenanceController,
+                            textEditingController: preventiveMaintenanceController,
                           ),
                           quantitycell(
                             name: "Meeting	",
@@ -551,19 +505,12 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                         width: 250,
                         child: ElevatedButton(
                             style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(100.0),
-                                      side: BorderSide(color: Colors.green))),
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith<Color>(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0), side: BorderSide(color: Colors.green))),
+                              backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.pressed))
-                                    return Colors.green.shade200;
-                                  return Colors
-                                      .white; // Use the component's default.
+                                  if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                                  return Colors.white; // Use the component's default.
                                 },
                               ),
                             ),
@@ -576,23 +523,16 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                               ),
                             ),
                             onPressed: () {
-                              PostpartiallyComplete postpartiallyComplete =
-                                  new PostpartiallyComplete(
+                              PostpartiallyComplete postpartiallyComplete = new PostpartiallyComplete(
                                 finishedGoods: widget.schedule.finishedGoods,
-                                purchaseOrder:
-                                    widget.schedule.purchaseOrder.toString(),
+                                purchaseOrder: widget.schedule.purchaseOrder.toString(),
                                 orderIdentification: "",
-                                cablePartNumber:
-                                    "${widget.schedule.cablePartNo}",
+                                cablePartNumber: "${widget.schedule.cablePartNo}",
                                 cutLength: "${widget.schedule.length}",
                                 color: widget.schedule.wireColour,
-                                scheduleIdentification:
-                                    widget.schedule.scheduleId,
+                                scheduleIdentification: widget.schedule.scheduleId,
                               );
-                              apiService
-                                  .postpartialComplete(postpartiallyComplete,
-                                      int.parse(widget.schedule.awg))
-                                  .then((value) {
+                              apiService.postpartialComplete(postpartiallyComplete, int.parse(widget.schedule.awg)).then((value) {
                                 if (value) {
                                   widget.continueProcess("scanBundle");
                                 } else {}
@@ -615,19 +555,12 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                         width: 250,
                         child: ElevatedButton(
                             style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(100.0),
-                                      side: BorderSide(color: Colors.green))),
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith<Color>(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0), side: BorderSide(color: Colors.green))),
+                              backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.pressed))
-                                    return Colors.green.shade200;
-                                  return Colors.green.shade500
-                                      ; // Use the component's default.
+                                  if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                                  return Colors.green.shade500; // Use the component's default.
                                 },
                               ),
                             ),
@@ -640,23 +573,16 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                               ),
                             ),
                             onPressed: () {
-                              PostpartiallyComplete postpartiallyComplete =
-                                  new PostpartiallyComplete(
+                              PostpartiallyComplete postpartiallyComplete = new PostpartiallyComplete(
                                 finishedGoods: widget.schedule.finishedGoods,
-                                purchaseOrder:
-                                    widget.schedule.purchaseOrder.toString(),
+                                purchaseOrder: widget.schedule.purchaseOrder.toString(),
                                 orderIdentification: "",
-                                cablePartNumber:
-                                    "${widget.schedule.cablePartNo}",
+                                cablePartNumber: "${widget.schedule.cablePartNo}",
                                 cutLength: "${widget.schedule.length}",
                                 color: widget.schedule.wireColour,
-                                scheduleIdentification:
-                                    widget.schedule.scheduleId,
+                                scheduleIdentification: widget.schedule.scheduleId,
                               );
-                              apiService
-                                  .postpartialComplete(postpartiallyComplete,
-                                      int.parse(widget.schedule.awg))
-                                  .then((value) {
+                              apiService.postpartialComplete(postpartiallyComplete, int.parse(widget.schedule.awg)).then((value) {
                                 if (value) {
                                   postCompleteTransfer(context: context, machine: widget.machine, employee: widget.employee);
                                   // Navigator.push(
@@ -683,10 +609,11 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
     );
   }
 
-  Widget quantitycell(
-      {required String name,
-      required int quantity,
-      required TextEditingController textEditingController,}) {
+  Widget quantitycell({
+    required String name,
+    required int quantity,
+    required TextEditingController textEditingController,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 3.0),
       child: Container(
@@ -700,9 +627,8 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
                 child: TextField(
                   showCursor: false,
                   controller: textEditingController,
-                  
                   onTap: () {
-                    SystemChannels.textInput.invokeMethod('TextInput.hide');
+                    SystemChannels.textInput.invokeMethod(keyboardType);
                     setState(() {
                       _output = '';
                       maincontroller = textEditingController;
@@ -729,7 +655,7 @@ class _PartialCompletionP2State extends State<PartialCompletionP2> {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     return showDialog<void>(

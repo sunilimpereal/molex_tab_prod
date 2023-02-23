@@ -4,11 +4,13 @@
 
 import 'dart:convert';
 
-List<PostCrimpingRejectedDetail> postCrimpingRejectedDetailFromJsonList(String str) =>
+List<PostCrimpingRejectedDetail> postCrimpingRejectedDetailFromJsonList(
+        String str) =>
     List<PostCrimpingRejectedDetail>.from(
         json.decode(str).map((x) => PostCrimpingRejectedDetail.fromJson(x)));
 
-String postCrimpingRejectedDetailToJsonList(List<PostCrimpingRejectedDetail> data) =>
+String postCrimpingRejectedDetailToJsonList(
+        List<PostCrimpingRejectedDetail> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 PostCrimpingRejectedDetail postCrimpingRejectedDetailFromJson(String str) =>
@@ -78,6 +80,9 @@ class PostCrimpingRejectedDetail {
     this.crimpToSchId,
     this.preparationCompleteFlag,
     this.viCompleted,
+    this.halfCurling,
+    this.lockingTapOpenClose,
+    this.terminalDamage,
   });
 
   String? bundleIdentification;
@@ -139,6 +144,9 @@ class PostCrimpingRejectedDetail {
   String? preparationCompleteFlag;
   String? viCompleted;
   String? processType;
+  int? lockingTapOpenClose;
+  int? halfCurling;
+  int? terminalDamage;
 
   factory PostCrimpingRejectedDetail.fromJson(Map<String, dynamic> json) =>
       PostCrimpingRejectedDetail(
@@ -174,7 +182,7 @@ class PostCrimpingRejectedDetail {
         terminalFrom: json["terminalFrom"],
         terminalTo: json["terminalTo"],
         awg: json["awg"],
-        setUpRejections: json["setUpRejections"],
+        setUpRejections: json["setUpRejections"], // cable
         setUpRejectionTerminalFrom: json["setUpRejectionTerminalFrom"],
         setUpRejectionTerminalTo: json["setUpRejectionTerminalTo"],
         cvmRejectionsCable: json["cvmRejectionsCable"],
@@ -201,6 +209,9 @@ class PostCrimpingRejectedDetail {
         crimpToSchId: json["crimpToSchId"],
         preparationCompleteFlag: json["preparationCompleteFlag"],
         viCompleted: json["viCompleted"],
+        lockingTapOpenClose: json["lockingTapOpenClose"],
+        halfCurling: json["halfCurling"],
+        terminalDamage: json["terminalDamage"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -236,7 +247,8 @@ class PostCrimpingRejectedDetail {
         "terminalFrom": terminalFrom ?? 0,
         "terminalTo": terminalTo ?? 0,
         "awg": awg ?? '',
-        "setUpRejections": setUpRejections ?? 0,
+        // "setUpRejection": setUpRejections ?? 0,
+        "setUpRejectionCable": setUpRejections ?? 0,
         "setUpRejectionTerminalFrom": setUpRejectionTerminalFrom ?? 0,
         "setUpRejectionTerminalTo": setUpRejectionTerminalTo ?? 0,
         "cvmRejectionsCable": cvmRejectionsCable ?? 0,
@@ -263,5 +275,8 @@ class PostCrimpingRejectedDetail {
         "crimpToSchId": crimpToSchId ?? '',
         "preparationCompleteFlag": preparationCompleteFlag ?? '0',
         "viCompleted": viCompleted ?? '0',
+        "lockingTapOpenClose": lockingTapOpenClose,
+        "halfCurling": halfCurling,
+        "terminalDamage": terminalDamage,
       };
 }

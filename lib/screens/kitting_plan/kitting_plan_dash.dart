@@ -13,6 +13,7 @@ import 'package:molex/screens/widgets/drawer.dart';
 import 'package:molex/screens/widgets/showBundles.dart';
 import 'package:molex/screens/widgets/time.dart';
 import 'package:molex/service/apiService.dart';
+import 'package:molex/utils/config.dart';
 
 import '../../main.dart';
 
@@ -110,11 +111,7 @@ class _KittingDashState extends State<KittingDash> {
       body: Column(
         children: [
           Row(
-            children: [
-              search(),
-              save(),
-              kittingList.length >= 1 ? displayFgDetails() : Container()
-            ],
+            children: [search(), save(), kittingList.length >= 1 ? displayFgDetails() : Container()],
           ),
           dataTable()
         ],
@@ -228,9 +225,8 @@ class _KittingDashState extends State<KittingDash> {
             ),
             ElevatedButton(
               style: ButtonStyle(
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40.0),
-                    side: BorderSide(color: Colors.transparent))),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(40.0), side: BorderSide(color: Colors.transparent))),
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
                   (Set<MaterialState> states) {
                     if (states.contains(MaterialState.pressed)) return Colors.blue.shade200;
@@ -240,19 +236,15 @@ class _KittingDashState extends State<KittingDash> {
               ),
               onPressed: () {
                 kittingList = [];
-                if (fgNumberController.text.isNotEmpty &&
-                    orderIdController.text.isNotEmpty &&
-                    qtyController.text.isNotEmpty) {
+                if (fgNumberController.text.isNotEmpty && orderIdController.text.isNotEmpty && qtyController.text.isNotEmpty) {
                   setState(() {
                     loading = true;
                   });
                   FocusScope.of(context).unfocus();
                   FocusNode focusNode = FocusNode();
                   focusNode.unfocus();
-                  PostKittingData postKittingData = new PostKittingData(
-                      orderNo: orderId ?? '',
-                      fgNumber: int?.parse(fgNumber ?? "0"),
-                      quantity: int?.parse(qty ?? '0'));
+                  PostKittingData postKittingData =
+                      new PostKittingData(orderNo: orderId ?? '', fgNumber: int?.parse(fgNumber ?? "0"), quantity: int?.parse(qty ?? '0'));
                   apiService!.getkittingDetail(postKittingData).then((value) {
                     //84671404
                     //369100004
@@ -260,8 +252,7 @@ class _KittingDashState extends State<KittingDash> {
                       setState(() {
                         List<KittingEJobDtoList> kitlis = value;
                         for (KittingEJobDtoList kit in kitlis) {
-                          kittingList.add(KittingPost(
-                              kittingEJobDtoList: kit, selectedBundles: getList(kit.bundleMaster)));
+                          kittingList.add(KittingPost(kittingEJobDtoList: kit, selectedBundles: getList(kit.bundleMaster)));
                           log("${kit.bundleMaster.length}");
                         }
                         loading = false;
@@ -363,8 +354,7 @@ class _KittingDashState extends State<KittingDash> {
   }
 
   Widget dataTable() {
-    TextStyle headingStyle =
-        TextStyle(fontSize: 13, fontWeight: FontWeight.w500, fontFamily: fonts.openSans);
+    TextStyle headingStyle = TextStyle(fontSize: 13, fontWeight: FontWeight.w500, fontFamily: fonts.openSans);
     TextStyle dataStyle = TextStyle(
       fontSize: 12,
     );
@@ -409,13 +399,11 @@ class _KittingDashState extends State<KittingDash> {
                 ),
                 CustomCell(
                   width: 120,
-                  child: Text('Selected\nBundles / Bundles Qty',
-                      textAlign: TextAlign.center, style: headingStyle.copyWith(fontSize: 10)),
+                  child: Text('Selected\nBundles / Bundles Qty', textAlign: TextAlign.center, style: headingStyle.copyWith(fontSize: 10)),
                 ),
                 CustomCell(
                   width: 120,
-                  child: Text('Total\nBundles / Bundles Qty',
-                      textAlign: TextAlign.center, style: headingStyle.copyWith(fontSize: 10)),
+                  child: Text('Total\nBundles / Bundles Qty', textAlign: TextAlign.center, style: headingStyle.copyWith(fontSize: 10)),
                 ),
                 CustomCell(
                   width: 70,
@@ -524,15 +512,10 @@ class _KittingDashState extends State<KittingDash> {
 
                     CustomCell(
                         width: 100,
-                        child: Text(
-                            "${getPendingQty(e.kittingEJobDtoList.bundleMaster, e.selectedBundles).abs()}",
+                        child: Text("${getPendingQty(e.kittingEJobDtoList.bundleMaster, e.selectedBundles).abs()}",
                             style: TextStyle(
                                 fontSize: 12,
-                                color: getPendingQty(
-                                            e.kittingEJobDtoList.bundleMaster, e.selectedBundles) <=
-                                        0
-                                    ? Colors.green
-                                    : Colors.red))),
+                                color: getPendingQty(e.kittingEJobDtoList.bundleMaster, e.selectedBundles) <= 0 ? Colors.green : Colors.red))),
                   ]);
                 },
               ).toList(),
@@ -572,7 +555,7 @@ class _KittingDashState extends State<KittingDash> {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     return showDialog<void>(
@@ -598,9 +581,8 @@ class _KittingDashState extends State<KittingDash> {
   Widget save() {
     return ElevatedButton(
         style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(40.0),
-              side: BorderSide(color: Colors.transparent))),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(40.0), side: BorderSide(color: Colors.transparent))),
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
@@ -612,9 +594,7 @@ class _KittingDashState extends State<KittingDash> {
           setState(() {
             loadingSave = true;
           });
-          apiService!
-              .postKittingData(getSaveKitting(kittingList, orderId ?? '', widget.employee.empId))
-              .then((value) {
+          apiService!.postKittingData(getSaveKitting(kittingList, orderId ?? '', widget.employee.empId)).then((value) {
             if (value) {
               setState(() {
                 loadingSave = false;
@@ -661,15 +641,12 @@ class _KittingDashState extends State<KittingDash> {
 getSaveKitting(List<KittingPost> kittingList, String orderId, String userId) {
   List<SaveKitting> saveKittng = [];
   for (KittingPost kitting in kittingList) {
-    List<String> locationList =
-        kitting.selectedBundles.map((e) => e.locationId).toList().toSet().toList();
-    List<String> binList =
-        kitting.selectedBundles.map((e) => e.binId.toString()).toList().toSet().toList();
+    List<String> locationList = kitting.selectedBundles.map((e) => e.locationId).toList().toSet().toList();
+    List<String> binList = kitting.selectedBundles.map((e) => e.binId.toString()).toList().toSet().toList();
     for (String bin in binList) {
       for (String location in locationList) {
-        List<BundleMaster> bundleList = kitting.selectedBundles
-            .where((element) => element.locationId == location && element.binId.toString() == bin)
-            .toList();
+        List<BundleMaster> bundleList =
+            kitting.selectedBundles.where((element) => element.locationId == location && element.binId.toString() == bin).toList();
         saveKittng.add(SaveKitting(
             fgPartNumber: kitting.kittingEJobDtoList.fgNumber,
             orderId: orderId ?? "",
@@ -684,8 +661,7 @@ getSaveKitting(List<KittingPost> kittingList, String orderId, String userId) {
             binId: bundleList.isNotEmpty ? "${bundleList[0].binId}" : "",
             binLocation: bundleList.isNotEmpty ? "${bundleList[0].locationId}" : "",
             actualQty: 0,
-            bundleQty:
-                kitting.selectedBundles.isNotEmpty ? kitting.selectedBundles[0].bundleQuantity : 0,
+            bundleQty: kitting.selectedBundles.isNotEmpty ? kitting.selectedBundles[0].bundleQuantity : 0,
             status: "Active",
             bundleId: bundleList.map((e) => e.bundleIdentification).toList(),
             suggestedActualQty: bundleList.isNotEmpty ? bundleList[0].bundleQuantity : 0,
@@ -758,12 +734,8 @@ class _ShowBundleListState extends State<ShowBundleList> {
                       field(title: "Cable Part No.", data: "${widget.cablePartNo}", width: 120),
                       field(title: "Cut Length", data: "${widget.cutLength}", width: 80),
                       field(title: "AWG", data: "${widget.awg}", width: 100),
-                      field(
-                          title: "Total Bundles", data: "${widget.bundleList.length}", width: 100),
-                      field(
-                          title: "Dispatch Bundles",
-                          data: "${widget.selectedBundleList.length}",
-                          width: 120),
+                      field(title: "Total Bundles", data: "${widget.bundleList.length}", width: 100),
+                      field(title: "Dispatch Bundles", data: "${widget.selectedBundleList.length}", width: 120),
                       // field(
                       //     title: "Pending Bundles",
                       //     data:
@@ -859,13 +831,10 @@ class _ShowBundleListState extends State<ShowBundleList> {
                     ElevatedButton(
                       style: ButtonStyle(
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(40.0),
-                                side: BorderSide(color: Colors.transparent))),
+                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(40.0), side: BorderSide(color: Colors.transparent))),
                         backgroundColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
-                            if (states.contains(MaterialState.pressed))
-                              return Colors.green.shade200;
+                            if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
                             return Colors.green.shade500; // Use the component's default.
                           },
                         ),

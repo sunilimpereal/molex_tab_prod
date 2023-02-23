@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../main.dart';
+import '../../../utils/config.dart';
 
 Future<void> showCustomBundleAlertCrimping(
     {required BuildContext context,
@@ -12,7 +13,7 @@ Future<void> showCustomBundleAlertCrimping(
   Future.delayed(
     const Duration(milliseconds: 50),
     () {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     },
   );
   return showDialog<void>(
@@ -37,12 +38,7 @@ class CustomBundleAlertCrimping extends StatefulWidget {
   Function onSubmitted;
   String heading;
   String heading2;
-  CustomBundleAlertCrimping(
-      {Key? key,
-      required this.onDoNotRemindAgain,
-      required this.onSubmitted,
-      required this.heading,
-      required this.heading2})
+  CustomBundleAlertCrimping({Key? key, required this.onDoNotRemindAgain, required this.onSubmitted, required this.heading, required this.heading2})
       : super(key: key);
 
   @override
@@ -92,8 +88,7 @@ class _CustomBundleAlertCrimpingState extends State<CustomBundleAlertCrimping> {
           ),
           Text(
             "${widget.heading2}",
-            style:
-                TextStyle(fontFamily: fonts.openSans, fontSize: 16, fontWeight: FontWeight.normal),
+            style: TextStyle(fontFamily: fonts.openSans, fontSize: 16, fontWeight: FontWeight.normal),
           ),
           SizedBox(
             height: 0,
@@ -143,8 +138,7 @@ class _CustomBundleAlertCrimpingState extends State<CustomBundleAlertCrimping> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       '  Cancel  ',
-                      style: TextStyle(
-                          fontSize: 16, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 16, fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
                     ),
                   )),
               ElevatedButton(
@@ -161,9 +155,7 @@ class _CustomBundleAlertCrimpingState extends State<CustomBundleAlertCrimping> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('Continue',
-                        style: TextStyle(
-                            fontSize: 16, fontFamily: fonts.openSans, fontWeight: FontWeight.bold)),
+                    child: Text('Continue', style: TextStyle(fontSize: 16, fontFamily: fonts.openSans, fontWeight: FontWeight.bold)),
                   )),
             ],
           )

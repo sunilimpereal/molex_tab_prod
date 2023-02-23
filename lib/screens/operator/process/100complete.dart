@@ -7,6 +7,7 @@ import '../../../model_api/machinedetails_model.dart';
 import '../../../model_api/process1/100Complete_model.dart';
 import '../../../model_api/schedular_model.dart';
 import '../../../model_api/startProcess_model.dart';
+import '../../../utils/config.dart';
 import '../location.dart';
 import '../../widgets/keypad.dart';
 import '../../../service/apiService.dart';
@@ -17,11 +18,7 @@ class FullyComplete extends StatefulWidget {
   Schedule schedule;
 
   Function continueProcess;
-  FullyComplete(
-      {required this.employee,
-      required this.machine,
-      required this.schedule,
-      required this.continueProcess});
+  FullyComplete({required this.employee, required this.machine, required this.schedule, required this.continueProcess});
   @override
   _FullyCompleteState createState() => _FullyCompleteState();
 }
@@ -32,12 +29,9 @@ class _FullyCompleteState extends State<FullyComplete> {
 
   TextEditingController mainController = new TextEditingController();
   TextEditingController noRawmaterialController = new TextEditingController();
-  TextEditingController machineBreakdownController =
-      new TextEditingController();
-  TextEditingController applicatorBreakdownController =
-      new TextEditingController();
-  TextEditingController toolingTechnicianNotAvailableController =
-      new TextEditingController();
+  TextEditingController machineBreakdownController = new TextEditingController();
+  TextEditingController applicatorBreakdownController = new TextEditingController();
+  TextEditingController toolingTechnicianNotAvailableController = new TextEditingController();
   TextEditingController noFeedController = new TextEditingController();
 
   // TextEditingController firsrPeicelastPieceController =
@@ -73,13 +67,11 @@ class _FullyCompleteState extends State<FullyComplete> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
-        decoration: BoxDecoration(
-            color: Colors.red,
-            borderRadius: BorderRadius.all(Radius.circular(10))),
+        decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(10))),
         child: Material(
           elevation: 10,
           shadowColor: Colors.white,
@@ -148,13 +140,10 @@ class _FullyCompleteState extends State<FullyComplete> {
           style: ButtonStyle(
             elevation: MaterialStateProperty.all(0),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0.0),
-                    side: BorderSide(color: Colors.grey.shade50))),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0), side: BorderSide(color: Colors.grey.shade50))),
             backgroundColor: MaterialStateProperty.resolveWith<Color>(
               (Set<MaterialState> states) {
-                if (states.contains(MaterialState.pressed))
-                  return Colors.grey.shade100;
+                if (states.contains(MaterialState.pressed)) return Colors.grey.shade100;
 
                 return Colors.white; // Use the component's default.
               },
@@ -254,8 +243,7 @@ class _FullyCompleteState extends State<FullyComplete> {
               ),
               Padding(
                 padding: const EdgeInsets.all(4.0),
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                   Text('       Production Report',
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
@@ -292,14 +280,12 @@ class _FullyCompleteState extends State<FullyComplete> {
                             quantitycell(
                               name: "Applicator BreakDown",
                               quantity: 10,
-                              textEditingController:
-                                  applicatorBreakdownController,
+                              textEditingController: applicatorBreakdownController,
                             ),
                             quantitycell(
                               name: "Tooling Technician not available ",
                               quantity: 10,
-                              textEditingController:
-                                  toolingTechnicianNotAvailableController,
+                              textEditingController: toolingTechnicianNotAvailableController,
                             ),
                           ],
                         ),
@@ -327,26 +313,19 @@ class _FullyCompleteState extends State<FullyComplete> {
                         height: 40,
                         child: ElevatedButton(
                             style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      side: BorderSide(color: Colors.green))),
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith<Color>(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.green))),
+                              backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.pressed))
-                                    return Colors.white;
-                                  return Colors
-                                      .white; // Use the component's default.
+                                  if (states.contains(MaterialState.pressed)) return Colors.white;
+                                  return Colors.white; // Use the component's default.
                                 },
                               ),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.keyboard_arrow_left,
-                                    color: Colors.green),
+                                Icon(Icons.keyboard_arrow_left, color: Colors.green),
                                 Text(
                                   "Back",
                                   style: TextStyle(color: Colors.green),
@@ -371,28 +350,18 @@ class _FullyCompleteState extends State<FullyComplete> {
                         width: MediaQuery.of(context).size.width * 0.24,
                         child: ElevatedButton(
                           style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    side:
-                                        BorderSide(color: Colors.transparent))),
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent))),
+                            backgroundColor: MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.pressed))
-                                  return Colors.green;
-                                return Colors.green
-                                    .shade500; // Use the component's default.
+                                if (states.contains(MaterialState.pressed)) return Colors.green;
+                                return Colors.green.shade500; // Use the component's default.
                               },
                             ),
-                            overlayColor:
-                                MaterialStateProperty.resolveWith<Color>(
+                            overlayColor: MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.pressed))
-                                  return Colors.green.shade600;
-                                return Colors.green
-                                    .shade300; // Use the component's default.
+                                if (states.contains(MaterialState.pressed)) return Colors.green.shade600;
+                                return Colors.green.shade300; // Use the component's default.
                               },
                             ),
                           ),
@@ -400,49 +369,32 @@ class _FullyCompleteState extends State<FullyComplete> {
                           onPressed: () {
                             Future.delayed(Duration.zero, () {
                               postStartprocess = new PostStartProcessP1(
-                                cablePartNumber:
-                                    widget.schedule.cablePartNumber ?? "0",
+                                cablePartNumber: widget.schedule.cablePartNumber ?? "0",
                                 color: widget.schedule.color,
-                                finishedGoodsNumber:
-                                    widget.schedule.finishedGoodsNumber ?? "0",
-                                lengthSpecificationInmm:
-                                    widget.schedule.length ?? "0",
-                                machineIdentification:
-                                    widget.machine.machineNumber,
-                                orderIdentification:
-                                    widget.schedule.orderId ?? "0",
-                                scheduledIdentification:
-                                    widget.schedule.scheduledId ?? "0",
-                                scheduledQuantity:
-                                    widget.schedule.scheduledQuantity ?? "0",
+                                finishedGoodsNumber: widget.schedule.finishedGoodsNumber ?? "0",
+                                lengthSpecificationInmm: widget.schedule.length ?? "0",
+                                machineIdentification: widget.machine.machineNumber,
+                                orderIdentification: widget.schedule.orderId ?? "0",
+                                scheduledIdentification: widget.schedule.scheduledId ?? "0",
+                                scheduledQuantity: widget.schedule.scheduledQuantity ?? "0",
                                 scheduleStatus: "complete",
                               );
-                              FullyCompleteModel fullyComplete =
-                                  FullyCompleteModel(
-                                      finishedGoodsNumber: int.parse(
-                                          widget.schedule.finishedGoodsNumber),
-                                      purchaseOrder:
-                                          int.parse(widget.schedule.orderId),
-                                      orderId:
-                                          int.parse(widget.schedule.orderId),
-                                      cablePartNumber: int.parse(
-                                          widget.schedule.cablePartNumber),
-                                      length: int.parse(widget.schedule.length),
-                                      color: widget.schedule.color,
-                                      scheduledStatus: "Complete",
-                                      scheduledId: int.parse(
-                                          widget.schedule.scheduledId),
-                                      scheduledQuantity: int.parse(
-                                          widget.schedule.scheduledQuantity),
-                                      machineIdentification:
-                                          widget.machine.machineNumber ?? '',
-                                      //TODO bundle ID
-                                      firstPieceAndPatrol: 0,
-                                      applicatorChangeover: 0,
-                                      bundleIdentification: '');
-                              apiService
-                                  .post100Complete(fullyComplete)
-                                  .then((value) {
+                              FullyCompleteModel fullyComplete = FullyCompleteModel(
+                                  finishedGoodsNumber: int.parse(widget.schedule.finishedGoodsNumber),
+                                  purchaseOrder: int.parse(widget.schedule.orderId),
+                                  orderId: int.parse(widget.schedule.orderId),
+                                  cablePartNumber: int.parse(widget.schedule.cablePartNumber),
+                                  length: int.parse(widget.schedule.length),
+                                  color: widget.schedule.color,
+                                  scheduledStatus: "Complete",
+                                  scheduledId: int.parse(widget.schedule.scheduledId),
+                                  scheduledQuantity: int.parse(widget.schedule.scheduledQuantity),
+                                  machineIdentification: widget.machine.machineNumber ?? '',
+                                  //TODO bundle ID
+                                  firstPieceAndPatrol: 0,
+                                  applicatorChangeover: 0,
+                                  bundleIdentification: '');
+                              apiService.post100Complete(fullyComplete).then((value) {
                                 if (value) {
                                   postCompleteTransfer(
                                     context: context,
@@ -494,11 +446,11 @@ class _FullyCompleteState extends State<FullyComplete> {
                   controller: textEditingController,
                   onTap: () {
                     setState(() {
-                      SystemChannels.textInput.invokeMethod('TextInput.hide');
+                      SystemChannels.textInput.invokeMethod(keyboardType);
                       _output = '';
                       mainController = textEditingController;
                     });
-                    SystemChannels.textInput.invokeMethod('TextInput.hide');
+                    SystemChannels.textInput.invokeMethod(keyboardType);
                   },
                   style: TextStyle(fontSize: 12),
                   keyboardType: TextInputType.name,

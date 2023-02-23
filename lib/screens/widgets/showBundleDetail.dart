@@ -5,12 +5,13 @@ import 'package:molex/model_api/process1/getBundleListGl.dart';
 
 import '../../model_api/crimping/bundleDetail.dart';
 import '../../service/apiService.dart';
+import '../../utils/config.dart';
 
 Future<void> showBundleDetail(BuildContext context) async {
   Future.delayed(
     const Duration(milliseconds: 50),
     () {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     },
   );
   return showDialog<void>(
@@ -51,10 +52,10 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
 
     return AlertDialog(
         titlePadding: EdgeInsets.all(10),
@@ -81,7 +82,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     return Container(
@@ -116,19 +117,19 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                           Future.delayed(
                             const Duration(milliseconds: 50),
                             () {
-                              SystemChannels.textInput.invokeMethod('TextInput.hide');
+                              SystemChannels.textInput.invokeMethod(keyboardType);
                             },
                           );
                         },
                         onTap: () {
                           _bundleController.clear();
                           setState(() {
-                            SystemChannels.textInput.invokeMethod('TextInput.hide');
+                            SystemChannels.textInput.invokeMethod(keyboardType);
                           });
                         },
                         onChanged: (value) {
                           setState(() {
-                            SystemChannels.textInput.invokeMethod('TextInput.hide');
+                            SystemChannels.textInput.invokeMethod(keyboardType);
                             bundleId = value;
                           });
                         },
@@ -137,7 +138,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                                 ? GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                        SystemChannels.textInput.invokeMethod(keyboardType);
                                         _bundleController.clear();
                                       });
                                     },
@@ -165,13 +166,10 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                         ElevatedButton(
                           style: ButtonStyle(
                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(100.0),
-                                    side: BorderSide(color: Colors.transparent))),
+                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0), side: BorderSide(color: Colors.transparent))),
                             backgroundColor: MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.pressed))
-                                  return Colors.green.shade200;
+                                if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
                                 return Colors.red.shade400; // Use the component's default.
                               },
                             ),
@@ -186,7 +184,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                             Future.delayed(
                               const Duration(milliseconds: 50),
                               () {
-                                SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                SystemChannels.textInput.invokeMethod(keyboardType);
                               },
                             );
                             if (_bundleController.text.length > 0) {
@@ -220,7 +218,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
     RawKeyEventData key,
   ) {
     setState(() {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     });
   }
 
@@ -249,8 +247,7 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                   padding: const EdgeInsets.all(0.0),
                   child: Text(
                     "$data",
-                    style:
-                        TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w400),
+                    style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w400),
                   ),
                 ),
               ],
@@ -288,17 +285,13 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                           field(title: "Bundle ID", data: bundleData!.bundleIdentification ?? ''),
                           field(title: "Bundle Qty", data: bundleData.bundleQuantity.toString()),
                           field(title: "Bundle Status", data: bundleData.bundleStatus ?? ''),
-                          field(
-                              title: "Cut Length",
-                              data: bundleData.cutLengthSpecificationInmm.toString()),
+                          field(title: "Cut Length", data: bundleData.cutLengthSpecificationInmm.toString()),
                           field(title: "Color", data: bundleData.color ?? ""),
                         ],
                       ),
                       Column(
                         children: [
-                          field(
-                              title: "Cable Part Number",
-                              data: bundleData.cablePartNumber.toString()),
+                          field(title: "Cable Part Number", data: bundleData.cablePartNumber.toString()),
                           field(
                             title: "Cable part Description",
                             data: bundleData.cablePartDescription ?? '',
@@ -370,14 +363,11 @@ class _ShowBundleDetailState extends State<ShowBundleDetail> {
                                 width: 150,
                                 child: ElevatedButton(
                                   style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(100.0),
-                                            side: BorderSide(color: Colors.transparent))),
+                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(100.0), side: BorderSide(color: Colors.transparent))),
                                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                       (Set<MaterialState> states) {
-                                        if (states.contains(MaterialState.pressed))
-                                          return Colors.green.shade200;
+                                        if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
                                         return Colors.red.shade400; // Use the component's default.
                                       },
                                     ),

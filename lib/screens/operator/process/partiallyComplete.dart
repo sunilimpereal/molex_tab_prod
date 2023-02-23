@@ -8,6 +8,7 @@ import '../../../model_api/login_model.dart';
 import '../../../model_api/machinedetails_model.dart';
 import '../../../model_api/partiallyComplete_model.dart';
 import '../../../model_api/schedular_model.dart';
+import '../../../utils/config.dart';
 import '../location.dart';
 import '../../widgets/keypad.dart';
 import '../../../service/apiService.dart';
@@ -17,11 +18,7 @@ class PartiallyComplete extends StatefulWidget {
   Schedule schedule;
   Employee employee;
   Function continueProcess;
-  PartiallyComplete(
-      {required this.machine,
-      required this.employee,
-      required this.continueProcess,
-      required this.schedule});
+  PartiallyComplete({required this.machine, required this.employee, required this.continueProcess, required this.schedule});
   @override
   _PartiallyCompleteState createState() => _PartiallyCompleteState();
 }
@@ -32,77 +29,50 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
   TextEditingController mainController = new TextEditingController();
   TextEditingController firstPatrolController = new TextEditingController();
   TextEditingController spareChangeoverController = new TextEditingController();
-  TextEditingController crimpHeightSettingController =
-      new TextEditingController();
-  TextEditingController resettingCFMProgramController =
-      new TextEditingController();
-  TextEditingController newProgramSettingCVMCFMController =
-      new TextEditingController();
+  TextEditingController crimpHeightSettingController = new TextEditingController();
+  TextEditingController resettingCFMProgramController = new TextEditingController();
+  TextEditingController newProgramSettingCVMCFMController = new TextEditingController();
   TextEditingController airPressureLowController = new TextEditingController();
-  TextEditingController machineTakenforRemovingCVMController =
-      new TextEditingController();
+  TextEditingController machineTakenforRemovingCVMController = new TextEditingController();
   TextEditingController noMaterialController = new TextEditingController();
-  TextEditingController applicatorChangeoverController =
-      new TextEditingController();
-  TextEditingController sinkHeightAdjustmentController =
-      new TextEditingController();
-  TextEditingController feedingAdjustmentController =
-      new TextEditingController();
-  TextEditingController applicatorPositionSettingController =
-      new TextEditingController();
+  TextEditingController applicatorChangeoverController = new TextEditingController();
+  TextEditingController sinkHeightAdjustmentController = new TextEditingController();
+  TextEditingController feedingAdjustmentController = new TextEditingController();
+  TextEditingController applicatorPositionSettingController = new TextEditingController();
   TextEditingController validationController = new TextEditingController();
-  TextEditingController cFACrimpingFaultController =
-      new TextEditingController();
+  TextEditingController cFACrimpingFaultController = new TextEditingController();
   TextEditingController cableEntangleController = new TextEditingController();
   TextEditingController jobTicketIssueController = new TextEditingController();
-  TextEditingController lengthChangeoverController =
-      new TextEditingController();
+  TextEditingController lengthChangeoverController = new TextEditingController();
   TextEditingController terminalBendController = new TextEditingController();
   TextEditingController cutOffBurrIssueController = new TextEditingController();
-  TextEditingController cVMErrorCorrectionController =
-      new TextEditingController();
-  TextEditingController cableFeedingFrontUnitProblemController =
-      new TextEditingController();
-  TextEditingController driftLimitReachedController =
-      new TextEditingController();
+  TextEditingController cVMErrorCorrectionController = new TextEditingController();
+  TextEditingController cableFeedingFrontUnitProblemController = new TextEditingController();
+  TextEditingController driftLimitReachedController = new TextEditingController();
   TextEditingController machineSlowController = new TextEditingController();
-  TextEditingController noPlanforMachineController =
-      new TextEditingController();
-  TextEditingController terminalChangeoverController =
-      new TextEditingController();
+  TextEditingController noPlanforMachineController = new TextEditingController();
+  TextEditingController terminalChangeoverController = new TextEditingController();
   TextEditingController terminalTwistController = new TextEditingController();
-  TextEditingController extrusionBurrIssueController =
-      new TextEditingController();
+  TextEditingController extrusionBurrIssueController = new TextEditingController();
   TextEditingController cFMErrorController = new TextEditingController();
-  TextEditingController supplierTakenforMaintenanceController =
-      new TextEditingController();
-  TextEditingController rollerChangeoverController =
-      new TextEditingController();
-  TextEditingController gripenUnitProblemController =
-      new TextEditingController();
-  TextEditingController technicianNotAvailableController =
-      new TextEditingController();
+  TextEditingController supplierTakenforMaintenanceController = new TextEditingController();
+  TextEditingController rollerChangeoverController = new TextEditingController();
+  TextEditingController gripenUnitProblemController = new TextEditingController();
+  TextEditingController technicianNotAvailableController = new TextEditingController();
   TextEditingController coilChangeoverController = new TextEditingController();
-  TextEditingController bellmouthAdjustmentController =
-      new TextEditingController();
+  TextEditingController bellmouthAdjustmentController = new TextEditingController();
   TextEditingController cameraSettingController = new TextEditingController();
   TextEditingController cVMErrorController = new TextEditingController();
-  TextEditingController lengthVariationsController =
-      new TextEditingController();
+  TextEditingController lengthVariationsController = new TextEditingController();
   TextEditingController powerFailureController = new TextEditingController();
   TextEditingController machineCleaningController = new TextEditingController();
   TextEditingController noOperatorController = new TextEditingController();
   TextEditingController lastPieceController = new TextEditingController();
-  TextEditingController curlingAdjustmentController =
-      new TextEditingController();
-  TextEditingController wireFeedingAdjustmentController =
-      new TextEditingController();
-  TextEditingController cVMProgramReloadingController =
-      new TextEditingController();
-  TextEditingController sensorNotWorkingController =
-      new TextEditingController();
-  TextEditingController preventiveMaintenanceController =
-      new TextEditingController();
+  TextEditingController curlingAdjustmentController = new TextEditingController();
+  TextEditingController wireFeedingAdjustmentController = new TextEditingController();
+  TextEditingController cVMProgramReloadingController = new TextEditingController();
+  TextEditingController sensorNotWorkingController = new TextEditingController();
+  TextEditingController preventiveMaintenanceController = new TextEditingController();
   TextEditingController meetingController = new TextEditingController();
   TextEditingController systemFaultController = new TextEditingController();
   List<String> reasonList = [
@@ -151,7 +121,6 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
   List<String> selectedreasons = [];
   ApiService? apiService;
 
-  
   @override
   void initState() {
     apiService = new ApiService();
@@ -159,7 +128,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
       const Duration(milliseconds: 200),
       () {
         showReasons();
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
 
@@ -171,9 +140,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
     return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Container(
-            decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.all(Radius.circular(10))),
+            decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(10))),
             child: Material(
               elevation: 10,
               shadowColor: Colors.white,
@@ -231,13 +198,10 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
           style: ButtonStyle(
             elevation: MaterialStateProperty.all(0),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0.0),
-                    side: BorderSide(color: Colors.grey.shade50))),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0), side: BorderSide(color: Colors.grey.shade50))),
             backgroundColor: MaterialStateProperty.resolveWith<Color>(
               (Set<MaterialState> states) {
-                if (states.contains(MaterialState.pressed))
-                  return Colors.grey.shade100;
+                if (states.contains(MaterialState.pressed)) return Colors.grey.shade100;
 
                 return Colors.white; // Use the component's default.
               },
@@ -335,8 +299,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                   Column(
                     children: [
                       Container(
@@ -371,24 +334,17 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                   style: ButtonStyle(
                     elevation: MaterialStateProperty.all(3),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                            side: BorderSide(color: Colors.red))),
+                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0), side: BorderSide(color: Colors.red))),
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
                       (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.pressed))
-                          return Colors.red.shade50;
+                        if (states.contains(MaterialState.pressed)) return Colors.red.shade50;
                         return Colors.white; // Use the component's default.
                       },
                     ),
                   ),
                   child: Row(
                     children: [
-                      Text('Reason',
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontFamily: fonts.openSans,
-                              fontSize: 14)),
+                      Text('Reason', style: TextStyle(color: Colors.red, fontFamily: fonts.openSans, fontSize: 14)),
                       Icon(
                         Icons.edit,
                         color: Colors.red,
@@ -434,8 +390,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                         quantitycell(
                           name: "New Program Setting CVM/CFM	",
                           quantity: 10,
-                          textEditingController:
-                              newProgramSettingCVMCFMController,
+                          textEditingController: newProgramSettingCVMCFMController,
                         ),
                       ],
                     ),
@@ -478,8 +433,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                         quantitycell(
                           name: "Applicator Position Setting		",
                           quantity: 10,
-                          textEditingController:
-                              applicatorPositionSettingController,
+                          textEditingController: applicatorPositionSettingController,
                         ),
                         quantitycell(
                           name: "Validation",
@@ -532,8 +486,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                         quantitycell(
                           name: "Cable Feeding Front Unit Problem",
                           quantity: 10,
-                          textEditingController:
-                              cableFeedingFrontUnitProblemController,
+                          textEditingController: cableFeedingFrontUnitProblemController,
                         ),
                         quantitycell(
                           name: "Drift Limit Reached	",
@@ -577,8 +530,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                         quantitycell(
                           name: "Supplier Taken for Maintenance	",
                           quantity: 10,
-                          textEditingController:
-                              supplierTakenforMaintenanceController,
+                          textEditingController: supplierTakenforMaintenanceController,
                         ),
                         quantitycell(
                           name: "Roller Changeover",
@@ -597,8 +549,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                         quantitycell(
                           name: "Technician Not Available	",
                           quantity: 10,
-                          textEditingController:
-                              technicianNotAvailableController,
+                          textEditingController: technicianNotAvailableController,
                         ),
                         quantitycell(
                           name: "Coil Changeover	",
@@ -661,8 +612,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                         quantitycell(
                           name: "Wire Feeding Adjustment",
                           quantity: 10,
-                          textEditingController:
-                              wireFeedingAdjustmentController,
+                          textEditingController: wireFeedingAdjustmentController,
                         ),
                         quantitycell(
                           name: "CVM Program Reloading",
@@ -681,8 +631,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                         quantitycell(
                           name: "Preventive Maintenance	",
                           quantity: 10,
-                          textEditingController:
-                              preventiveMaintenanceController,
+                          textEditingController: preventiveMaintenanceController,
                         ),
                         quantitycell(
                           name: "Meeting	",
@@ -713,43 +662,27 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                       // width: 250,
                       child: ElevatedButton(
                         style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      side: BorderSide(color: Colors.green))),
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith<Color>(
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.green))),
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
                             (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.pressed))
-                                return Colors.green.shade200;
-                              return Colors
-                                  .white; // Use the component's default.
+                              if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                              return Colors.white; // Use the component's default.
                             },
                           ),
                         ),
                         child: Text("Accept and Continue Process",
-                            style: TextStyle(
-                                color: Colors.green,
-                                fontFamily: fonts.openSans,
-                                fontWeight: FontWeight.bold)),
+                            style: TextStyle(color: Colors.green, fontFamily: fonts.openSans, fontWeight: FontWeight.bold)),
                         onPressed: () {
-                          PostpartiallyComplete postpartiallyComplete =
-                              new PostpartiallyComplete(
-                                  finishedGoods: int.parse(
-                                      widget.schedule.finishedGoodsNumber),
-                                  purchaseOrder: widget.schedule.orderId,
-                                  orderIdentification: widget.schedule.orderId,
-                                  cablePartNumber:
-                                      widget.schedule.cablePartNumber,
-                                  cutLength: widget.schedule.length,
-                                  color: widget.schedule.color,
-                                  scheduleIdentification:
-                                      int.parse(widget.schedule.scheduledId));
-                          apiService!
-                              .postpartialComplete(
-                                  postpartiallyComplete, widget.schedule.awg)
-                              .then((value) {
+                          PostpartiallyComplete postpartiallyComplete = new PostpartiallyComplete(
+                              finishedGoods: int.parse(widget.schedule.finishedGoodsNumber),
+                              purchaseOrder: widget.schedule.orderId,
+                              orderIdentification: widget.schedule.orderId,
+                              cablePartNumber: widget.schedule.cablePartNumber,
+                              cutLength: widget.schedule.length,
+                              color: widget.schedule.color,
+                              scheduleIdentification: int.parse(widget.schedule.scheduledId));
+                          apiService!.postpartialComplete(postpartiallyComplete, widget.schedule.awg).then((value) {
                             if (value) {
                               widget.continueProcess("label");
                             } else {
@@ -779,49 +712,31 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
                       // width: 250,
                       child: ElevatedButton(
                         style: ButtonStyle(
-                          shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  side: BorderSide(color: Colors.transparent))),
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith<Color>(
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent))),
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
                             (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.pressed))
-                                return Colors.green.shade200;
-                              return Colors.green
-                                  .shade500; // Use the component's default.
+                              if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                              return Colors.green.shade500; // Use the component's default.
                             },
                           ),
                         ),
                         child: Text(
                           "Save & End Process",
-                          style: TextStyle(
-                              fontFamily: fonts.openSans,
-                              fontWeight: FontWeight.bold),
+                          style: TextStyle(fontFamily: fonts.openSans, fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
-                          PostpartiallyComplete postpartiallyComplete =
-                              new PostpartiallyComplete(
-                                  finishedGoods: int.parse(
-                                      widget.schedule.finishedGoodsNumber),
-                                  purchaseOrder: widget.schedule.orderId,
-                                  orderIdentification: widget.schedule.orderId,
-                                  cablePartNumber:
-                                      widget.schedule.cablePartNumber,
-                                  cutLength: widget.schedule.length,
-                                  color: widget.schedule.color,
-                                  scheduleIdentification:
-                                      int.parse(widget.schedule.scheduledId));
-                          apiService!
-                              .postpartialComplete(
-                                  postpartiallyComplete, widget.schedule.awg)
-                              .then((value) {
+                          PostpartiallyComplete postpartiallyComplete = new PostpartiallyComplete(
+                              finishedGoods: int.parse(widget.schedule.finishedGoodsNumber),
+                              purchaseOrder: widget.schedule.orderId,
+                              orderIdentification: widget.schedule.orderId,
+                              cablePartNumber: widget.schedule.cablePartNumber,
+                              cutLength: widget.schedule.length,
+                              color: widget.schedule.color,
+                              scheduleIdentification: int.parse(widget.schedule.scheduledId));
+                          apiService!.postpartialComplete(postpartiallyComplete, widget.schedule.awg).then((value) {
                             if (value) {
-                              postCompleteTransfer(
-                                  context: context,
-                                  machine: widget.machine,
-                                  employee: widget.employee);
+                              postCompleteTransfer(context: context, machine: widget.machine, employee: widget.employee);
                               // Navigator.push(
                               //   context,
                               //   MaterialPageRoute(
@@ -885,7 +800,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
 
                       mainController = textEditingController;
                     });
-                    SystemChannels.textInput.invokeMethod('TextInput.hide');
+                    SystemChannels.textInput.invokeMethod(keyboardType);
                   },
                   style: TextStyle(fontSize: 12),
                   keyboardType: TextInputType.name,
@@ -909,7 +824,7 @@ class _PartiallyCompleteState extends State<PartiallyComplete> {
     Future.delayed(
       const Duration(milliseconds: 50),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     return showDialog<void>(
@@ -1017,8 +932,7 @@ class _ReasonSelectionState extends State<ReasonSelection> {
                 child: Row(
                   children: selectedreasons
                       .map((e) => Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 2.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 2.0),
                             child: Container(
                               color: Colors.grey.shade100,
                               child: Padding(
@@ -1094,23 +1008,17 @@ class _ReasonSelectionState extends State<ReasonSelection> {
                     },
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              side: BorderSide(color: Colors.transparent))),
+                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.transparent))),
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.pressed))
-                            return Colors.green.shade200;
-                          return Colors
-                              .green.shade500; // Use the component's default.
+                          if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                          return Colors.green.shade500; // Use the component's default.
                         },
                       ),
                       overlayColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.pressed))
-                            return Colors.green.shade200;
-                          return Colors
-                              .green.shade500; // Use the component's default.
+                          if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
+                          return Colors.green.shade500; // Use the component's default.
                         },
                       ),
                     ),

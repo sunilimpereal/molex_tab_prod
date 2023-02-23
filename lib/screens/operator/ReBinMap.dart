@@ -8,13 +8,14 @@ import '../../model_api/Transfer/getBinDetail.dart';
 import '../../model_api/crimping/bundleDetail.dart';
 import '../../model_api/machinedetails_model.dart';
 
+import '../../utils/config.dart';
 import '../widgets/showBundles.dart';
 import '../../service/apiService.dart';
 
 class ReMapBin extends StatefulWidget {
   String userId;
   MachineDetails? machine;
-  ReMapBin({required this.userId,  this.machine});
+  ReMapBin({required this.userId, this.machine});
 
   @override
   _ReMapBinState createState() => _ReMapBinState();
@@ -29,7 +30,7 @@ class _ReMapBinState extends State<ReMapBin> {
   TextEditingController _bundleController = new TextEditingController();
   FocusNode _bundleFocus = new FocusNode();
 
-  String ?bundleId;
+  String? bundleId;
   List<BundleTransferToBin> transferList = [];
   bool loading = false;
 
@@ -42,7 +43,7 @@ class _ReMapBinState extends State<ReMapBin> {
     Future.delayed(
       const Duration(milliseconds: 100),
       () {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SystemChannels.textInput.invokeMethod(keyboardType);
       },
     );
     super.initState();
@@ -57,8 +58,7 @@ class _ReMapBinState extends State<ReMapBin> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 25),
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
               bundle(),
               bin(),
               confirmTransfer(),
@@ -71,73 +71,65 @@ class _ReMapBinState extends State<ReMapBin> {
   }
 
   Widget bundle() {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
 
     return Container(
       width: MediaQuery.of(context).size.width * 0.3,
-      child: Row(
-          mainAxisSize: MainAxisSize.min,
+      child: Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: [
+        Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: RawKeyboardListener(
-                        focusNode: FocusNode(),
-                        onKey: (event) => handleKey(event.data),
-                        child: TextField(
-                            focusNode: _bundleFocus,
-                            autofocus: true,
-                            controller: _bundleController,
-                            onTap: () {
-                              SystemChannels.textInput
-                                  .invokeMethod('TextInput.hide');
-                            },
-                            onSubmitted: (value) {
-                              setState(() {
-                                _binFocus.requestFocus();
-                              });
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                bundleId = value;
-                              });
-                            },
-                            decoration: new InputDecoration(
-                                suffix: _bundleController.text.length > 1
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            _bundleController.clear();
-                                          });
-                                        },
-                                        child: Icon(Icons.clear,
-                                            size: 18, color: Colors.red))
-                                    : Container(),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.redAccent, width: 2.0),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.grey.shade400, width: 2.0),
-                                ),
-                                labelText: 'Scan Bundle',
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 5.0))),
-                      ),
-                    ),
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.25,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: RawKeyboardListener(
+                    focusNode: FocusNode(),
+                    onKey: (event) => handleKey(event.data),
+                    child: TextField(
+                        focusNode: _bundleFocus,
+                        autofocus: true,
+                        controller: _bundleController,
+                        onTap: () {
+                          SystemChannels.textInput.invokeMethod(keyboardType);
+                        },
+                        onSubmitted: (value) {
+                          setState(() {
+                            _binFocus.requestFocus();
+                          });
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            bundleId = value;
+                          });
+                        },
+                        decoration: new InputDecoration(
+                            suffix: _bundleController.text.length > 1
+                                ? GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _bundleController.clear();
+                                      });
+                                    },
+                                    child: Icon(Icons.clear, size: 18, color: Colors.red))
+                                : Container(),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey.shade400, width: 2.0),
+                            ),
+                            labelText: 'Scan Bundle',
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 5.0))),
                   ),
                 ),
-              ],
+              ),
             ),
-          ]),
+          ],
+        ),
+      ]),
     );
   }
 
@@ -166,8 +158,7 @@ class _ReMapBinState extends State<ReMapBin> {
                           focusNode: _binFocus,
                           controller: _binController,
                           onTap: () {
-                            SystemChannels.textInput
-                                .invokeMethod('TextInput.hide');
+                            SystemChannels.textInput.invokeMethod(keyboardType);
                             setState(() {
                               _binController.clear();
                               binId = "";
@@ -187,23 +178,19 @@ class _ReMapBinState extends State<ReMapBin> {
                                           _binController.clear();
                                         });
                                       },
-                                      child: Icon(Icons.clear,
-                                          size: 18, color: Colors.red))
+                                      child: Icon(Icons.clear, size: 18, color: Colors.red))
                                   : Container(
                                       height: 1,
                                       width: 1,
                                     ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.redAccent, width: 2.0),
+                                borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.grey.shade400, width: 2.0),
+                                borderSide: BorderSide(color: Colors.grey.shade400, width: 2.0),
                               ),
                               labelText: 'Scan bin',
-                              contentPadding:
-                                  const EdgeInsets.symmetric(horizontal: 5.0))),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 5.0))),
                     ),
                   ),
                 ),
@@ -222,26 +209,19 @@ class _ReMapBinState extends State<ReMapBin> {
       height: MediaQuery.of(context).size.height * 0.8,
       width: MediaQuery.of(context).size.width * 0.6,
       colums: [
-        CustomCell(
-          width: 40,
-          child: Text('No.',
-              style: TextStyle(fontWeight: FontWeight.w600))),
-        
+        CustomCell(width: 40, child: Text('No.', style: TextStyle(fontWeight: FontWeight.w600))),
 
         CustomCell(
           width: 120,
-          child: Text('Location ID',
-              style: TextStyle(fontWeight: FontWeight.w600)),
+          child: Text('Location ID', style: TextStyle(fontWeight: FontWeight.w600)),
         ),
         CustomCell(
           width: 100,
-          child: Text('Bin ID',
-              style: TextStyle(fontWeight: FontWeight.w600)),
+          child: Text('Bin ID', style: TextStyle(fontWeight: FontWeight.w600)),
         ),
         CustomCell(
           width: 100,
-          child: Text('Bundle ID',
-              style:  TextStyle(fontWeight: FontWeight.w600)),
+          child: Text('Bundle ID', style: TextStyle(fontWeight: FontWeight.w600)),
         ),
         // DataColumn(
         //   label: Text('Remove',
@@ -256,21 +236,11 @@ class _ReMapBinState extends State<ReMapBin> {
                   width: 40,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("${a++}",
-                        style:  TextStyle()),
+                    child: Text("${a++}", style: TextStyle()),
                   )),
-              CustomCell(
-                  width: 120,
-                  child: Text("${e.locationId}",
-                      style:  TextStyle())),
-              CustomCell(
-                  width: 100,
-                  child: Text("${e.binId}",
-                      style: TextStyle())),
-              CustomCell(
-                  width: 100,
-                  child: Text("${e.bundleIdentification}",
-                      style:  TextStyle())),
+              CustomCell(width: 120, child: Text("${e.locationId}", style: TextStyle())),
+              CustomCell(width: 100, child: Text("${e.binId}", style: TextStyle())),
+              CustomCell(width: 100, child: Text("${e.bundleIdentification}", style: TextStyle())),
               // DataCell(
               //   IconButton(
               //     icon: Icon(
@@ -353,7 +323,7 @@ class _ReMapBinState extends State<ReMapBin> {
   }
 
   Widget confirmTransfer() {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod(keyboardType);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -371,8 +341,7 @@ class _ReMapBinState extends State<ReMapBin> {
                   ),
                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.pressed))
-                        return Colors.green.shade200;
+                      if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
                       return Colors.green; // Use the component's default.
                     },
                   ),
@@ -395,8 +364,7 @@ class _ReMapBinState extends State<ReMapBin> {
                   ),
                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.pressed))
-                        return Colors.green.shade200;
+                      if (states.contains(MaterialState.pressed)) return Colors.green.shade200;
                       return Colors.green; // Use the component's default.
                     },
                   ),
@@ -406,20 +374,15 @@ class _ReMapBinState extends State<ReMapBin> {
                     loading = true;
                   });
                   if (_bundleController.text.length > 0) {
-                    if (_bundleController.text ==
-                        getpostBundletoBin().bundleId) {
-                      apiService.postTransferBundletoBin(transferBundleToBin: [
-                        getpostBundletoBin()
-                      ]).then((value) {
+                    if (_bundleController.text == getpostBundletoBin().bundleId) {
+                      apiService.postTransferBundletoBin(transferBundleToBin: [getpostBundletoBin()]).then((value) {
                         if (value != null) {
                           setState(() {
                             loading = false;
                           });
-                          BundleTransferToBin bundleTransferToBinTracking =
-                              value[0];
+                          BundleTransferToBin bundleTransferToBinTracking = value[0];
                           Fluttertoast.showToast(
-                              msg:
-                                  "Transfered Bundle-${bundleTransferToBinTracking.bundleIdentification} to Bin- ${_binController.text ?? ''}",
+                              msg: "Transfered Bundle-${bundleTransferToBinTracking.bundleIdentification} to Bin- ${_binController.text ?? ''}",
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.BOTTOM,
                               timeInSecForIosWeb: 1,
@@ -482,14 +445,15 @@ class _ReMapBinState extends State<ReMapBin> {
     TransferBundleToBin bundleToBin = TransferBundleToBin(
       binIdentification: _binController.text,
       bundleId: _bundleController.text,
-      userId: widget.userId, locationId: '',
+      userId: widget.userId,
+      locationId: '',
     );
     return bundleToBin;
   }
 
   handleKey(RawKeyEventData key) {
     setState(() {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      SystemChannels.textInput.invokeMethod(keyboardType);
     });
   }
 }

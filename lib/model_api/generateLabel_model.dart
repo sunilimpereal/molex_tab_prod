@@ -7,7 +7,8 @@ import 'dart:convert';
 PostGenerateLabel postGenerateLabelFromJson(String str) =>
     PostGenerateLabel.fromJson(json.decode(str));
 
-String postGenerateLabelToJson(PostGenerateLabel data) => json.encode(data.toJson());
+String postGenerateLabelToJson(PostGenerateLabel data) =>
+    json.encode(data.toJson());
 
 class PostGenerateLabel {
   PostGenerateLabel({
@@ -42,7 +43,7 @@ class PostGenerateLabel {
     this.strandsCut,
     this.brushLengthLessorMore,
     this.terminalCoppermark,
-    this.setupRejections,
+    this.setupRejectionCable,
     this.terminalBackOut,
     this.cableDamage,
     this.crimpingPositionOutOrMissCrimp,
@@ -135,7 +136,7 @@ class PostGenerateLabel {
   int? strandsCut;
   int? brushLengthLessorMore;
   int? terminalCoppermark;
-  int? setupRejections;
+  int? setupRejectionCable;
   int? terminalBackOut;
   int? cableDamage;
   int? crimpingPositionOutOrMissCrimp;
@@ -196,7 +197,8 @@ class PostGenerateLabel {
   String? viCompleted;
   String? processType;
 
-  factory PostGenerateLabel.fromJson(Map<String, dynamic> json) => PostGenerateLabel(
+  factory PostGenerateLabel.fromJson(Map<String, dynamic> json) =>
+      PostGenerateLabel(
         finishedGoods: json["finishedGoods"],
         purchaseorder: json["purchaseorder"],
         orderIdentification: json["orderIdentification"],
@@ -228,7 +230,7 @@ class PostGenerateLabel {
         strandsCut: json["strandsCut"],
         brushLengthLessorMore: json["brushLengthLessorMore"],
         terminalCoppermark: json["terminalCoppermark"],
-        setupRejections: json["setupRejections"],
+        setupRejectionCable: json["setupRejections"],
         terminalBackOut: json["terminalBackOut"],
         cableDamage: json["cableDamage"],
         crimpingPositionOutOrMissCrimp: json["crimpingPositionOutOrMissCrimp"],
@@ -247,7 +249,8 @@ class PostGenerateLabel {
         crimpOnInsulationF: json["crimpOnInsulation_F"],
         cablePositionMovementG: json["cablePositionMovement_G"],
         crimpOnInsulationC: json["crimpOnInsulation_C"],
-        crimpingPositionOutOrMissCrimpD: json["crimpingPositionOutOrMissCrimp_D"],
+        crimpingPositionOutOrMissCrimpD:
+            json["crimpingPositionOutOrMissCrimp_D"],
         crimpPositionOut: json["crimpPositionOut"],
         stripPositionOut: json["stripPositionOut"],
         offCurling: json["offCurling"],
@@ -322,7 +325,7 @@ class PostGenerateLabel {
         "strandsCut": strandsCut ?? 0,
         "brushLengthLessorMore": brushLengthLessorMore ?? 0,
         "terminalCoppermark": terminalCoppermark ?? 0,
-        "setupRejections": setupRejections ?? 0,
+        "setUpRejectionCable": setupRejectionCable ?? 0,
         "terminalBackOut": terminalBackOut ?? 0,
         "cableDamage": cableDamage ?? 0,
         "crimpingPositionOutOrMissCrimp": crimpingPositionOutOrMissCrimp ?? 0,
@@ -341,7 +344,8 @@ class PostGenerateLabel {
         "crimpOnInsulation_F": crimpOnInsulationF ?? 0,
         "cablePositionMovement_G": cablePositionMovementG ?? 0,
         "crimpOnInsulation_C": crimpOnInsulationC ?? 0,
-        "crimpingPositionOutOrMissCrimp_D": crimpingPositionOutOrMissCrimpD ?? 0,
+        "crimpingPositionOutOrMissCrimp_D":
+            crimpingPositionOutOrMissCrimpD ?? 0,
         "crimpPositionOut": crimpPositionOut ?? 0,
         "stripPositionOut": stripPositionOut ?? 0,
         "offCurling": offCurling ?? 0,
@@ -354,7 +358,7 @@ class PostGenerateLabel {
         "terminalFrom": terminalFrom ?? 0,
         "terminalTo": terminalTo ?? 0,
         "awg": awg,
-        "setUpRejections": setUpRejections ?? 0,
+        "setupRejections": setUpRejections ?? 0,
         "setUpRejectionTerminalFrom": setUpRejectionTerminalFrom ?? 0,
         "setUpRejectionTerminalTo": setUpRejectionTerminalTo ?? 0,
         "cvmRejectionsCable": cvmRejectionsCable ?? 0,
@@ -396,7 +400,8 @@ class PostGenerateLabel {
 ResponseGenerateLabel responseGenerateLabelFromJson(String str) =>
     ResponseGenerateLabel.fromJson(json.decode(str));
 
-String responseGenerateLabelToJson(ResponseGenerateLabel data) => json.encode(data.toJson());
+String responseGenerateLabelToJson(ResponseGenerateLabel data) =>
+    json.encode(data.toJson());
 
 class ResponseGenerateLabel {
   ResponseGenerateLabel({
@@ -411,7 +416,8 @@ class ResponseGenerateLabel {
   dynamic errorCode;
   Data data;
 
-  factory ResponseGenerateLabel.fromJson(Map<String, dynamic> json) => ResponseGenerateLabel(
+  factory ResponseGenerateLabel.fromJson(Map<String, dynamic> json) =>
+      ResponseGenerateLabel(
         status: json["status"],
         statusMsg: json["statusMsg"],
         errorCode: json["errorCode"],
@@ -503,7 +509,8 @@ class GeneratedLabel {
 ErrorGenerateLabel errorGenerateLabelFromJson(String str) =>
     ErrorGenerateLabel.fromJson(json.decode(str));
 
-String errorGenerateLabelToJson(ErrorGenerateLabel data) => json.encode(data.toJson());
+String errorGenerateLabelToJson(ErrorGenerateLabel data) =>
+    json.encode(data.toJson());
 
 class ErrorGenerateLabel {
   ErrorGenerateLabel({
@@ -518,7 +525,8 @@ class ErrorGenerateLabel {
   String errorCode;
   Data1 data;
 
-  factory ErrorGenerateLabel.fromJson(Map<String, dynamic> json) => ErrorGenerateLabel(
+  factory ErrorGenerateLabel.fromJson(Map<String, dynamic> json) =>
+      ErrorGenerateLabel(
         status: json["status"],
         statusMsg: json["statusMsg"],
         errorCode: json["errorCode"],
